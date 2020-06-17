@@ -15,7 +15,7 @@ const (
 )
 
 const (
-	debugCode = iota	// 0
+	debugCode = iota // 0
 	//releaseCode			// 1
 	//testCode			// 2
 )
