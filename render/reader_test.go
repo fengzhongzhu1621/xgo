@@ -2,11 +2,22 @@ package render
 
 import (
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"net/http/httptest"
 	"strconv"
 	"strings"
 	"testing"
 )
+
+func TestReaderRenderNoHeaders(t *testing.T) {
+	content := "test"
+	r := Reader{
+		ContentLength: int64(len(content)),
+		Reader:        strings.NewReader(content),
+	}
+	err := r.Render(httptest.NewRecorder())
+	require.NoError(t, err)
+}
 
 func TestRenderReader(t *testing.T) {
 	w := httptest.NewRecorder()

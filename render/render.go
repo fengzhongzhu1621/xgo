@@ -27,6 +27,7 @@ var (
 	_ HTMLRender = HTMLProduction{}
 	_ Render     = Reader{}
 	_ Render     = ProtoBuf{}
+	_ Render     = Redirect{}
 )
 
 /**
