@@ -8,7 +8,7 @@ import (
 func TestHead(t *testing.T) {
 	s := "abc__def"
 	sep := "__"
-	left, right := head(s, sep)
+	left, right := Head(s, sep)
 	assert.Equal(t, left, "abc")
 	assert.Equal(t, right, "def")
 }
