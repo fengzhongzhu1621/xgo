@@ -10,7 +10,6 @@ import (
 // 支持的最小版本
 const xGoSupportMinGoVer = 10
 
-
 /**
  * 判断是否是调试模式
  */
