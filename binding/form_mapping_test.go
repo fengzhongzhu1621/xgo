@@ -8,8 +8,8 @@ import (
 	"reflect"
 	"testing"
 	"time"
-
 	"github.com/stretchr/testify/assert"
+	"github.com/fengzhongzhu1621/xgo/utils/reflect_utils"
 )
 
 func TestMappingBaseTypes(t *testing.T) {
@@ -124,7 +124,7 @@ func TestMappingUnknownFieldType(t *testing.T) {
 
 	err := mappingByPtr(&s, formSource{"U": {"unknown"}}, "form")
 	assert.Error(t, err)
-	assert.Equal(t, errUnknownType, err)
+	assert.Equal(t, reflect_utils.ErrUnknownType, err)
 }
 
 func TestMappingURI(t *testing.T) {
