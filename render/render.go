@@ -28,6 +28,9 @@ var (
 	_ Render     = Reader{}
 	_ Render     = ProtoBuf{}
 	_ Render     = Redirect{}
+	_ Render     = String{}
+	_ Render     = XML{}
+	_ Render     = YAML{}
 )
 
 /**
