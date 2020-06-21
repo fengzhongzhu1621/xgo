@@ -14,26 +14,22 @@ type Render interface {
 	WriteContentType(w http.ResponseWriter)
 }
 
+// 验证类是否实现了接口
 var (
 	_ Render     = JSON{}
 	_ Render     = IndentedJSON{}
 	_ Render     = SecureJSON{}
 	_ Render     = JsonpJSON{}
-	_ Render     = XML{}
-	_ Render     = String{}
-	_ Render     = Redirect{}
-	_ Render     = Data{}
-	_ Render     = HTML{}
-	_ HTMLRender = HTMLDebug{}
-	_ HTMLRender = HTMLProduction{}
-	_ Render     = YAML{}
-	_ Render     = Reader{}
 	_ Render     = AsciiJSON{}
-	_ Render     = ProtoBuf{}
 )
 
+/**
+ * 如果响应头部没有设置Content-Type，则设置响应头部中的Content-Type
+ */
 func writeContentType(w http.ResponseWriter, value []string) {
+	// 获得响应的头部
 	header := w.Header()
+	// 设置响应头部中的Content-Type
 	if val := header["Content-Type"]; len(val) == 0 {
 		header["Content-Type"] = value
 	}
