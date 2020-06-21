@@ -21,6 +21,10 @@ var (
 	_ Render     = SecureJSON{}
 	_ Render     = JsonpJSON{}
 	_ Render     = AsciiJSON{}
+	_ Render     = Data{}
+	_ Render     = HTML{}
+	_ HTMLRender = HTMLDebug{}
+	_ HTMLRender = HTMLProduction{}
 )
 
 /**
