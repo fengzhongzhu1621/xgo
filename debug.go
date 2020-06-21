@@ -65,3 +65,11 @@ func debugPrintWARNINGNew() {
 
 `)
 }
+
+func debugPrintError(err error) {
+	if err != nil {
+		if IsDebugging() {
+			fmt.Fprintf(DefaultErrorWriter, "[XGO-debug] [ERROR] %v\n", err)
+		}
+	}
+}
