@@ -30,12 +30,15 @@ var Validator StructValidator = &defaultValidator{}
 var (
 	JSON          = jsonBinding{}
 	XML           = xmlBinding{}
+	Form          = formBinding{}
+	Query         = queryBinding{}
+	FormPost      = formPostBinding{}
+	FormMultipart = formMultipartBinding{}
+	ProtoBuf      = protobufBinding{}
 	MsgPack       = msgpackBinding{}
 	YAML          = yamlBinding{}
-	Header        = headerBinding{}
 	Uri           = uriBinding{}
-	ProtoBuf      = protobufBinding{}
-	Query         = queryBinding{}
+	Header        = headerBinding{}
 )
 
 // Content-Type MIME of the most common data formats.
@@ -59,6 +62,31 @@ const (
 type Binding interface {
 	Name() string
 	Bind(*http.Request, interface{}) error
+}
+
+// Default returns the appropriate Binding instance based on the HTTP method
+// and the content type.
+func Default(method, contentType string) Binding {
+	if method == http.MethodGet {
+		return Form
+	}
+
+	switch contentType {
+	case MIMEJSON:
+		return JSON
+	case MIMEXML, MIMEXML2:
+		return XML
+	case MIMEPROTOBUF:
+		return ProtoBuf
+	case MIMEMSGPACK, MIMEMSGPACK2:
+		return MsgPack
+	case MIMEYAML:
+		return YAML
+	case MIMEMultipartPOSTForm:
+		return FormMultipart
+	default: // case MIMEPOSTForm:
+		return Form
+	}
 }
 
 func validate(obj interface{}) error {
