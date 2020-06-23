@@ -23,6 +23,13 @@ type StructValidator interface {
 // under the hood.
 var Validator StructValidator = &defaultValidator{}
 
+// These implement the Binding interface and can be used to bind the data
+// present in the request to struct instances.
+var (
+	JSON          = jsonBinding{}
+	MsgPack       = msgpackBinding{}
+)
+
 
 func validate(obj interface{}) error {
 	if Validator == nil {
