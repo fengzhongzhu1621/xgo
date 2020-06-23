@@ -27,7 +27,9 @@ var Validator StructValidator = &defaultValidator{}
 // present in the request to struct instances.
 var (
 	JSON          = jsonBinding{}
+	XML           = xmlBinding{}
 	MsgPack       = msgpackBinding{}
+	YAML          = yamlBinding{}
 	Header        = headerBinding{}
 )
 
