@@ -5,11 +5,11 @@
 package binding
 
 import (
+	"github.com/fengzhongzhu1621/xgo/utils/reflect_utils"
+	"github.com/stretchr/testify/assert"
 	"reflect"
 	"testing"
 	"time"
-	"github.com/stretchr/testify/assert"
-	"github.com/fengzhongzhu1621/xgo/utils/reflect_utils"
 )
 
 func TestMappingBaseTypes(t *testing.T) {
@@ -44,18 +44,25 @@ func TestMappingBaseTypes(t *testing.T) {
 		{"zero value", struct{ F bool }{}, "", false},
 		{"zero value", struct{ F float32 }{}, "", float32(0)},
 	} {
+		// 获得类型的元数据
 		tp := reflect.TypeOf(tt.value)
+		// 获得结构体中第一个字段的类型
 		testName := tt.name + ":" + tp.Field(0).Type.String()
 
+		// 新建一个新的元数据
 		val := reflect.New(reflect.TypeOf(tt.value))
+		// 设置新的元数据的值
 		val.Elem().Set(reflect.ValueOf(tt.value))
 
+		// 获得新的元数据的第一个字段，field.Name是字段名，为F
 		field := val.Elem().Type().Field(0)
 
 		_, err := mapping(val, emptyField, formSource{field.Name: {tt.form}}, "form")
 		assert.NoError(t, err, testName)
 
+		// 获得第一个字段的值
 		actual := val.Elem().Field(0).Interface()
+
 		assert.Equal(t, tt.expect, actual, testName)
 	}
 }

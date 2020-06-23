@@ -23,3 +23,10 @@ func resolveAddress(addr []string) string {
 		panic("too many parameters")
 	}
 }
+
+/**
+ * 返回整数的指针
+ */
+func IntPtr(i int)  *int {
+	return &i
+}

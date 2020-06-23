@@ -6,8 +6,8 @@ package binding
 
 import (
 	"fmt"
-	"github.com/fengzhongzhu1621/xgo/utils/string_utils"
 	"github.com/fengzhongzhu1621/xgo/utils/reflect_utils"
+	"github.com/fengzhongzhu1621/xgo/utils/string_utils"
 	"reflect"
 )
 
@@ -15,6 +15,7 @@ type setOptions struct {
 	isDefaultExists bool	// 表单字段是否存在默认值
 	defaultValue    string
 }
+
 
 // setter tries to set value on a walking by fields of a struct
 type setter interface {
