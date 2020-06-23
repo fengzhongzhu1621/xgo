@@ -33,7 +33,7 @@ var emptyField = reflect.StructField{}
 
 // TrySet tries to set a value by request's form source (like map[string][]string)
 func (form formSource) TrySet(value reflect.Value, field reflect.StructField, tagValue string, opt setOptions) (isSetted bool, err error) {
-	return SetByForm(value, field, form, tagValue, opt)
+	return setByForm(value, field, form, tagValue, opt)
 }
 
 func mappingByPtr(ptr interface{}, setter setter, tag string) error {
@@ -138,7 +138,7 @@ func tryToSetValue(value reflect.Value, field reflect.StructField, setter setter
 /**
  * 根据表单的值填充对象
  */
-func SetByForm(value reflect.Value, field reflect.StructField, form map[string][]string, tagValue string, opt setOptions) (isSetted bool, err error) {
+func setByForm(value reflect.Value, field reflect.StructField, form map[string][]string, tagValue string, opt setOptions) (isSetted bool, err error) {
 	// 获得表单的值
 	vs, ok := form[tagValue]
 	if !ok && !opt.isDefaultExists {

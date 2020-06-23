@@ -28,6 +28,7 @@ var Validator StructValidator = &defaultValidator{}
 var (
 	JSON          = jsonBinding{}
 	MsgPack       = msgpackBinding{}
+	Header        = headerBinding{}
 )
 
 
