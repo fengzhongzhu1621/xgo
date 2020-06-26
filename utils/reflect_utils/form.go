@@ -2,16 +2,15 @@ package reflect_utils
 
 import (
 	"errors"
+	"github.com/fengzhongzhu1621/xgo/utils/bytesconv"
+	"github.com/fengzhongzhu1621/xgo/utils/json"
 	"reflect"
 	"strconv"
 	"strings"
 	"time"
-	"github.com/fengzhongzhu1621/xgo/utils/bytesconv"
-	"github.com/fengzhongzhu1621/xgo/utils/json"
 )
 
 var ErrUnknownType = errors.New("unknown type")
-
 
 func SetTimeDuration(val string, value reflect.Value, field reflect.StructField) error {
 	// 获得时间间隔
@@ -187,5 +186,3 @@ func SetSlice(vals []string, value reflect.Value, field reflect.StructField) err
 	value.Set(slice)
 	return nil
 }
-
-

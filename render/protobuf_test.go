@@ -2,8 +2,8 @@ package render
 
 import (
 	testdata "github.com/gin-gonic/gin/testdata/protoexample"
-	"github.com/stretchr/testify/assert"
 	"github.com/golang/protobuf/proto"
+	"github.com/stretchr/testify/assert"
 	"net/http/httptest"
 	"testing"
 )

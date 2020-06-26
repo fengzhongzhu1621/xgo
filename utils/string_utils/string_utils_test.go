@@ -12,4 +12,3 @@ func TestHead(t *testing.T) {
 	assert.Equal(t, left, "abc")
 	assert.Equal(t, right, "def")
 }
-

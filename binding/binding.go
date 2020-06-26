@@ -19,7 +19,6 @@ type StructValidator interface {
 	Engine() interface{}
 }
 
-
 // Validator is the default validator which implements the StructValidator
 // interface. It uses https://github.com/go-playground/validator/tree/v8.18.2
 // under the hood.

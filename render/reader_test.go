@@ -64,4 +64,3 @@ func TestRenderReaderNoContentLength(t *testing.T) {
 	assert.Equal(t, headers["Content-Disposition"], w.Header().Get("Content-Disposition"))
 	assert.Equal(t, headers["x-request-id"], w.Header().Get("x-request-id"))
 }
-

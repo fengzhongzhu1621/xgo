@@ -48,4 +48,3 @@ func TestUriInnerBinding(t *testing.T) {
 	assert.Equal(t, tag.Name, expectedName)
 	assert.Equal(t, tag.S.Age, expectedAge)
 }
-

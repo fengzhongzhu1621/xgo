@@ -12,10 +12,9 @@ import (
 )
 
 type setOptions struct {
-	isDefaultExists bool	// 表单字段是否存在默认值
+	isDefaultExists bool // 表单字段是否存在默认值
 	defaultValue    string
 }
-
 
 // setter tries to set value on a walking by fields of a struct
 type setter interface {
@@ -27,7 +26,6 @@ type formSource map[string][]string
 
 // 验证表单有setter接口
 var _ setter = formSource(nil)
-
 
 var emptyField = reflect.StructField{}
 

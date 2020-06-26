@@ -1,6 +1,8 @@
 package xgo
 
-import "os"
+import (
+	"os"
+)
 
 // H is a shortcut for map[string]interface{}
 type H map[string]interface{}
@@ -8,7 +10,7 @@ type H map[string]interface{}
 /**
  * 从命令行获得服务器的IP和端口
  */
-func resolveAddress(addr []string) string {
+func ResolveAddress(addr []string) string {
 	switch len(addr) {
 	case 0:
 		if port := os.Getenv("PORT"); port != "" {
@@ -27,6 +29,19 @@ func resolveAddress(addr []string) string {
 /**
  * 返回整数的指针
  */
-func IntPtr(i int)  *int {
+func IntPtr(i int) *int {
 	return &i
+}
+
+func Assert1(guard bool, text string) {
+	if !guard {
+		panic(text)
+	}
+}
+
+func LastChar(str string) uint8 {
+	if str == "" {
+		panic("The length of the string can't be 0")
+	}
+	return str[len(str)-1]
 }
