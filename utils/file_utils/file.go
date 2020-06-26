@@ -9,7 +9,6 @@ import (
 
 const currentProcessFd = "/proc/self/fd"
 
-
 /**
  * 删除所有的子目录
  */
@@ -47,7 +46,7 @@ func GetCurrentProcessAllFdName() ([]string, error) {
 	// 获得所有的目录名
 	names, err := fd.Readdirnames(-1)
 	if err != nil {
-		return nil, fmt.Errorf("could not read %s: %s", d.Name(), err)
+		return nil, fmt.Errorf("could not read %s: %s", fd.Name(), err)
 	}
 
 	return names, nil
@@ -63,7 +62,6 @@ func GetCurrentProcessFdsLen() (int, error) {
 	}
 	return len(fdNames), nil
 }
-
 
 /**
  * 判断文件是否被修改
