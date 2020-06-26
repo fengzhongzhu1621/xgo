@@ -46,7 +46,7 @@ func GetAllIpv4() []string {
 		return nil
 	}
 
-	ips := make([]string,0)
+	ips := make([]string, 0)
 
 	for _, v := range interfaces {
 		// 通过判断net.FlagUp标志进行确认，排除掉无用的网卡
@@ -58,11 +58,25 @@ func GetAllIpv4() []string {
 			for _, address := range addrs {
 				if ipnet, ok := address.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
 					if ipnet.IP.To4() != nil {
-						ips = append(ips,ipnet.IP.String())
+						ips = append(ips, ipnet.IP.String())
 					}
 				}
 			}
 		}
 	}
 	return ips
+}
+
+/**
+ * 根据主机和端口获取IP
+ */
+func GetIpByHostAndPort(host string, port int) (string, error) {
+	conn, err := net.Dial("udp", host+":"+string(port))
+	if err != nil {
+		return "", err
+	}
+	defer conn.Close()
+	localAddr := conn.LocalAddr().String()
+	idx := strings.LastIndex(localAddr, ":")
+	return localAddr[0:idx], nil
 }
