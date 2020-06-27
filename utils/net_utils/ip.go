@@ -69,9 +69,9 @@ func GetAllIpv4() []string {
 }
 
 /**
- * 根据主机和端口获取IP
+ * 获得和远端服务器通信的IP地址
  */
-func GetLocalIp(host string, port int) (string, error) {
+func GetLocalConnectionIp(host string, port int) (string, error) {
 	conn, err := net.Dial("udp", fmt.Sprintf("%s:%d", host, port))
 	if err != nil {
 		return "", err
