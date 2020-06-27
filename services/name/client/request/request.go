@@ -1,7 +1,7 @@
 package request
 
 import (
-	"github.com/fengzhongzhu1621/xgo/services/name/client/options"
+	opts "github.com/fengzhongzhu1621/xgo/services/name/client/options"
 )
 
 /**
@@ -9,7 +9,7 @@ import (
  */
 type IRequest interface {
 	// Init 初始化
-	Init(o options.InitOptions) (err error)
+	Init(o opts.InitOptions) (err error)
 }
 
 //var (
