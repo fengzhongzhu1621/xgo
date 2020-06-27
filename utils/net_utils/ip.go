@@ -1,6 +1,7 @@
 package net_utils
 
 import (
+	"fmt"
 	"net"
 	"strings"
 )
@@ -70,8 +71,8 @@ func GetAllIpv4() []string {
 /**
  * 根据主机和端口获取IP
  */
-func GetIpByHostAndPort(host string, port int) (string, error) {
-	conn, err := net.Dial("udp", host+":"+string(port))
+func GetLocalIp(host string, port int) (string, error) {
+	conn, err := net.Dial("udp", fmt.Sprintf("%s:%d", host, port))
 	if err != nil {
 		return "", err
 	}
