@@ -1,8 +1,8 @@
 package file_utils
 
 import (
+	"github.com/mitchellh/go-homedir"
 	"os"
-	"os/user"
 	"path"
 )
 
@@ -54,9 +54,6 @@ func GetWd() string {
  * 获得当前用户的$HOME目录
  */
 func GetHomeDir() string {
-	usr, err := user.Current()
-	if err != nil {
-		return "~"
-	}
-	return usr.HomeDir
+	home, _ := homedir.Dir()
+	return home
 }
