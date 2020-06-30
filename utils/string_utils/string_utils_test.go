@@ -12,3 +12,9 @@ func TestHead(t *testing.T) {
 	assert.Equal(t, left, "abc")
 	assert.Equal(t, right, "def")
 }
+
+func TestRemoveDuplicateElement(t *testing.T) {
+	items := []string{"a", "b", "a"}
+	dropDuplicatedItems := RemoveDuplicateElement(items)
+	assert.Equal(t, dropDuplicatedItems, []string{"a", "b"})
+}

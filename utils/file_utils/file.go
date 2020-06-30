@@ -36,6 +36,27 @@ func RemoveContents(dir string) error {
 }
 
 /**
+ * 创建目录
+ */
+func CreateDir(dirname string) error {
+	var err error
+	fin, err := os.Lstat(dirname)
+	if err != nil {
+		if os.IsExist(err) {
+			return err
+		}
+		// 目录不存在则创建
+		return os.MkdirAll(dirname, os.ModePerm)
+	}
+
+	if !fin.IsDir() {
+		return fmt.Errorf("directory %s already exists", dirname)
+	}
+
+	return nil
+}
+
+/**
  * 获得当前进程的所有文件描述符名称
  */
 func GetCurrentProcessAllFdName() ([]string, error) {
@@ -100,7 +121,7 @@ func CopySymlink(src string, dest string) error {
 
 func _copy(src, dest string, fileInfo os.FileInfo) error {
 	// 如果源文件是符号链接
-	if IsSymbolicLink(fileInfo) == true {
+	if IsSymbolicLink(fileInfo) {
 		return CopySymlink(src, dest)
 	}
 	// 如果源文件是目录
@@ -123,7 +144,7 @@ func CopyDir(src string, dst string, fileInfo os.FileInfo) error {
 		fileInfo = fileInfo2
 	}
 	// 创建目录文件夹
-	if err := os.MkdirAll(dst, fileInfo.Mode()); err != nil {
+	if err := os.MkdirAll(dst, os.ModePerm); err != nil {
 		return err
 	}
 	// 读取目录dirmane 中的所有目录和文件（不包括子目录）, 返回读取到的文件的信息列表
