@@ -2,8 +2,11 @@ package file_utils
 
 import (
 	"fmt"
+	"io"
+	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -75,4 +78,161 @@ func IsFileModified(filePath string, lastModifyTime time.Time) bool {
 		return true
 	}
 	return false
+}
+
+/**
+ * 判断文件是否是符号链接
+ */
+func IsSymbolicLink(fileInfo os.FileInfo) bool {
+	return fileInfo.Mode()&os.ModeSymlink != 0
+}
+
+/**
+ * 复制符号链接
+ */
+func CopySymlink(src string, dest string) error {
+	src, err := os.Readlink(src)
+	if err != nil {
+		return err
+	}
+	return os.Symlink(src, dest)
+}
+
+func _copy(src, dest string, fileInfo os.FileInfo) error {
+	// 如果源文件是符号链接
+	if IsSymbolicLink(fileInfo) == true {
+		return CopySymlink(src, dest)
+	}
+	// 如果源文件是目录
+	if fileInfo.IsDir() {
+		return CopyDir(src, dest, fileInfo)
+	}
+	// 如果源文件是普通文件
+	return CopyFile(src, dest, fileInfo)
+}
+
+/**
+ * 复制目录
+ */
+func CopyDir(src string, dst string, fileInfo os.FileInfo) error {
+	if fileInfo == nil {
+		fileInfo2, err := os.Lstat(src)
+		if err != nil {
+			return err
+		}
+		fileInfo = fileInfo2
+	}
+	// 创建目录文件夹
+	if err := os.MkdirAll(dst, fileInfo.Mode()); err != nil {
+		return err
+	}
+	// 读取目录dirmane 中的所有目录和文件（不包括子目录）, 返回读取到的文件的信息列表
+	contents, err := ioutil.ReadDir(src)
+	if err != nil {
+		return err
+	}
+
+	for _, content := range contents {
+		name := content.Name()
+		subSrc := filepath.Join(src, name)
+		subDst := filepath.Join(dst, name)
+		// 递归调用
+		if err := _copy(subSrc, subDst, content); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+/**
+ * 复制文件
+ */
+func CopyFile(src string, dest string, fileInfo os.FileInfo) error {
+	if fileInfo == nil {
+		fileInfo2, err := os.Lstat(src)
+		if err != nil {
+			return err
+		}
+		fileInfo = fileInfo2
+	}
+	fileModel := fileInfo.Mode()
+	if err := os.MkdirAll(filepath.Dir(dest), fileModel); err != nil {
+		return err
+	}
+
+	f, err := os.Create(dest)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	if err = os.Chmod(f.Name(), fileModel); err != nil {
+		return err
+	}
+
+	s, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer s.Close()
+
+	_, err = io.Copy(f, s)
+	return err
+}
+
+/**
+ * 复制文件
+ * 注意Lstat和stat函数的区别，两个都是返回文件的状态信息
+ * Lstat多了处理Link文件的功能，会返回Linked文件的信息，而state直接返回的是Link文件所指向的文件的信息
+ */
+func Copy(src, dest string) error {
+	fileInfo, err := os.Lstat(src)
+	if err != nil {
+		return err
+	}
+	return _copy(src, dest, fileInfo)
+}
+
+/**
+ * 根据路径获得文件名，并去掉文件名的后缀
+ */
+func RemoveFileExt(filePath string) string {
+	filename := filepath.Base(filePath)
+	idx := strings.LastIndex(filename, ".")
+	if idx < 0 {
+		return filename
+	}
+	return filename[:idx]
+}
+
+/**
+ * 判断文件是否存在
+ */
+func IsFileExists(path string) bool {
+	_, err := os.Stat(path)
+	if err != nil {
+		if os.IsExist(err) {
+			return true
+		}
+		return false
+	}
+	return true
+}
+
+/**
+ * 判断是否是目录
+ */
+func IsDirType(path string) bool {
+	s, err := os.Stat(path)
+	if err != nil {
+		return false
+	}
+	return s.IsDir()
+}
+
+/**
+ * 判断是否是文件
+ */
+func IsFileType(path string) bool {
+	return !IsDirType(path)
 }
