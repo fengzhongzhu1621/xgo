@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"strings"
+	"unicode"
 )
 
 /**
@@ -85,4 +86,43 @@ func RemoveDuplicateElement(items []string) []string {
 		}
 	}
 	return result
+}
+
+/**
+ * 去掉字符串的后缀
+ */
+func TrimRight(str string, substring string) string {
+	idx := strings.LastIndex(str, substring)
+	if idx < 0 {
+		return str
+	}
+	return str[:idx]
+}
+
+/**
+ * 去掉字符串的前缀
+ */
+func TrimLeft(str string, substring string) string {
+	return strings.TrimPrefix(str, substring)
+}
+
+func UnicodeTitle(s string) string {
+	for k, v := range s {
+		return string(unicode.ToUpper(v)) + s[k+1:]
+	}
+	return ""
+}
+
+func UnicodeUnTitle(s string) string {
+	for k, v := range s {
+		return string(unicode.ToLower(v)) + s[k+1:]
+	}
+	return ""
+}
+
+/**
+ * 返回数组最后一个元素
+ */
+func Last(list []string) string {
+	return list[len(list) - 1]
 }
