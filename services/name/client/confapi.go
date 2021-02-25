@@ -2,8 +2,8 @@ package name
 
 import (
 	"fmt"
-	opts "github.com/fengzhongzhu1621/xgo/services/name/client/options"
-	request "github.com/fengzhongzhu1621/xgo/services/name/client/request"
+	opts "xgo/services/name/client/options"
+	request "xgo/services/name/client/request"
 )
 
 

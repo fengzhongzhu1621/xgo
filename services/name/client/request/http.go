@@ -4,8 +4,8 @@ import (
 	"net"
 	"net/http"
 	"time"
-	"github.com/fengzhongzhu1621/xgo/services/name/client/address"
-	opts "github.com/fengzhongzhu1621/xgo/services/name/client/options"
+	address "xgo/services/name/client/address"
+	opts "xgo/services/name/client/options"
 )
 
 type HttpRequest struct {

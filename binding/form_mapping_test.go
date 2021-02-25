@@ -5,7 +5,7 @@
 package binding
 
 import (
-	"github.com/fengzhongzhu1621/xgo/utils/reflect_utils"
+	reflect_utils "xgo/utils/reflect_utils"
 	"github.com/stretchr/testify/assert"
 	"reflect"
 	"testing"

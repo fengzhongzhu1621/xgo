@@ -2,8 +2,8 @@ package reflect_utils
 
 import (
 	"errors"
-	"github.com/fengzhongzhu1621/xgo/utils/bytesconv"
-	"github.com/fengzhongzhu1621/xgo/utils/json"
+	bytesconv "xgo/utils/bytesconv"
+	json "xgo/utils/json"
 	"reflect"
 	"strconv"
 	"strings"

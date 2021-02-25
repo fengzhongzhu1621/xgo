@@ -6,8 +6,8 @@ package binding
 
 import (
 	"fmt"
-	"github.com/fengzhongzhu1621/xgo/utils/reflect_utils"
-	"github.com/fengzhongzhu1621/xgo/utils/string_utils"
+	reflect_utils "xgo/utils/reflect_utils"
+	string_utils "xgo/utils/string_utils"
 	"reflect"
 )
 

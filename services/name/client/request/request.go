@@ -1,7 +1,7 @@
 package request
 
 import (
-	opts "github.com/fengzhongzhu1621/xgo/services/name/client/options"
+	opts "xgo/services/name/client/options"
 )
 
 /**

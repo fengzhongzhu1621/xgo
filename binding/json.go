@@ -10,7 +10,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/fengzhongzhu1621/xgo/utils/json"
+	json "xgo/utils/json"
 )
 
 // EnableDecoderUseNumber is used to call the UseNumber method on the JSON

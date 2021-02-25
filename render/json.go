@@ -7,9 +7,9 @@ package render
 import (
 	"bytes"
 	"fmt"
-	"github.com/fengzhongzhu1621/xgo/utils/bytes_utils"
-	"github.com/fengzhongzhu1621/xgo/utils/bytesconv"
-	"github.com/fengzhongzhu1621/xgo/utils/json"
+	bytes_utils "xgo/utils/bytes_utils"
+	bytesconv "xgo/utils/bytesconv"
+	json "xgo/utils/json"
 	"html/template"
 	"net/http"
 )
