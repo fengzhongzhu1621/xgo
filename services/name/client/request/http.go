@@ -27,10 +27,10 @@ func (request *HttpRequest) Init(initOpts opts.InitOptions) (err error) {
 		Transport: &http.Transport{
 			Proxy: http.ProxyFromEnvironment,
 			DialContext: (&net.Dialer{
-				Timeout:   initOpts.RequestTimeout,		// 三次握手超时时间
-				KeepAlive: initOpts.RequestPollingTimeout + 3*time.Second,	// 连接保持时间
+				Timeout:   initOpts.RequestTimeout,                        // 三次握手超时时间
+				KeepAlive: initOpts.RequestPollingTimeout + 3*time.Second, // 连接保持时间
 			}).DialContext,
-			TLSHandshakeTimeout: initOpts.RequestTimeout,	// 等待TLS握手完成的最长时间
+			TLSHandshakeTimeout: initOpts.RequestTimeout, // 等待TLS握手完成的最长时间
 		},
 		Timeout: initOpts.RequestTimeout,
 	}

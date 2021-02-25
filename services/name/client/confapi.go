@@ -6,10 +6,9 @@ import (
 	request "xgo/services/name/client/request"
 )
 
-
 type ConfApi struct {
-	options     opts.InitOptions
-	handler		request.IRequest
+	options opts.InitOptions
+	handler request.IRequest
 }
 
 func (api *ConfApi) Init() error {
@@ -21,4 +20,3 @@ func (api *ConfApi) Init() error {
 	}
 	return api.handler.Init(api.options)
 }
-

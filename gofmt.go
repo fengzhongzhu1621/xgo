@@ -32,7 +32,6 @@ func GoFmtFile(fpath string) error {
 	return nil
 }
 
-
 /**
  * 格式化go代码目录
  */

@@ -14,14 +14,14 @@ type (
 )
 
 const (
-	LOG_EMERG     = LogLevel(0)       //  system is unusable
-	LOG_ALERT     = LogLevel(1)       //  action must be taken immediately
-	LOG_CRIT      = LogLevel(2)       //  critical conditions
-	LOG_ERR       = LogLevel(3)       //  error conditions
-	LOG_WARNING   = LogLevel(4)       //  warning conditions
-	LOG_NOTICE    = LogLevel(5)       //  normal but significant condition
-	LOG_INFO      = LogLevel(6)       //  informational
-	LOG_DEBUG     = LogLevel(7)       //  debug-level messages
+	LOG_EMERG   = LogLevel(0) //  system is unusable
+	LOG_ALERT   = LogLevel(1) //  action must be taken immediately
+	LOG_CRIT    = LogLevel(2) //  critical conditions
+	LOG_ERR     = LogLevel(3) //  error conditions
+	LOG_WARNING = LogLevel(4) //  warning conditions
+	LOG_NOTICE  = LogLevel(5) //  normal but significant condition
+	LOG_INFO    = LogLevel(6) //  informational
+	LOG_DEBUG   = LogLevel(7) //  debug-level messages
 )
 
 func logLevelToString(t LogLevel) string {
@@ -39,12 +39,12 @@ func logLevelToString(t LogLevel) string {
 }
 
 type LoggerConfig struct {
-	flag   int        // properties
-	Formatter    ILogFormatter
-	level        LogLevel
-	mu     sync.Mutex
-	buf    []byte
-	out    io.Writer
+	flag      int // properties
+	Formatter ILogFormatter
+	level     LogLevel
+	mu        sync.Mutex
+	buf       []byte
+	out       io.Writer
 }
 
 type ILogFormatter interface {
@@ -52,7 +52,6 @@ type ILogFormatter interface {
 }
 
 type DefaultFormatter struct {
-
 }
 
 func (formatter *DefaultFormatter) Format(logger *LoggerConfig, t time.Time, level LogLevel, message string) error {

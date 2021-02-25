@@ -6,7 +6,6 @@ import (
 	"testing"
 )
 
-
 func TestNameServiceAddressHttp(t *testing.T) {
 	var address NameServiceAddress
 	err := address.ParseAddress("http://www.example.com")

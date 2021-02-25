@@ -5,11 +5,11 @@
 package binding
 
 import (
-	reflect_utils "xgo/utils/reflect_utils"
 	"github.com/stretchr/testify/assert"
 	"reflect"
 	"testing"
 	"time"
+	reflect_utils "xgo/utils/reflect_utils"
 )
 
 func TestMappingBaseTypes(t *testing.T) {

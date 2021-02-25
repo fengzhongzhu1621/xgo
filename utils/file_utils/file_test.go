@@ -10,10 +10,10 @@ import (
 
 func TestRemoveFileExt(t *testing.T) {
 	tests := []struct {
-		name string
-		filePath string
+		name               string
+		filePath           string
 		filenameWithoutExt string
-	} {
+	}{
 		{name: "1", filePath: "On Unix:", filenameWithoutExt: "On Unix:"},
 		{name: "2", filePath: "/foo/bar/baz.js", filenameWithoutExt: "baz"},
 		{name: "3", filePath: "/foo/bar/baz", filenameWithoutExt: "baz"},
@@ -48,8 +48,8 @@ func TestLocateFile(t *testing.T) {
 	tests := []struct {
 		name     string
 		filename string
-		dirs   []string
-		expect string
+		dirs     []string
+		expect   string
 	}{
 		{name: "1", filename: "file.go", dirs: []string{pwd}, expect: ""},
 	}
@@ -60,4 +60,3 @@ func TestLocateFile(t *testing.T) {
 		})
 	}
 }
-

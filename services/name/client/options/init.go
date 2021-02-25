@@ -5,16 +5,16 @@ import (
 )
 
 type InitOptions struct {
-	Address string	// 配置中心地址
-	AppId string
-	Groups []string
-	userId string
-	UserKey string
-	HmacAlgorithm string					// 签名算法
-	Heartbeat time.Duration					// 心跳间隔
-	RequestTimeout time.Duration         	// 请求超时时间
-	RequestPollingTimeout time.Duration  	// 长轮询等待时间
-	ProtoType string                        // 协议类型
+	Address               string // 配置中心地址
+	AppId                 string
+	Groups                []string
+	userId                string
+	UserKey               string
+	HmacAlgorithm         string        // 签名算法
+	Heartbeat             time.Duration // 心跳间隔
+	RequestTimeout        time.Duration // 请求超时时间
+	RequestPollingTimeout time.Duration // 长轮询等待时间
+	ProtoType             string        // 协议类型
 }
 
 func (options *InitOptions) Init() {

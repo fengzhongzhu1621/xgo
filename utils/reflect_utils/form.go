@@ -2,12 +2,12 @@ package reflect_utils
 
 import (
 	"errors"
-	bytesconv "xgo/utils/bytesconv"
-	json "xgo/utils/json"
 	"reflect"
 	"strconv"
 	"strings"
 	"time"
+	bytesconv "xgo/utils/bytesconv"
+	json "xgo/utils/json"
 )
 
 var ErrUnknownType = errors.New("unknown type")

@@ -18,15 +18,15 @@ type INameServiceAddress interface {
  * 名字服务：以SID（由模块ID和命令字ID组成）为关键字，通过SID取得真正的IP和端口地址，使得IP和端口配置对调用者透明
  */
 type NameServiceAddress struct {
-	Type string // 地址类型
-	Address string // 具体的地址
-	IpList []string // 多个IP地址
-	ModId int
-	CmdId int
+	Type    string   // 地址类型
+	Address string   // 具体的地址
+	IpList  []string // 多个IP地址
+	ModId   int
+	CmdId   int
 }
 
 func getRandomIp(IpList []string) string {
-	return IpList[rand.Int() % len(IpList)]
+	return IpList[rand.Int()%len(IpList)]
 }
 
 func (addr *NameServiceAddress) GetAddress() string {

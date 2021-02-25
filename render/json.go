@@ -7,11 +7,11 @@ package render
 import (
 	"bytes"
 	"fmt"
+	"html/template"
+	"net/http"
 	bytes_utils "xgo/utils/bytes_utils"
 	bytesconv "xgo/utils/bytesconv"
 	json "xgo/utils/json"
-	"html/template"
-	"net/http"
 )
 
 // JSON contains the given interface object.

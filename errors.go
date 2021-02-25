@@ -3,16 +3,13 @@ package xgo
 import "fmt"
 
 var (
-	ErrUnauthorized = fmt.Errorf("%s", "unauthorized")
-	ErrInvalidArg = fmt.Errorf("%s", "invalid argument")
-	ErrInvalidAddress  = fmt.Errorf("%s", "invalid address")
-	ErrUnknown = fmt.Errorf("%s", "unknown")
+	ErrUnauthorized   = fmt.Errorf("%s", "unauthorized")
+	ErrInvalidArg     = fmt.Errorf("%s", "invalid argument")
+	ErrInvalidAddress = fmt.Errorf("%s", "invalid address")
+	ErrUnknown        = fmt.Errorf("%s", "unknown")
 )
 
-
-var errTable = map[int32]error {
-
-}
+var errTable = map[int32]error{}
 
 /**
  * 将错误码转换为error
