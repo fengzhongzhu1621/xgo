@@ -59,7 +59,7 @@ func BenchmarkCompareStringSlice(b *testing.B) {
 func BenchmarkReverseReflectSlice(b *testing.B) {
 	names := []string{"a", "b", "c", "d", "e", "f", "g"}
 	for i := 0; i < b.N; i++ {
-		ReverseReflectSlice(names)
+		ReflectReverseSlice(names)
 	}
 }
 

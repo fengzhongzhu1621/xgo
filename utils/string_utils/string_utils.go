@@ -8,6 +8,13 @@ import (
 	"unicode"
 )
 
+
+/*
+ * 字符替换器
+ */
+var HeaderNewlineToSpace = strings.NewReplacer("\n", " ", "\r", " ")
+var HeaderDashToUnderscore = strings.NewReplacer("-", "_")
+
 /**
  * 根据分隔符分割字符串
  */
@@ -81,7 +88,7 @@ func RemoveDuplicateElement(items []string) []string {
 	set := map[string]struct{}{}
 	for _, item := range items {
 		if _, ok := set[item]; !ok {
-			// 如何集合中不存在此元素，则加入集合
+			// 如果集合中不存在此元素，则加入集合
 			set[item] = struct{}{}
 			result = append(result, item)
 		}
