@@ -17,7 +17,6 @@ const (
 	LogUnknown = 127
 )
 
-
 // 定义日志输出接口，需要使用方自定义输出函数的实现
 type LogFunc func(logScope *LogScope, level LogLevel, levelName string, category string, msg string, args ...interface{})
 

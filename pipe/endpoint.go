@@ -8,7 +8,7 @@ type Endpoint interface {
 }
 
 /**
- * 双工管道传递数据
+ * 双工管道传递交换数据
  */
 func PipeEndpoints(e1, e2 Endpoint) {
 	// 启动协程读取数据，写入到管道中

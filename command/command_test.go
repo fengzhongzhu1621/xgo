@@ -1,4 +1,4 @@
-package os_utils
+package command
 
 import (
 	"github.com/stretchr/testify/assert"

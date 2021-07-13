@@ -1,4 +1,4 @@
-package os_utils
+package command
 
 import (
 	"bufio"
@@ -107,11 +107,12 @@ func CmdAndChangeDirToShow(dir string, commandName string, params []string) erro
 }
 
 
+// 命令加载进程类
 type LaunchedProcess struct {
-	cmd    *exec.Cmd
-	stdin  io.WriteCloser
-	stdout io.ReadCloser
-	stderr io.ReadCloser
+	Cmd    *exec.Cmd
+	Stdin  io.WriteCloser
+	Stdout io.ReadCloser
+	Stderr io.ReadCloser
 }
 
 /**
@@ -135,7 +136,7 @@ func LaunchCmd(commandName string, commandArgs []string, env []string) (*Launche
 	if err != nil {
 		return nil, err
 	}
-	// 执行命令
+	// 执行命令，需要等待命令执行完成
 	err = cmd.Start()
 	if err != nil {
 		return nil, err
