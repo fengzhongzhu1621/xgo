@@ -3,10 +3,9 @@ package websocketd
 import (
 	"fmt"
 	"net/http"
-	"xgo/utils/string_utils"
-	. "xgo/env"
 	. "xgo/log"
 	. "xgo/utils/net_utils"
+	"xgo/utils/string_utils"
 )
 
 const (
@@ -46,8 +45,8 @@ func createEnv(handler *WebsocketdHandler, req *http.Request, log *LogScope) []s
 	// As defined in http://tools.ietf.org/html/rfc3875
 	env = AppendEnv(env, "REMOTE_ADDR", handler.RemoteInfo.Addr)
 	env = AppendEnv(env, "REMOTE_HOST", handler.RemoteInfo.Host)
-	env = AppendEnv(env, "SERVER_NAME", serverName)	// IP
-	env = AppendEnv(env, "SERVER_PORT", serverPort)	// port
+	env = AppendEnv(env, "SERVER_NAME", serverName) // IP
+	env = AppendEnv(env, "SERVER_PORT", serverPort) // port
 	env = AppendEnv(env, "SERVER_PROTOCOL", req.Proto)
 	env = AppendEnv(env, "GATEWAY_INTERFACE", gatewayInterface)
 	env = AppendEnv(env, "REQUEST_METHOD", req.Method)

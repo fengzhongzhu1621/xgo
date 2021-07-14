@@ -1,7 +1,9 @@
-package env
+package net_utils
 
 import (
 	"fmt"
+	"net/http"
+	"net/textproto"
 	"strings"
 	"xgo/utils/string_utils"
 )
@@ -23,4 +25,26 @@ func AppendEnv(env []string, k string, v ...string) []string {
 	return append(env, fmt.Sprintf("%s=%s",
 		strings.ToUpper(k),
 		strings.Join(vCleaned, ", ")))
+}
+
+
+func SplitMimeHeader(s string) (string, string) {
+	p := strings.IndexByte(s, ':')
+	if p < 0 {
+		return s, ""
+	}
+	key := textproto.CanonicalMIMEHeaderKey(s[:p])
+
+	for p = p + 1; p < len(s); p++ {
+		if s[p] != ' ' {
+			break
+		}
+	}
+	return key, s[p:]
+}
+
+func PushHeaders(h http.Header, hdrs []string) {
+	for _, hstr := range hdrs {
+		h.Add(SplitMimeHeader(hstr))
+	}
 }
