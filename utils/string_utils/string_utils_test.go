@@ -2,6 +2,7 @@ package string_utils
 
 import (
 	"github.com/stretchr/testify/assert"
+	"strconv"
 	"testing"
 )
 
@@ -38,6 +39,13 @@ func TestReverseSlice(t *testing.T) {
 	ReverseSlice(names)
 	expected := []string{"g", "f", "e", "d", "c", "b", "a"}
 	assert.Equal(t, expected, names)
+}
+
+func TestGenerateId(t *testing.T) {
+	actual := GenerateId()
+	s, err := strconv.ParseUint(actual, 10, 64)
+	assert.Equal(t, err, nil)
+	assert.Equal(t, s > 0, true)
 }
 
 func BenchmarkCompareStringSliceReflect(b *testing.B) {

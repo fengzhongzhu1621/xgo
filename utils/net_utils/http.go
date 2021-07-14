@@ -17,6 +17,30 @@ type URLInfo struct {
 	FilePath   string
 }
 
+// GetRemoteInfo creates RemoteInfo structure and fills its fields appropriately
+func GetRemoteInfo(remote string, doLookup bool) (*RemoteInfo, error) {
+	// 获得IP和端口
+	addr, port, err := net.SplitHostPort(remote)
+	if err != nil {
+		return nil, err
+	}
+
+	var host string
+	if doLookup {
+		// 根据IP获得主机地址
+		hosts, err := net.LookupAddr(addr)
+		if err != nil || len(hosts) == 0 {
+			host = addr
+		} else {
+			host = hosts[0]
+		}
+	} else {
+		host = addr
+	}
+
+	return &RemoteInfo{Addr: addr, Host: host, Port: port}, nil
+}
+
 /**
  * 获得主机和端口，如果不存在则获取默认值
  */
