@@ -2,8 +2,11 @@ package string_utils
 
 import (
 	"bytes"
+	"crypto/md5"
+	"encoding/hex"
 	"fmt"
 	"reflect"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -230,4 +233,49 @@ func Str2map(s string, sep1 string, sep2 string) map[string]string {
 		}
 	}
 	return m
+}
+
+func MergeGetAndPostParamWithKey(queryParam map[string]string, postParam map[string]string, key string, keyName string) string {
+	m := make(map[string]string)
+	if len(queryParam) > 0 {
+		for k, v := range queryParam {
+			m[k] = v
+		}
+	}
+	if len(postParam) > 0 {
+		for k, v := range postParam {
+			m[k] = v
+		}
+	}
+
+	// 获取数组的key，排序
+	keyList := make([]string, 0, len(m))
+	for k, _ := range m {
+		keyList = append(keyList, k)
+	}
+	sort.Strings(keyList)
+
+	// 排序后的数组
+	params := ""
+	for _, key := range keyList {
+		value, _ := m[key]
+		if value != "" {
+			params += key + "=" + value + "&"
+		}
+	}
+	// 添加key参数
+	params += keyName + "=" + key
+	return params
+}
+
+/**
+ * 计算字符串的MD5值
+ * 同 echo -n "123456789" | md5sum
+ */
+func Md5(src string) string {
+	md5ctx := md5.New()
+	md5ctx.Write([]byte(src))
+	cipher := md5ctx.Sum(nil)
+	value := hex.EncodeToString(cipher)
+	return value
 }

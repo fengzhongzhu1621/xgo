@@ -55,6 +55,23 @@ func TestStr2map(t *testing.T) {
 	assert.Equal(t, expect, actual)
 }
 
+func TestMergeGetAndPostParamWithKey(t *testing.T) {
+	queryParam := map[string]string{"b": "2", "a": "1"}
+	postParam := map[string]string{"c": "3", "d": "4"}
+	key := "123456789"
+	keyName := "_key"
+	actual := MergeGetAndPostParamWithKey(queryParam, postParam, key, keyName)
+	expect := "a=1&b=2&c=3&d=4&_key=123456789"
+	assert.Equal(t, expect, actual)
+}
+
+func TestMd5(t *testing.T) {
+	src := "123456789"
+	actual := Md5(src)
+	expect := "25f9e794323b453885f5181f1b624d0b"
+	assert.Equal(t, expect, actual)
+}
+
 func BenchmarkCompareStringSliceReflect(b *testing.B) {
 	sliceA := []string{"a", "b", "c", "d", "e"}
 	sliceB := []string{"e", "d", "c", "b", "a"}
