@@ -48,6 +48,13 @@ func TestGenerateId(t *testing.T) {
 	assert.Equal(t, s > 0, true)
 }
 
+func TestStr2map(t *testing.T) {
+	s := "a=1&b=2&c="
+	actual := Str2map(s, "&", "=")
+	expect := map[string]string{"a": "1", "b": "2", "c": ""}
+	assert.Equal(t, expect, actual)
+}
+
 func BenchmarkCompareStringSliceReflect(b *testing.B) {
 	sliceA := []string{"a", "b", "c", "d", "e"}
 	sliceB := []string{"e", "d", "c", "b", "a"}
