@@ -65,6 +65,10 @@ func rawStrToBytes(s string) []byte {
 	return []byte(s)
 }
 
+func SafeBytes(s string) []byte {
+	return []byte(s)
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // []bytes转换为字符串
 // BytesToString converts byte slice to string without a memory allocation.
@@ -79,6 +83,10 @@ func String(b []byte) string {
 }
 
 func rawBytesToStr(b []byte) string {
+	return string(b)
+}
+
+func SafeString(b []byte) string {
 	return string(b)
 }
 

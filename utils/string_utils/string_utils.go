@@ -11,6 +11,7 @@ import (
 	"strings"
 	"time"
 	"unicode"
+	"xgo/utils/bytesconv"
 )
 
 /*
@@ -278,4 +279,31 @@ func Md5(src string) string {
 	cipher := md5ctx.Sum(nil)
 	value := hex.EncodeToString(cipher)
 	return value
+}
+
+// 字符串转换为小写，在转化前先判断是否包含大写字符，比strings.ToLower性能高
+func ToLower(s string) string {
+	if isLower(s) {
+		return s
+	}
+
+	b := make([]byte, len(s))
+	for i := range b {
+		c := s[i]
+		if c >= 'A' && c <= 'Z' {
+			c += 'a' - 'A'
+		}
+		b[i] = c
+	}
+	return bytesconv.BytesToString(b)
+}
+
+func isLower(s string) bool {
+	for i := 0; i < len(s); i++ {
+		c := s[i]
+		if c >= 'A' && c <= 'Z' {
+			return false
+		}
+	}
+	return true
 }

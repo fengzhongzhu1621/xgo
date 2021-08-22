@@ -3,6 +3,7 @@ package string_utils
 import (
 	"github.com/stretchr/testify/assert"
 	"strconv"
+	"strings"
 	"testing"
 )
 
@@ -106,5 +107,23 @@ func BenchmarkReverseSliceNew(b *testing.B) {
 	names := []string{"a", "b", "c", "d", "e", "f", "g"}
 	for i := 0; i < b.N; i++ {
 		ReverseSliceGetNew(names)
+	}
+}
+
+func BenchmarkToLower(b *testing.B) {
+	string1 := "ABCDEFGHIJKLMN"
+	string2 := "abcdefghijklmn"
+	for i := 0; i < b.N; i++ {
+		ToLower(string1)
+		ToLower(string2)
+	}
+}
+
+func BenchmarkBuildInToLower(b *testing.B) {
+	string1 := "ABCDEFGHIJKLMN"
+	string2 := "abcdefghijklmn"
+	for i := 0; i < b.N; i++ {
+		strings.ToLower(string1)
+		strings.ToLower(string2)
 	}
 }
