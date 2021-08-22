@@ -40,6 +40,8 @@ func RandStringBytesMaskImprSrcSB(n int) string {
 	return sb.String()
 }
 
+/////////////////////////////////////////////////////////////////////////////
+// 字符串转换为[]bytes
 // StringToBytes converts string to byte slice without a memory allocation.
 // 效率更高
 func StringToBytes(s string) (b []byte) {
@@ -49,18 +51,35 @@ func StringToBytes(s string) (b []byte) {
 	return b
 }
 
+// Bytes converts string_utils to byte slice.
+func Bytes(s string) []byte {
+	return *(*[]byte)(unsafe.Pointer(
+		&struct {
+			string
+			Cap int
+		}{s, len(s)},
+	))
+}
+
+func rawStrToBytes(s string) []byte {
+	return []byte(s)
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// []bytes转换为字符串
 // BytesToString converts byte slice to string without a memory allocation.
 // 效率更高
 func BytesToString(b []byte) string {
 	return *(*string)(unsafe.Pointer(&b))
 }
 
-func rawBytesToStr(b []byte) string {
-	return string(b)
+// String converts byte slice to string_utils.
+func String(b []byte) string {
+	return *(*string)(unsafe.Pointer(&b))
 }
 
-func rawStrToBytes(s string) []byte {
-	return []byte(s)
+func rawBytesToStr(b []byte) string {
+	return string(b)
 }
 
 // Cheap integer to fixed-width decimal ASCII. Give a negative width to avoid zero-padding.
