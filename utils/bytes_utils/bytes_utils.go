@@ -1,6 +1,12 @@
 package bytes_utils
 
-import "bytes"
+import (
+	"bytes"
+	"fmt"
+	"strconv"
+	"time"
+	"xgo/utils/bytesconv"
+)
 
 /**
  * 判断前缀和后缀是否全部匹配
@@ -8,7 +14,6 @@ import "bytes"
 func HasPrefixAndSuffix(s, prefix []byte, suffix []byte) bool {
 	return bytes.HasPrefix(s, prefix) && bytes.HasSuffix(s, suffix)
 }
-
 
 /**
  * 去掉结尾换行符
@@ -23,4 +28,55 @@ func TrimEOL(b []byte) []byte {
 		}
 	}
 	return b[:lns]
+}
+
+////////////////////////////////////////////////////////////////////////////////////
+// 字符数组拼接
+func AppendArg(b []byte, v interface{}) []byte {
+	switch v := v.(type) {
+	case nil:
+		return append(b, "<nil>"...)
+	case string:
+		return AppendUTF8String(b, bytesconv.Bytes(v))
+	case []byte:
+		return AppendUTF8String(b, v)
+	case int:
+		return strconv.AppendInt(b, int64(v), 10)
+	case int8:
+		return strconv.AppendInt(b, int64(v), 10)
+	case int16:
+		return strconv.AppendInt(b, int64(v), 10)
+	case int32:
+		return strconv.AppendInt(b, int64(v), 10)
+	case int64:
+		return strconv.AppendInt(b, v, 10)
+	case uint:
+		return strconv.AppendUint(b, uint64(v), 10)
+	case uint8:
+		return strconv.AppendUint(b, uint64(v), 10)
+	case uint16:
+		return strconv.AppendUint(b, uint64(v), 10)
+	case uint32:
+		return strconv.AppendUint(b, uint64(v), 10)
+	case uint64:
+		return strconv.AppendUint(b, v, 10)
+	case float32:
+		return strconv.AppendFloat(b, float64(v), 'f', -1, 64)
+	case float64:
+		return strconv.AppendFloat(b, v, 'f', -1, 64)
+	case bool:
+		if v {
+			return append(b, "true"...)
+		}
+		return append(b, "false"...)
+	case time.Time:
+		return v.AppendFormat(b, time.RFC3339Nano)
+	default:
+		return append(b, fmt.Sprint(v)...)
+	}
+}
+
+func AppendUTF8String(dst []byte, src []byte) []byte {
+	dst = append(dst, src...)
+	return dst
 }
