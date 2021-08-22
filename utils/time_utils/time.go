@@ -1,6 +1,7 @@
 package time_utils
 
 import (
+	"context"
 	"math/rand"
 	"time"
 )
@@ -26,4 +27,18 @@ func RetryBackoff(retry int, minBackoff, maxBackoff time.Duration) time.Duration
 	}
 
 	return d
+}
+
+// 休眠指定时间
+func Sleep(ctx context.Context, dur time.Duration) error {
+	// 创建一个定时器
+	t := time.NewTimer(dur)
+	defer t.Stop()
+
+	select {
+	case <-t.C:	// 在指定间隔后从定时器获取下一个调度时间
+		return nil
+	case <-ctx.Done():
+		return ctx.Err()
+	}
 }
