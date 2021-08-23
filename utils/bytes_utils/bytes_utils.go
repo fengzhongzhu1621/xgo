@@ -80,3 +80,23 @@ func AppendUTF8String(dst []byte, src []byte) []byte {
 	dst = append(dst, src...)
 	return dst
 }
+
+
+//////////////////////////////////////////////////////////////////////////////////////
+// 将字节数组转换为其它类型
+
+func Atoi(b []byte) (int, error) {
+	return strconv.Atoi(bytesconv.BytesToString(b))
+}
+
+func ParseInt(b []byte, base int, bitSize int) (int64, error) {
+	return strconv.ParseInt(bytesconv.BytesToString(b), base, bitSize)
+}
+
+func ParseUint(b []byte, base int, bitSize int) (uint64, error) {
+	return strconv.ParseUint(bytesconv.BytesToString(b), base, bitSize)
+}
+
+func ParseFloat(b []byte, bitSize int) (float64, error) {
+	return strconv.ParseFloat(bytesconv.BytesToString(b), bitSize)
+}
