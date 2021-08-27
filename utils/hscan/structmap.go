@@ -34,7 +34,7 @@ func (s *structMap) get(t reflect.Type) *structSpec {
 // 结构体字段类型解码器对象
 // structSpec contains the list of all fields in a target struct.
 type structSpec struct {
-	m map[string]*structField	// key为tag
+	m map[string]*structField // key为tag
 }
 
 func (s *structSpec) set(tag string, sf *structField) {
@@ -85,8 +85,8 @@ type structField struct {
 //------------------------------------------------------------------------------
 
 type StructValue struct {
-	spec  *structSpec		// 结构体描述
-	value reflect.Value		// 结构体值的运行时表示
+	spec  *structSpec   // 结构体描述
+	value reflect.Value // 结构体值的运行时表示
 }
 
 // 根据tag名称扫描结构体的指定字段，调用字段类型对应的解码器

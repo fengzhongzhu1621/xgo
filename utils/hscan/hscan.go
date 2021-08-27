@@ -7,6 +7,9 @@ import (
 	"strconv"
 )
 
+// 定义结构体注解，提供Scan()给结构体的字段赋值，每个字段赋值前进行扫描校验，
+// 将字符串转换为指定类型，如果有一个字段的赋值不符合策略，则停止赋值，返回err
+
 // 定义一个函数
 // decoderFunc represents decoding functions for default built-in types.
 type decoderFunc func(reflect.Value, string) error
@@ -67,8 +70,8 @@ func Struct(dst interface{}) (StructValue, error) {
 	}
 	// 解析结构体字段的注解，获得结构指针的值和所有字段的类型解码器对象
 	return StructValue{
-		spec:  globalStructMap.get(v.Type()),	// 获得结构体描述，包含每个字段的类型解码器
-		value: v,		// 结构体指针的运行时表示
+		spec:  globalStructMap.get(v.Type()), // 获得结构体描述，包含每个字段的类型解码器
+		value: v,                             // 结构体指针的运行时表示
 	}, nil
 }
 
