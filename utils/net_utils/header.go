@@ -8,10 +8,8 @@ import (
 	"xgo/utils/string_utils"
 )
 
-/**
- * 构造header
- * 返回一个新数组
- */
+// 构造header
+// 返回一个新数组
 func AppendEnv(env []string, k string, v ...string) []string {
 	if len(v) == 0 {
 		return env

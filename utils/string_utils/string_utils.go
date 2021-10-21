@@ -20,9 +20,7 @@ import (
 var HeaderNewlineToSpace = strings.NewReplacer("\n", " ", "\r", " ")
 var HeaderDashToUnderscore = strings.NewReplacer("-", "_")
 
-/**
- * 根据分隔符分割字符串
- */
+// 根据分隔符分割字符串
 func Head(str, sep string) (head string, tail string) {
 	idx := strings.Index(str, sep)
 	if idx < 0 {
@@ -83,10 +81,8 @@ func StringBuilderEx(p []string, cap int) string {
 	return b.String()
 }
 
-/**
- * 切片去重
- * 空struct不占内存空间，使用它来实现我们的函数空间复杂度是最低的。
- */
+// 切片去重
+// 空struct不占内存空间，使用它来实现我们的函数空间复杂度是最低的。
 func RemoveDuplicateElement(items []string) []string {
 	result := make([]string, 0, len(items))
 	// 定义集合
@@ -101,9 +97,7 @@ func RemoveDuplicateElement(items []string) []string {
 	return result
 }
 
-/**
- * 去掉字符串的后缀
- */
+// 去掉字符串的后缀
 func TrimRight(str string, substring string) string {
 	idx := strings.LastIndex(str, substring)
 	if idx < 0 {
@@ -112,9 +106,7 @@ func TrimRight(str string, substring string) string {
 	return str[:idx]
 }
 
-/**
- * 去掉字符串的前缀
- */
+// 去掉字符串的前缀
 func TrimLeft(str string, substring string) string {
 	return strings.TrimPrefix(str, substring)
 }
@@ -133,23 +125,17 @@ func UnicodeUnTitle(s string) string {
 	return ""
 }
 
-/**
- * 返回数组最后一个元素
- */
+// 返回数组最后一个元素
 func Last(list []string) string {
 	return list[len(list)-1]
 }
 
-/**
- * Deprecated: 切片比较
- */
+// Deprecated: 切片比较
 func CompareStringSliceReflect(a, b []string) bool {
 	return reflect.DeepEqual(a, b)
 }
 
-/**
- * 切片比较
- */
+// 切片比较
 func CompareStringSlice(a, b []string) bool {
 	if len(a) != len(b) {
 		return false
@@ -171,9 +157,7 @@ func CompareStringSlice(a, b []string) bool {
 	return true
 }
 
-/**
- * Deprecated: 翻转切片 panic if s is not a slice
- */
+// Deprecated: 翻转切片 panic if s is not a slice
 func ReflectReverseSlice(s interface{}) {
 	n := reflect.ValueOf(s).Len()
 	swap := reflect.Swapper(s)
@@ -182,9 +166,7 @@ func ReflectReverseSlice(s interface{}) {
 	}
 }
 
-/**
- * Deprecated: 翻转切片，返回一个新的切片，有copy的耗损
- */
+// Deprecated: 翻转切片，返回一个新的切片，有copy的耗损
 func ReverseSliceGetNew(s []string) []string {
 	a := make([]string, len(s))
 	copy(a, s)
@@ -196,25 +178,19 @@ func ReverseSliceGetNew(s []string) []string {
 	return a
 }
 
-/**
- * 翻转切片，值会改变，性能最高
- */
+// 翻转切片，值会改变，性能最高
 func ReverseSlice(a []string) {
 	for left, right := 0, len(a)-1; left < right; left, right = left+1, right-1 {
 		a[left], a[right] = a[right], a[left]
 	}
 }
 
-/**
- * 获得随机字符串
- */
+// 获得随机字符串
 func GenerateId() string {
 	return strconv.FormatInt(time.Now().UnixNano(), 10)
 }
 
-/**
- *
- */
+
 func Str2map(s string, sep1 string, sep2 string) map[string]string {
 	if "" == s {
 		return nil
@@ -269,10 +245,8 @@ func MergeGetAndPostParamWithKey(queryParam map[string]string, postParam map[str
 	return params
 }
 
-/**
- * 计算字符串的MD5值
- * 同 echo -n "123456789" | md5sum
- */
+// 计算字符串的MD5值
+// 同 echo -n "123456789" | md5sum
 func Md5(src string) string {
 	md5ctx := md5.New()
 	md5ctx.Write([]byte(src))

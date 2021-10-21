@@ -9,9 +9,7 @@ import (
 	"os/exec"
 )
 
-/**
- * 运行linux bash命令
- */
+// 运行linux bash命令
 func RunBashCommand(command string) (error, string, string) {
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer
@@ -37,9 +35,7 @@ func RunBashCommandBackground(commandName string) *exec.Cmd {
 	return cmd
 }
 
-/**
- * 直接在当前目录使用并返回结果
- */
+// 直接在当前目录使用并返回结果
 func Cmd(commandName string, params []string) (string, error) {
 	cmd := exec.Command(commandName, params...)
 	fmt.Println("Cmd", cmd.Args)
@@ -55,9 +51,7 @@ func Cmd(commandName string, params []string) (string, error) {
 }
 
 
-/**
- * 在命令位置使用并返回结果
- */
+// 在命令位置使用并返回结果
 func CmdAndChangeDir(dir string, commandName string, params []string) (string, error) {
 	cmd := exec.Command(commandName, params...)
 	fmt.Println("CmdAndChangeDir", dir, cmd.Args)
@@ -73,9 +67,7 @@ func CmdAndChangeDir(dir string, commandName string, params []string) (string, e
 	return out.String(), err
 }
 
-/**
- * 在命令位置使用并实时输出每行结果
- */
+// 在命令位置使用并实时输出每行结果
 func CmdAndChangeDirToShow(dir string, commandName string, params []string) error {
 	cmd := exec.Command(commandName, params...)
 	fmt.Println("CmdAndChangeDirToFile", dir, cmd.Args)
@@ -115,9 +107,7 @@ type LaunchedProcess struct {
 	Stderr io.ReadCloser
 }
 
-/**
- * 加载一个命令
- */
+// 加载一个命令
 func LaunchCmd(commandName string, commandArgs []string, env []string) (*LaunchedProcess, error) {
 	cmd := exec.Command(commandName, commandArgs...)
 	cmd.Env = env

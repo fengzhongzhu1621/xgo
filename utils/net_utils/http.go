@@ -41,9 +41,7 @@ func GetRemoteInfo(remote string, doLookup bool) (*RemoteInfo, error) {
 	return &RemoteInfo{Addr: addr, Host: host, Port: port}, nil
 }
 
-/**
- * 获得主机和端口，如果不存在则获取默认值
- */
+// 获得主机和端口，如果不存在则获取默认值
 func TellHostPort(host string, ssl bool) (server, port string, err error) {
 	// 根据字符串获得IP和端口
 	server, port, err = net.SplitHostPort(host)

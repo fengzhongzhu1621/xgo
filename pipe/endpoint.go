@@ -7,9 +7,7 @@ type Endpoint interface {
 	Send([]byte) bool
 }
 
-/**
- * 双工管道传递交换数据
- */
+// 双工管道传递交换数据
 func PipeEndpoints(e1, e2 Endpoint) {
 	// 启动协程读取数据，写入到管道中
 	e1.StartReading()

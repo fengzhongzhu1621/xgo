@@ -33,9 +33,7 @@ var (
 	_ Render     = YAML{}
 )
 
-/**
- * 如果响应头部没有设置Content-Type，则设置响应头部中的Content-Type
- */
+// 如果响应头部没有设置Content-Type，则设置响应头部中的Content-Type
 func writeContentType(w http.ResponseWriter, value []string) {
 	// 获得响应的头部
 	header := w.Header()

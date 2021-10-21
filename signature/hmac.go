@@ -7,9 +7,7 @@ import (
 	"hash"
 )
 
-/**
- * 生成签名串
- */
+// 生成签名串
 func GenereateHmacSignedString(algorithm string, key []byte, p []byte) (string, error) {
 	var h hash.Hash
 	if algorithm == "sha256" {

@@ -59,9 +59,7 @@ func (we *WebSocketEndpoint) StartReading() {
 	go we.read_frames()
 }
 
-/**
- * 读取websocket协议流，发给管道
- */
+// 读取websocket协议流，发给管道
 func (we *WebSocketEndpoint) read_frames() {
 	for {
 		mtype, rd, err := we.ws.NextReader()

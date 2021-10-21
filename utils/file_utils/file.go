@@ -13,9 +13,7 @@ import (
 
 const currentProcessFd = "/proc/self/fd"
 
-/**
- * 删除所有的子目录
- */
+// 删除所有的子目录
 func RemoveContents(dir string) error {
 	// 获得目录下所有的文件名
 	d, err := os.Open(dir)
@@ -36,9 +34,7 @@ func RemoveContents(dir string) error {
 	return nil
 }
 
-/**
- * 创建目录
- */
+// 创建目录
 func CreateDir(dirname string) error {
 	var err error
 	fin, err := os.Lstat(dirname)
@@ -57,9 +53,7 @@ func CreateDir(dirname string) error {
 	return nil
 }
 
-/**
- * 获得当前进程的所有文件描述符名称
- */
+// 获得当前进程的所有文件描述符名称
 func GetCurrentProcessAllFdName() ([]string, error) {
 	// 打开当前进程的文件描述符
 	fd, err := os.Open(currentProcessFd)
@@ -77,9 +71,7 @@ func GetCurrentProcessAllFdName() ([]string, error) {
 	return names, nil
 }
 
-/**
- * 获得当前进程文件描述符的数量
- */
+// 获得当前进程文件描述符的数量
 func GetCurrentProcessFdsLen() (int, error) {
 	fdNames, err := GetCurrentProcessAllFdName()
 	if err != nil {
@@ -88,9 +80,7 @@ func GetCurrentProcessFdsLen() (int, error) {
 	return len(fdNames), nil
 }
 
-/**
- * 判断文件是否被修改
- */
+// 判断文件是否被修改
 func IsFileModified(filePath string, lastModifyTime time.Time) bool {
 	baseFile, err := os.Stat(filePath)
 	if err != nil {
@@ -102,16 +92,12 @@ func IsFileModified(filePath string, lastModifyTime time.Time) bool {
 	return false
 }
 
-/**
- * 判断文件是否是符号链接
- */
+// 判断文件是否是符号链接
 func IsSymbolicLink(fileInfo os.FileInfo) bool {
 	return fileInfo.Mode()&os.ModeSymlink != 0
 }
 
-/**
- * 复制符号链接
- */
+// 复制符号链接
 func CopySymlink(src string, dest string) error {
 	// 通过符号链接，能获取其所指向的路径名
 	src, err := os.Readlink(src)
@@ -135,9 +121,7 @@ func _copy(src, dest string, fileInfo os.FileInfo) error {
 	return CopyFile(src, dest, fileInfo)
 }
 
-/**
- * 复制目录
- */
+// 复制目录
 func CopyDir(src string, dst string, fileInfo os.FileInfo) error {
 	if fileInfo == nil {
 		fileInfo2, err := os.Lstat(src)
@@ -168,9 +152,7 @@ func CopyDir(src string, dst string, fileInfo os.FileInfo) error {
 	return nil
 }
 
-/**
- * 复制文件
- */
+// 复制文件
 func CopyFile(src string, dest string, fileInfo os.FileInfo) error {
 	if fileInfo == nil {
 		fileInfo2, err := os.Lstat(src)
@@ -204,11 +186,9 @@ func CopyFile(src string, dest string, fileInfo os.FileInfo) error {
 	return err
 }
 
-/**
- * 复制文件
- * 注意Lstat和stat函数的区别，两个都是返回文件的状态信息
- * Lstat多了处理Link文件的功能，会返回Linked文件的信息，而state直接返回的是Link文件所指向的文件的信息
- */
+// 复制文件
+// 注意Lstat和stat函数的区别，两个都是返回文件的状态信息
+// Lstat多了处理Link文件的功能，会返回Linked文件的信息，而state直接返回的是Link文件所指向的文件的信息
 func Copy(src, dest string) error {
 	fileInfo, err := os.Lstat(src)
 	if err != nil {
@@ -217,9 +197,7 @@ func Copy(src, dest string) error {
 	return _copy(src, dest, fileInfo)
 }
 
-/**
- * 根据路径获得文件名，并去掉文件名的后缀
- */
+// 根据路径获得文件名，并去掉文件名的后缀
 func RemoveFileExt(filePath string) string {
 	filename := filepath.Base(filePath)
 	idx := strings.LastIndex(filename, ".")
@@ -229,9 +207,7 @@ func RemoveFileExt(filePath string) string {
 	return filename[:idx]
 }
 
-/**
- * 判断文件是否存在
- */
+// 判断文件是否存在
 func IsFileExists(path string) bool {
 	_, err := os.Stat(path)
 	if err != nil {
@@ -243,9 +219,7 @@ func IsFileExists(path string) bool {
 	return true
 }
 
-/**
- * 判断是否是目录
- */
+// 判断是否是目录
 func IsDirType(path string) bool {
 	s, err := os.Stat(path)
 	if err != nil {
@@ -254,18 +228,14 @@ func IsDirType(path string) bool {
 	return s.IsDir()
 }
 
-/**
- * 判断是否是文件
- */
+// 判断是否是文件
 func IsFileType(path string) bool {
 	return !IsDirType(path)
 }
 
-/**
- * 从指定的目录中查询文件，返回查找到的文件的绝对路径
- * - 如果文件没有找到，返回err
- * - 如果查找到多个文件，返回err
- */
+// 从指定的目录中查询文件，返回查找到的文件的绝对路径
+// - 如果文件没有找到，返回err
+// - 如果查找到多个文件，返回err
 func LocateFile(filename string, dirs []string) (string, error) {
 	// 在当前目录下查询文件
 	if len(dirs) == 0 || (len(dirs) == 1 && (dirs)[0] == ".") {
@@ -294,9 +264,7 @@ func LocateFile(filename string, dirs []string) (string, error) {
 	return absPath, nil
 }
 
-/**
- * 读取go mod文件，返回模块名
- */
+// 读取go mod文件，返回模块名
 func GetGoModeName() (mod string, err error) {
 	d, err := os.Getwd()
 	if err != nil {

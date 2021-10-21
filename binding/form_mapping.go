@@ -133,9 +133,7 @@ func tryToSetValue(value reflect.Value, field reflect.StructField, setter setter
 	return setter.TrySet(value, field, tagValue, setOpt)
 }
 
-/**
- * 根据表单的值填充对象
- */
+// 根据表单的值填充对象
 func setByForm(value reflect.Value, field reflect.StructField, form map[string][]string, tagValue string, opt setOptions) (isSetted bool, err error) {
 	// 获得表单的值
 	vs, ok := form[tagValue]

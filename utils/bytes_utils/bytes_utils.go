@@ -8,17 +8,13 @@ import (
 	"xgo/utils/bytesconv"
 )
 
-/**
- * 判断前缀和后缀是否全部匹配
- */
+// 判断前缀和后缀是否全部匹配
 func HasPrefixAndSuffix(s, prefix []byte, suffix []byte) bool {
 	return bytes.HasPrefix(s, prefix) && bytes.HasSuffix(s, suffix)
 }
 
-/**
- * 去掉结尾换行符
- * trimEOL cuts unixy style \n and windowsy style \r\n suffix from the string
- */
+// 去掉结尾换行符
+// trimEOL cuts unixy style \n and windowsy style \r\n suffix from the string
 func TrimEOL(b []byte) []byte {
 	lns := len(b)
 	if lns > 0 && b[lns-1] == '\n' {
@@ -79,24 +75,4 @@ func AppendArg(b []byte, v interface{}) []byte {
 func AppendUTF8String(dst []byte, src []byte) []byte {
 	dst = append(dst, src...)
 	return dst
-}
-
-
-//////////////////////////////////////////////////////////////////////////////////////
-// 将字节数组转换为其它类型
-
-func Atoi(b []byte) (int, error) {
-	return strconv.Atoi(bytesconv.BytesToString(b))
-}
-
-func ParseInt(b []byte, base int, bitSize int) (int64, error) {
-	return strconv.ParseInt(bytesconv.BytesToString(b), base, bitSize)
-}
-
-func ParseUint(b []byte, base int, bitSize int) (uint64, error) {
-	return strconv.ParseUint(bytesconv.BytesToString(b), base, bitSize)
-}
-
-func ParseFloat(b []byte, bitSize int) (float64, error) {
-	return strconv.ParseFloat(bytesconv.BytesToString(b), bitSize)
 }

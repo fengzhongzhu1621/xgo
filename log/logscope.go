@@ -33,9 +33,7 @@ type AssocPair struct {
 	Value string
 }
 
-/**
- * 添加日志元素
- */
+// 添加日志元素
 func (l *LogScope) Associate(key string, value string) {
 	l.Associated = append(l.Associated, AssocPair{key, value})
 }
