@@ -101,14 +101,14 @@ func Uint32toIP(ip uint32) string {
 	return fmt.Sprintf("%d.%d.%d.%d", b[0], b[1], b[2], b[3])
 }
 
-/**
- * 整型大小端互转
- *   3    2     1    0
- *  XX   @@     ##   $$
- *         ||
- *         \/
- *   3    2     1    0
- *  $$   ##     @@   XX
+/*
+ 整型大小端互转
+    3    2     1    0
+   XX   @@     ##   $$
+          ||
+          \/
+    3    2     1    0
+   $$   ##     @@   XX
  */
 func ConvertEndian(num uint32) uint32 {
 	return ((num >> 24) & 0xff) |

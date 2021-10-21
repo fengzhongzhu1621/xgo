@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strconv"
 	"time"
+
 	"xgo/utils/bytesconv"
 )
 
@@ -26,8 +27,7 @@ func TrimEOL(b []byte) []byte {
 	return b[:lns]
 }
 
-////////////////////////////////////////////////////////////////////////////////////
-// 字符数组拼接
+// 字符数组拼接，将对象追加到字节数组b的后面
 func AppendArg(b []byte, v interface{}) []byte {
 	switch v := v.(type) {
 	case nil:
@@ -72,6 +72,7 @@ func AppendArg(b []byte, v interface{}) []byte {
 	}
 }
 
+// 连接两个字节数组，将src连接到dst后面
 func AppendUTF8String(dst []byte, src []byte) []byte {
 	dst = append(dst, src...)
 	return dst

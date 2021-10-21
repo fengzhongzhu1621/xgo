@@ -11,12 +11,13 @@ import (
 	"strings"
 	"time"
 	"unicode"
+
 	"xgo/utils/bytesconv"
 )
 
 /*
- * 字符替换器
- */
+字符替换器
+*/
 var HeaderNewlineToSpace = strings.NewReplacer("\n", " ", "\r", " ")
 var HeaderDashToUnderscore = strings.NewReplacer("-", "_")
 
@@ -29,7 +30,6 @@ func Head(str, sep string) (head string, tail string) {
 	return str[:idx], str[idx+len(sep):]
 }
 
-////////////////////////////////////////////////////////
 // 字符串拼接
 
 // Deprecated: 低效的字符串拼接
@@ -190,7 +190,6 @@ func GenerateId() string {
 	return strconv.FormatInt(time.Now().UnixNano(), 10)
 }
 
-
 func Str2map(s string, sep1 string, sep2 string) map[string]string {
 	if "" == s {
 		return nil
@@ -227,7 +226,7 @@ func MergeGetAndPostParamWithKey(queryParam map[string]string, postParam map[str
 
 	// 获取数组的key，排序
 	keyList := make([]string, 0, len(m))
-	for k, _ := range m {
+	for k := range m {
 		keyList = append(keyList, k)
 	}
 	sort.Strings(keyList)
@@ -257,10 +256,10 @@ func Md5(src string) string {
 
 // 字符串转换为小写，在转化前先判断是否包含大写字符，比strings.ToLower性能高
 func ToLower(s string) string {
+	// 判断字符串是否包含小写字母
 	if isLower(s) {
 		return s
 	}
-
 	b := make([]byte, len(s))
 	for i := range b {
 		c := s[i]
@@ -269,9 +268,11 @@ func ToLower(s string) string {
 		}
 		b[i] = c
 	}
+	// []bytes转换为字符串
 	return bytesconv.BytesToString(b)
 }
 
+// 判断字符串是否包含小写字母
 func isLower(s string) bool {
 	for i := 0; i < len(s); i++ {
 		c := s[i]

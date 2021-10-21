@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package internal
+package utils
 
 import (
 	"sync"
@@ -42,8 +42,12 @@ type Once struct {
 // is niladic, it may be necessary to use a function literal to capture the
 // arguments to a function to be invoked by Do:
 // 	err := config.once.Do(func() error { return config.init(filename) })
+//
+// sync.Once.Do(f func())是一个挺有趣的东西,能保证once只执行一次，
+// 无论你是否更换once.Do(xx)这里的方法,这个sync.Once块只会执行一次。
 func (o *Once) Do(f func() error) error {
 	if atomic.LoadUint32(&o.done) == 1 {
+		// 1表示已经成功执行过，保证只成功执行一次
 		return nil
 	}
 	// Slow-path.
@@ -52,6 +56,7 @@ func (o *Once) Do(f func() error) error {
 	var err error
 	if o.done == 0 {
 		err = f()
+		// 成功设置为1
 		if err == nil {
 			atomic.StoreUint32(&o.done, 1)
 		}

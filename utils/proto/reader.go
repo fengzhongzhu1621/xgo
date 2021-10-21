@@ -17,8 +17,6 @@ const (
 	ArrayReply  = '*'
 )
 
-//------------------------------------------------------------------------------
-
 const Nil = RedisError("redis: nil") // nolint:errname
 
 type RedisError string
@@ -27,19 +25,17 @@ func (e RedisError) Error() string { return string(e) }
 
 func (RedisError) RedisError() {}
 
-//------------------------------------------------------------------------------
-
 type MultiBulkParse func(*Reader, int64) (interface{}, error)
 
 type Reader struct {
 	rd   *bufio.Reader
-	_buf []byte			// 读缓存大小
+	_buf []byte // 读缓存大小
 }
 
 func NewReader(rd io.Reader) *Reader {
 	return &Reader{
 		rd:   bufio.NewReader(rd),
-		_buf: make([]byte, 64),		// 读缓存大小，默认64字节
+		_buf: make([]byte, 64), // 读缓存大小，默认64字节
 	}
 }
 

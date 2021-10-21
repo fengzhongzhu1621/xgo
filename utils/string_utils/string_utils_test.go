@@ -1,10 +1,11 @@
 package string_utils
 
 import (
-	"github.com/stretchr/testify/assert"
 	"strconv"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestHead(t *testing.T) {
