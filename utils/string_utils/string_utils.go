@@ -257,7 +257,7 @@ func Md5(src string) string {
 // 字符串转换为小写，在转化前先判断是否包含大写字符，比strings.ToLower性能高
 func ToLower(s string) string {
 	// 判断字符串是否包含小写字母
-	if isLower(s) {
+	if IsLower(s) {
 		return s
 	}
 	b := make([]byte, len(s))
@@ -273,7 +273,7 @@ func ToLower(s string) string {
 }
 
 // 判断字符串是否包含小写字母
-func isLower(s string) bool {
+func IsLower(s string) bool {
 	for i := 0; i < len(s); i++ {
 		c := s[i]
 		if c >= 'A' && c <= 'Z' {
@@ -281,4 +281,14 @@ func isLower(s string) bool {
 		}
 	}
 	return true
+}
+
+// 获得大括号中间的值
+func GetValueInBraces(key string) string {
+	if s := strings.IndexByte(key, '{'); s > -1 {
+		if e := strings.IndexByte(key[s+1:], '}'); e > 0 {
+			return key[s+1 : s+e+1]
+		}
+	}
+	return key
 }

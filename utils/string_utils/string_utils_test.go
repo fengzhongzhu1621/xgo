@@ -74,6 +74,18 @@ func TestMd5(t *testing.T) {
 	assert.Equal(t, expect, actual)
 }
 
+func TestGetValueInBraces(t *testing.T) {
+	s := "ab{cd}ef{gh}i"
+	actual := GetValueInBraces(s)
+	expect := "cd"
+	assert.Equal(t, expect, actual)
+
+	s = "cd"
+	actual = GetValueInBraces(s)
+	expect = "cd"
+	assert.Equal(t, expect, actual)
+}
+
 func BenchmarkCompareStringSliceReflect(b *testing.B) {
 	sliceA := []string{"a", "b", "c", "d", "e"}
 	sliceB := []string{"e", "d", "c", "b", "a"}
