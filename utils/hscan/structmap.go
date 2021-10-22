@@ -14,17 +14,19 @@ type structMap struct {
 	m sync.Map
 }
 
+// 创建一个全局线程安全字典，key是结构体值运行时表示，value是*structSpec
 func newStructMap() *structMap {
 	return new(structMap)
 }
 
 func (s *structMap) get(t reflect.Type) *structSpec {
-	// 根据结构体类型获得StrctSpec对象
+	// 从字典中取值，根据结构体值运行时表示获得StrctSpec对象
 	if v, ok := s.m.Load(t); ok {
 		return v.(*structSpec)
 	}
-	// 如果字典中不存在，则创建一个新的structSpec对象
+	// 如果key不再字典中，则创建一个新的structSpec对象指针
 	spec := newStructSpec(t, "redis")
+	// 将新创建的structSpec对象指针放到字段中
 	s.m.Store(t, spec)
 	return spec
 }
@@ -42,18 +44,19 @@ func (s *structSpec) set(tag string, sf *structField) {
 }
 
 // 创建结构体字段类型解码器对象，设置每个字段的类型解码器
-// fieldTag: 注解的tag
+// 	t: 是结构体值运行时表示
+// 	fieldTag: 注解的前缀
 func newStructSpec(t reflect.Type, fieldTag string) *structSpec {
 	out := &structSpec{
 		m: make(map[string]*structField),
 	}
 
-	// 返回结构体类型的字段数量
+	// 返回结构体的字段数量
 	num := t.NumField()
 	for i := 0; i < num; i++ {
 		// 返回字段对象
 		f := t.Field(i)
-		// 获得字段注解的值
+		// 根据前缀获得字段注解的值
 		tag := f.Tag.Get(fieldTag)
 		if tag == "" || tag == "-" {
 			continue
@@ -63,7 +66,6 @@ func newStructSpec(t reflect.Type, fieldTag string) *structSpec {
 		if tag == "" {
 			continue
 		}
-
 		// Use the built-in decoder.
 		// 保存注解
 		// i: 字段索引
@@ -74,15 +76,11 @@ func newStructSpec(t reflect.Type, fieldTag string) *structSpec {
 	return out
 }
 
-//------------------------------------------------------------------------------
-
 // structField represents a single field in a target struct.
 type structField struct {
 	index int
 	fn    decoderFunc
 }
-
-//------------------------------------------------------------------------------
 
 type StructValue struct {
 	spec  *structSpec   // 结构体描述
