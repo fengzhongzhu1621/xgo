@@ -57,12 +57,12 @@ type DefaultFormatter struct {
 func (formatter *DefaultFormatter) Format(logger *LoggerConfig, t time.Time, level LogLevel, message string) error {
 	buf := &logger.buf
 	*buf = append(*buf, t.Format(DATETIME_DEFAULT_FORMAT)...)
-	//year, month, day := t.Date()
-	//bytesconv.Itoa(buf, year, 4)
-	//*buf = append(*buf, '-')
-	//bytesconv.Itoa(buf, int(month), 2)
-	//*buf = append(*buf, '-')
-	//bytesconv.Itoa(buf, day, 2)
+	// year, month, day := t.Date()
+	// bytesconv.Itoa(buf, year, 4)
+	// *buf = append(*buf, '-')
+	// bytesconv.Itoa(buf, int(month), 2)
+	// *buf = append(*buf, '-')
+	// bytesconv.Itoa(buf, day, 2)
 	*buf = append(*buf, '|')
 	*buf = append(*buf, logLevelToString(level)...)
 	*buf = append(*buf, '|')
