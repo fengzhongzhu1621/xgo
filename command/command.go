@@ -20,7 +20,6 @@ func RunBashCommand(command string) (error, string, string) {
 	return err, stdout.String(), stderr.String()
 }
 
-
 // 后台运行linux bash命令
 func RunBashCommandBackground(commandName string) *exec.Cmd {
 	cmd := exec.Command("/bin/bash", "-c", commandName)
@@ -49,7 +48,6 @@ func Cmd(commandName string, params []string) (string, error) {
 	err = cmd.Wait()
 	return out.String(), err
 }
-
 
 // 在命令位置使用并返回结果
 func CmdAndChangeDir(dir string, commandName string, params []string) (string, error) {
@@ -97,7 +95,6 @@ func CmdAndChangeDirToShow(dir string, commandName string, params []string) erro
 	err = cmd.Wait()
 	return err
 }
-
 
 // 命令加载进程类
 type LaunchedProcess struct {

@@ -3,7 +3,7 @@ package hashtag
 import (
 	"strings"
 
-	"xgo/utils/rand_utils"
+	"xgo/utils/randutils"
 )
 
 const slotNumber = 16384
@@ -57,7 +57,7 @@ func Key(key string) string {
 }
 
 func RandomSlot() int {
-	return rand_utils.Intn(slotNumber)
+	return randutils.Intn(slotNumber)
 }
 
 // Slot returns a consistent slot number between 0 and 16383

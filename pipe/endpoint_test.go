@@ -6,7 +6,6 @@ import (
 	"time"
 )
 
-
 type TestEndpoint struct {
 	limit  int
 	prefix string

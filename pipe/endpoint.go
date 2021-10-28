@@ -1,9 +1,9 @@
 package pipe
 
 type Endpoint interface {
-	StartReading()			// 启动协程读取数据，写入到管道中
+	StartReading() // 启动协程读取数据，写入到管道中
 	Terminate()
-	Output() chan []byte	// 返回管道
+	Output() chan []byte // 返回管道
 	Send([]byte) bool
 }
 

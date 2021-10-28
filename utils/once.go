@@ -2,7 +2,7 @@
 Copyright 2014 The Camlistore Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file_utils except in compliance with the License.
+you may not use this fileutils except in compliance with the License.
 You may obtain a copy of the License at
 
      http://www.apache.org/licenses/LICENSE-2.0

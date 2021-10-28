@@ -3,7 +3,7 @@ package hashtag
 import (
 	"testing"
 
-	"xgo/utils/rand_utils"
+	"xgo/utils/randutils"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -46,7 +46,7 @@ var _ = Describe("HashSlot", func() {
 			{string([]byte{83, 153, 134, 118, 229, 214, 244, 75, 140, 37, 215, 215}), 5463},
 		}
 		// Empty keys receive random slot.
-		rand_utils.Seed(100)
+		randutils.Seed(100)
 
 		for _, test := range tests {
 			Expect(Slot(test.key)).To(Equal(test.slot), "for %s", test.key)

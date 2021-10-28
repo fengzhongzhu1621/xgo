@@ -51,7 +51,7 @@ func StringToBytes(s string) (b []byte) {
 	return b
 }
 
-// Bytes converts string_utils to byte slice.
+// Bytes converts stringutils to byte slice.
 func Bytes(s string) []byte {
 	return *(*[]byte)(unsafe.Pointer(
 		&struct {

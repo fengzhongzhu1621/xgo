@@ -5,9 +5,10 @@ import (
 	"io"
 	"syscall"
 	"time"
+
 	. "xgo/command"
 	. "xgo/log"
-	. "xgo/utils/bytes_utils"
+	. "xgo/utils/bytesutils"
 )
 
 type ProcessEndpoint struct {

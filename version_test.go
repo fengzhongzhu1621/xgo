@@ -7,7 +7,6 @@ import (
 	"testing"
 )
 
-
 func TestVersion(t *testing.T) {
 	actual := Version()
 	expect := fmt.Sprintf("%s (%s %s-%s) %s",

@@ -3,9 +3,10 @@ package websocketd
 import (
 	"fmt"
 	"net/http"
+
 	. "xgo/log"
-	. "xgo/utils/net_utils"
-	"xgo/utils/string_utils"
+	. "xgo/utils/netutils"
+	"xgo/utils/stringutils"
 )
 
 const (
@@ -18,7 +19,7 @@ func createEnv(handler *WebsocketdHandler, req *http.Request, log *LogScope) []s
 	url := req.URL
 
 	// 获得主机和端口
-	serverName, serverPort, err :=TellHostPort(req.Host, handler.server.Config.Ssl)
+	serverName, serverPort, err := TellHostPort(req.Host, handler.server.Config.Ssl)
 	if err != nil {
 		// This does mean that we cannot detect port from Host: header... Just keep going with "", guessing is bad.
 		log.Debug("env", "Host port detection error: %s", err)
@@ -94,7 +95,7 @@ func createEnv(handler *WebsocketdHandler, req *http.Request, log *LogScope) []s
 	}
 
 	for k, hdrs := range headers {
-		header := fmt.Sprintf("HTTP_%s", string_utils.HeaderDashToUnderscore.Replace(k))
+		header := fmt.Sprintf("HTTP_%s", stringutils.HeaderDashToUnderscore.Replace(k))
 		env = AppendEnv(env, header, hdrs...)
 		log.Info("env", "Header variable %s", env[len(env)-1])
 	}

@@ -7,8 +7,9 @@ package binding
 import (
 	"fmt"
 	"reflect"
-	reflect_utils "xgo/utils/reflect_utils"
-	string_utils "xgo/utils/string_utils"
+
+	reflect_utils "xgo/utils/reflectutils"
+	string_utils "xgo/utils/stringutils"
 )
 
 type setOptions struct {
