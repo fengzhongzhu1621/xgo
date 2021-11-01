@@ -15,13 +15,11 @@ import (
 	"xgo/utils/bytesconv"
 )
 
-/*
-字符替换器
-*/
-var HeaderNewlineToSpace = strings.NewReplacer("\n", " ", "\r", " ")
-var HeaderDashToUnderscore = strings.NewReplacer("-", "_")
+var HeaderNewlineToSpace = strings.NewReplacer("\n", " ", "\r", " ") // 换行字符替换器
 
-// 根据分隔符分割字符串
+var HeaderDashToUnderscore = strings.NewReplacer("-", "_") // 短横线字符替换器
+
+// 根据分隔符分割字符串.
 func Head(str, sep string) (head string, tail string) {
 	idx := strings.Index(str, sep)
 	if idx < 0 {
@@ -32,7 +30,7 @@ func Head(str, sep string) (head string, tail string) {
 
 // 字符串拼接
 
-// Deprecated: 低效的字符串拼接
+// Deprecated: 低效的字符串拼接.
 func StringPlus(p []string) string {
 	var s string
 	l := len(p)
@@ -42,12 +40,12 @@ func StringPlus(p []string) string {
 	return s
 }
 
-// Deprecated: 低效的字符串拼接
+// Deprecated: 低效的字符串拼接.
 func StringFmt(p []interface{}) string {
 	return fmt.Sprint(p...)
 }
 
-// Deprecated: 低效的字符串拼接
+// Deprecated: 低效的字符串拼接.
 func StringBuffer(p []string) string {
 	var b bytes.Buffer
 	l := len(p)
@@ -70,11 +68,11 @@ func StringBuilder(p []string) string {
 	return b.String()
 }
 
-func StringBuilderEx(p []string, cap int) string {
+func StringBuilderEx(p []string, n int) string {
 	var b strings.Builder
 	l := len(p)
 	// 实现分配足够的内容，减少运行时的内存分配
-	b.Grow(cap)
+	b.Grow(n)
 	for i := 0; i < l; i++ {
 		b.WriteString(p[i])
 	}
@@ -97,7 +95,7 @@ func RemoveDuplicateElement(items []string) []string {
 	return result
 }
 
-// 去掉字符串的后缀
+// 去掉字符串的后缀.
 func TrimRight(str string, substring string) string {
 	idx := strings.LastIndex(str, substring)
 	if idx < 0 {
@@ -106,7 +104,7 @@ func TrimRight(str string, substring string) string {
 	return str[:idx]
 }
 
-// 去掉字符串的前缀
+// 去掉字符串的前缀.
 func TrimLeft(str string, substring string) string {
 	return strings.TrimPrefix(str, substring)
 }
@@ -125,17 +123,17 @@ func UnicodeUnTitle(s string) string {
 	return ""
 }
 
-// 返回数组最后一个元素
+// 返回数组最后一个元素.
 func Last(list []string) string {
 	return list[len(list)-1]
 }
 
-// Deprecated: 切片比较
+// Deprecated: 切片比较.
 func CompareStringSliceReflect(a, b []string) bool {
 	return reflect.DeepEqual(a, b)
 }
 
-// 切片比较
+// 切片比较.
 func CompareStringSlice(a, b []string) bool {
 	if len(a) != len(b) {
 		return false
@@ -157,7 +155,7 @@ func CompareStringSlice(a, b []string) bool {
 	return true
 }
 
-// Deprecated: 翻转切片 panic if s is not a slice
+// Deprecated: 翻转切片 panic if s is not a slice.
 func ReflectReverseSlice(s interface{}) {
 	n := reflect.ValueOf(s).Len()
 	swap := reflect.Swapper(s)
@@ -178,24 +176,24 @@ func ReverseSliceGetNew(s []string) []string {
 	return a
 }
 
-// 翻转切片，值会改变，性能最高
+// 翻转切片，值会改变，性能最高.
 func ReverseSlice(a []string) {
 	for left, right := 0, len(a)-1; left < right; left, right = left+1, right-1 {
 		a[left], a[right] = a[right], a[left]
 	}
 }
 
-// 获得随机字符串
-func GenerateId() string {
+// 获得随机字符串.
+func GenerateID() string {
 	return strconv.FormatInt(time.Now().UnixNano(), 10)
 }
 
 func Str2map(s string, sep1 string, sep2 string) map[string]string {
-	if "" == s {
+	if s == "" {
 		return nil
 	}
 	spe1List := strings.Split(s, sep1)
-	if len(spe1List) <= 0 {
+	if len(spe1List) == 0 {
 		return nil
 	}
 	m := make(map[string]string)
@@ -211,7 +209,8 @@ func Str2map(s string, sep1 string, sep2 string) map[string]string {
 	return m
 }
 
-func MergeGetAndPostParamWithKey(queryParam map[string]string, postParam map[string]string, key string, keyName string) string {
+func MergeGetAndPostParamWithKey(queryParam map[string]string,
+	postParam map[string]string, key string, keyName string) string {
 	m := make(map[string]string)
 	if len(queryParam) > 0 {
 		for k, v := range queryParam {
@@ -234,8 +233,7 @@ func MergeGetAndPostParamWithKey(queryParam map[string]string, postParam map[str
 	// 排序后的数组
 	params := ""
 	for _, key := range keyList {
-		value, _ := m[key]
-		if value != "" {
+		if value := m[key]; value != "" {
 			params += key + "=" + value + "&"
 		}
 	}
@@ -291,4 +289,15 @@ func GetValueInBraces(key string) string {
 		}
 	}
 	return key
+}
+
+// 获得字典的所有key值
+func MapKeys(m map[string]struct{}) []string {
+	s := make([]string, len(m))
+	i := 0
+	for k := range m {
+		s[i] = k
+		i++
+	}
+	return s
 }

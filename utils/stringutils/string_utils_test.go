@@ -44,7 +44,7 @@ func TestReverseSlice(t *testing.T) {
 }
 
 func TestGenerateId(t *testing.T) {
-	actual := GenerateId()
+	actual := GenerateID()
 	s, err := strconv.ParseUint(actual, 10, 64)
 	assert.Equal(t, err, nil)
 	assert.Equal(t, s > 0, true)
