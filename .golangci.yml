@@ -12,6 +12,7 @@ linters:
     - goconst
     - godox
     - gosec
+    - godot
     - maligned
     - wsl
     - gomnd
