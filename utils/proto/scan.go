@@ -10,7 +10,7 @@ import (
 )
 
 // Scan parses bytes `b` to `v` with appropriate type.
-// 自动识别v的类型，将b值赋值给v
+// 自动识别v的类型，将b值赋值给v .
 func Scan(b []byte, v interface{}) error {
 	// 判断v的类型
 	switch v := v.(type) {
@@ -125,7 +125,7 @@ func Scan(b []byte, v interface{}) error {
 	}
 }
 
-// 自动识别切片slice的类型，将data中的值转换为切片的类型，并追加到切片slice中
+// 自动识别切片slice的类型，将data中的值转换为切片的类型，并追加到切片slice中 .
 func ScanSlice(data []string, slice interface{}) error {
 	// 获取数据的运行时表示
 	v := reflect.ValueOf(slice)

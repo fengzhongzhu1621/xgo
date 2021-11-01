@@ -33,7 +33,7 @@ func NewWriter(wr writer) *Writer {
 	}
 }
 
-// 发送多个参数值指令，例如："$5\r\n$5\r\nhello\r\n$5\r\nworld\r\n"
+// 发送多个参数值指令，例如："$5\r\n$5\r\nhello\r\n$5\r\nworld\r\n" .
 func (w *Writer) WriteArgs(args []interface{}) error {
 	// 发送数组标记$
 	if err := w.WriteByte(ArrayReply); err != nil {

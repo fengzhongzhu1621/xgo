@@ -3,24 +3,23 @@ package command
 import (
 	"bufio"
 	"bytes"
-	"fmt"
 	"io"
 	"os"
 	"os/exec"
 )
 
-// 运行linux bash命令
-func RunBashCommand(command string) (error, string, string) {
+// 运行linux bash命令.
+func RunBashCommand(command string) (string, string, error) {
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer
 	cmd := exec.Command("/bin/bash", "-c", command)
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 	err := cmd.Run()
-	return err, stdout.String(), stderr.String()
+	return stdout.String(), stderr.String(), err
 }
 
-// 后台运行linux bash命令
+// 后台运行linux bash命令.
 func RunBashCommandBackground(commandName string) *exec.Cmd {
 	cmd := exec.Command("/bin/bash", "-c", commandName)
 
@@ -34,10 +33,10 @@ func RunBashCommandBackground(commandName string) *exec.Cmd {
 	return cmd
 }
 
-// 直接在当前目录使用并返回结果
-func Cmd(commandName string, params []string) (string, error) {
+// 直接在当前目录使用并返回结果.
+func CmdInDir(commandName string, params []string) (string, error) {
 	cmd := exec.Command(commandName, params...)
-	fmt.Println("Cmd", cmd.Args)
+	// fmt.Println("Cmd", cmd.Args)
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	cmd.Stderr = os.Stderr
@@ -49,10 +48,10 @@ func Cmd(commandName string, params []string) (string, error) {
 	return out.String(), err
 }
 
-// 在命令位置使用并返回结果
+// 在命令位置使用并返回结果.
 func CmdAndChangeDir(dir string, commandName string, params []string) (string, error) {
 	cmd := exec.Command(commandName, params...)
-	fmt.Println("CmdAndChangeDir", dir, cmd.Args)
+	// fmt.Println("CmdAndChangeDir", dir, cmd.Args)
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	cmd.Stderr = os.Stderr
@@ -65,15 +64,15 @@ func CmdAndChangeDir(dir string, commandName string, params []string) (string, e
 	return out.String(), err
 }
 
-// 在命令位置使用并实时输出每行结果
+// 在命令位置使用并实时输出每行结果.
 func CmdAndChangeDirToShow(dir string, commandName string, params []string) error {
 	cmd := exec.Command(commandName, params...)
-	fmt.Println("CmdAndChangeDirToFile", dir, cmd.Args)
+	// fmt.Println("CmdAndChangeDirToFile", dir, cmd.Args)
 	// StdoutPipe方法返回一个在命令Start后与命令标准输出关联的管道。
 	// Wait方法获知命令结束后会关闭这个管道，一般不需要显式的关闭该管道。
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
-		fmt.Println("cmd.StdoutPipe: ", err)
+		// fmt.Println("cmd.StdoutPipe: ", err)
 		return err
 	}
 	cmd.Stderr = os.Stderr
@@ -82,21 +81,21 @@ func CmdAndChangeDirToShow(dir string, commandName string, params []string) erro
 	if err != nil {
 		return err
 	}
-	//创建一个流来读取管道内内容，这里逻辑是通过一行一行的读取的
+	// 创建一个流来读取管道内内容，这里逻辑是通过一行一行的读取的
 	reader := bufio.NewReader(stdout)
-	//实时循环读取输出流中的一行内容
+	// 实时循环读取输出流中的一行内容
 	for {
-		line, err2 := reader.ReadString('\n')
+		_, err2 := reader.ReadString('\n')
 		if err2 != nil || io.EOF == err2 {
 			break
 		}
-		fmt.Println(line)
+		// fmt.Println(line)
 	}
 	err = cmd.Wait()
 	return err
 }
 
-// 命令加载进程类
+// 命令加载进程类.
 type LaunchedProcess struct {
 	Cmd    *exec.Cmd
 	Stdin  io.WriteCloser
@@ -104,7 +103,7 @@ type LaunchedProcess struct {
 	Stderr io.ReadCloser
 }
 
-// 加载一个命令
+// 加载一个命令.
 func LaunchCmd(commandName string, commandArgs []string, env []string) (*LaunchedProcess, error) {
 	cmd := exec.Command(commandName, commandArgs...)
 	cmd.Env = env
@@ -130,4 +129,40 @@ func LaunchCmd(commandName string, commandArgs []string, env []string) (*Launche
 	}
 
 	return &LaunchedProcess{cmd, stdin, stdout, stderr}, err
+}
+
+// 将多个参数添加到参数数组中.
+func AppendArgs(dst, src []interface{}) []interface{} {
+	if len(src) == 1 {
+		return AppendArg(dst, src[0])
+	}
+
+	dst = append(dst, src...)
+	return dst
+}
+
+// 将单个参数添加到参数数组中.
+func AppendArg(dst []interface{}, arg interface{}) []interface{} {
+	switch arg := arg.(type) {
+	case []string:
+		for _, s := range arg {
+			dst = append(dst, s)
+		}
+		return dst
+	case []interface{}:
+		dst = append(dst, arg...)
+		return dst
+	case map[string]interface{}:
+		for k, v := range arg {
+			dst = append(dst, k, v)
+		}
+		return dst
+	case map[string]string:
+		for k, v := range arg {
+			dst = append(dst, k, v)
+		}
+		return dst
+	default:
+		return append(dst, arg)
+	}
 }
