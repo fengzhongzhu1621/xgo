@@ -38,3 +38,11 @@ The following components are provided under the MIT License. See project link fo
 The text of each license is also included at licenses/LICENSE-[project].txt.
 
     (MIT License) strcase v0.2.0 (https://github.com/iancoleman/strcase)
+
+========================================================================
+BSD 3-Clause licenses
+========================================================================
+The following components are provided under the BSD 3-Clause license. See project links for details.
+The text of each license is also included at licenses/LICENSE-[project].txt.
+
+    (BSD 3 License) go-flags v1.5.0 (https://github.com/jessevdk/go-flags)
