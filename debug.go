@@ -16,7 +16,7 @@ func IsDebugging() bool {
 }
 
 // 调试模式打印函数
-func debugPrint(format string, values ...interface{}) {
+func debugPrintf(format string, values ...interface{}) {
 	if IsDebugging() {
 		// 添加换行符
 		if !strings.HasSuffix(format, "\n") {
@@ -41,7 +41,7 @@ func getMinVer(v string) (uint64, error) {
 func debugPrintWARNINGDefault() {
 	// go1.14.4
 	if v, e := getMinVer(runtime.Version()); e == nil && v <= xGoSupportMinGoVer {
-		debugPrint(`[WARNING] Now xGo requires Go 1.11 or later and Go 1.12 will be required soon.
+		debugPrintf(`[WARNING] Now xGo requires Go 1.11 or later and Go 1.12 will be required soon.
 
 `)
 	}
@@ -49,7 +49,7 @@ func debugPrintWARNINGDefault() {
 
 // 如果当前是调试模式，则打印警告信息
 func debugPrintWARNINGNew() {
-	debugPrint(`[WARNING] Running in "debug" mode. Switch to "release" mode in production.
+	debugPrintf(`[WARNING] Running in "debug" mode. Switch to "release" mode in production.
  - using env:	export XGO_MODE=release
  - using code:	xgo.SetMode(xgo.ReleaseMode)
 
