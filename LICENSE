@@ -38,6 +38,7 @@ The following components are provided under the MIT License. See project link fo
 The text of each license is also included at licenses/LICENSE-[project].txt.
 
     (MIT License) strcase v0.2.0 (https://github.com/iancoleman/strcase)
+    (MIT License) go-homedir v1.1.0 (https://github.com/mitchellh/go-homedir)
 
 ========================================================================
 BSD 3-Clause licenses
