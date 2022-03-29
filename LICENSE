@@ -39,6 +39,7 @@ The text of each license is also included at licenses/LICENSE-[project].txt.
 
     (MIT License) strcase v0.2.0 (https://github.com/iancoleman/strcase)
     (MIT License) go-homedir v1.1.0 (https://github.com/mitchellh/go-homedir)
+    (MIT License) fastrand (https://github.com/valyala/fastrand)
 
 ========================================================================
 BSD 3-Clause licenses
@@ -47,3 +48,12 @@ The following components are provided under the BSD 3-Clause license. See projec
 The text of each license is also included at licenses/LICENSE-[project].txt.
 
     (BSD 3 License) go-flags v1.5.0 (https://github.com/jessevdk/go-flags)
+
+
+========================================================================
+Apache 2.0 licenses
+========================================================================
+The following components are provided under the Apache 2.0 license. See project links for details.
+The text of each license is also included at licenses/LICENSE-[project].txt.
+
+    (Apache 2.0 license) ini v1.63.2 (https://github.com/go-ini/ini)
