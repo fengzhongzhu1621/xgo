@@ -132,6 +132,7 @@ func (r *FastRNG) NewRand() *rand.Rand {
 	// 生成新的随机种子
 	newSeed := time.Now().UnixNano()
 	r.Seed(newSeed)
+	// 不管随机种子有没有更新成功，都会用新的种子生成随机数发生器
 	newRand := rand.New(rand.NewSource(newSeed))
 	return newRand
 }
