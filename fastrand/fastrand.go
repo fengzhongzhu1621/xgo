@@ -116,7 +116,7 @@ func NewFastRand() *FastRNG {
 	return scalableRand
 }
 
-// 设置新的随机种子
+// 并发安全的设置新的随机种子
 func (r *FastRNG) Seed(newSeed int64) bool {
 	// 获得旧的随机种子
 	oldSeed := atomic.LoadInt64(&r.seed)
@@ -129,7 +129,7 @@ func (r *FastRNG) Seed(newSeed int64) bool {
 
 // 创建一个新的随机数发生器
 func (r *FastRNG) NewRand() *rand.Rand {
-	// 生成新的随机种子
+	// 生成新的随机种子，确保并发安全
 	newSeed := time.Now().UnixNano()
 	r.Seed(newSeed)
 	// 不管随机种子有没有更新成功，都会用新的种子生成随机数发生器
