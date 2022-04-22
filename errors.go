@@ -1,7 +1,9 @@
 package xgo
 
 import (
+	"bytes"
 	"fmt"
+	"strings"
 )
 
 // ErrorType represents the type of error.
@@ -155,4 +157,22 @@ func Code2Error(code int32) error {
 		return err
 	}
 	return ErrUnknown
+}
+
+// 合并多个错误信息
+// Errors is a type of []error
+// This is used to pass multiple errors when using parallel or concurrent methods
+// and yet subscribe to the error interface
+type MultipleErrors []error
+
+// Prints all errors from asynchronous tasks separated by space
+func (e MultipleErrors) Error() string {
+	b := bytes.NewBufferString(EmptyStr)
+
+	for _, err := range e {
+		b.WriteString(err.Error())
+		b.WriteString(" ")
+	}
+
+	return strings.TrimSpace(b.String())
 }

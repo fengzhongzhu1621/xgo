@@ -1,6 +1,17 @@
 package xgo
 
-import "os"
+import (
+	"os"
+	"reflect"
+)
+
+// 空值定义
+var (
+	EmptyStr    string
+	EmptyError  error
+	EmptyResult []interface{}
+	EmptyArgs   []reflect.Value
+)
 
 // H is a shortcut for map[string]interface{}
 type H map[string]interface{}
