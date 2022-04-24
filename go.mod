@@ -19,5 +19,6 @@ require (
 	github.com/stretchr/testify v1.7.0
 	github.com/ugorji/go/codec v1.2.6
 	github.com/wxnacy/wgo v1.0.4
+	golang.org/x/sys v0.0.0-20210823070655-63515b42dcdf
 	gopkg.in/yaml.v2 v2.4.0
 )

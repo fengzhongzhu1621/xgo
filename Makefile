@@ -3,10 +3,10 @@
 build: vet bench
 
 test:
-	go test -v -cover -race
+	go test -v ./... -cover -race
 
 bench:
-	go test -v -cover -test.bench=. -test.benchmem
+	go test -v  -cover -test.bench=. -test.benchmem
 
 vet:
 	go vet
