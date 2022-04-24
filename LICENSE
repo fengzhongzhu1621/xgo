@@ -40,6 +40,7 @@ The text of each license is also included at licenses/LICENSE-[project].txt.
     (MIT License) strcase v0.2.0 (https://github.com/iancoleman/strcase)
     (MIT License) go-homedir v1.1.0 (https://github.com/mitchellh/go-homedir)
     (MIT License) fastrand (https://github.com/valyala/fastrand)
+    (MIT License) async v1.0.0 (https://github.com/rafaeldias/async)
 
 ========================================================================
 BSD 3-Clause licenses
