@@ -1,4 +1,4 @@
-package xgo
+package async
 
 // 返回结果分为两类
 // 1. 结果是二维切片
