@@ -1,15 +1,25 @@
-.PHONY: build test bench vet coverage
+GOVERSION := $(shell go version | cut -d ' ' -f 3 | cut -d '.' -f 2)
 
-build: vet bench
+.PHONY: build test bench vet coverage
+.DEFAULT_GOAL := help
+
+check: test-race vet
+
+test:
+	go test ./...
+
+test-race:
+	go test -race ./...
 
 test:
 	go test -v ./... -cover -race
 
-bench:
-	go test -v  -cover -test.bench=. -test.benchmem
-
 vet:
 	go vet
 
-coverage:
-	go test -coverprofile=c.out && go tool cover -html=c.out && rm c.out
+test-cover-html:
+	go test -coverprofile=coverage.out -covermode=count
+	go tool cover -func=coverage.out
+
+help:
+	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
