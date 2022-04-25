@@ -28,7 +28,9 @@ func Head(str, sep string) (head string, tail string) {
 	return str[:idx], str[idx+len(sep):]
 }
 
+// -----------------------------------------------------------------
 // 字符串拼接
+// -----------------------------------------------------------------
 
 // Deprecated: 低效的字符串拼接.
 func StringPlus(p []string) string {
@@ -109,6 +111,7 @@ func TrimLeft(str string, substring string) string {
 	return strings.TrimPrefix(str, substring)
 }
 
+// 首字母大写
 func UnicodeTitle(s string) string {
 	for k, v := range s {
 		return string(unicode.ToUpper(v)) + s[k+1:]
@@ -116,6 +119,7 @@ func UnicodeTitle(s string) string {
 	return ""
 }
 
+// 首字母小写
 func UnicodeUnTitle(s string) string {
 	for k, v := range s {
 		return string(unicode.ToLower(v)) + s[k+1:]
@@ -300,4 +304,14 @@ func MapKeys(m map[string]struct{}) []string {
 		i++
 	}
 	return s
+}
+
+// 判断字符串是否在切片中
+func StringInSlice(a string, list []string) bool {
+	for _, b := range list {
+		if b == a {
+			return true
+		}
+	}
+	return false
 }
