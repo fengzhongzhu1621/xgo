@@ -6,6 +6,8 @@ help:	# Empty target rule
 
 check: test-race vet
 
+build:
+	go build -v ./...
 test:
 	go test -v ./... -cover
 
