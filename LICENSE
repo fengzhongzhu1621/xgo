@@ -41,6 +41,7 @@ The text of each license is also included at licenses/LICENSE-[project].txt.
     (MIT License) go-homedir v1.1.0 (https://github.com/mitchellh/go-homedir)
     (MIT License) fastrand (https://github.com/valyala/fastrand)
     (MIT License) async v1.0.0 (https://github.com/rafaeldias/async)
+    (MIT License) cast v1.4.1 (https://github.com/spf13/cast)
 
 ========================================================================
 BSD 3-Clause licenses
