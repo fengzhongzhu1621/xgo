@@ -1,23 +1,15 @@
-package pathutils
+package fileutils
 
 import (
 	"os"
 	"path/filepath"
-	"runtime"
 	"testing"
 
 	"xgo/utils/testutil"
 )
 
-// Skip some tests on Windows that kept failing when Windows was added to the CI as a target.
-func skipWindows(t *testing.T) {
-	if runtime.GOOS == "windows" {
-		t.Skip("Skip test on Windows")
-	}
-}
-
 func TestAbsPathify(t *testing.T) {
-	skipWindows(t)
+	testutil.SkipWindows(t)
 
 	home := userHomeDir()
 	homer := filepath.Join(home, "homer")
