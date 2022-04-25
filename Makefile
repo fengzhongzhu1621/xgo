@@ -2,23 +2,23 @@ GOVERSION := $(shell go version | cut -d ' ' -f 3 | cut -d '.' -f 2)
 
 .PHONY: build test bench vet coverage
 .DEFAULT_GOAL := help
+help:	# Empty target rule
 
 check: test-race vet
 
 test:
-	go test ./...
+	go test -v ./... -cover
 
 test-race:
-	go test -race ./...
+	go test -v ./... -race
 
-test:
-	go test -v ./... -cover -race
-
+bench:
+	go test -v ./... -test.bench -test.benchmem
 vet:
 	go vet
 
 test-cover-html:
-	go test -coverprofile=coverage.out -covermode=count
+	go test -v ./... -coverprofile=coverage.out -covermode=count
 	go tool cover -func=coverage.out
 
 help:

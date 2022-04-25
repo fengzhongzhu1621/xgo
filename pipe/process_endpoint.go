@@ -8,7 +8,7 @@ import (
 
 	. "xgo/command"
 	. "xgo/log"
-	. "xgo/utils/bytesutils"
+	"xgo/utils/bytesutils"
 )
 
 type ProcessEndpoint struct {
@@ -131,7 +131,7 @@ func (pe *ProcessEndpoint) process_txtout() {
 			}
 			break
 		}
-		pe.output <- TrimEOL(buf)
+		pe.output <- bytesutils.TrimEOL(buf)
 	}
 	// 命令执行结束关闭管道
 	close(pe.output)
@@ -171,6 +171,6 @@ func (pe *ProcessEndpoint) log_stderr() {
 			}
 			break
 		}
-		pe.log.Error("stderr", "%s", string(TrimEOL(buf)))
+		pe.log.Error("stderr", "%s", string(bytesutils.TrimEOL(buf)))
 	}
 }
