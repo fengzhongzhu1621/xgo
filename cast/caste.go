@@ -1304,39 +1304,37 @@ func (f timeFormat) hasTimezone() bool {
 
 var (
 	timeFormats = []timeFormat{
-		timeFormat{time.RFC3339, timeFormatNumericTimezone},
-		timeFormat{"2006-01-02T15:04:05", timeFormatNoTimezone}, // iso8601 without timezone
-		timeFormat{time.RFC1123Z, timeFormatNumericTimezone},
-		timeFormat{time.RFC1123, timeFormatNamedTimezone},
-		timeFormat{time.RFC822Z, timeFormatNumericTimezone},
-		timeFormat{time.RFC822, timeFormatNamedTimezone},
-		timeFormat{time.RFC850, timeFormatNamedTimezone},
-		timeFormat{"2006-01-02 15:04:05.999999999 -0700 MST", timeFormatNumericAndNamedTimezone}, // Time.String()
-		timeFormat{"2006-01-02T15:04:05-0700", timeFormatNumericTimezone},                        // RFC3339 without timezone hh:mm colon
-		timeFormat{"2006-01-02 15:04:05Z0700", timeFormatNumericTimezone},                        // RFC3339 without T or timezone hh:mm colon
-		timeFormat{"2006-01-02 15:04:05", timeFormatNoTimezone},
-		timeFormat{time.ANSIC, timeFormatNoTimezone},
-		timeFormat{time.UnixDate, timeFormatNamedTimezone},
-		timeFormat{time.RubyDate, timeFormatNumericTimezone},
-		timeFormat{"2006-01-02 15:04:05Z07:00", timeFormatNumericTimezone},
-		timeFormat{"2006-01-02", timeFormatNoTimezone},
-		timeFormat{"02 Jan 2006", timeFormatNoTimezone},
-		timeFormat{"2006-01-02 15:04:05 -07:00", timeFormatNumericTimezone},
-		timeFormat{"2006-01-02 15:04:05 -0700", timeFormatNumericTimezone},
-		timeFormat{time.Kitchen, timeFormatTimeOnly},
-		timeFormat{time.Stamp, timeFormatTimeOnly},
-		timeFormat{time.StampMilli, timeFormatTimeOnly},
-		timeFormat{time.StampMicro, timeFormatTimeOnly},
-		timeFormat{time.StampNano, timeFormatTimeOnly},
+		{time.RFC3339, timeFormatNumericTimezone},
+		{"2006-01-02T15:04:05", timeFormatNoTimezone}, // iso8601 without timezone
+		{time.RFC1123Z, timeFormatNumericTimezone},
+		{time.RFC1123, timeFormatNamedTimezone},
+		{time.RFC822Z, timeFormatNumericTimezone},
+		{time.RFC822, timeFormatNamedTimezone},
+		{time.RFC850, timeFormatNamedTimezone},
+		{"2006-01-02 15:04:05.999999999 -0700 MST", timeFormatNumericAndNamedTimezone}, // Time.String()
+		{"2006-01-02T15:04:05-0700", timeFormatNumericTimezone},                        // RFC3339 without timezone hh:mm colon
+		{"2006-01-02 15:04:05Z0700", timeFormatNumericTimezone},                        // RFC3339 without T or timezone hh:mm colon
+		{"2006-01-02 15:04:05", timeFormatNoTimezone},
+		{time.ANSIC, timeFormatNoTimezone},
+		{time.UnixDate, timeFormatNamedTimezone},
+		{time.RubyDate, timeFormatNumericTimezone},
+		{"2006-01-02 15:04:05Z07:00", timeFormatNumericTimezone},
+		{"2006-01-02", timeFormatNoTimezone},
+		{"02 Jan 2006", timeFormatNoTimezone},
+		{"2006-01-02 15:04:05 -07:00", timeFormatNumericTimezone},
+		{"2006-01-02 15:04:05 -0700", timeFormatNumericTimezone},
+		{time.Kitchen, timeFormatTimeOnly},
+		{time.Stamp, timeFormatTimeOnly},
+		{time.StampMilli, timeFormatTimeOnly},
+		{time.StampMicro, timeFormatTimeOnly},
+		{time.StampNano, timeFormatTimeOnly},
 	}
 )
 
 // 将字符串格式的时间转换为 time.Time 类型，根据 timeFormats 的格式进行转换
 func parseDateWith(s string, location *time.Location, formats []timeFormat) (d time.Time, e error) {
-
 	for _, format := range formats {
 		if d, e = time.Parse(format.format, s); e == nil {
-
 			// Some time formats have a zone name, but no offset, so it gets
 			// put in that zone name (not the default one passed in to us), but
 			// without that zone's offset. So set the location manually.

@@ -10,6 +10,6 @@ type IRequest interface {
 	Init(o opts.InitOptions) (err error)
 }
 
-//var (
+// var (
 //	_ IRequest     = HttpRequest{}
 //)

@@ -14,10 +14,12 @@ require (
 	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.19.0
 	github.com/pkg/errors v0.9.1
+	github.com/spf13/jwalterweatherman v1.1.0
 	github.com/spf13/viper v1.11.0
 	github.com/stretchr/testify v1.7.1
 	github.com/ugorji/go/codec v1.2.7
 	github.com/wxnacy/wgo v1.0.4
 	golang.org/x/sys v0.0.0-20220422013727-9388b58f7150
 	gopkg.in/yaml.v2 v2.4.0
+	gotest.tools/gotestsum v1.8.0 // indirect
 )

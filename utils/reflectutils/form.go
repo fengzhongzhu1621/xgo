@@ -90,7 +90,6 @@ func SetTimeField(val string, structField reflect.StructField, value reflect.Val
 		t := time.Unix(tv/int64(d), tv%int64(d))
 		value.Set(reflect.ValueOf(t))
 		return nil
-
 	}
 
 	if val == "" {
