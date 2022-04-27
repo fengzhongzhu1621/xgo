@@ -20,6 +20,7 @@ require (
 	github.com/ugorji/go/codec v1.2.7
 	github.com/wxnacy/wgo v1.0.4
 	golang.org/x/sys v0.0.0-20220422013727-9388b58f7150
+	google.golang.org/protobuf v1.28.0
 	gopkg.in/yaml.v2 v2.4.0
 	gotest.tools/gotestsum v1.8.0 // indirect
 )
