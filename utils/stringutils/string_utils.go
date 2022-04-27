@@ -19,7 +19,7 @@ var HeaderNewlineToSpace = strings.NewReplacer("\n", " ", "\r", " ") // 换行�
 
 var HeaderDashToUnderscore = strings.NewReplacer("-", "_") // 短横线字符替换器
 
-// 根据分隔符分割字符串.
+// Head 根据分隔符分割字符串.
 func Head(str, sep string) (head string, tail string) {
 	idx := strings.Index(str, sep)
 	if idx < 0 {
@@ -81,7 +81,7 @@ func StringBuilderEx(p []string, n int) string {
 	return b.String()
 }
 
-// 切片去重
+// RemoveDuplicateElement 切片去重
 // 空struct不占内存空间，使用它来实现我们的函数空间复杂度是最低的。
 func RemoveDuplicateElement(items []string) []string {
 	result := make([]string, 0, len(items))
@@ -97,7 +97,7 @@ func RemoveDuplicateElement(items []string) []string {
 	return result
 }
 
-// 去掉字符串的后缀.
+// TrimRight 去掉字符串的后缀.
 func TrimRight(str string, substring string) string {
 	idx := strings.LastIndex(str, substring)
 	if idx < 0 {
@@ -106,12 +106,12 @@ func TrimRight(str string, substring string) string {
 	return str[:idx]
 }
 
-// 去掉字符串的前缀.
+// TrimLeft 去掉字符串的前缀.
 func TrimLeft(str string, substring string) string {
 	return strings.TrimPrefix(str, substring)
 }
 
-// 首字母大写
+// UnicodeTitle 首字母大写
 func UnicodeTitle(s string) string {
 	for k, v := range s {
 		return string(unicode.ToUpper(v)) + s[k+1:]
@@ -119,7 +119,7 @@ func UnicodeTitle(s string) string {
 	return ""
 }
 
-// 首字母小写
+// UnicodeUnTitle 首字母小写
 func UnicodeUnTitle(s string) string {
 	for k, v := range s {
 		return string(unicode.ToLower(v)) + s[k+1:]
@@ -127,7 +127,7 @@ func UnicodeUnTitle(s string) string {
 	return ""
 }
 
-// 返回数组最后一个元素.
+// Last 返回数组最后一个元素.
 func Last(list []string) string {
 	return list[len(list)-1]
 }
@@ -137,7 +137,7 @@ func CompareStringSliceReflect(a, b []string) bool {
 	return reflect.DeepEqual(a, b)
 }
 
-// 切片比较.
+// CompareStringSlice 切片比较.
 func CompareStringSlice(a, b []string) bool {
 	if len(a) != len(b) {
 		return false
@@ -180,14 +180,14 @@ func ReverseSliceGetNew(s []string) []string {
 	return a
 }
 
-// 翻转切片，值会改变，性能最高.
+// ReverseSlice 翻转切片，值会改变，性能最高.
 func ReverseSlice(a []string) {
 	for left, right := 0, len(a)-1; left < right; left, right = left+1, right-1 {
 		a[left], a[right] = a[right], a[left]
 	}
 }
 
-// 获得随机字符串.
+// GenerateID 获得随机字符串.
 func GenerateID() string {
 	return strconv.FormatInt(time.Now().UnixNano(), 10)
 }
@@ -246,7 +246,7 @@ func MergeGetAndPostParamWithKey(queryParam map[string]string,
 	return params
 }
 
-// 计算字符串的MD5值
+// Md5 计算字符串的MD5值
 // 同 echo -n "123456789" | md5sum
 func Md5(src string) string {
 	md5ctx := md5.New()
@@ -256,7 +256,7 @@ func Md5(src string) string {
 	return value
 }
 
-// 字符串转换为小写，在转化前先判断是否包含大写字符，比strings.ToLower性能高
+// ToLower 字符串转换为小写，在转化前先判断是否包含大写字符，比strings.ToLower性能高
 func ToLower(s string) string {
 	// 判断字符串是否包含小写字母
 	if IsLower(s) {
@@ -285,7 +285,7 @@ func IsLower(s string) bool {
 	return true
 }
 
-// 获得大括号中间的值
+// GetValueInBraces 获得大括号中间的值
 func GetValueInBraces(key string) string {
 	if s := strings.IndexByte(key, '{'); s > -1 {
 		if e := strings.IndexByte(key[s+1:], '}'); e > 0 {
@@ -295,7 +295,7 @@ func GetValueInBraces(key string) string {
 	return key
 }
 
-// 获得字典的所有key值
+// MapKeys 获得字典的所有key值
 func MapKeys(m map[string]struct{}) []string {
 	s := make([]string, len(m))
 	i := 0
@@ -306,7 +306,7 @@ func MapKeys(m map[string]struct{}) []string {
 	return s
 }
 
-// 判断字符串是否在切片中
+// StringInSlice 判断字符串是否在切片中
 func StringInSlice(a string, list []string) bool {
 	for _, b := range list {
 		if b == a {
@@ -314,4 +314,12 @@ func StringInSlice(a string, list []string) bool {
 		}
 	}
 	return false
+}
+
+// LastChar 获得最后一个字符
+func LastChar(str string) uint8 {
+	if str == "" {
+		panic("The length of the string can't be 0")
+	}
+	return str[len(str)-1]
 }

@@ -6,7 +6,7 @@ import (
 	"xgo/cast"
 )
 
-// 将字典的key转换为小写，返回新的字典
+// ToCaseInsensitiveValue 将字典的key转换为小写，返回新的字典
 // toCaseInsensitiveValue checks if the value is a  map;
 // if so, create a copy and lower-case the keys recursively.
 func ToCaseInsensitiveValue(value interface{}) interface{} {
@@ -42,7 +42,7 @@ func copyAndInsensitiviseMap(m map[string]interface{}) map[string]interface{} {
 	return nm
 }
 
-// 将字典的key转换为小写，返回原字典
+// InsensitiviseMap 将字典的key转换为小写，返回原字典
 func InsensitiviseMap(m map[string]interface{}) {
 	for key, val := range m {
 		switch val.(type) {
