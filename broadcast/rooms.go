@@ -88,7 +88,7 @@ func (m *Manager) deleteBroadcast(roomid string) {
 	}
 }
 
-// 获得房间的广播，一个房间只能有一个广播
+// 获得房间的广播，一个房间只能有一个广播.
 func (m *Manager) room(roomid string) broadcast.Broadcaster {
 	b, ok := m.roomChannels[roomid]
 	if !ok {
@@ -99,7 +99,7 @@ func (m *Manager) room(roomid string) broadcast.Broadcaster {
 }
 
 ///////////////////////////////////////////////////////////////
-// 消息传递
+// 消息传递.
 func (m *Manager) OpenListener(roomid string) chan interface{} {
 	listener := make(chan interface{})
 	m.open <- &Listener{

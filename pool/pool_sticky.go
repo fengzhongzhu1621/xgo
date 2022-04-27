@@ -13,7 +13,7 @@ const (
 	stateClosed  = 2
 )
 
-// 自定义错误
+// 自定义错误.
 type BadConnError struct {
 	wrapped error
 }
@@ -32,7 +32,7 @@ func (e BadConnError) Unwrap() error {
 	return e.wrapped
 }
 
-// 连接池，包含一个共享连接，在不同状态切换
+// 连接池，包含一个共享连接，在不同状态切换.
 type StickyConnPool struct {
 	pool   Pooler
 	shared int32 // atomic	共享一个连接
@@ -103,7 +103,7 @@ func (p *StickyConnPool) Get(ctx context.Context) (*Conn, error) {
 	return nil, fmt.Errorf("redis: StickyConnPool.Get: infinite loop")
 }
 
-// 释放共享连接
+// 释放共享连接.
 func (p *StickyConnPool) Put(ctx context.Context, cn *Conn) {
 	defer func() {
 		if recover() != nil {

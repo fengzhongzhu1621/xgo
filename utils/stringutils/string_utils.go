@@ -111,7 +111,7 @@ func TrimLeft(str string, substring string) string {
 	return strings.TrimPrefix(str, substring)
 }
 
-// UnicodeTitle 首字母大写
+// UnicodeTitle 首字母大写.
 func UnicodeTitle(s string) string {
 	for k, v := range s {
 		return string(unicode.ToUpper(v)) + s[k+1:]
@@ -119,7 +119,7 @@ func UnicodeTitle(s string) string {
 	return ""
 }
 
-// UnicodeUnTitle 首字母小写
+// UnicodeUnTitle 首字母小写.
 func UnicodeUnTitle(s string) string {
 	for k, v := range s {
 		return string(unicode.ToLower(v)) + s[k+1:]
@@ -168,7 +168,7 @@ func ReflectReverseSlice(s interface{}) {
 	}
 }
 
-// Deprecated: 翻转切片，返回一个新的切片，有copy的耗损
+// Deprecated: 翻转切片，返回一个新的切片，有copy的耗损.
 func ReverseSliceGetNew(s []string) []string {
 	a := make([]string, len(s))
 	copy(a, s)
@@ -247,7 +247,7 @@ func MergeGetAndPostParamWithKey(queryParam map[string]string,
 }
 
 // Md5 计算字符串的MD5值
-// 同 echo -n "123456789" | md5sum
+// 同 echo -n "123456789" | md5sum.
 func Md5(src string) string {
 	md5ctx := md5.New()
 	md5ctx.Write([]byte(src))
@@ -256,7 +256,7 @@ func Md5(src string) string {
 	return value
 }
 
-// ToLower 字符串转换为小写，在转化前先判断是否包含大写字符，比strings.ToLower性能高
+// ToLower 字符串转换为小写，在转化前先判断是否包含大写字符，比strings.ToLower性能高.
 func ToLower(s string) string {
 	// 判断字符串是否包含小写字母
 	if IsLower(s) {
@@ -274,7 +274,7 @@ func ToLower(s string) string {
 	return bytesconv.BytesToString(b)
 }
 
-// 判断字符串是否包含小写字母
+// 判断字符串是否包含小写字母.
 func IsLower(s string) bool {
 	for i := 0; i < len(s); i++ {
 		c := s[i]
@@ -285,7 +285,7 @@ func IsLower(s string) bool {
 	return true
 }
 
-// GetValueInBraces 获得大括号中间的值
+// GetValueInBraces 获得大括号中间的值.
 func GetValueInBraces(key string) string {
 	if s := strings.IndexByte(key, '{'); s > -1 {
 		if e := strings.IndexByte(key[s+1:], '}'); e > 0 {
@@ -295,7 +295,7 @@ func GetValueInBraces(key string) string {
 	return key
 }
 
-// MapKeys 获得字典的所有key值
+// MapKeys 获得字典的所有key值.
 func MapKeys(m map[string]struct{}) []string {
 	s := make([]string, len(m))
 	i := 0
@@ -306,7 +306,7 @@ func MapKeys(m map[string]struct{}) []string {
 	return s
 }
 
-// StringInSlice 判断字符串是否在切片中
+// StringInSlice 判断字符串是否在切片中.
 func StringInSlice(a string, list []string) bool {
 	for _, b := range list {
 		if b == a {
@@ -316,7 +316,7 @@ func StringInSlice(a string, list []string) bool {
 	return false
 }
 
-// LastChar 获得最后一个字符
+// LastChar 获得最后一个字符.
 func LastChar(str string) uint8 {
 	if str == "" {
 		panic("The length of the string can't be 0")

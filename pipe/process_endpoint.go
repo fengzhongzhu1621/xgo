@@ -19,7 +19,7 @@ type ProcessEndpoint struct {
 	bin       bool // 传递数据的格式：字符串或二进制
 }
 
-// 构造函数
+// 构造函数.
 func NewProcessEndpoint(process *LaunchedProcess, bin bool, log *LogScope) *ProcessEndpoint {
 	return &ProcessEndpoint{
 		process: process,
@@ -100,13 +100,13 @@ func (pe *ProcessEndpoint) Output() chan []byte {
 }
 
 // 将第一个命令的输出作为第二个命令的输入
-// 将第二个命令的输出作为第一个命令的输入
+// 将第二个命令的输出作为第一个命令的输入.
 func (pe *ProcessEndpoint) Send(msg []byte) bool {
 	pe.process.Stdin.Write(msg)
 	return true
 }
 
-// 从标准输出中读取数据发给管道
+// 从标准输出中读取数据发给管道.
 func (pe *ProcessEndpoint) StartReading() {
 	// 创建协程，从标准错误输出中读取数据，并打印出来
 	go pe.log_stderr()
@@ -118,7 +118,7 @@ func (pe *ProcessEndpoint) StartReading() {
 	}
 }
 
-// 从标准输出按行读取字节数组
+// 从标准输出按行读取字节数组.
 func (pe *ProcessEndpoint) process_txtout() {
 	bufin := bufio.NewReader(pe.process.Stdout)
 	for {
@@ -137,7 +137,7 @@ func (pe *ProcessEndpoint) process_txtout() {
 	close(pe.output)
 }
 
-// 从标准输出读取二进制数据
+// 从标准输出读取二进制数据.
 func (pe *ProcessEndpoint) process_binout() {
 	buf := make([]byte, 10*1024*1024) // 10M
 	for {
@@ -157,7 +157,7 @@ func (pe *ProcessEndpoint) process_binout() {
 	close(pe.output)
 }
 
-// 打印标准错误
+// 打印标准错误.
 func (pe *ProcessEndpoint) log_stderr() {
 	bufStderr := bufio.NewReader(pe.process.Stderr)
 	for {

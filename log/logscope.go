@@ -17,7 +17,7 @@ const (
 	LogUnknown = 127
 )
 
-// 定义日志输出接口，需要使用方自定义输出函数的实现
+// 定义日志输出接口，需要使用方自定义输出函数的实现.
 type LogFunc func(logScope *LogScope, level LogLevel, levelName string, category string, msg string, args ...interface{})
 
 type LogScope struct {
@@ -33,7 +33,7 @@ type AssocPair struct {
 	Value string
 }
 
-// 添加日志元素
+// 添加日志元素.
 func (l *LogScope) Associate(key string, value string) {
 	l.Associated = append(l.Associated, AssocPair{key, value})
 }

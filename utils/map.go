@@ -42,7 +42,7 @@ func copyAndInsensitiviseMap(m map[string]interface{}) map[string]interface{} {
 	return nm
 }
 
-// InsensitiviseMap 将字典的key转换为小写，返回原字典
+// InsensitiviseMap 将字典的key转换为小写，返回原字典.
 func InsensitiviseMap(m map[string]interface{}) {
 	for key, val := range m {
 		switch val.(type) {

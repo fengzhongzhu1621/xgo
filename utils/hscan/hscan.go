@@ -14,7 +14,7 @@ type decoderFunc func(reflect.Value, string) error
 
 var (
 	// List of built-in decoders indexed by their numeric constant values (eg: reflect.Bool = 1).
-	// 定义切片字典
+	// 定义切片字典.
 	decoders = []decoderFunc{
 		reflect.Bool:          decodeBool,
 		reflect.Int:           decodeInt,
@@ -46,11 +46,11 @@ var (
 	// Global map of struct field specs that is populated once for every new
 	// struct type that is scanned. This caches the field types and the corresponding
 	// decoder functions to avoid iterating through struct fields on subsequent scans.
-	// 定义全局字典（线程安全），包含结构体中的structSpec对象
+	// 定义全局字典（线程安全），包含结构体中的structSpec对象.
 	globalStructMap = newStructMap()
 )
 
-// 将结构体指针转换为StructValue对象，dst是结构体指针
+// 将结构体指针转换为StructValue对象，dst是结构体指针.
 func Struct(dst interface{}) (StructValue, error) {
 	// 获取结构体指针的运行时表示
 	v := reflect.ValueOf(dst)

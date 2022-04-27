@@ -17,20 +17,20 @@ type setOptions struct {
 	defaultValue    string
 }
 
-// setter tries to set value on a walking by fields of a struct
+// setter tries to set value on a walking by fields of a struct.
 type setter interface {
 	TrySet(value reflect.Value, field reflect.StructField, key string, opt setOptions) (isSetted bool, err error)
 }
 
-// 定义表单对象
+// 定义表单对象.
 type formSource map[string][]string
 
-// 验证表单有setter接口
+// 验证表单有setter接口.
 var _ setter = formSource(nil)
 
 var emptyField = reflect.StructField{}
 
-// TrySet tries to set a value by request's form source (like map[string][]string)
+// TrySet tries to set a value by request's form source (like map[string][]string).
 func (form formSource) TrySet(value reflect.Value, field reflect.StructField, tagValue string, opt setOptions) (isSetted bool, err error) {
 	return setByForm(value, field, form, tagValue, opt)
 }
@@ -134,7 +134,7 @@ func tryToSetValue(value reflect.Value, field reflect.StructField, setter setter
 	return setter.TrySet(value, field, tagValue, setOpt)
 }
 
-// 根据表单的值填充对象
+// 根据表单的值填充对象.
 func setByForm(value reflect.Value, field reflect.StructField, form map[string][]string, tagValue string, opt setOptions) (isSetted bool, err error) {
 	// 获得表单的值
 	vs, ok := form[tagValue]

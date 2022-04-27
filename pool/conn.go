@@ -12,7 +12,7 @@ import (
 
 var noDeadline = time.Time{}
 
-// 连接接口
+// 连接接口.
 type Conn struct {
 	usedAt  int64    // atomic 原子操作，记录读或写的时间
 	netConn net.Conn // 网络连接对象
@@ -26,7 +26,7 @@ type Conn struct {
 	createdAt time.Time // 连接创建时间
 }
 
-// 创建一个连接
+// 创建一个连接.
 func NewConn(netConn net.Conn) *Conn {
 	cn := &Conn{
 		netConn:   netConn,
@@ -39,13 +39,13 @@ func NewConn(netConn net.Conn) *Conn {
 	return cn
 }
 
-// 获得时间戳，转换为time.Time格式
+// 获得时间戳，转换为time.Time格式.
 func (cn *Conn) UsedAt() time.Time {
 	unix := atomic.LoadInt64(&cn.usedAt)
 	return time.Unix(unix, 0)
 }
 
-// 将时间转换为unix时间戳，并保存到变量中
+// 将时间转换为unix时间戳，并保存到变量中.
 func (cn *Conn) SetUsedAt(tm time.Time) {
 	atomic.StoreInt64(&cn.usedAt, tm.Unix())
 }
@@ -56,12 +56,12 @@ func (cn *Conn) SetNetConn(netConn net.Conn) {
 	cn.bw.Reset(netConn) // 重置缓存，丢弃未被处理的数据
 }
 
-// 通过连接写字节数组
+// 通过连接写字节数组.
 func (cn *Conn) Write(b []byte) (int, error) {
 	return cn.netConn.Write(b)
 }
 
-// 获得服务端地址
+// 获得服务端地址.
 func (cn *Conn) RemoteAddr() net.Addr {
 	if cn.netConn != nil {
 		return cn.netConn.RemoteAddr()
@@ -69,7 +69,7 @@ func (cn *Conn) RemoteAddr() net.Addr {
 	return nil
 }
 
-// 设置读超时，返回一个读操作
+// 设置读超时，返回一个读操作.
 func (cn *Conn) WithReader(ctx context.Context, timeout time.Duration, fn func(rd *proto.Reader) error) error {
 	// 设置读超时时间
 	if err := cn.netConn.SetReadDeadline(cn.deadline(ctx, timeout)); err != nil {
@@ -78,7 +78,7 @@ func (cn *Conn) WithReader(ctx context.Context, timeout time.Duration, fn func(r
 	return fn(cn.rd)
 }
 
-// 设置写超时，返回一个写操作
+// 设置写超时，返回一个写操作.
 func (cn *Conn) WithWriter(
 	ctx context.Context, timeout time.Duration, fn func(wr *proto.Writer) error,
 ) error {
@@ -97,12 +97,12 @@ func (cn *Conn) WithWriter(
 	return cn.bw.Flush()
 }
 
-// 关闭连接
+// 关闭连接.
 func (cn *Conn) Close() error {
 	return cn.netConn.Close()
 }
 
-// 返回连接的截止日期
+// 返回连接的截止日期.
 func (cn *Conn) deadline(ctx context.Context, timeout time.Duration) time.Time {
 	// 记录当前时间
 	tm := time.Now()

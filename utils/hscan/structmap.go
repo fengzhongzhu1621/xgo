@@ -9,12 +9,12 @@ import (
 
 // structMap contains the map of struct fields for target structs
 // indexed by the struct type.
-// 存放结构体的structSpec对象
+// 存放结构体的structSpec对象.
 type structMap struct {
 	m sync.Map
 }
 
-// 创建一个全局线程安全字典，key是结构体值运行时表示，value是*structSpec
+// 创建一个全局线程安全字典，key是结构体值运行时表示，value是*structSpec.
 func newStructMap() *structMap {
 	return new(structMap)
 }
@@ -87,7 +87,7 @@ type StructValue struct {
 	value reflect.Value // 结构体值的运行时表示
 }
 
-// 根据tag名称扫描结构体的指定字段，调用字段类型对应的解码器
+// 根据tag名称扫描结构体的指定字段，调用字段类型对应的解码器.
 func (s StructValue) Scan(key string, value string) error {
 	// 根据tag名获得structField对象
 	field, ok := s.spec.m[key]

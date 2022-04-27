@@ -7,7 +7,7 @@ import (
 
 var LineBreak = "\n"
 
-// Variable regexp pattern: %(variable)s
+// Variable regexp pattern: %(variable)s.
 var VarPattern = regexp.MustCompile(`%\(([^)]+)\)s`)
 
 func init() {

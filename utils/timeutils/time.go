@@ -10,7 +10,7 @@ import (
 // RetryBackoff 计算重试的间隔
 // retry: 重试次数
 // minBackoff: 最小时间间隔
-// maxBackoff: 最大时间间隔
+// maxBackoff: 最大时间间隔.
 func RetryBackoff(retry int, minBackoff, maxBackoff time.Duration) (time.Duration, error) {
 	if retry < 0 {
 		return 0, fmt.Errorf("not reached")
@@ -33,7 +33,7 @@ func RetryBackoff(retry int, minBackoff, maxBackoff time.Duration) (time.Duratio
 	return d, nil
 }
 
-// Sleep 休眠指定时间
+// Sleep 休眠指定时间.
 func Sleep(ctx context.Context, dur time.Duration) error {
 	// 创建一个定时器
 	t := time.NewTimer(dur)
@@ -47,7 +47,7 @@ func Sleep(ctx context.Context, dur time.Duration) error {
 	}
 }
 
-// SecondToTime 把事件戳转换为time.Time格式
+// SecondToTime 把事件戳转换为time.Time格式.
 func SecondToTime(second int64) time.Time {
 	return time.Unix(second, 0)
 }

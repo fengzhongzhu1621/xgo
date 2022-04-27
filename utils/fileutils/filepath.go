@@ -18,7 +18,7 @@ func userHomeDir() string {
 	return os.Getenv("HOME")
 }
 
-// 将路径转换为绝对路径
+// 将路径转换为绝对路径.
 func AbsPathify(inPath string) string {
 	// 如果是home路径，则转换为绝对路径
 	if inPath == "$HOME" || strings.HasPrefix(inPath, "$HOME"+string(os.PathSeparator)) {

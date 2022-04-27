@@ -62,7 +62,7 @@ func (JwwLogger) Error(msg string, keyvals ...interface{}) {
 	jww.ERROR.Printf(jwwLogMessage(msg, keyvals...))
 }
 
-// 格式化消息，加上参数值
+// 格式化消息，加上参数值.
 func jwwLogMessage(msg string, keyvals ...interface{}) string {
 	out := msg
 

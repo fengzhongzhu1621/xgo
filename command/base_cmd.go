@@ -59,7 +59,7 @@ type baseCmd struct {
 	_readTimeout *time.Duration
 }
 
-// 获得命令的名称，必须是小写，为第一个参数的值
+// 获得命令的名称，必须是小写，为第一个参数的值.
 func (cmd *baseCmd) Name() string {
 	if len(cmd.args) == 0 {
 		return ""

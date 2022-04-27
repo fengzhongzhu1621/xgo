@@ -17,10 +17,10 @@ func init() {
 	rand.Seed(time.Now().UnixNano())
 }
 
-// 存放可被重复使用的值的容器，缓存随机数
+// 存放可被重复使用的值的容器，缓存随机数.
 var rngPool sync.Pool
 
-// 根据时间戳获取无符号32位整数
+// 根据时间戳获取无符号32位整数.
 func getRandomUint32() uint32 {
 	// 纳秒时间戳
 	x := time.Now().UnixNano()
@@ -37,7 +37,7 @@ type RNG struct {
 // Uint32 returns pseudorandom uint32.
 //
 // It is unsafe to call this method from concurrent goroutines.
-// 随机范围 [0, MaxInt64]
+// 随机范围 [0, MaxInt64].
 func (r *RNG) Uint32() uint32 {
 	for r.x == 0 {
 		// 获取无符号32位整数作为随机种子
@@ -59,7 +59,7 @@ func (r *RNG) Uint32() uint32 {
 // Uint32n returns pseudorandom uint32 in the range [0..maxN).
 //
 // It is unsafe to call this method from concurrent goroutines.
-// 并发调用可能导致随机数重复
+// 并发调用可能导致随机数重复.
 func (r *RNG) Uint32n(maxN uint32) uint32 {
 	// 获得随机数，随机范围是 [0, MaxInt64]
 	x := r.Uint32()
@@ -68,7 +68,7 @@ func (r *RNG) Uint32n(maxN uint32) uint32 {
 }
 
 // Seed sets the r state to n.
-// 重置随机种子，并发安全
+// 重置随机种子，并发安全.
 func (r *RNG) Seed(seed uint32) bool {
 	oldSeed := atomic.LoadUint32(&r.x)
 	if oldSeed == seed {
@@ -116,7 +116,7 @@ func NewFastRand() *FastRNG {
 	return scalableRand
 }
 
-// 并发安全的设置新的随机种子
+// 并发安全的设置新的随机种子.
 func (r *FastRNG) Seed(newSeed int64) bool {
 	// 获得旧的随机种子
 	oldSeed := atomic.LoadInt64(&r.seed)
@@ -127,7 +127,7 @@ func (r *FastRNG) Seed(newSeed int64) bool {
 	return atomic.CompareAndSwapInt64(&r.seed, oldSeed, newSeed)
 }
 
-// 创建一个新的随机数发生器
+// 创建一个新的随机数发生器.
 func (r *FastRNG) NewRand() *rand.Rand {
 	// 生成新的随机种子，确保并发安全
 	newSeed := time.Now().UnixNano()

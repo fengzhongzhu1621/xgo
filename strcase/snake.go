@@ -4,7 +4,7 @@ import (
 	"strings"
 )
 
-// ToSnake converts a string to snake_case
+// ToSnake converts a string to snake_case.
 func ToSnake(s string) string {
 	return ToDelimited(s, '_')
 }
@@ -13,23 +13,23 @@ func ToSnakeWithIgnore(s string, ignore string) string {
 	return ToScreamingDelimited(s, '_', ignore, false)
 }
 
-// ToScreamingSnake converts a string to SCREAMING_SNAKE_CASE
+// ToScreamingSnake converts a string to SCREAMING_SNAKE_CASE.
 func ToScreamingSnake(s string) string {
 	return ToScreamingDelimited(s, '_', "", true)
 }
 
-// ToKebab converts a string to kebab-case
+// ToKebab converts a string to kebab-case.
 func ToKebab(s string) string {
 	return ToDelimited(s, '-')
 }
 
-// ToScreamingKebab converts a string to SCREAMING-KEBAB-CASE
+// ToScreamingKebab converts a string to SCREAMING-KEBAB-CASE.
 func ToScreamingKebab(s string) string {
 	return ToScreamingDelimited(s, '-', "", true)
 }
 
 // ToDelimited converts a string to delimited.snake.case
-// (in this case `delimiter = '.'`)
+// (in this case `delimiter = '.'`).
 func ToDelimited(s string, delimiter uint8) string {
 	return ToScreamingDelimited(s, delimiter, "", false)
 }
@@ -37,7 +37,7 @@ func ToDelimited(s string, delimiter uint8) string {
 // ToScreamingDelimited converts a string to SCREAMING.DELIMITED.SNAKE.CASE
 // (in this case `delimiter = '.'; screaming = true`)
 // or delimited.snake.case
-// (in this case `delimiter = '.'; screaming = false`)
+// (in this case `delimiter = '.'; screaming = false`).
 func ToScreamingDelimited(s string, delimiter uint8, ignore string, screaming bool) string {
 	s = strings.TrimSpace(s)
 	n := strings.Builder{}

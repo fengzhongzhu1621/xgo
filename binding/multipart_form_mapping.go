@@ -15,7 +15,7 @@ type multipartRequest http.Request
 
 var _ setter = (*multipartRequest)(nil)
 
-// TrySet tries to set a value by the multipart request with the binding a form file
+// TrySet tries to set a value by the multipart request with the binding a form file.
 func (r *multipartRequest) TrySet(value reflect.Value, field reflect.StructField, key string, opt setOptions) (isSetted bool, err error) {
 	if files := r.MultipartForm.File[key]; len(files) != 0 {
 		return setByMultipartFormFile(value, field, files)

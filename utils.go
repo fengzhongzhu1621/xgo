@@ -5,7 +5,7 @@ import (
 	"reflect"
 )
 
-// 空值定义
+// 空值定义.
 var (
 	EmptyStr    string
 	EmptyError  error
@@ -13,10 +13,10 @@ var (
 	EmptyArgs   []reflect.Value
 )
 
-// H is a shortcut for map[string]interface{}
+// H is a shortcut for map[string]interface{}.
 type H map[string]interface{}
 
-// 从命令行获得服务器的IP和端口
+// 从命令行获得服务器的IP和端口.
 func ResolveAddress(addr []string) string {
 	switch len(addr) {
 	case 0:
@@ -33,7 +33,7 @@ func ResolveAddress(addr []string) string {
 	}
 }
 
-// 返回整数的指针
+// 返回整数的指针.
 func IntPtr(i int) *int {
 	return &i
 }

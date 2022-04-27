@@ -12,7 +12,7 @@ type PathInfo struct {
 	IsDir bool   // 是否是目录
 }
 
-// 获得最后一个字符
+// 获得最后一个字符.
 func lastChar(str string) uint8 {
 	if str == "" {
 		panic("The length of the string can't be 0")

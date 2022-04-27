@@ -7,7 +7,7 @@ import (
 	"xgo"
 )
 
-// Internal usage to gather results from tasks
+// Internal usage to gather results from tasks.
 type execResult struct {
 	err     error
 	results []reflect.Value
@@ -22,7 +22,7 @@ type funcs struct {
 
 // 任务顺序执行，前一个任务的执行结果作为下一个任务的输入
 // ExecInSeries executes recursively each task of the stack until it reachs
-// the bottom of the stack or it is interrupted by an error
+// the bottom of the stack or it is interrupted by an error.
 func (f *funcs) ExecInSeries(args ...reflect.Value) ([]interface{}, error) {
 	var (
 		// 堆栈是一个切片，表示多个任务
@@ -119,7 +119,7 @@ func (f *funcs) ExecConcurrent(parallel bool) (Results, error) {
 	return results, errs
 }
 
-// 并发执行多个任务，多个任务是切片类型
+// 并发执行多个任务，多个任务是切片类型.
 func execSlice(funcs []reflect.Value, parallel bool) (SliceResults, xgo.MultipleErrors) {
 	var (
 		errs    xgo.MultipleErrors          // 任务执行失败结果
@@ -166,7 +166,7 @@ func execSlice(funcs []reflect.Value, parallel bool) (SliceResults, xgo.Multiple
 	return results, errs
 }
 
-// 并发执行多个任务，多个任务是字典格式
+// 并发执行多个任务，多个任务是字典格式.
 func execMap(funcs map[string]reflect.Value, parallel bool) (MapResults, xgo.MultipleErrors) {
 	var (
 		errs    xgo.MultipleErrors
@@ -209,7 +209,7 @@ func execMap(funcs map[string]reflect.Value, parallel bool) (MapResults, xgo.Mul
 	return results, errs
 }
 
-// Executes the task and consumes the message of `sem` channel
+// Executes the task and consumes the message of `sem` channel.
 func execRoutineParallel(f reflect.Value, c chan execResult, sem chan int, k string) {
 	// execute routine
 	execRoutine(f, c, k)
@@ -218,7 +218,7 @@ func execRoutineParallel(f reflect.Value, c chan execResult, sem chan int, k str
 	<-sem
 }
 
-// Executes the task and sends error to the `c` channel
+// Executes the task and sends error to the `c` channel.
 func execRoutine(f reflect.Value, c chan execResult, key string) {
 	var (
 		exr = execResult{} // Result

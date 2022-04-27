@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-// 格式化go代码
+// 格式化go代码.
 func GoFmtFile(fpath string) error {
 	// 读源码文件
 	in, err := ioutil.ReadFile(fpath)
@@ -30,7 +30,7 @@ func GoFmtFile(fpath string) error {
 	return nil
 }
 
-// 格式化go代码目录
+// 格式化go代码目录.
 func GoFmtDir(dir string) error {
 	err := filepath.Walk(dir, func(fpath string, fileInfo os.FileInfo, err error) error {
 		if strings.HasSuffix(fpath, ".go") && !fileInfo.IsDir() {

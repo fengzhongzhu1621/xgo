@@ -20,7 +20,7 @@ var (
 	ErrPoolTimeout = errors.New("redis: connection pool timeout")
 )
 
-// 创建临时对象池，存放单次定时器
+// 创建临时对象池，存放单次定时器.
 var timers = sync.Pool{
 	New: func() interface{} {
 		// 创建一个小时定时器
@@ -43,7 +43,7 @@ type Stats struct {
 	StaleConns uint32 // number of stale connections removed from the pool 自动检测关闭的连接数量
 }
 
-// 连接池接口
+// 连接池接口.
 type Pooler interface {
 	NewConn(context.Context) (*Conn, error) // 创建连接
 	CloseConn(*Conn) error                  // 关闭连接
@@ -72,12 +72,12 @@ type Options struct {
 	IdleCheckFrequency time.Duration // 空闲连接检查定时器间隔
 }
 
-// 定义最近一次错误
+// 定义最近一次错误.
 type lastDialErrorWrap struct {
 	err error
 }
 
-// 连接池实现
+// 连接池实现.
 type ConnPool struct {
 	opt *Options // 连接配置
 
@@ -101,7 +101,7 @@ type ConnPool struct {
 
 var _ Pooler = (*ConnPool)(nil)
 
-// 创建连接池
+// 创建连接池.
 func NewConnPool(opt *Options) *ConnPool {
 	p := &ConnPool{
 		opt: opt, // 连接池配置
@@ -124,7 +124,7 @@ func NewConnPool(opt *Options) *ConnPool {
 	return p
 }
 
-// 初始化连接池的大小和空闲连接，预分配连接
+// 初始化连接池的大小和空闲连接，预分配连接.
 func (p *ConnPool) checkMinIdleConns() {
 	if p.opt.MinIdleConns == 0 {
 		return
@@ -147,7 +147,7 @@ func (p *ConnPool) checkMinIdleConns() {
 	}
 }
 
-// 创建并添加空闲连接
+// 创建并添加空闲连接.
 func (p *ConnPool) addIdleConn() error {
 	// 创建一个新连接
 	cn, err := p.dialConn(context.TODO(), true)
@@ -170,7 +170,7 @@ func (p *ConnPool) addIdleConn() error {
 	return nil
 }
 
-// 创建一个新连接，此连接不再连接池中，但是需要放到p.conns中统一管理
+// 创建一个新连接，此连接不再连接池中，但是需要放到p.conns中统一管理.
 func (p *ConnPool) NewConn(ctx context.Context) (*Conn, error) {
 	return p.newConn(ctx, false)
 }
@@ -203,7 +203,7 @@ func (p *ConnPool) newConn(ctx context.Context, pooled bool) (*Conn, error) {
 	return cn, nil
 }
 
-// 创建连接
+// 创建连接.
 func (p *ConnPool) dialConn(ctx context.Context, pooled bool) (*Conn, error) {
 	// 判断连接池是否已经关闭
 	if p.closed() {
@@ -231,7 +231,7 @@ func (p *ConnPool) dialConn(ctx context.Context, pooled bool) (*Conn, error) {
 	return cn, nil
 }
 
-// 失败则不停的尝试重连
+// 失败则不停的尝试重连.
 func (p *ConnPool) tryDial() {
 	for {
 		// 判断连接池是否已经关闭
@@ -254,12 +254,12 @@ func (p *ConnPool) tryDial() {
 	}
 }
 
-// 存储最近一次错误
+// 存储最近一次错误.
 func (p *ConnPool) setLastDialError(err error) {
 	p.lastDialError.Store(&lastDialErrorWrap{err: err})
 }
 
-// 获得最近一次错误
+// 获得最近一次错误.
 func (p *ConnPool) getLastDialError() error {
 	err, _ := p.lastDialError.Load().(*lastDialErrorWrap)
 	if err != nil {
@@ -329,7 +329,7 @@ func (p *ConnPool) freeTurn() {
 	<-p.queue
 }
 
-// 判断连接池是否有空闲的连接
+// 判断连接池是否有空闲的连接.
 func (p *ConnPool) waitTurn(ctx context.Context) error {
 	select {
 	case <-ctx.Done():
@@ -370,7 +370,7 @@ func (p *ConnPool) waitTurn(ctx context.Context) error {
 	}
 }
 
-// 获得一个空闲连接
+// 获得一个空闲连接.
 func (p *ConnPool) popIdle() (*Conn, error) {
 	if p.closed() {
 		return nil, ErrClosed
@@ -398,7 +398,7 @@ func (p *ConnPool) popIdle() (*Conn, error) {
 	return cn, nil
 }
 
-// 将一个连接加入到空闲连接列表
+// 将一个连接加入到空闲连接列表.
 func (p *ConnPool) Put(ctx context.Context, cn *Conn) {
 	// 判断连接是否还有未传输完成的数据
 	if cn.rd.Buffered() > 0 {
@@ -425,7 +425,7 @@ func (p *ConnPool) Remove(_ context.Context, cn *Conn, _ error) {
 	_ = p.closeConn(cn)
 }
 
-// 关闭指定连接
+// 关闭指定连接.
 func (p *ConnPool) CloseConn(cn *Conn) error {
 	p.removeConnWithLock(cn)
 	return p.closeConn(cn)
@@ -437,7 +437,7 @@ func (p *ConnPool) removeConnWithLock(cn *Conn) {
 	p.connsMu.Unlock()
 }
 
-// 从连接池移除连接
+// 从连接池移除连接.
 func (p *ConnPool) removeConn(cn *Conn) {
 	for i, c := range p.conns {
 		if c == cn {
@@ -488,7 +488,7 @@ func (p *ConnPool) Stats() *Stats {
 	}
 }
 
-// 判断连接池是否已经关闭
+// 判断连接池是否已经关闭.
 func (p *ConnPool) closed() bool {
 	return atomic.LoadUint32(&p._closed) == 1
 }
@@ -508,7 +508,7 @@ func (p *ConnPool) Filter(fn func(*Conn) bool) error {
 	return firstErr
 }
 
-// 关闭连接池
+// 关闭连接池.
 func (p *ConnPool) Close() error {
 	if !atomic.CompareAndSwapUint32(&p._closed, 0, 1) {
 		return ErrClosed
@@ -531,7 +531,7 @@ func (p *ConnPool) Close() error {
 	return firstErr
 }
 
-// 定时检查空闲的连接，如果过期则关闭
+// 定时检查空闲的连接，如果过期则关闭.
 func (p *ConnPool) reaper(frequency time.Duration) {
 	// 创建定时器
 	ticker := time.NewTicker(frequency)
@@ -559,7 +559,7 @@ func (p *ConnPool) reaper(frequency time.Duration) {
 	}
 }
 
-// 关闭过期的所有空闲连接
+// 关闭过期的所有空闲连接.
 func (p *ConnPool) ReapStaleConns() (int, error) {
 	var n int
 	for {
@@ -585,7 +585,7 @@ func (p *ConnPool) ReapStaleConns() (int, error) {
 	return n, nil
 }
 
-// 从空闲连接列表中判断第一个连接是否是无效连接，如果无效则删除
+// 从空闲连接列表中判断第一个连接是否是无效连接，如果无效则删除.
 func (p *ConnPool) reapStaleConn() *Conn {
 	if len(p.idleConns) == 0 {
 		return nil
@@ -604,7 +604,7 @@ func (p *ConnPool) reapStaleConn() *Conn {
 	return cn
 }
 
-// 判断连接是否是无效的
+// 判断连接是否是无效的.
 func (p *ConnPool) isStaleConn(cn *Conn) bool {
 	if p.opt.IdleTimeout == 0 && p.opt.MaxConnAge == 0 {
 		return false

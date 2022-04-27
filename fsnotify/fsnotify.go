@@ -35,7 +35,7 @@ const (
 	Chmod // 文件或目录的属性发生变化时触发，linux系统可以通过chmod命令改变文件或目录属性
 )
 
-// 按位判断触发的类型，如果类型为0，返回空字符串
+// 按位判断触发的类型，如果类型为0，返回空字符串.
 func (op Op) String() string {
 	// Use a buffer for efficient string concatenation
 	var buffer bytes.Buffer
@@ -62,12 +62,12 @@ func (op Op) String() string {
 }
 
 // String returns a string representation of the event in the form
-// "file: REMOVE|WRITE|..."
+// "file: REMOVE|WRITE|...".
 func (e Event) String() string {
 	return fmt.Sprintf("%q: %s", e.Name, e.Op.String())
 }
 
-// Common errors that can be reported by a watcher
+// Common errors that can be reported by a watcher.
 var (
 	ErrEventOverflow = errors.New("fsnotify queue overflow")
 )

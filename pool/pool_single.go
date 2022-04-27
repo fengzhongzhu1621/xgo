@@ -2,17 +2,17 @@ package pool
 
 import "context"
 
-// 简单连接池，只包含一个连接
+// 简单连接池，只包含一个连接.
 type SingleConnPool struct {
 	pool      Pooler
 	cn        *Conn
 	stickyErr error
 }
 
-// 判断SingleConnPool是否实现了Pooler中的所有接口
+// 判断SingleConnPool是否实现了Pooler中的所有接口.
 var _ Pooler = (*SingleConnPool)(nil)
 
-// 创建一个简单连接池
+// 创建一个简单连接池.
 func NewSingleConnPool(pool Pooler, cn *Conn) *SingleConnPool {
 	return &SingleConnPool{
 		pool: pool,
@@ -20,12 +20,12 @@ func NewSingleConnPool(pool Pooler, cn *Conn) *SingleConnPool {
 	}
 }
 
-// 创建一个连接并放到连接池
+// 创建一个连接并放到连接池.
 func (p *SingleConnPool) NewConn(ctx context.Context) (*Conn, error) {
 	return p.pool.NewConn(ctx)
 }
 
-// 关闭一个连接
+// 关闭一个连接.
 func (p *SingleConnPool) CloseConn(cn *Conn) error {
 	return p.pool.CloseConn(cn)
 }

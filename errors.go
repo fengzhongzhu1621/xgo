@@ -41,14 +41,14 @@ const (
 	ErrShortNameTooLong
 
 	// ErrDuplicatedFlag indicates that a short or long flag has been
-	// defined more than once
+	// defined more than once.
 	ErrDuplicatedFlag
 
 	// ErrTag indicates an error while parsing flag tags.
 	ErrTag
 
 	// ErrCommandRequired indicates that a command was required but not
-	// specified
+	// specified.
 	ErrCommandRequired
 
 	// ErrUnknownCommand indicates that an unknown command was specified.
@@ -58,11 +58,11 @@ const (
 	// a certain number of choices.
 	ErrInvalidChoice
 
-	// ErrInvalidTag indicates an invalid tag or invalid use of an existing tag
+	// ErrInvalidTag indicates an invalid tag or invalid use of an existing tag.
 	ErrInvalidTag
 )
 
-// 将错误码转换为错误信息
+// 将错误码转换为错误信息.
 func (e ErrType) String() string {
 	switch e {
 	case ErrUnknown:
@@ -114,7 +114,7 @@ type Error struct {
 	Message string
 }
 
-// Error returns the error's message
+// Error returns the error's message.
 func (e *Error) Error() string {
 	return e.Message
 }
@@ -141,7 +141,7 @@ func WrapError(err error) *Error {
 	return ret
 }
 
-// 如下是更好的设计方式
+// 如下是更好的设计方式.
 var (
 	ErrUnauthorized   = fmt.Errorf("%s", "unauthorized")
 	ErrInvalidArg     = fmt.Errorf("%s", "invalid argument")
@@ -151,7 +151,7 @@ var (
 
 var errTable = map[int32]error{}
 
-// 将错误码转换为error
+// 将错误码转换为error.
 func Code2Error(code int32) error {
 	if err, ok := errTable[code]; ok {
 		return err
@@ -162,10 +162,10 @@ func Code2Error(code int32) error {
 // 合并多个错误信息
 // Errors is a type of []error
 // This is used to pass multiple errors when using parallel or concurrent methods
-// and yet subscribe to the error interface
+// and yet subscribe to the error interface.
 type MultipleErrors []error
 
-// Prints all errors from asynchronous tasks separated by space
+// Prints all errors from asynchronous tasks separated by space.
 func (e MultipleErrors) Error() string {
 	b := bytes.NewBufferString(EmptyStr)
 

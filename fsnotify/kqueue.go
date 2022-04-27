@@ -162,7 +162,7 @@ func (w *Watcher) Remove(name string) error {
 }
 
 // WatchList returns the directories and files that are being monitered.
-// 获得监听的文件或目录列表
+// 获得监听的文件或目录列表.
 func (w *Watcher) WatchList() []string {
 	w.mu.Lock()
 	defer w.mu.Unlock()
@@ -176,10 +176,10 @@ func (w *Watcher) WatchList() []string {
 }
 
 // Watch all events (except NOTE_EXTEND, NOTE_LINK, NOTE_REVOKE)
-// 默认监听的事件
+// 默认监听的事件.
 const noteAllEvents = unix.NOTE_DELETE | unix.NOTE_WRITE | unix.NOTE_ATTRIB | unix.NOTE_RENAME
 
-// keventWaitTime to block on each read from kevent
+// keventWaitTime to block on each read from kevent.
 var keventWaitTime = timeutils.DurationToTimespec(100 * time.Millisecond)
 
 // addWatch adds name to the watched file set.
@@ -421,7 +421,7 @@ func newCreateEvent(name string) Event {
 	return Event{Name: name, Op: Create}
 }
 
-// watchDirectoryFiles to mimic inotify when adding a watch on a directory
+// watchDirectoryFiles to mimic inotify when adding a watch on a directory.
 func (w *Watcher) watchDirectoryFiles(dirPath string) error {
 	// Get all files
 	files, err := ioutil.ReadDir(dirPath)
@@ -522,7 +522,7 @@ func kqueue() (kq int, err error) {
 	return kq, nil
 }
 
-// register events with the queue
+// register events with the queue.
 func register(kq int, fds []int, flags int, fflags uint32) error {
 	changes := make([]unix.Kevent_t, len(fds))
 

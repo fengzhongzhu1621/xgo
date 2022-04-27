@@ -43,7 +43,7 @@ func RandStringBytesMaskImprSrcSB(n int) string {
 
 // 字符串转换为[]bytes
 // StringToBytes converts string to byte slice without a memory allocation.
-// 效率更高
+// 效率更高.
 func StringToBytes(s string) (b []byte) {
 	sh := *(*reflect.StringHeader)(unsafe.Pointer(&s))
 	bh := (*reflect.SliceHeader)(unsafe.Pointer(&b))
@@ -71,14 +71,14 @@ func SafeBytes(s string) []byte {
 
 // []bytes转换为字符串
 // BytesToString converts byte slice to string without a memory allocation.
-// 效率更高
+// 效率更高.
 func BytesToString(b []byte) string {
 	return *(*string)(unsafe.Pointer(&b))
 }
 
 // []bytes转换为字符串
 // BytesToString converts byte slice to string without a memory allocation.
-// 效率更高
+// 效率更高.
 func String(b []byte) string {
 	return *(*string)(unsafe.Pointer(&b))
 }
@@ -108,22 +108,22 @@ func Itoa(buf *[]byte, i int, wid int) {
 	*buf = append(*buf, b[bp:]...)
 }
 
-// 将字节数组转换为int类型
+// 将字节数组转换为int类型.
 func Atoi(b []byte) (int, error) {
 	return strconv.Atoi(BytesToString(b))
 }
 
-// 将字节数组转换为int64
+// 将字节数组转换为int64.
 func ParseInt(b []byte, base int, bitSize int) (int64, error) {
 	return strconv.ParseInt(BytesToString(b), base, bitSize)
 }
 
-// 将字节数组转换为uint64
+// 将字节数组转换为uint64.
 func ParseUint(b []byte, base int, bitSize int) (uint64, error) {
 	return strconv.ParseUint(BytesToString(b), base, bitSize)
 }
 
-// 将字节数组转换为float64
+// 将字节数组转换为float64.
 func ParseFloat(b []byte, bitSize int) (float64, error) {
 	return strconv.ParseFloat(BytesToString(b), bitSize)
 }

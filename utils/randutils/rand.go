@@ -31,7 +31,7 @@ type source struct {
 	mu  sync.Mutex
 }
 
-// 支持多线程安全
+// 支持多线程安全.
 func (s *source) Int63() int64 {
 	s.mu.Lock()
 	n := s.src.Int63()
@@ -39,7 +39,7 @@ func (s *source) Int63() int64 {
 	return n
 }
 
-// 支持多线程安全
+// 支持多线程安全.
 func (s *source) Seed(seed int64) {
 	s.mu.Lock()
 	s.src.Seed(seed)

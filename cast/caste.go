@@ -16,11 +16,11 @@ import (
 	"time"
 )
 
-// 负数格式转换异常
+// 负数格式转换异常.
 var errNegativeNotAllowed = errors.New("unable to cast negative value")
 
 // ToTimeE casts an interface to a time.Time type.
-// 时间格式转换，转换为UTC时区
+// 时间格式转换，转换为UTC时区.
 func ToTimeE(i interface{}) (tim time.Time, err error) {
 	return ToTimeInDefaultLocationE(i, time.UTC)
 }
@@ -806,7 +806,7 @@ func indirect(a interface{}) interface{} {
 // Copyright 2011 The Go Authors. All rights reserved.
 // indirectToStringerOrError returns the value, after dereferencing as many times
 // as necessary to reach the base type (or nil) or an implementation of fmt.Stringer
-// or error,
+// or error,.
 func indirectToStringerOrError(a interface{}) interface{} {
 	if a == nil {
 		return nil
@@ -1331,7 +1331,7 @@ var (
 	}
 )
 
-// 将字符串格式的时间转换为 time.Time 类型，根据 timeFormats 的格式进行转换
+// 将字符串格式的时间转换为 time.Time 类型，根据 timeFormats 的格式进行转换.
 func parseDateWith(s string, location *time.Location, formats []timeFormat) (d time.Time, e error) {
 	for _, format := range formats {
 		if d, e = time.Parse(format.format, s); e == nil {

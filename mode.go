@@ -11,13 +11,13 @@ const (
 	// ReleaseMode indicates gin mode is release.
 	// ReleaseMode = "release"
 	// TestMode indicates gin mode is test.
-	// TestMode = "test"
+	// TestMode = "test".
 )
 
 const (
 	debugCode = iota // 0
 	// releaseCode			// 1
-	// testCode			// 2
+	// testCode			// 2.
 )
 
 var xGoMode = debugCode
@@ -30,8 +30,8 @@ var modeName = DebugMode
 // To support coloring in Windows use:
 // 		import "github.com/mattn/go-colorable"
 // 		xgo.DefaultWriter = colorable.NewColorableStdout()
-// 可用于将日志输出到文件
+// 可用于将日志输出到文件.
 var DefaultWriter io.Writer = os.Stdout
 
-// DefaultErrorWriter is the default io.Writer used by Gin to debug errors
+// DefaultErrorWriter is the default io.Writer used by Gin to debug errors.
 var DefaultErrorWriter io.Writer = os.Stderr

@@ -5,16 +5,16 @@ import (
 	"reflect"
 )
 
-// Interface fot async to handle user user functions
+// Interface fot async to handle user user functions.
 type taskier interface {
 	GetFuncs() (interface{}, error)
 }
 
 // Type used as a slice of tasks
-// 任务列表
+// 任务列表.
 type Tasks []interface{}
 
-// 获得任务列表
+// 获得任务列表.
 func (t Tasks) GetFuncs() (interface{}, error) {
 	var (
 		l   = len(t) // 任务的数量
@@ -36,7 +36,7 @@ func (t Tasks) GetFuncs() (interface{}, error) {
 }
 
 // Type used as a map of tasks
-// 任务字典
+// 任务字典.
 type MapTasks map[string]interface{}
 
 func (mt MapTasks) GetFuncs() (interface{}, error) {
@@ -81,12 +81,12 @@ func Waterfall(stack Tasks, firstArgs ...interface{}) ([]interface{}, error) {
 	return f.ExecInSeries(args...)
 }
 
-// 限制并发数目
+// 限制并发数目.
 func Parallel(stack taskier) (Results, error) {
 	return execConcurrentStack(stack, true)
 }
 
-// 不限制并发数目
+// 不限制并发数目.
 func Concurrent(stack taskier) (Results, error) {
 	return execConcurrentStack(stack, false)
 }

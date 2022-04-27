@@ -4,7 +4,7 @@ import (
 	"sync/atomic"
 )
 
-// Counter 自增计数器
+// Counter 自增计数器.
 type Counter struct {
 	val int32
 }

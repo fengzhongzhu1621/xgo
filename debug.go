@@ -7,15 +7,15 @@ import (
 	"strings"
 )
 
-// 支持的最小版本
+// 支持的最小版本.
 const xGoSupportMinGoVer = 10
 
-// 判断是否是调试模式
+// 判断是否是调试模式.
 func IsDebugging() bool {
 	return xGoMode == debugCode
 }
 
-// 调试模式打印函数
+// 调试模式打印函数.
 func debugPrintf(format string, values ...interface{}) {
 	if IsDebugging() {
 		// 添加换行符
@@ -27,7 +27,7 @@ func debugPrintf(format string, values ...interface{}) {
 	}
 }
 
-// 获得go的最小版本
+// 获得go的最小版本.
 func getMinVer(v string) (uint64, error) {
 	first := strings.IndexByte(v, '.')
 	last := strings.LastIndexByte(v, '.')
@@ -37,7 +37,7 @@ func getMinVer(v string) (uint64, error) {
 	return strconv.ParseUint(v[first+1:last], 10, 64)
 }
 
-// 打印版本匹配信息
+// 打印版本匹配信息.
 func debugPrintWARNINGDefault() {
 	// go1.14.4
 	if v, e := getMinVer(runtime.Version()); e == nil && v <= xGoSupportMinGoVer {
@@ -47,7 +47,7 @@ func debugPrintWARNINGDefault() {
 	}
 }
 
-// 如果当前是调试模式，则打印警告信息
+// 如果当前是调试模式，则打印警告信息.
 func debugPrintWARNINGNew() {
 	debugPrintf(`[WARNING] Running in "debug" mode. Switch to "release" mode in production.
  - using env:	export XGO_MODE=release

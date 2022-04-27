@@ -54,7 +54,7 @@ func (w *Writer) WriteArgs(args []interface{}) error {
 	return nil
 }
 
-// 添加长度指令，例如："6\r\n"
+// 添加长度指令，例如："6\r\n".
 func (w *Writer) writeLen(n int) error {
 	w.lenBuf = strconv.AppendUint(w.lenBuf[:0], uint64(n), 10)
 	w.lenBuf = append(w.lenBuf, '\r', '\n')
@@ -114,7 +114,7 @@ func (w *Writer) WriteArg(v interface{}) error {
 	}
 }
 
-// 添加字符串指令，例如："$5\r\nhello\r\n"
+// 添加字符串指令，例如："$5\r\nhello\r\n".
 func (w *Writer) bytes(b []byte) error {
 	if err := w.WriteByte(StringReply); err != nil {
 		return err
@@ -150,7 +150,7 @@ func (w *Writer) float(f float64) error {
 	return w.bytes(w.numBuf)
 }
 
-// 添加回车换行
+// 添加回车换行.
 func (w *Writer) crlf() error {
 	if err := w.WriteByte('\r'); err != nil {
 		return err

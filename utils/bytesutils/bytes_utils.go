@@ -9,13 +9,13 @@ import (
 	"xgo/utils/bytesconv"
 )
 
-// 判断前缀和后缀是否全部匹配
+// 判断前缀和后缀是否全部匹配.
 func HasPrefixAndSuffix(s, prefix []byte, suffix []byte) bool {
 	return bytes.HasPrefix(s, prefix) && bytes.HasSuffix(s, suffix)
 }
 
 // 去掉结尾换行符
-// trimEOL cuts unixy style \n and windowsy style \r\n suffix from the string
+// trimEOL cuts unixy style \n and windowsy style \r\n suffix from the string.
 func TrimEOL(b []byte) []byte {
 	lns := len(b)
 	if lns > 0 && b[lns-1] == '\n' {
@@ -27,7 +27,7 @@ func TrimEOL(b []byte) []byte {
 	return b[:lns]
 }
 
-// 字符数组拼接，将对象追加到字节数组b的后面
+// 字符数组拼接，将对象追加到字节数组b的后面.
 func AppendArg(b []byte, v interface{}) []byte {
 	switch v := v.(type) {
 	case nil:
@@ -72,7 +72,7 @@ func AppendArg(b []byte, v interface{}) []byte {
 	}
 }
 
-// 连接两个字节数组，将src连接到dst后面
+// 连接两个字节数组，将src连接到dst后面.
 func AppendUTF8String(dst []byte, src []byte) []byte {
 	dst = append(dst, src...)
 	return dst

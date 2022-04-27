@@ -9,7 +9,7 @@ import (
 	"golang.org/x/sys/unix"
 )
 
-// DurationToTimespec prepares a timeout value
+// DurationToTimespec prepares a timeout value.
 func DurationToTimespec(d time.Duration) unix.Timespec {
 	return unix.NsecToTimespec(d.Nanoseconds())
 }

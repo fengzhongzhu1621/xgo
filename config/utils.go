@@ -5,7 +5,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-// 如果配置中指定key的值为空，则返回默认值
+// 如果配置中指定key的值为空，则返回默认值.
 func GetString(key, defaultValue string) string {
 	val := viper.GetString(key)
 	if val != "" {
@@ -14,7 +14,7 @@ func GetString(key, defaultValue string) string {
 	return defaultValue
 }
 
-// 将配置解析到结构体
+// 将配置解析到结构体.
 func UnmarshalKey(key string, obj interface{}) {
 	err := viper.UnmarshalKey(key, &obj)
 	if err != nil {

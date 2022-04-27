@@ -14,7 +14,7 @@ import (
 
 // DisableCache will disable caching of the home directory. Caching is enabled by default.
 // 默认情况下，缓存是开启的。 我们也可以将DisableCache设置为true来关闭它
-// e.g. homedir.DisableCache = true
+// e.g. homedir.DisableCache = true.
 var DisableCache bool
 
 var homedirCache string
