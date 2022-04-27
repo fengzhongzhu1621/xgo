@@ -87,8 +87,13 @@ func (poller *fdPoller) wait() (bool, error) {
 	// I don't know whether epoll_wait returns the number of events returned,
 	// or the total number of events ready.
 	// I decided to catch both by making the buffer one larger than the maximum.
+	// 总共监听两个fd: 1.inotify 2.优雅退出所需的pipe[0]
+	// 每个fd有三种可能的事件, 所以最多可以触发6个事件
+	// 准备一个大于6的slice
 	events := make([]unix.EpollEvent, 7)
 	for {
+		// 阻塞wait在epoll的fd上, 参数-1表示不会超时
+		// 一旦有事件产生, 就会发到events里
 		n, errno := unix.EpollWait(poller.epfd, events, -1)
 		if n == -1 {
 			if errno == unix.EINTR {
@@ -104,6 +109,7 @@ func (poller *fdPoller) wait() (bool, error) {
 			// This should never happen. More events were returned than should be possible.
 			return false, errors.New("epoll_wait returned more events than I know what to do with")
 		}
+		// 收到正常事件的处理
 		ready := events[:n]
 		epollhup := false
 		epollerr := false
@@ -121,9 +127,11 @@ func (poller *fdPoller) wait() (bool, error) {
 				}
 				if event.Events&unix.EPOLLIN != 0 {
 					// There is data to read.
+					// inotify有事件
 					epollin = true
 				}
 			}
+			// 监听管道
 			if event.Fd == int32(poller.pipe[0]) {
 				if event.Events&unix.EPOLLHUP != 0 {
 					// Write pipe descriptor was closed, by us. This means we're closing down the
@@ -136,6 +144,7 @@ func (poller *fdPoller) wait() (bool, error) {
 				}
 				if event.Events&unix.EPOLLIN != 0 {
 					// This is a regular wakeup, so we have to clear the buffer.
+					// 收到程序发来的优雅退出事件, 将调用clearWake以使管道排空
 					err := poller.clearWake()
 					if err != nil {
 						return false, err
@@ -170,6 +179,7 @@ func (poller *fdPoller) wake() error {
 func (poller *fdPoller) clearWake() error {
 	// You have to be woken up a LOT in order to get to 100!
 	buf := make([]byte, 100)
+	// 读取pipe[0]中的退出信号
 	n, errno := unix.Read(poller.pipe[0], buf)
 	if n == -1 {
 		if errno == unix.EAGAIN {

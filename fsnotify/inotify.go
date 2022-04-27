@@ -24,15 +24,16 @@ import (
 
 // Watcher watches a set of files, delivering events to a channel.
 type Watcher struct {
-	Events   chan Event
-	Errors   chan error
-	mu       sync.Mutex // Map access
-	fd       int
-	poller   *fdPoller
-	watches  map[string]*watch // Map of inotify watches (key: path)
-	paths    map[int]string    // Map of watched paths (key: watch descriptor)
-	done     chan struct{}     // Channel for sending a "quit message" to the reader goroutine
-	doneResp chan struct{}     // Channel to respond to Close
+	Events  chan Event
+	Errors  chan error
+	mu      sync.Mutex // Map access
+	fd      int        // inotify fd
+	poller  *fdPoller
+	watches map[string]*watch // Map of inotify watches (key: path)
+	// 文件描述符和路径对象的映射关系
+	paths    map[int]string // Map of watched paths (key: watch descriptor)
+	done     chan struct{}  // Channel for sending a "quit message" to the reader goroutine
+	doneResp chan struct{}  // Channel to respond to Close
 }
 
 // NewWatcher establishes a new watcher with the underlying OS and begins waiting for events.
@@ -105,13 +106,14 @@ func (w *Watcher) Add(name string) error {
 
 	var flags uint32 = agnosticEvents
 
+	// 添加监听文件
 	w.mu.Lock()
 	defer w.mu.Unlock()
 	watchEntry := w.watches[name]
 	if watchEntry != nil {
 		flags |= watchEntry.flags | unix.IN_MASK_ADD
 	}
-	wd, errno := unix.InotifyAddWatch(w.fd, name, flags)
+	wd, errno := unix.InotifyAddWatch(w.fd, name, flags) // wd是监听文件的句柄
 	if wd == -1 {
 		return errno
 	}
@@ -147,6 +149,7 @@ func (w *Watcher) Remove(name string) error {
 	delete(w.paths, int(watch.wd))
 	delete(w.watches, name)
 
+	// 移除监听文件
 	// inotify_rm_watch will return EINVAL if the file has been deleted;
 	// the inotify will already have been removed.
 	// watches and pathes are deleted in ignoreLinux() implicitly and asynchronously
@@ -207,11 +210,12 @@ func (w *Watcher) readEvents() {
 			return
 		}
 
+		// 程序阻塞在这行, 直到epoll监听到相关事件为止
 		ok, errno = w.poller.wait()
 		if errno != nil {
 			select {
 			case w.Errors <- errno:
-			case <-w.done:
+			case <-w.done: // 不过监听器关闭事件
 				return
 			}
 			continue
@@ -221,6 +225,7 @@ func (w *Watcher) readEvents() {
 			continue
 		}
 
+		// 读出事件到buffer里, 放到下面处理
 		n, errno = unix.Read(w.fd, buf[:])
 		// If a signal interrupted execution, see if we've been asked to close, and try again.
 		// http://man7.org/linux/man-pages/man7/signal.7.html :
@@ -234,6 +239,7 @@ func (w *Watcher) readEvents() {
 			return
 		}
 
+		// 当读到的事件小于16字节(一个事件结构体的单位大小), 异常处理逻辑
 		if n < unix.SizeofInotifyEvent {
 			var err error
 			if n == 0 {
@@ -255,15 +261,22 @@ func (w *Watcher) readEvents() {
 		}
 
 		var offset uint32
+		// 此时我们也不知道读了几个事件到buffer里
+		// 所以我们就用offset记录下当前所读到的位置偏移量, 直到读完为止
+		// 这个for循环结束条件是: offset累加到了某个值, 以至于剩余字节数不够读取出一整个inotify event结构体
 		// We don't know how many events we just read into the buffer
 		// While the offset points to at least one whole event...
 		for offset <= uint32(n-unix.SizeofInotifyEvent) {
 			// Point "raw" to the event in the buffer
+			// 强制把地址值转换成inotify结构体
 			raw := (*unix.InotifyEvent)(unsafe.Pointer(&buf[offset]))
 
+			// 所发生的事件以掩码形式表示
 			mask := uint32(raw.Mask)
+			// 当监听的是个目录时, 目录中发生事件的文件名会包含在结构体中, 这里的len就是文件名的长度
 			nameLen := uint32(raw.Len)
 
+			// mask格式错误, 向Errors chan发送事件
 			if mask&unix.IN_Q_OVERFLOW != 0 {
 				select {
 				case w.Errors <- ErrEventOverflow:
@@ -277,11 +290,13 @@ func (w *Watcher) readEvents() {
 			// the "Name" field with a valid filename. We retrieve the path of the watch from
 			// the "paths" map.
 			w.mu.Lock()
+			// 取出这个文件描述符所对应的文件名
 			name, ok := w.paths[int(raw.Wd)]
 			// IN_DELETE_SELF occurs when the file/directory being watched is removed.
 			// This is a sign to clean up the maps, otherwise we are no longer in sync
 			// with the inotify kernel state which has already deleted the watch
 			// automatically.
+			// 如果发生删除事件, 也一并在上下文中删掉这个文件名
 			if ok && mask&unix.IN_DELETE_SELF == unix.IN_DELETE_SELF {
 				delete(w.paths, int(raw.Wd))
 				delete(w.watches, name)
@@ -289,23 +304,29 @@ func (w *Watcher) readEvents() {
 			w.mu.Unlock()
 
 			if nameLen > 0 {
+				// 当watch是一个目录的时候, 其下面的文件发生事件时, 就会导致这个nameLen大于0
+				// 此时读取文件名字(文件名就在inotify event结构体的后面), 强制把地址值转换成长度4096的byte数组
 				// Point "bytes" at the first byte of the filename
 				bytes := (*[unix.PathMax]byte)(unsafe.Pointer(&buf[offset+unix.SizeofInotifyEvent]))[:nameLen:nameLen]
 				// The filename is padded with NULL bytes. TrimRight() gets rid of those.
+				// 拼接路径(文件名会以\000为结尾表示, 所以要去掉)
 				name += "/" + strings.TrimRight(string(bytes[0:nameLen]), "\000")
 			}
 
+			// 生成一个event
 			event := newEvent(name, mask)
 
 			// Send the events that are not ignored on the events channel
+			// 如果这个事件没有被忽略, 那么发送到Events chan
 			if !event.ignoreLinux(mask) {
 				select {
-				case w.Events <- event:
+				case w.Events <- event: // 发送事件
 				case <-w.done:
 					return
 				}
 			}
 
+			// 移动offset偏移量到下个inotify event结构体
 			// Move to the next event in the buffer
 			offset += unix.SizeofInotifyEvent + nameLen
 		}
