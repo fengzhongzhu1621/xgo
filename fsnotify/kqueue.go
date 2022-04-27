@@ -16,6 +16,9 @@ import (
 	"sync"
 	"time"
 
+	"xgo/utils/fileutils"
+	"xgo/utils/timeutils"
+
 	"golang.org/x/sys/unix"
 )
 
@@ -27,32 +30,32 @@ type Watcher struct {
 
 	kq int // File descriptor (as returned by the kqueue() syscall).
 
-	mu              sync.Mutex        // Protects access to watcher data
-	watches         map[string]int    // Map of watched file descriptors (key: path).
-	externalWatches map[string]bool   // Map of watches added by user of the library.
-	dirFlags        map[string]uint32 // Map of watched directories to fflags used in kqueue.
-	paths           map[int]pathInfo  // Map file descriptors to path names for processing kqueue events.
-	fileExists      map[string]bool   // Keep track of if we know this file exists (to stop duplicate create events).
-	isClosed        bool              // Set to true when Close() is first called
-}
-
-type pathInfo struct {
-	name  string
-	isDir bool
+	mu              sync.Mutex      // Protects access to watcher data
+	watches         map[string]int  // Map of watched file descriptors (key: path). 路径和文件描述符的映射关系
+	externalWatches map[string]bool // Map of watches added by user of the library.
+	// Map of watched directories to fflags used in kqueue.
+	// 监听的目录和监听的事件的映射关系
+	dirFlags map[string]uint32
+	// Map file descriptors to path names for processing kqueue events. 文件描述符和路径对象的映射关系
+	paths map[int]fileutils.PathInfo
+	// Keep track of if we know this file exists (to stop duplicate create events).
+	fileExists map[string]bool
+	isClosed   bool // Set to true when Close() is first called
 }
 
 // NewWatcher establishes a new watcher with the underlying OS and begins waiting for events.
 func NewWatcher() (*Watcher, error) {
+	// creates a new kernel event queue and returns a descriptor.
 	kq, err := kqueue()
 	if err != nil {
 		return nil, err
 	}
-
+	// 创建监听器对象
 	w := &Watcher{
 		kq:              kq,
-		watches:         make(map[string]int),
+		watches:         make(map[string]int), // 文件描述符
 		dirFlags:        make(map[string]uint32),
-		paths:           make(map[int]pathInfo),
+		paths:           make(map[int]fileutils.PathInfo),
 		fileExists:      make(map[string]bool),
 		externalWatches: make(map[string]bool),
 		Events:          make(chan Event),
@@ -66,14 +69,17 @@ func NewWatcher() (*Watcher, error) {
 
 // Close removes all watches and closes the events channel.
 func (w *Watcher) Close() error {
+	// 防止重复关闭
 	w.mu.Lock()
 	if w.isClosed {
 		w.mu.Unlock()
 		return nil
 	}
+	// 标记已经关闭
 	w.isClosed = true
 
 	// copy paths to remove while locked
+	// 获得监听的文件描述符
 	var pathsToRemove = make([]string, 0, len(w.watches))
 	for name := range w.watches {
 		pathsToRemove = append(pathsToRemove, name)
@@ -81,11 +87,13 @@ func (w *Watcher) Close() error {
 	w.mu.Unlock()
 	// unlock before calling Remove, which also locks
 
+	// 删除监听的文件描述符
 	for _, name := range pathsToRemove {
 		w.Remove(name)
 	}
 
 	// send a "quit" message to the reader goroutine
+	// 发送关闭命令
 	close(w.done)
 
 	return nil
@@ -103,6 +111,7 @@ func (w *Watcher) Add(name string) error {
 // Remove stops watching the the named file or directory (non-recursively).
 func (w *Watcher) Remove(name string) error {
 	name = filepath.Clean(name)
+	// 获得监听的文件或目录的描述符
 	w.mu.Lock()
 	watchfd, ok := w.watches[name]
 	w.mu.Unlock()
@@ -110,15 +119,17 @@ func (w *Watcher) Remove(name string) error {
 		return fmt.Errorf("can't remove non-existent kevent watch for: %s", name)
 	}
 
+	// 内核取消监听事件
 	const registerRemove = unix.EV_DELETE
 	if err := register(w.kq, []int{watchfd}, registerRemove, 0); err != nil {
 		return err
 	}
 
+	// 关闭需要监听的文件或目录
 	unix.Close(watchfd)
 
 	w.mu.Lock()
-	isDir := w.paths[watchfd].isDir
+	isDir := w.paths[watchfd].IsDir
 	delete(w.watches, name)
 	delete(w.paths, watchfd)
 	delete(w.dirFlags, name)
@@ -126,17 +137,19 @@ func (w *Watcher) Remove(name string) error {
 
 	// Find all watched paths that are in this directory that are not external.
 	if isDir {
+		// 获得目录下监听的子目录或文件
 		var pathsToRemove []string
 		w.mu.Lock()
 		for _, path := range w.paths {
-			wdir, _ := filepath.Split(path.name)
+			wdir, _ := filepath.Split(path.Name)
 			if filepath.Clean(wdir) == name {
-				if !w.externalWatches[path.name] {
-					pathsToRemove = append(pathsToRemove, path.name)
+				if !w.externalWatches[path.Name] {
+					pathsToRemove = append(pathsToRemove, path.Name)
 				}
 			}
 		}
 		w.mu.Unlock()
+		// 删除目录下监听的子目录或文件的监听事件
 		for _, name := range pathsToRemove {
 			// Since these are internal, not much sense in propagating error
 			// to the user, as that will just confuse them with an error about
@@ -149,6 +162,7 @@ func (w *Watcher) Remove(name string) error {
 }
 
 // WatchList returns the directories and files that are being monitered.
+// 获得监听的文件或目录列表
 func (w *Watcher) WatchList() []string {
 	w.mu.Lock()
 	defer w.mu.Unlock()
@@ -162,10 +176,11 @@ func (w *Watcher) WatchList() []string {
 }
 
 // Watch all events (except NOTE_EXTEND, NOTE_LINK, NOTE_REVOKE)
+// 默认监听的事件
 const noteAllEvents = unix.NOTE_DELETE | unix.NOTE_WRITE | unix.NOTE_ATTRIB | unix.NOTE_RENAME
 
 // keventWaitTime to block on each read from kevent
-var keventWaitTime = durationToTimespec(100 * time.Millisecond)
+var keventWaitTime = timeutils.DurationToTimespec(100 * time.Millisecond)
 
 // addWatch adds name to the watched file set.
 // The flags are interpreted as described in kevent(2).
@@ -180,10 +195,11 @@ func (w *Watcher) addWatch(name string, flags uint32) (string, error) {
 		w.mu.Unlock()
 		return "", errors.New("kevent instance already closed")
 	}
+
 	watchfd, alreadyWatching := w.watches[name]
 	// We already have a watch, but we can still override flags.
 	if alreadyWatching {
-		isDir = w.paths[watchfd].isDir
+		isDir = w.paths[watchfd].IsDir
 	}
 	w.mu.Unlock()
 
@@ -229,6 +245,7 @@ func (w *Watcher) addWatch(name string, flags uint32) (string, error) {
 			}
 		}
 
+		// 打开文件
 		watchfd, err = unix.Open(name, openMode, 0700)
 		if watchfd == -1 {
 			return "", err
@@ -237,16 +254,18 @@ func (w *Watcher) addWatch(name string, flags uint32) (string, error) {
 		isDir = fi.IsDir()
 	}
 
+	// 内核注册监听事件
 	const registerAdd = unix.EV_ADD | unix.EV_CLEAR | unix.EV_ENABLE
 	if err := register(w.kq, []int{watchfd}, registerAdd, flags); err != nil {
 		unix.Close(watchfd)
 		return "", err
 	}
 
+	// 构造文件描述符和路径的映射关系
 	if !alreadyWatching {
 		w.mu.Lock()
 		w.watches[name] = watchfd
-		w.paths[watchfd] = pathInfo{name: name, isDir: isDir}
+		w.paths[watchfd] = fileutils.PathInfo{Name: name, IsDir: isDir}
 		w.mu.Unlock()
 	}
 
@@ -258,10 +277,12 @@ func (w *Watcher) addWatch(name string, flags uint32) (string, error) {
 		watchDir := (flags&unix.NOTE_WRITE) == unix.NOTE_WRITE &&
 			(!alreadyWatching || (w.dirFlags[name]&unix.NOTE_WRITE) != unix.NOTE_WRITE)
 		// Store flags so this watch can be updated later
+		// 构造监听的目录和监听事件的映射关系
 		w.dirFlags[name] = flags
 		w.mu.Unlock()
 
 		if watchDir {
+			// 监听目录下的所有文件
 			if err := w.watchDirectoryFiles(name); err != nil {
 				return "", err
 			}
@@ -304,9 +325,9 @@ loop:
 			w.mu.Lock()
 			path := w.paths[watchfd]
 			w.mu.Unlock()
-			event := newEvent(path.name, mask)
+			event := newEvent(path.Name, mask)
 
-			if path.isDir && !(event.Op&Remove == Remove) {
+			if path.IsDir && !(event.Op&Remove == Remove) {
 				// Double check to make sure the directory exists. This can happen when
 				// we do a rm -fr on a recursively watched folders and we receive a
 				// modification event first but the folder has been deleted and later
@@ -324,7 +345,7 @@ loop:
 				w.mu.Unlock()
 			}
 
-			if path.isDir && event.Op&Write == Write && !(event.Op&Remove == Remove) {
+			if path.IsDir && event.Op&Write == Write && !(event.Op&Remove == Remove) {
 				w.sendDirectoryChangeEvents(event.Name)
 			} else {
 				// Send the event on the Events channel.
@@ -338,7 +359,7 @@ loop:
 			if event.Op&Remove == Remove {
 				// Look for a file that may have overwritten this.
 				// For example, mv f1 f2 will delete f2, then create f2.
-				if path.isDir {
+				if path.IsDir {
 					fileDir := filepath.Clean(event.Name)
 					w.mu.Lock()
 					_, found := w.watches[fileDir]
@@ -378,7 +399,7 @@ loop:
 	close(w.Errors)
 }
 
-// newEvent returns an platform-independent Event based on kqueue Fflags.
+// newEvent returns a platform-independent Event based on kqueue Fflags.
 func newEvent(name string, mask uint32) Event {
 	e := Event{Name: name}
 	if mask&unix.NOTE_DELETE == unix.NOTE_DELETE {
@@ -527,9 +548,4 @@ func read(kq int, events []unix.Kevent_t, timeout *unix.Timespec) ([]unix.Kevent
 		return nil, err
 	}
 	return events[0:n], nil
-}
-
-// durationToTimespec prepares a timeout value
-func durationToTimespec(d time.Duration) unix.Timespec {
-	return unix.NsecToTimespec(d.Nanoseconds())
 }

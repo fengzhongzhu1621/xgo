@@ -11,6 +11,8 @@ import (
 	"os"
 	"testing"
 	"time"
+
+	"xgo/utils/testutil"
 )
 
 func TestEventStringWithValue(t *testing.T) {
@@ -50,21 +52,22 @@ func TestEventOpStringWithNoValue(t *testing.T) {
 // or errors channels.
 func TestWatcherClose(t *testing.T) {
 	t.Parallel()
-
-	name := tempMkFile(t, "")
+	// 创建临时文件
+	name := testutil.TempMkFile(t, "", "fsnotify")
+	// 监听临时文件
 	w := newWatcher(t)
 	err := w.Add(name)
 	if err != nil {
 		t.Fatal(err)
 	}
-
+	// 删除临时文件
 	err = os.Remove(name)
 	if err != nil {
 		t.Fatal(err)
 	}
 	// Allow the watcher to receive the event.
 	time.Sleep(time.Millisecond * 100)
-
+	// 关闭监听
 	err = w.Close()
 	if err != nil {
 		t.Fatal(err)

@@ -30,6 +30,7 @@ func emptyPoller(fd int) *fdPoller {
 
 // Create a new inotify poller.
 // This creates an inotify handler, and an epoll handler.
+// 在epoll的fd上注册了两个文件, 一个是inotify的, 另一个是其用来实现优雅退出的pipe[0].
 func newFdPoller(fd int) (*fdPoller, error) {
 	var errno error
 	poller := emptyPoller(fd)
@@ -40,16 +41,20 @@ func newFdPoller(fd int) (*fdPoller, error) {
 	}()
 
 	// Create epoll fd
+	// 要使用epoll的话, 需要使用EpollCreate函数为其单独创建一个fd
 	poller.epfd, errno = unix.EpollCreate1(unix.EPOLL_CLOEXEC)
 	if poller.epfd == -1 {
 		return nil, errno
 	}
+
+	// 为实现优雅退出, 需要创建一个管道, pipe[0]用来读, pipe[1]用来写
 	// Create pipe; pipe[0] is the read end, pipe[1] the write end.
 	errno = unix.Pipe2(poller.pipe[:], unix.O_NONBLOCK|unix.O_CLOEXEC)
 	if errno != nil {
 		return nil, errno
 	}
 
+	// 注册inotify的fd到epoll
 	// Register inotify fd with epoll
 	event := unix.EpollEvent{
 		Fd:     int32(poller.fd),
@@ -60,6 +65,7 @@ func newFdPoller(fd int) (*fdPoller, error) {
 		return nil, errno
 	}
 
+	// 注册管道的read fd到epoll
 	// Register pipe fd with epoll
 	event = unix.EpollEvent{
 		Fd:     int32(poller.pipe[0]),
@@ -148,6 +154,8 @@ func (poller *fdPoller) wait() (bool, error) {
 // Close the write end of the poller.
 func (poller *fdPoller) wake() error {
 	buf := make([]byte, 1)
+	// 使用管道发送关闭事件，实现优雅退出
+	// 这里在pipe[1]写入了一个字符当做退出信号
 	n, errno := unix.Write(poller.pipe[1], buf)
 	if n == -1 {
 		if errno == unix.EAGAIN {

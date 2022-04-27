@@ -34,7 +34,7 @@ func RemoveContents(dir string) error {
 	return nil
 }
 
-// 创建目录.
+// CreateDir 创建目录.
 func CreateDir(dirname string) error {
 	var err error
 	fin, err := os.Lstat(dirname)

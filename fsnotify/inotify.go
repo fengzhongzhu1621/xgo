@@ -17,6 +17,8 @@ import (
 	"sync"
 	"unsafe"
 
+	"xgo/utils/channel"
+
 	"golang.org/x/sys/unix"
 )
 
@@ -34,6 +36,7 @@ type Watcher struct {
 }
 
 // NewWatcher establishes a new watcher with the underlying OS and begins waiting for events.
+// 创建一个监听器
 func NewWatcher() (*Watcher, error) {
 	// Create inotify fd
 	fd, errno := unix.InotifyInit1(unix.IN_CLOEXEC)
@@ -41,6 +44,7 @@ func NewWatcher() (*Watcher, error) {
 		return nil, errno
 	}
 	// Create epoll
+	// 在epoll的fd上注册了两个文件, 一个是inotify的, 另一个是其用来实现优雅退出的pipe[0].
 	poller, err := newFdPoller(fd)
 	if err != nil {
 		unix.Close(fd)
@@ -57,20 +61,18 @@ func NewWatcher() (*Watcher, error) {
 		doneResp: make(chan struct{}),
 	}
 
+	// 启动一个协程监听文件变更事件
 	go w.readEvents()
 	return w, nil
 }
 
+// 判断监听器是否已经关闭
 func (w *Watcher) isClosed() bool {
-	select {
-	case <-w.done:
-		return true
-	default:
-		return false
-	}
+	return channel.IsClosed(w.done)
 }
 
 // Close removes all watches and closes the events channel.
+// 关闭监听器
 func (w *Watcher) Close() error {
 	if w.isClosed() {
 		return nil
@@ -80,9 +82,11 @@ func (w *Watcher) Close() error {
 	close(w.done)
 
 	// Wake up goroutine
+	// 使用管道发送关闭事件，读协程通过epoll可以获取到此事件
 	w.poller.wake()
 
 	// Wait for goroutine to close
+	// 等待读事件结束
 	<-w.doneResp
 
 	return nil

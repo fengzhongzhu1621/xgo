@@ -18,48 +18,15 @@ import (
 	"sync/atomic"
 	"testing"
 	"time"
+
+	"xgo/utils/atomicutils"
+	"xgo/utils/testutil"
 )
 
 const (
 	eventSeparator = 50 * time.Millisecond
 	waitForEvents  = 500 * time.Millisecond
 )
-
-// An atomic counter
-type counter struct {
-	val int32
-}
-
-func (c *counter) increment() {
-	atomic.AddInt32(&c.val, 1)
-}
-
-func (c *counter) value() int32 {
-	return atomic.LoadInt32(&c.val)
-}
-
-func (c *counter) reset() {
-	atomic.StoreInt32(&c.val, 0)
-}
-
-// tempMkdir makes a temporary directory
-func tempMkdir(t *testing.T) string {
-	dir, err := ioutil.TempDir("", "fsnotify")
-	if err != nil {
-		t.Fatalf("failed to create test directory: %s", err)
-	}
-	return dir
-}
-
-// tempMkFile makes a temporary file.
-func tempMkFile(t *testing.T, dir string) string {
-	f, err := ioutil.TempFile(dir, "fsnotify")
-	if err != nil {
-		t.Fatalf("failed to create test file: %v", err)
-	}
-	defer f.Close()
-	return f.Name()
-}
 
 // newWatcher initializes an fsnotify Watcher instance.
 func newWatcher(t *testing.T) *Watcher {
@@ -91,11 +58,11 @@ func TestFsnotifyMultipleOperations(t *testing.T) {
 	}()
 
 	// Create directory to watch
-	testDir := tempMkdir(t)
+	testDir := testutil.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDir)
 
 	// Create directory that's not watched
-	testDirToMoveFiles := tempMkdir(t)
+	testDirToMoveFiles := testutil.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDirToMoveFiles)
 
 	testFile := filepath.Join(testDir, "TestFsnotifySeq.testfile")
@@ -105,7 +72,7 @@ func TestFsnotifyMultipleOperations(t *testing.T) {
 
 	// Receive events on the event channel on a separate goroutine
 	eventstream := watcher.Events
-	var createReceived, modifyReceived, deleteReceived, renameReceived counter
+	var createReceived, modifyReceived, deleteReceived, renameReceived atomicutils.Counter
 	done := make(chan bool)
 	go func() {
 		for event := range eventstream {
@@ -113,16 +80,16 @@ func TestFsnotifyMultipleOperations(t *testing.T) {
 			if event.Name == filepath.Clean(testDir) || event.Name == filepath.Clean(testFile) {
 				t.Logf("event received: %s", event)
 				if event.Op&Remove == Remove {
-					deleteReceived.increment()
+					deleteReceived.Increment()
 				}
 				if event.Op&Write == Write {
-					modifyReceived.increment()
+					modifyReceived.Increment()
 				}
 				if event.Op&Create == Create {
-					createReceived.increment()
+					createReceived.Increment()
 				}
 				if event.Op&Rename == Rename {
-					renameReceived.increment()
+					renameReceived.Increment()
 				}
 			} else {
 				t.Logf("unexpected event received: %s", event)
@@ -172,16 +139,16 @@ func TestFsnotifyMultipleOperations(t *testing.T) {
 
 	// We expect this event to be received almost immediately, but let's wait 500 ms to be sure
 	time.Sleep(waitForEvents)
-	cReceived := createReceived.value()
+	cReceived := createReceived.Value()
 	if cReceived != 2 {
 		t.Fatalf("incorrect number of create events received after 500 ms (%d vs %d)", cReceived, 2)
 	}
-	mReceived := modifyReceived.value()
+	mReceived := modifyReceived.Value()
 	if mReceived != 1 {
 		t.Fatalf("incorrect number of modify events received after 500 ms (%d vs %d)", mReceived, 1)
 	}
-	dReceived := deleteReceived.value()
-	rReceived := renameReceived.value()
+	dReceived := deleteReceived.Value()
+	rReceived := renameReceived.Value()
 	if dReceived+rReceived != 1 {
 		t.Fatalf("incorrect number of rename+delete events received after 500 ms (%d vs %d)", rReceived+dReceived, 1)
 	}
@@ -212,7 +179,7 @@ func TestFsnotifyMultipleCreates(t *testing.T) {
 	}()
 
 	// Create directory to watch
-	testDir := tempMkdir(t)
+	testDir := testutil.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDir)
 
 	testFile := filepath.Join(testDir, "TestFsnotifySeq.testfile")
@@ -221,7 +188,7 @@ func TestFsnotifyMultipleCreates(t *testing.T) {
 
 	// Receive events on the event channel on a separate goroutine
 	eventstream := watcher.Events
-	var createReceived, modifyReceived, deleteReceived counter
+	var createReceived, modifyReceived, deleteReceived atomicutils.Counter
 	done := make(chan bool)
 	go func() {
 		for event := range eventstream {
@@ -229,13 +196,13 @@ func TestFsnotifyMultipleCreates(t *testing.T) {
 			if event.Name == filepath.Clean(testDir) || event.Name == filepath.Clean(testFile) {
 				t.Logf("event received: %s", event)
 				if event.Op&Remove == Remove {
-					deleteReceived.increment()
+					deleteReceived.Increment()
 				}
 				if event.Op&Create == Create {
-					createReceived.increment()
+					createReceived.Increment()
 				}
 				if event.Op&Write == Write {
-					modifyReceived.increment()
+					modifyReceived.Increment()
 				}
 			} else {
 				t.Logf("unexpected event received: %s", event)
@@ -302,15 +269,15 @@ func TestFsnotifyMultipleCreates(t *testing.T) {
 
 	// We expect this event to be received almost immediately, but let's wait 500 ms to be sure
 	time.Sleep(waitForEvents)
-	cReceived := createReceived.value()
+	cReceived := createReceived.Value()
 	if cReceived != 2 {
 		t.Fatalf("incorrect number of create events received after 500 ms (%d vs %d)", cReceived, 2)
 	}
-	mReceived := modifyReceived.value()
+	mReceived := modifyReceived.Value()
 	if mReceived < 3 {
 		t.Fatalf("incorrect number of modify events received after 500 ms (%d vs atleast %d)", mReceived, 3)
 	}
-	dReceived := deleteReceived.value()
+	dReceived := deleteReceived.Value()
 	if dReceived != 1 {
 		t.Fatalf("incorrect number of rename+delete events received after 500 ms (%d vs %d)", dReceived, 1)
 	}
@@ -331,7 +298,7 @@ func TestFsnotifyDirOnly(t *testing.T) {
 	watcher := newWatcher(t)
 
 	// Create directory to watch
-	testDir := tempMkdir(t)
+	testDir := testutil.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDir)
 
 	// Create a file before watching directory
@@ -360,7 +327,7 @@ func TestFsnotifyDirOnly(t *testing.T) {
 
 	// Receive events on the event channel on a separate goroutine
 	eventstream := watcher.Events
-	var createReceived, modifyReceived, deleteReceived counter
+	var createReceived, modifyReceived, deleteReceived atomicutils.Counter
 	done := make(chan bool)
 	go func() {
 		for event := range eventstream {
@@ -368,13 +335,13 @@ func TestFsnotifyDirOnly(t *testing.T) {
 			if event.Name == filepath.Clean(testDir) || event.Name == filepath.Clean(testFile) || event.Name == filepath.Clean(testFileAlreadyExists) {
 				t.Logf("event received: %s", event)
 				if event.Op&Remove == Remove {
-					deleteReceived.increment()
+					deleteReceived.Increment()
 				}
 				if event.Op&Write == Write {
-					modifyReceived.increment()
+					modifyReceived.Increment()
 				}
 				if event.Op&Create == Create {
-					createReceived.increment()
+					createReceived.Increment()
 				}
 			} else {
 				t.Logf("unexpected event received: %s", event)
@@ -404,15 +371,15 @@ func TestFsnotifyDirOnly(t *testing.T) {
 
 	// We expect this event to be received almost immediately, but let's wait 500 ms to be sure
 	time.Sleep(waitForEvents)
-	cReceived := createReceived.value()
+	cReceived := createReceived.Value()
 	if cReceived != 1 {
 		t.Fatalf("incorrect number of create events received after 500 ms (%d vs %d)", cReceived, 1)
 	}
-	mReceived := modifyReceived.value()
+	mReceived := modifyReceived.Value()
 	if mReceived != 1 {
 		t.Fatalf("incorrect number of modify events received after 500 ms (%d vs %d)", mReceived, 1)
 	}
-	dReceived := deleteReceived.value()
+	dReceived := deleteReceived.Value()
 	if dReceived != 2 {
 		t.Fatalf("incorrect number of delete events received after 500 ms (%d vs %d)", dReceived, 2)
 	}
@@ -434,7 +401,7 @@ func TestFsnotifyDeleteWatchedDir(t *testing.T) {
 	defer watcher.Close()
 
 	// Create directory to watch
-	testDir := tempMkdir(t)
+	testDir := testutil.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDir)
 
 	// Create a file before watching directory
@@ -463,14 +430,14 @@ func TestFsnotifyDeleteWatchedDir(t *testing.T) {
 
 	// Receive events on the event channel on a separate goroutine
 	eventstream := watcher.Events
-	var deleteReceived counter
+	var deleteReceived atomicutils.Counter
 	go func() {
 		for event := range eventstream {
 			// Only count relevant events
 			if event.Name == filepath.Clean(testDir) || event.Name == filepath.Clean(testFileAlreadyExists) {
 				t.Logf("event received: %s", event)
 				if event.Op&Remove == Remove {
-					deleteReceived.increment()
+					deleteReceived.Increment()
 				}
 			} else {
 				t.Logf("unexpected event received: %s", event)
@@ -482,7 +449,7 @@ func TestFsnotifyDeleteWatchedDir(t *testing.T) {
 
 	// We expect this event to be received almost immediately, but let's wait 500 ms to be sure
 	time.Sleep(waitForEvents)
-	dReceived := deleteReceived.value()
+	dReceived := deleteReceived.Value()
 	if dReceived < 2 {
 		t.Fatalf("did not receive at least %d delete events, received %d after 500 ms", 2, dReceived)
 	}
@@ -492,7 +459,7 @@ func TestFsnotifySubDir(t *testing.T) {
 	watcher := newWatcher(t)
 
 	// Create directory to watch
-	testDir := tempMkdir(t)
+	testDir := testutil.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDir)
 
 	testFile1 := filepath.Join(testDir, "TestFsnotifyFile1.testfile")
@@ -508,7 +475,7 @@ func TestFsnotifySubDir(t *testing.T) {
 
 	// Receive events on the event channel on a separate goroutine
 	eventstream := watcher.Events
-	var createReceived, deleteReceived counter
+	var createReceived, deleteReceived atomicutils.Counter
 	done := make(chan bool)
 	go func() {
 		for event := range eventstream {
@@ -516,10 +483,10 @@ func TestFsnotifySubDir(t *testing.T) {
 			if event.Name == filepath.Clean(testDir) || event.Name == filepath.Clean(testSubDir) || event.Name == filepath.Clean(testFile1) {
 				t.Logf("event received: %s", event)
 				if event.Op&Create == Create {
-					createReceived.increment()
+					createReceived.Increment()
 				}
 				if event.Op&Remove == Remove {
-					deleteReceived.increment()
+					deleteReceived.Increment()
 				}
 			} else {
 				t.Logf("unexpected event received: %s", event)
@@ -561,11 +528,11 @@ func TestFsnotifySubDir(t *testing.T) {
 
 	// We expect this event to be received almost immediately, but let's wait 500 ms to be sure
 	time.Sleep(waitForEvents)
-	cReceived := createReceived.value()
+	cReceived := createReceived.Value()
 	if cReceived != 2 {
 		t.Fatalf("incorrect number of create events received after 500 ms (%d vs %d)", cReceived, 2)
 	}
-	dReceived := deleteReceived.value()
+	dReceived := deleteReceived.Value()
 	if dReceived != 2 {
 		t.Fatalf("incorrect number of delete events received after 500 ms (%d vs %d)", dReceived, 2)
 	}
@@ -586,7 +553,7 @@ func TestFsnotifyRename(t *testing.T) {
 	watcher := newWatcher(t)
 
 	// Create directory to watch
-	testDir := tempMkdir(t)
+	testDir := testutil.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDir)
 
 	addWatch(t, watcher, testDir)
@@ -603,14 +570,14 @@ func TestFsnotifyRename(t *testing.T) {
 
 	// Receive events on the event channel on a separate goroutine
 	eventstream := watcher.Events
-	var renameReceived counter
+	var renameReceived atomicutils.Counter
 	done := make(chan bool)
 	go func() {
 		for event := range eventstream {
 			// Only count relevant events
 			if event.Name == filepath.Clean(testDir) || event.Name == filepath.Clean(testFile) || event.Name == filepath.Clean(testFileRenamed) {
 				if event.Op&Rename == Rename {
-					renameReceived.increment()
+					renameReceived.Increment()
 				}
 				t.Logf("event received: %s", event)
 			} else {
@@ -642,7 +609,7 @@ func TestFsnotifyRename(t *testing.T) {
 
 	// We expect this event to be received almost immediately, but let's wait 500 ms to be sure
 	time.Sleep(waitForEvents)
-	if renameReceived.value() == 0 {
+	if renameReceived.Value() == 0 {
 		t.Fatal("fsnotify rename events have not been received after 500 ms")
 	}
 
@@ -664,11 +631,11 @@ func TestFsnotifyRenameToCreate(t *testing.T) {
 	watcher := newWatcher(t)
 
 	// Create directory to watch
-	testDir := tempMkdir(t)
+	testDir := testutil.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDir)
 
 	// Create directory to get file
-	testDirFrom := tempMkdir(t)
+	testDirFrom := testutil.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDirFrom)
 
 	addWatch(t, watcher, testDir)
@@ -685,14 +652,14 @@ func TestFsnotifyRenameToCreate(t *testing.T) {
 
 	// Receive events on the event channel on a separate goroutine
 	eventstream := watcher.Events
-	var createReceived counter
+	var createReceived atomicutils.Counter
 	done := make(chan bool)
 	go func() {
 		for event := range eventstream {
 			// Only count relevant events
 			if event.Name == filepath.Clean(testDir) || event.Name == filepath.Clean(testFile) || event.Name == filepath.Clean(testFileRenamed) {
 				if event.Op&Create == Create {
-					createReceived.increment()
+					createReceived.Increment()
 				}
 				t.Logf("event received: %s", event)
 			} else {
@@ -718,7 +685,7 @@ func TestFsnotifyRenameToCreate(t *testing.T) {
 
 	// We expect this event to be received almost immediately, but let's wait 500 ms to be sure
 	time.Sleep(waitForEvents)
-	if createReceived.value() == 0 {
+	if createReceived.Value() == 0 {
 		t.Fatal("fsnotify create events have not been received after 500 ms")
 	}
 
@@ -745,11 +712,11 @@ func TestFsnotifyRenameToOverwrite(t *testing.T) {
 	watcher := newWatcher(t)
 
 	// Create directory to watch
-	testDir := tempMkdir(t)
+	testDir := testutil.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDir)
 
 	// Create directory to get file
-	testDirFrom := tempMkdir(t)
+	testDirFrom := testutil.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDirFrom)
 
 	testFile := filepath.Join(testDirFrom, "TestFsnotifyEvents.testfile")
@@ -775,13 +742,13 @@ func TestFsnotifyRenameToOverwrite(t *testing.T) {
 
 	// Receive events on the event channel on a separate goroutine
 	eventstream := watcher.Events
-	var eventReceived counter
+	var eventReceived atomicutils.Counter
 	done := make(chan bool)
 	go func() {
 		for event := range eventstream {
 			// Only count relevant events
 			if event.Name == filepath.Clean(testFileRenamed) {
-				eventReceived.increment()
+				eventReceived.Increment()
 				t.Logf("event received: %s", event)
 			} else {
 				t.Logf("unexpected event received: %s", event)
@@ -806,7 +773,7 @@ func TestFsnotifyRenameToOverwrite(t *testing.T) {
 
 	// We expect this event to be received almost immediately, but let's wait 500 ms to be sure
 	time.Sleep(waitForEvents)
-	if eventReceived.value() == 0 {
+	if eventReceived.Value() == 0 {
 		t.Fatal("fsnotify events have not been received after 500 ms")
 	}
 
@@ -826,7 +793,7 @@ func TestFsnotifyRenameToOverwrite(t *testing.T) {
 
 func TestRemovalOfWatch(t *testing.T) {
 	// Create directory to watch
-	testDir := tempMkdir(t)
+	testDir := testutil.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDir)
 
 	// Create a file before watching directory
@@ -886,7 +853,7 @@ func TestFsnotifyAttrib(t *testing.T) {
 	watcher := newWatcher(t)
 
 	// Create directory to watch
-	testDir := tempMkdir(t)
+	testDir := testutil.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDir)
 
 	// Receive errors on the error channel on a separate goroutine
@@ -903,18 +870,18 @@ func TestFsnotifyAttrib(t *testing.T) {
 	// The modifyReceived counter counts IsModify events that are not IsAttrib,
 	// and the attribReceived counts IsAttrib events (which are also IsModify as
 	// a consequence).
-	var modifyReceived counter
-	var attribReceived counter
+	var modifyReceived atomicutils.Counter
+	var attribReceived atomicutils.Counter
 	done := make(chan bool)
 	go func() {
 		for event := range eventstream {
 			// Only count relevant events
 			if event.Name == filepath.Clean(testDir) || event.Name == filepath.Clean(testFile) {
 				if event.Op&Write == Write {
-					modifyReceived.increment()
+					modifyReceived.Increment()
 				}
 				if event.Op&Chmod == Chmod {
-					attribReceived.increment()
+					attribReceived.Increment()
 				}
 				t.Logf("event received: %s", event)
 			} else {
@@ -947,17 +914,17 @@ func TestFsnotifyAttrib(t *testing.T) {
 	// We expect this event to be received almost immediately, but let's wait 500 ms to be sure
 	// Creating/writing a file changes also the mtime, so IsAttrib should be set to true here
 	time.Sleep(waitForEvents)
-	if modifyReceived.value() != 0 {
+	if modifyReceived.Value() != 0 {
 		t.Fatal("received an unexpected modify event when creating a test file")
 	}
-	if attribReceived.value() == 0 {
+	if attribReceived.Value() == 0 {
 		t.Fatal("fsnotify attribute events have not received after 500 ms")
 	}
 
 	// Modifying the contents of the file does not set the attrib flag (although eg. the mtime
 	// might have been modified).
-	modifyReceived.reset()
-	attribReceived.reset()
+	modifyReceived.Reset()
+	attribReceived.Reset()
 
 	f, err = os.OpenFile(testFile, os.O_WRONLY, 0)
 	if err != nil {
@@ -970,16 +937,16 @@ func TestFsnotifyAttrib(t *testing.T) {
 
 	time.Sleep(waitForEvents)
 
-	if modifyReceived.value() != 1 {
+	if modifyReceived.Value() != 1 {
 		t.Fatal("didn't receive a modify event after changing test file contents")
 	}
 
-	if attribReceived.value() != 0 {
+	if attribReceived.Value() != 0 {
 		t.Fatal("did receive an unexpected attrib event after changing test file contents")
 	}
 
-	modifyReceived.reset()
-	attribReceived.reset()
+	modifyReceived.Reset()
+	attribReceived.Reset()
 
 	// Doing a chmod on the file should trigger an event with the "attrib" flag set (the contents
 	// of the file are not changed though)
@@ -989,7 +956,7 @@ func TestFsnotifyAttrib(t *testing.T) {
 
 	time.Sleep(waitForEvents)
 
-	if attribReceived.value() != 1 {
+	if attribReceived.Value() != 1 {
 		t.Fatal("didn't receive an attribute change after 500ms")
 	}
 
@@ -1022,7 +989,7 @@ func TestFsnotifyClose(t *testing.T) {
 		t.Fatal("double Close() test failed: second Close() call didn't return")
 	}
 
-	testDir := tempMkdir(t)
+	testDir := testutil.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDir)
 
 	if err := watcher.Add(testDir); err == nil {
@@ -1038,27 +1005,27 @@ func TestFsnotifyFakeSymlink(t *testing.T) {
 	watcher := newWatcher(t)
 
 	// Create directory to watch
-	testDir := tempMkdir(t)
+	testDir := testutil.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDir)
 
-	var errorsReceived counter
+	var errorsReceived atomicutils.Counter
 	// Receive errors on the error channel on a separate goroutine
 	go func() {
 		for errors := range watcher.Errors {
 			t.Logf("Received error: %s", errors)
-			errorsReceived.increment()
+			errorsReceived.Increment()
 		}
 	}()
 
 	// Count the CREATE events received
-	var createEventsReceived, otherEventsReceived counter
+	var createEventsReceived, otherEventsReceived atomicutils.Counter
 	go func() {
 		for ev := range watcher.Events {
 			t.Logf("event received: %s", ev)
 			if ev.Op&Create == Create {
-				createEventsReceived.increment()
+				createEventsReceived.Increment()
 			} else {
-				otherEventsReceived.increment()
+				otherEventsReceived.Increment()
 			}
 		}
 	}()
@@ -1074,18 +1041,18 @@ func TestFsnotifyFakeSymlink(t *testing.T) {
 	time.Sleep(waitForEvents)
 
 	// Should not be error, just no events for broken links (watching nothing)
-	if errorsReceived.value() > 0 {
+	if errorsReceived.Value() > 0 {
 		t.Fatal("fsnotify errors have been received.")
 	}
-	if otherEventsReceived.value() > 0 {
+	if otherEventsReceived.Value() > 0 {
 		t.Fatal("fsnotify other events received on the broken link")
 	}
 
 	// Except for 1 create event (for the link itself)
-	if createEventsReceived.value() == 0 {
+	if createEventsReceived.Value() == 0 {
 		t.Fatal("fsnotify create events were not received after 500 ms")
 	}
-	if createEventsReceived.value() > 1 {
+	if createEventsReceived.Value() > 1 {
 		t.Fatal("fsnotify more create events received than expected")
 	}
 
@@ -1101,7 +1068,7 @@ func TestCyclicSymlink(t *testing.T) {
 
 	watcher := newWatcher(t)
 
-	testDir := tempMkdir(t)
+	testDir := testutil.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDir)
 
 	link := path.Join(testDir, "link")
@@ -1110,11 +1077,11 @@ func TestCyclicSymlink(t *testing.T) {
 	}
 	addWatch(t, watcher, testDir)
 
-	var createEventsReceived counter
+	var createEventsReceived atomicutils.Counter
 	go func() {
 		for ev := range watcher.Events {
 			if ev.Op&Create == Create {
-				createEventsReceived.increment()
+				createEventsReceived.Increment()
 			}
 		}
 	}()
@@ -1134,7 +1101,7 @@ func TestCyclicSymlink(t *testing.T) {
 	// We expect this event to be received almost immediately, but let's wait 500 ms to be sure
 	time.Sleep(waitForEvents)
 
-	if got := createEventsReceived.value(); got == 0 {
+	if got := createEventsReceived.Value(); got == 0 {
 		t.Errorf("want at least 1 create event got %v", got)
 	}
 
@@ -1150,7 +1117,7 @@ func TestConcurrentRemovalOfWatch(t *testing.T) {
 	}
 
 	// Create directory to watch
-	testDir := tempMkdir(t)
+	testDir := testutil.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDir)
 
 	// Create a file before watching directory
@@ -1187,7 +1154,7 @@ func TestConcurrentRemovalOfWatch(t *testing.T) {
 
 func TestClose(t *testing.T) {
 	// Regression test for #59 bad file descriptor from Close
-	testDir := tempMkdir(t)
+	testDir := testutil.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDir)
 
 	watcher := newWatcher(t)
@@ -1203,13 +1170,13 @@ func TestClose(t *testing.T) {
 // TestRemoveWithClose tests if one can handle Remove events and, at the same
 // time, close Watcher object without any data races.
 func TestRemoveWithClose(t *testing.T) {
-	testDir := tempMkdir(t)
+	testDir := testutil.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDir)
 
 	const fileN = 200
 	tempFiles := make([]string, 0, fileN)
 	for i := 0; i < fileN; i++ {
-		tempFiles = append(tempFiles, tempMkFile(t, testDir))
+		tempFiles = append(tempFiles, testutil.TempMkFile(t, testDir, "fsnotify"))
 	}
 	watcher := newWatcher(t)
 	if err := watcher.Add(testDir); err != nil {
