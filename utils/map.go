@@ -100,3 +100,41 @@ func FlattenAndMergeMap(shadow map[string]interface{}, m map[string]interface{},
 	}
 	return shadow
 }
+
+// DeepSearch THIS CODE IS COPIED HERE: IT SHOULD NOT BE MODIFIED
+// AT SOME POINT IT WILL BE MOVED TO A COMMON PLACE
+// deepSearch scans deep maps, following the key indexes listed in the
+// sequence "path".
+// The last value is expected to be another map, and is returned.
+//
+// In case intermediate keys do not exist, or map to a non-map value,
+// a new map is created and inserted, and the search continues from there:
+// the initial map "m" may be modified!
+// 获得指定路径上的最后一个字典
+func DeepSearch(m map[string]interface{}, paths []string) map[string]interface{} {
+	// 遍历 path 数组
+	for _, k := range paths {
+		// 判断是否在字典m中存在
+		m2, ok := m[k]
+		if !ok {
+			// 如果path不在字典中，将其放到字典m中
+			// intermediate key does not exist
+			// => create it and continue from there
+			m3 := make(map[string]interface{})
+			m[k] = m3
+			m = m3
+			continue
+		}
+		// 如果path在字典中
+		m3, ok := m2.(map[string]interface{})
+		if !ok {
+			// intermediate key is a value
+			// => replace with a new map
+			m3 = make(map[string]interface{})
+			m[k] = m3
+		}
+		// continue search from here
+		m = m3
+	}
+	return m
+}

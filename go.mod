@@ -14,6 +14,7 @@ require (
 	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.19.0
 	github.com/pkg/errors v0.9.1
+	github.com/spf13/cast v1.4.1
 	github.com/spf13/jwalterweatherman v1.1.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.11.0
@@ -23,6 +24,7 @@ require (
 	github.com/wxnacy/wgo v1.0.4
 	golang.org/x/sys v0.0.0-20220422013727-9388b58f7150
 	google.golang.org/protobuf v1.28.0
+	gopkg.in/ini.v1 v1.66.4
 	gopkg.in/yaml.v2 v2.4.0
 	gotest.tools/gotestsum v1.8.0 // indirect
 )

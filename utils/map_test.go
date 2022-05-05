@@ -42,3 +42,24 @@ func TestCopyAndInsensitiviseMap(t *testing.T) {
 		t.Fatal("Input map changed")
 	}
 }
+
+func TestDeepSearch(t *testing.T) {
+	m := map[string]interface{}{
+		"a": 32,
+		"b": map[string]interface{}{
+			"c": "A",
+			"d": map[string]interface{}{
+				"e": "E",
+				"f": "F",
+			},
+		},
+	}
+	actual := DeepSearch(m, []string{"b", "d"})
+	expect := map[string]interface{}{
+		"e": "E",
+		"f": "F",
+	}
+	if !reflect.DeepEqual(actual, expect) {
+		t.Fatal("DeepSearch error")
+	}
+}

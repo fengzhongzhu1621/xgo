@@ -1,5 +1,8 @@
 package hcl
 
+// HCL 是 hashicorp 推出的一个配置语言，在 hashicorp 的产品，
+// 如 Consul、Terraform 中用作标准的配置语言，其语法结构有点类似于 nginx 的配置文件 .
+
 import (
 	"bytes"
 	"encoding/json"

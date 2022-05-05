@@ -5,6 +5,8 @@ import (
 	"sort"
 	"strings"
 
+	"xgo/utils"
+
 	"github.com/spf13/cast"
 	"gopkg.in/ini.v1"
 )
@@ -25,7 +27,7 @@ func (c Codec) Encode(v map[string]interface{}) ([]byte, error) {
 
 	flattened := map[string]interface{}{}
 
-	flattened = flattenAndMergeMap(flattened, v, "", c.keyDelimiter())
+	flattened = utils.FlattenAndMergeMap(flattened, v, "", c.keyDelimiter())
 
 	keys := make([]string, 0, len(flattened))
 
@@ -80,7 +82,7 @@ func (c Codec) Decode(b []byte, v map[string]interface{}) error {
 			key := keys[j]
 			value := cfg.Section(section.Name()).Key(key.Name()).String()
 
-			deepestMap := deepSearch(v, strings.Split(section.Name(), c.keyDelimiter()))
+			deepestMap := utils.DeepSearch(v, strings.Split(section.Name(), c.keyDelimiter()))
 
 			// set innermost value
 			deepestMap[key.Name()] = value
