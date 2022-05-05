@@ -64,3 +64,39 @@ func InsensitiviseMap(m map[string]interface{}) {
 		m[lower] = val
 	}
 }
+
+// FlattenAndMergeMap recursively flattens the given map into a new map
+// Code is based on the function with the same name in tha main package.
+// shadow: 摊平后的结果
+// m：需要摊平的数组
+func FlattenAndMergeMap(shadow map[string]interface{}, m map[string]interface{}, prefix string, delimiter string) map[string]interface{} {
+	if shadow != nil && prefix != "" && shadow[prefix] != nil {
+		// prefix is shadowed => nothing more to flatten
+		return shadow
+	}
+	if shadow == nil {
+		shadow = make(map[string]interface{})
+	}
+
+	var m2 map[string]interface{}
+	if prefix != "" {
+		prefix += delimiter
+	}
+	for k, val := range m {
+		// 获得完整的key
+		fullKey := prefix + k
+		switch val.(type) {
+		case map[string]interface{}:
+			m2 = val.(map[string]interface{})
+		case map[interface{}]interface{}:
+			m2 = cast.ToStringMap(val)
+		default:
+			// immediate value
+			shadow[strings.ToLower(fullKey)] = val
+			continue
+		}
+		// recursively merge to shadow map
+		shadow = FlattenAndMergeMap(shadow, m2, fullKey, delimiter)
+	}
+	return shadow
+}

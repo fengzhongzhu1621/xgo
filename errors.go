@@ -6,11 +6,11 @@ import (
 	"strings"
 )
 
-// ErrorType represents the type of error.
+// ErrType ErrorType represents the type of error.
 type ErrType uint
 
 const (
-	// ErrUnknown indicates a generic error.
+	// ErrUnknownDefault indicates a generic error.
 	ErrUnknownDefault ErrType = iota
 
 	// ErrExpectedArgument indicates that an argument was expected.
@@ -130,7 +130,7 @@ func NewErrorf(tp ErrType, format string, args ...interface{}) *Error {
 	return NewError(tp, fmt.Sprintf(format, args...))
 }
 
-// 将其他错误转换为Error对象.
+// WrapError 将其他错误转换为Error对象.
 func WrapError(err error) *Error {
 	ret, ok := err.(*Error)
 
@@ -151,7 +151,7 @@ var (
 
 var errTable = map[int32]error{}
 
-// 将错误码转换为error.
+// Code2Error 将错误码转换为error.
 func Code2Error(code int32) error {
 	if err, ok := errTable[code]; ok {
 		return err
@@ -159,7 +159,7 @@ func Code2Error(code int32) error {
 	return ErrUnknown
 }
 
-// 合并多个错误信息
+// MultipleErrors 合并多个错误信息，用空格分割
 // Errors is a type of []error
 // This is used to pass multiple errors when using parallel or concurrent methods
 // and yet subscribe to the error interface.
@@ -175,4 +175,11 @@ func (e MultipleErrors) Error() string {
 	}
 
 	return strings.TrimSpace(b.String())
+}
+
+// EncodingError 基于字符串的错误
+type EncodingError string
+
+func (e EncodingError) Error() string {
+	return string(e)
 }
