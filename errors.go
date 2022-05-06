@@ -177,7 +177,7 @@ func (e MultipleErrors) Error() string {
 	return strings.TrimSpace(b.String())
 }
 
-// EncodingError 基于字符串的错误
+// EncodingError 基于字符串的错误.
 type EncodingError string
 
 func (e EncodingError) Error() string {

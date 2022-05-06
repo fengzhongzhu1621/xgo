@@ -53,7 +53,7 @@ func (e *EncoderRegistry) RegisterEncoder(format string, enc Encoder) error {
 	return nil
 }
 
-// Encode 根据编码器的名称选择一个编码器对字典进行编码
+// Encode 根据编码器的名称选择一个编码器对字典进行编码.
 func (e *EncoderRegistry) Encode(format string, v map[string]interface{}) ([]byte, error) {
 	e.mu.RLock()
 	encoder, ok := e.encoders[format]

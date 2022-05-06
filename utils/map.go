@@ -68,7 +68,7 @@ func InsensitiviseMap(m map[string]interface{}) {
 // FlattenAndMergeMap recursively flattens the given map into a new map
 // Code is based on the function with the same name in tha main package.
 // shadow: 摊平后的结果
-// m：需要摊平的数组
+// m：需要摊平的数组.
 func FlattenAndMergeMap(shadow map[string]interface{}, m map[string]interface{}, prefix string, delimiter string) map[string]interface{} {
 	if shadow != nil && prefix != "" && shadow[prefix] != nil {
 		// prefix is shadowed => nothing more to flatten
@@ -110,7 +110,7 @@ func FlattenAndMergeMap(shadow map[string]interface{}, m map[string]interface{},
 // In case intermediate keys do not exist, or map to a non-map value,
 // a new map is created and inserted, and the search continues from there:
 // the initial map "m" may be modified!
-// 根据path构造字典，并返回指定路径上的最后一个字典，与 python 中的 setdefault 方法类似
+// 根据path构造字典，并返回指定路径上的最后一个字典，与 python 中的 setdefault 方法类似.
 func DeepSearch(m map[string]interface{}, paths []string) map[string]interface{} {
 	// 遍历 path 数组
 	for _, k := range paths {
