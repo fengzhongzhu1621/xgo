@@ -43,6 +43,23 @@ func TestCopyAndInsensitiviseMap(t *testing.T) {
 	}
 }
 
+func TestFlattenAndMergeMap(t *testing.T) {
+	var data = map[string]interface{}{
+		"KEY": map[string]interface{}{
+			"a": 1,
+			"b": 2,
+		},
+	}
+	actual := FlattenAndMergeMap(nil, data, "", "_")
+	expect := map[string]interface{}{
+		"key_a": 1,
+		"key_b": 2,
+	}
+	if !reflect.DeepEqual(actual, expect) {
+		t.Fatal("FlattenAndMergeMap error")
+	}
+}
+
 func TestDeepSearch(t *testing.T) {
 	m := map[string]interface{}{
 		"a": 32,

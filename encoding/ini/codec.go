@@ -25,9 +25,7 @@ func (c Codec) Encode(v map[string]interface{}) ([]byte, error) {
 	cfg := ini.Empty()
 	ini.PrettyFormat = false
 
-	flattened := map[string]interface{}{}
-
-	flattened = utils.FlattenAndMergeMap(flattened, v, "", c.keyDelimiter())
+	flattened := utils.FlattenAndMergeMap(nil, v, "", c.keyDelimiter())
 
 	keys := make([]string, 0, len(flattened))
 
