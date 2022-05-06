@@ -61,22 +61,57 @@ func TestFlattenAndMergeMap(t *testing.T) {
 }
 
 func TestDeepSearch(t *testing.T) {
-	m := map[string]interface{}{
-		"a": 32,
-		"b": map[string]interface{}{
-			"c": "A",
-			"d": map[string]interface{}{
-				"e": "E",
-				"f": "F",
+	t.Run("OK", func(t *testing.T) {
+		m := map[string]interface{}{
+			"a": 32,
+			"b": map[string]interface{}{
+				"c": "A",
+				"d": map[string]interface{}{
+					"e": "E",
+					"f": "F",
+				},
 			},
-		},
-	}
-	actual := DeepSearch(m, []string{"b", "d"})
-	expect := map[string]interface{}{
-		"e": "E",
-		"f": "F",
-	}
-	if !reflect.DeepEqual(actual, expect) {
-		t.Fatal("DeepSearch error")
-	}
+		}
+		actual := DeepSearch(m, []string{"b", "d"})
+		expect := map[string]interface{}{
+			"e": "E",
+			"f": "F",
+		}
+		if !reflect.DeepEqual(actual, expect) {
+			t.Fatal("DeepSearch error")
+		}
+
+		expect = map[string]interface{}{
+			"a": 32,
+			"b": map[string]interface{}{
+				"c": "A",
+				"d": map[string]interface{}{
+					"e": "E",
+					"f": "F",
+				},
+			},
+		}
+		if !reflect.DeepEqual(m, expect) {
+			t.Fatal("DeepSearch error")
+		}
+	})
+
+	t.Run("EmptyMap", func(t *testing.T) {
+		m := map[string]interface{}{}
+		lastMap := DeepSearch(m, []string{"b", "d"})
+		// 验证最后一个字典的值
+		expect := map[string]interface{}{}
+		if !reflect.DeepEqual(lastMap, expect) {
+			t.Fatalf("DeepSearch error actual is %v, expect is %v", lastMap, expect)
+		}
+		// 验证生成后的深度遍历后的字典
+		expect = map[string]interface{}{
+			"b": map[string]interface{}{
+				"d": map[string]interface{}{},
+			},
+		}
+		if !reflect.DeepEqual(m, expect) {
+			t.Fatal("DeepSearch error")
+		}
+	})
 }

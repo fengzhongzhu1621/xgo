@@ -110,7 +110,7 @@ func FlattenAndMergeMap(shadow map[string]interface{}, m map[string]interface{},
 // In case intermediate keys do not exist, or map to a non-map value,
 // a new map is created and inserted, and the search continues from there:
 // the initial map "m" may be modified!
-// 获得指定路径上的最后一个字典
+// 根据path构造字典，并返回指定路径上的最后一个字典，与 python 中的 setdefault 方法类似
 func DeepSearch(m map[string]interface{}, paths []string) map[string]interface{} {
 	// 遍历 path 数组
 	for _, k := range paths {
@@ -121,7 +121,7 @@ func DeepSearch(m map[string]interface{}, paths []string) map[string]interface{}
 			// intermediate key does not exist
 			// => create it and continue from there
 			m3 := make(map[string]interface{})
-			m[k] = m3
+			m[k] = m3 // 修改输入参数的值
 			m = m3
 			continue
 		}
