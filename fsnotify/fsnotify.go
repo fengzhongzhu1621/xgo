@@ -35,6 +35,8 @@ const (
 	Chmod // 文件或目录的属性发生变化时触发，linux系统可以通过chmod命令改变文件或目录属性
 )
 
+const WriteOrCreateMask = Write | Create
+
 // 按位判断触发的类型，如果类型为0，返回空字符串.
 func (op Op) String() string {
 	// Use a buffer for efficient string concatenation

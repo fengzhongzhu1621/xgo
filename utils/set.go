@@ -6,6 +6,7 @@ type StringSet map[string]struct{}
 // 判断key是否在集合中.
 func (s StringSet) Exist(key string) bool {
 	_, ok := s[key]
+
 	return ok
 }
 

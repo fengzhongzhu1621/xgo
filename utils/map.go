@@ -1,6 +1,9 @@
 package utils
 
 import (
+	"fmt"
+	"log"
+	"reflect"
 	"strings"
 
 	"xgo/cast"
@@ -93,6 +96,7 @@ func FlattenAndMergeMap(shadow map[string]interface{}, m map[string]interface{},
 		default:
 			// immediate value
 			shadow[strings.ToLower(fullKey)] = val
+
 			continue
 		}
 		// recursively merge to shadow map
@@ -137,4 +141,147 @@ func DeepSearch(m map[string]interface{}, paths []string) map[string]interface{}
 		m = m3
 	}
 	return m
+}
+
+// mergeFlatMap merges the given maps, excluding values of the second map
+// shadowed by values from the first map.
+// MergeFlatMap 合并字典的key， value不可并；如果key重复，不合并到源字典.
+func MergeFlatMap(shadow map[string]bool, src map[string]interface{}, keyDelim string) map[string]bool {
+	// scan keys
+outer:
+	for k := range src {
+		path := strings.Split(k, keyDelim)
+		// scan intermediate paths
+		var parentKey string
+		for i := 1; i < len(path); i++ {
+			parentKey = strings.Join(path[0:i], keyDelim)
+			if shadow[parentKey] {
+				// path is shadowed, continue
+				// 如果key已经存在，则检测下一个key
+				continue outer
+			}
+		}
+		// add key 标记key已存在
+		shadow[strings.ToLower(k)] = true
+	}
+	return shadow
+}
+
+// mergeMaps merges two maps. The `itgt` parameter is for handling go-yaml's
+// insistence on parsing nested structures as `map[interface{}]interface{}`
+// instead of using a `string` as the key for nest structures beyond one level
+// deep. Both map types are supported as there is a go-yaml fork that uses
+// `map[string]interface{}` instead.
+func MergeMaps(
+	src, tgt map[string]interface{}, itgt map[interface{}]interface{},
+) {
+	for sk, sv := range src {
+		// 判断源key是否在目标字典存在，不存在则添加（判断不区分大小写）
+		tk := KeyExists(sk, tgt)
+		if tk == "" {
+			log.Println("", "tk", "\"\"", fmt.Sprintf("tgt[%s]", sk), sv)
+			tgt[sk] = sv
+			if itgt != nil {
+				itgt[sk] = sv
+			}
+			continue
+		}
+
+		// 如果源key在目标字典存在，但是大小写不匹配，需要添加到目标字典
+		tv, ok := tgt[tk]
+		if !ok {
+			log.Println("", fmt.Sprintf("ok[%s]", tk), false, fmt.Sprintf("tgt[%s]", sk), sv)
+			tgt[sk] = sv
+			if itgt != nil {
+				itgt[sk] = sv
+			}
+			continue
+		}
+
+		svType := reflect.TypeOf(sv)
+		tvType := reflect.TypeOf(tv)
+
+		log.Println(
+			"processing",
+			"key", sk,
+			"st", svType,
+			"tt", tvType,
+			"sv", sv,
+			"tv", tv,
+		)
+
+		switch ttv := tv.(type) {
+		case map[interface{}]interface{}:
+			log.Println("merging maps (must convert)")
+			// 格式转换
+			tsv, ok := sv.(map[interface{}]interface{})
+			if !ok {
+				log.Printf(
+					"Could not cast sv to map[interface{}]interface{}; key=%s, st=%v, tt=%v, sv=%v, tv=%v",
+					sk, svType, tvType, sv, tv)
+				continue
+			}
+
+			ssv := CastToMapStringInterface(tsv)
+			stv := CastToMapStringInterface(ttv)
+			MergeMaps(ssv, stv, ttv)
+		case map[string]interface{}:
+			log.Println("merging maps")
+			tsv, ok := sv.(map[string]interface{})
+			if !ok {
+				log.Printf(
+					"Could not cast sv to map[string]interface{}; key=%s, st=%v, tt=%v, sv=%v, tv=%v",
+					sk, svType, tvType, sv, tv)
+				continue
+			}
+			MergeMaps(tsv, ttv, nil)
+		default:
+			log.Println("setting value")
+			tgt[tk] = sv
+			if itgt != nil {
+				itgt[tk] = sv
+			}
+		}
+	}
+}
+
+// KeyExists 判断字段中是否存在指定key，key不区分大小写，返回源key
+func KeyExists(k string, m map[string]interface{}) string {
+	lk := strings.ToLower(k)
+	for mk := range m {
+		lmk := strings.ToLower(mk)
+		if lmk == lk {
+			return mk
+		}
+	}
+	return ""
+}
+
+// CastToMapStringInterface 将字典中的key转换为字符串格式
+func CastToMapStringInterface(
+	src map[interface{}]interface{},
+) map[string]interface{} {
+	tgt := map[string]interface{}{}
+	for k, v := range src {
+		tgt[fmt.Sprintf("%v", k)] = v
+	}
+	return tgt
+}
+
+// CastMapStringSliceToMapInterface 将字典的value值从 []string 转换为 interface{}
+func CastMapStringSliceToMapInterface(src map[string][]string) map[string]interface{} {
+	tgt := map[string]interface{}{}
+	for k, v := range src {
+		tgt[k] = v
+	}
+	return tgt
+}
+
+// CastMapStringToMapInterface 将字典的value值从 string 转换为 interface{}
+func CastMapStringToMapInterface(src map[string]string) map[string]interface{} {
+	tgt := map[string]interface{}{}
+	for k, v := range src {
+		tgt[k] = v
+	}
+	return tgt
 }

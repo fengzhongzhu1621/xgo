@@ -115,3 +115,43 @@ func TestDeepSearch(t *testing.T) {
 		}
 	})
 }
+
+func TestMergeFlatMap(t *testing.T) {
+	t.Run("UpperKey", func(t *testing.T) {
+		var shadow = map[string]bool{}
+		var src = map[string]interface{}{
+			"A":     1,
+			"A_B":   2,
+			"A_B_C": 3,
+			"a":     4,
+		}
+		keyDelim := "_"
+		actual := MergeFlatMap(shadow, src, keyDelim)
+		expect := map[string]bool{
+			"a":     true,
+			"a_b":   true,
+			"a_b_c": true,
+		}
+		if !reflect.DeepEqual(actual, expect) {
+			t.Fatalf("MergeFlatMap error actual is %v, expect is %v", actual, expect)
+		}
+	})
+
+	t.Run("LowerKey", func(t *testing.T) {
+		var shadow = map[string]bool{}
+		var src = map[string]interface{}{
+			"a":     1,
+			"a_b":   2,
+			"a_b_C": 3,
+			"A":     4,
+		}
+		keyDelim := "_"
+		actual := MergeFlatMap(shadow, src, keyDelim)
+		expect := map[string]bool{
+			"a": true,
+		}
+		if !reflect.DeepEqual(actual, expect) {
+			t.Fatalf("MergeFlatMap error actual is %v, expect is %v", actual, expect)
+		}
+	})
+}
