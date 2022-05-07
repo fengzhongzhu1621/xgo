@@ -12,11 +12,14 @@ require (
 	github.com/magiconair/properties v1.8.6
 	github.com/manucorporat/stats v0.0.0-20180402194714-3ba42d56d227
 	github.com/mitchellh/go-homedir v1.1.0
+	github.com/mitchellh/mapstructure v1.4.3
 	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.19.0
 	github.com/pelletier/go-toml v1.9.4
+	github.com/pelletier/go-toml/v2 v2.0.0-beta.8
 	github.com/pkg/errors v0.9.1
 	github.com/sagikazarmark/crypt v0.5.0
+	github.com/spf13/afero v1.8.2 // indirect
 	github.com/spf13/cast v1.4.1
 	github.com/spf13/jwalterweatherman v1.1.0
 	github.com/spf13/pflag v1.0.5
@@ -29,5 +32,5 @@ require (
 	google.golang.org/protobuf v1.28.0
 	gopkg.in/ini.v1 v1.66.4
 	gopkg.in/yaml.v2 v2.4.0
-	gotest.tools/gotestsum v1.8.0 // indirect
+	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 )

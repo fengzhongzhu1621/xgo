@@ -8,7 +8,7 @@ import (
 )
 
 // 生成签名串.
-func GenereateHmacSignedString(algorithm string, key []byte, p []byte) (string, error) {
+func GenerateHmacSignedString(algorithm string, key []byte, p []byte) (string, error) {
 	var h hash.Hash
 	if algorithm == "sha256" {
 		h = hmac.New(sha256.New, key)
