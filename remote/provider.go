@@ -4,7 +4,7 @@ package remote
 // to connect to a remote key/value store.
 // Optional secretKeyring to unencrypt encrypted values
 // can be provided.
-// 远程key/value存储的客户端配置接口
+// 远程key/value存储的客户端配置接口.
 type RemoteProvider interface {
 	// provider is a string value: "etcd", "consul" or "firestore" are currently supported.
 	Provider() string
@@ -15,4 +15,3 @@ type RemoteProvider interface {
 	// secretkeyring is the filepath to your openpgp secret keyring.  e.g. /etc/secrets/myring.gpg
 	SecretKeyring() string
 }
-

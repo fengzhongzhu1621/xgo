@@ -15,7 +15,7 @@ type DecoderConfigOption func(*mapstructure.DecoderConfig)
 //		mapstructure.StringToTimeDurationHookFunc(),
 //		mapstructure.StringToSliceHookFunc(","),
 //	)
-// 给 mapstructure.DecoderConfig 添加 hook函数
+// 给 mapstructure.DecoderConfig 添加 hook函数.
 func DecodeHook(hook mapstructure.DecodeHookFunc) DecoderConfigOption {
 	return func(c *mapstructure.DecoderConfig) {
 		c.DecodeHook = hook

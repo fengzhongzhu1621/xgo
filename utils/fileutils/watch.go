@@ -5,9 +5,9 @@ import (
 	"path/filepath"
 	"sync"
 
-	"xgo/fsnotify"
 	jww "xgo/log"
 
+	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/afero"
 )
 
@@ -69,7 +69,7 @@ func (v *Watcher) getConfigType() string {
 	return ""
 }
 
-// 监听配置文件的变化
+// WatchConfig 监听配置文件的变化
 func (v *Watcher) WatchConfig() {
 	initWG := sync.WaitGroup{}
 	initWG.Add(1)
@@ -111,8 +111,9 @@ func (v *Watcher) WatchConfig() {
 					// we only care about the config file with the following cases:
 					// 1 - if the config file was modified or created
 					// 2 - if the real path to the config file changed (eg: k8s ConfigMap replacement)
+					const WriteOrCreateMask = fsnotify.Write | fsnotify.Create
 					if (filepath.Clean(event.Name) == configFile &&
-						event.Op&fsnotify.WriteOrCreateMask != 0) ||
+						event.Op&WriteOrCreateMask != 0) ||
 						(currentConfigFile != "" && currentConfigFile != realConfigFile) {
 						// 创建或更新了配置文件
 						realConfigFile = currentConfigFile

@@ -6,6 +6,8 @@ import (
 )
 
 func TestCopyAndInsensitiviseMap(t *testing.T) {
+	t.Parallel()
+
 	var (
 		given = map[string]interface{}{
 			"Foo": 32,
@@ -44,6 +46,8 @@ func TestCopyAndInsensitiviseMap(t *testing.T) {
 }
 
 func TestFlattenAndMergeMap(t *testing.T) {
+	t.Parallel()
+
 	var data = map[string]interface{}{
 		"KEY": map[string]interface{}{
 			"a": 1,
@@ -61,6 +65,8 @@ func TestFlattenAndMergeMap(t *testing.T) {
 }
 
 func TestDeepSearch(t *testing.T) {
+	t.Parallel()
+
 	t.Run("OK", func(t *testing.T) {
 		m := map[string]interface{}{
 			"a": 32,
@@ -117,6 +123,8 @@ func TestDeepSearch(t *testing.T) {
 }
 
 func TestMergeFlatMap(t *testing.T) {
+	t.Parallel()
+
 	t.Run("UpperKey", func(t *testing.T) {
 		var shadow = map[string]bool{}
 		var src = map[string]interface{}{

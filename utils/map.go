@@ -141,7 +141,7 @@ func DeepSearch(m map[string]interface{}, paths []string) map[string]interface{}
 	return m
 }
 
-// DeepSearchAndCreateMap 将摊平的字典转换成收缩的字典
+// DeepSearchAndCreateMap 将摊平的字典转换成收缩的字典.
 func DeepSearchAndCreateMap(m map[string]interface{}, keyDelim string) map[string]interface{} {
 	m2 := map[string]interface{}{}
 	// start from the list of keys, and construct the map one value at a time
@@ -160,9 +160,9 @@ func DeepSearchAndCreateMap(m map[string]interface{}, keyDelim string) map[strin
 	return m2
 }
 
-// mergeFlatMap merges the given maps, excluding values of the second map
+// MergeFlatMap merges the given maps, excluding values of the second map
 // shadowed by values from the first map.
-// MergeFlatMap 合并字典的key， value不可并；如果key重复，不合并到源字典.
+// 合并字典的key， value不可并；如果key重复，不合并到源字典.
 func MergeFlatMap(shadow map[string]bool, src map[string]interface{}, keyDelim string) map[string]bool {
 	// scan keys
 outer:
@@ -239,7 +239,7 @@ func MergeMaps(
 	}
 }
 
-// KeyExists 判断字段中是否存在指定key，key不区分大小写，返回源key
+// KeyExists 判断字段中是否存在指定key，key不区分大小写，返回源key.
 func KeyExists(k string, m map[string]interface{}) string {
 	lk := strings.ToLower(k)
 	for mk := range m {
@@ -251,7 +251,7 @@ func KeyExists(k string, m map[string]interface{}) string {
 	return ""
 }
 
-// CastToMapStringInterface 将字典中的key转换为字符串格式
+// CastToMapStringInterface 将字典中的key转换为字符串格式.
 func CastToMapStringInterface(
 	src map[interface{}]interface{},
 ) map[string]interface{} {
@@ -262,7 +262,7 @@ func CastToMapStringInterface(
 	return tgt
 }
 
-// CastMapStringSliceToMapInterface 将字典的value值从 []string 转换为 interface{}
+// CastMapStringSliceToMapInterface 将字典的value值从 []string 转换为 interface{}.
 func CastMapStringSliceToMapInterface(src map[string][]string) map[string]interface{} {
 	tgt := map[string]interface{}{}
 	for k, v := range src {
@@ -271,7 +271,7 @@ func CastMapStringSliceToMapInterface(src map[string][]string) map[string]interf
 	return tgt
 }
 
-// CastMapStringToMapInterface 将字典的value值从 string 转换为 interface{}
+// CastMapStringToMapInterface 将字典的value值从 string 转换为 interface{}.
 func CastMapStringToMapInterface(src map[string]string) map[string]interface{} {
 	tgt := map[string]interface{}{}
 	for k, v := range src {
