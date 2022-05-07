@@ -214,7 +214,7 @@ func TestMergeMaps(t *testing.T) {
 	})
 }
 
-func TestDeepSearchAndCreateMap(t *testing.T) {
+func TestCreateDeepMap(t *testing.T) {
 	t.Run("UpperKey", func(t *testing.T) {
 		var src = map[string]interface{}{
 			"A":     1,
@@ -223,7 +223,7 @@ func TestDeepSearchAndCreateMap(t *testing.T) {
 			"d":     4,
 		}
 		keyDelim := "_"
-		actual := DeepSearchAndCreateMap(src, keyDelim)
+		actual := CreateDeepMap(src, keyDelim)
 		expect := map[string]interface{}{
 			"A": map[string]interface{}{
 				"B": map[string]interface{}{
@@ -235,7 +235,52 @@ func TestDeepSearchAndCreateMap(t *testing.T) {
 			"d": 4,
 		}
 		if !reflect.DeepEqual(actual, expect) {
-			t.Fatalf("DeepSearchAndCreateMap error actual is %v, expect is %v", actual, expect)
+			t.Fatalf("CreateDeepMap error actual is %v, expect is %v", actual, expect)
+		}
+	})
+}
+
+func TestSetDeepMapValue(t *testing.T) {
+	t.Parallel()
+
+	t.Run("KeyNotExists", func(t *testing.T) {
+		var src = map[string]interface{}{
+			"A": 1,
+			"b": 2,
+		}
+		keyDelim := "_"
+		key := "A"
+		value := 11
+		SetDeepMapValue(src, key, value, keyDelim)
+		expect := map[string]interface{}{
+			"A": 1,
+			"a": 11,
+			"b": 2,
+		}
+		if !reflect.DeepEqual(src, expect) {
+			t.Fatalf("SetDeepMapValue error actual is %v, expect is %v", src, expect)
+		}
+	})
+
+	t.Run("KeyExists", func(t *testing.T) {
+		var src = map[string]interface{}{
+			"a": map[string]interface{}{
+				"b": map[string]interface{}{},
+			},
+		}
+		keyDelim := "_"
+		key := "a_b_c"
+		value := 3
+		SetDeepMapValue(src, key, value, keyDelim)
+		expect := map[string]interface{}{
+			"a": map[string]interface{}{
+				"b": map[string]interface{}{
+					"c": 3,
+				},
+			},
+		}
+		if !reflect.DeepEqual(src, expect) {
+			t.Fatalf("SetDeepMapValue error actual is %v, expect is %v", src, expect)
 		}
 	})
 }

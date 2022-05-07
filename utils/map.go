@@ -142,7 +142,7 @@ func DeepSearch(m map[string]interface{}, paths []string) map[string]interface{}
 }
 
 // DeepSearchAndCreateMap 将摊平的字典转换成收缩的字典.
-func DeepSearchAndCreateMap(m map[string]interface{}, keyDelim string) map[string]interface{} {
+func CreateDeepMap(m map[string]interface{}, keyDelim string) map[string]interface{} {
 	m2 := map[string]interface{}{}
 	// start from the list of keys, and construct the map one value at a time
 	for key, value := range m {
@@ -300,4 +300,17 @@ func MapKeys(m map[string]interface{}) []string {
 		i++
 	}
 	return s
+}
+
+// SetDeepMapValue 根据key设置DeepMap的值
+func SetDeepMapValue(m map[string]interface{}, key string, value interface{}, keyDelim string) {
+	key = strings.ToLower(key)
+	value = ToCaseInsensitiveValue(value)
+
+	path := strings.Split(key, keyDelim)
+	lastKey := strings.ToLower(path[len(path)-1])
+	deepestMap := DeepSearch(m, path[0:len(path)-1])
+
+	// set innermost value
+	deepestMap[lastKey] = value
 }
