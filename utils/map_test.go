@@ -155,3 +155,53 @@ func TestMergeFlatMap(t *testing.T) {
 		}
 	})
 }
+
+func TestMergeMaps(t *testing.T) {
+	t.Run("OK", func(t *testing.T) {
+		var src = map[string]interface{}{
+			"a": 1,
+			"b": 2,
+			"c": map[string]interface{}{
+				"c1": 3,
+			},
+			"d": map[interface{}]interface{}{
+				"d1": 4,
+			},
+		}
+		dst := map[string]interface{}{
+			"A": 11,
+			"b": 22,
+			"C": map[string]interface{}{
+				"c1": 33,
+			},
+		}
+		dst2 := map[interface{}]interface{}{}
+
+		MergeMaps(src, dst, dst2)
+
+		expectDst := map[string]interface{}{
+			"A": 1,
+			"b": 2,
+			"C": map[string]interface{}{
+				"c1": 3,
+			},
+			"d": map[interface{}]interface{}{
+				"d1": 4,
+			},
+		}
+		if !reflect.DeepEqual(dst, expectDst) {
+			t.Fatalf("MergeMaps error actual is %v, expect is %v", dst, expectDst)
+		}
+
+		expectDst2 := map[interface{}]interface{}{
+			"A": 1,
+			"b": 2,
+			"d": map[interface{}]interface{}{
+				"d1": 4,
+			},
+		}
+		if !reflect.DeepEqual(dst2, expectDst2) {
+			t.Fatalf("MergeMaps error actual is %v, expect is %v", dst2, expectDst2)
+		}
+	})
+}

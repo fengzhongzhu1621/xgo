@@ -2,8 +2,6 @@ package utils
 
 import (
 	"fmt"
-	"log"
-	"reflect"
 	"strings"
 
 	"xgo/cast"
@@ -179,7 +177,6 @@ func MergeMaps(
 		// 判断源key是否在目标字典存在，不存在则添加（判断不区分大小写）
 		tk := KeyExists(sk, tgt)
 		if tk == "" {
-			log.Println("", "tk", "\"\"", fmt.Sprintf("tgt[%s]", sk), sv)
 			tgt[sk] = sv
 			if itgt != nil {
 				itgt[sk] = sv
@@ -190,7 +187,6 @@ func MergeMaps(
 		// 如果源key在目标字典存在，但是大小写不匹配，需要添加到目标字典
 		tv, ok := tgt[tk]
 		if !ok {
-			log.Println("", fmt.Sprintf("ok[%s]", tk), false, fmt.Sprintf("tgt[%s]", sk), sv)
 			tgt[sk] = sv
 			if itgt != nil {
 				itgt[sk] = sv
@@ -198,27 +194,11 @@ func MergeMaps(
 			continue
 		}
 
-		svType := reflect.TypeOf(sv)
-		tvType := reflect.TypeOf(tv)
-
-		log.Println(
-			"processing",
-			"key", sk,
-			"st", svType,
-			"tt", tvType,
-			"sv", sv,
-			"tv", tv,
-		)
-
 		switch ttv := tv.(type) {
 		case map[interface{}]interface{}:
-			log.Println("merging maps (must convert)")
 			// 格式转换
 			tsv, ok := sv.(map[interface{}]interface{})
 			if !ok {
-				log.Printf(
-					"Could not cast sv to map[interface{}]interface{}; key=%s, st=%v, tt=%v, sv=%v, tv=%v",
-					sk, svType, tvType, sv, tv)
 				continue
 			}
 
@@ -226,17 +206,12 @@ func MergeMaps(
 			stv := CastToMapStringInterface(ttv)
 			MergeMaps(ssv, stv, ttv)
 		case map[string]interface{}:
-			log.Println("merging maps")
 			tsv, ok := sv.(map[string]interface{})
 			if !ok {
-				log.Printf(
-					"Could not cast sv to map[string]interface{}; key=%s, st=%v, tt=%v, sv=%v, tv=%v",
-					sk, svType, tvType, sv, tv)
 				continue
 			}
 			MergeMaps(tsv, ttv, nil)
 		default:
-			log.Println("setting value")
 			tgt[tk] = sv
 			if itgt != nil {
 				itgt[tk] = sv
