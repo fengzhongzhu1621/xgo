@@ -189,7 +189,8 @@ func ReverseSlice(a []string) {
 
 // GenerateID 获得随机字符串.
 func GenerateID() string {
-	return strconv.FormatInt(time.Now().UnixNano(), 10)
+	base := 10
+	return strconv.FormatInt(time.Now().UnixNano(), base)
 }
 
 func Str2map(s string, sep1 string, sep2 string) map[string]string {
@@ -202,7 +203,8 @@ func Str2map(s string, sep1 string, sep2 string) map[string]string {
 	}
 	m := make(map[string]string)
 	for _, sub := range spe1List {
-		spe2List := strings.SplitN(sub, sep2, 2)
+		splitNum := 2
+		spe2List := strings.SplitN(sub, sep2, splitNum)
 		num := len(spe2List)
 		if num == 1 {
 			m[spe2List[0]] = ""
