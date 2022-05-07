@@ -297,17 +297,6 @@ func GetValueInBraces(key string) string {
 	return key
 }
 
-// MapKeys 获得字典的所有key值.
-func MapKeys(m map[string]struct{}) []string {
-	s := make([]string, len(m))
-	i := 0
-	for k := range m {
-		s[i] = k
-		i++
-	}
-	return s
-}
-
 // StringInSlice 判断字符串是否在切片中.
 func StringInSlice(a string, list []string) bool {
 	for _, b := range list {

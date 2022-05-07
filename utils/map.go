@@ -279,3 +279,25 @@ func CastMapStringToMapInterface(src map[string]string) map[string]interface{} {
 	}
 	return tgt
 }
+
+// MapKeysValueIsStruct 获得字典的所有key值.
+func MapKeysValueIsStruct(m map[string]struct{}) []string {
+	s := make([]string, 0, len(m))
+	i := 0
+	for k := range m {
+		s[i] = k
+		i++
+	}
+	return s
+}
+
+// MapKeys 获得字典的所有key值.
+func MapKeys(m map[string]interface{}) []string {
+	s := make([]string, 0, len(m))
+	i := 0
+	for k := range m {
+		s[i] = k
+		i++
+	}
+	return s
+}
