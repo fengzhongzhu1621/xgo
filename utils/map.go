@@ -141,6 +141,25 @@ func DeepSearch(m map[string]interface{}, paths []string) map[string]interface{}
 	return m
 }
 
+// DeepSearchAndCreateMap 将摊平的字典转换成收缩的字典
+func DeepSearchAndCreateMap(m map[string]interface{}, keyDelim string) map[string]interface{} {
+	m2 := map[string]interface{}{}
+	// start from the list of keys, and construct the map one value at a time
+	for key, value := range m {
+		if value == nil {
+			// should not happen, since AllKeys() returns only keys holding a value,
+			// check just in case anything changes
+			continue
+		}
+		path := strings.Split(key, keyDelim)
+		lastKey := strings.ToLower(path[len(path)-1])
+		deepestMap := DeepSearch(m2, path[0:len(path)-1])
+		// set innermost value
+		deepestMap[lastKey] = value
+	}
+	return m2
+}
+
 // mergeFlatMap merges the given maps, excluding values of the second map
 // shadowed by values from the first map.
 // MergeFlatMap 合并字典的key， value不可并；如果key重复，不合并到源字典.
