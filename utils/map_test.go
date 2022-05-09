@@ -64,6 +64,47 @@ func TestFlattenAndMergeMap(t *testing.T) {
 	}
 }
 
+func TestSearchSearch(t *testing.T) {
+	t.Parallel()
+
+	t.Run("OK", func(t *testing.T) {
+		m := map[string]interface{}{
+			"a": 32,
+			"b": map[string]interface{}{
+				"c": "A",
+				"d": map[string]interface{}{
+					"e": "E",
+					"f": "F",
+				},
+			},
+		}
+		actual := SearchMap(m, []string{"b", "d"})
+		expect := map[string]interface{}{
+			"e": "E",
+			"f": "F",
+		}
+		if !reflect.DeepEqual(actual, expect) {
+			t.Fatal("DeepSearch error")
+		}
+
+		actual = SearchMap(m, []string{"b", "d", "e"})
+		expect2 := "E"
+		if !reflect.DeepEqual(actual, expect2) {
+			t.Fatal("DeepSearch error")
+		}
+	})
+
+	t.Run("NoValue", func(t *testing.T) {
+		m := map[string]interface{}{
+			"a": 32,
+		}
+		actual := SearchMap(m, []string{"b", "d", "e"})
+		if !reflect.DeepEqual(actual, nil) {
+			t.Fatal("DeepSearch error")
+		}
+	})
+}
+
 func TestDeepSearch(t *testing.T) {
 	t.Parallel()
 

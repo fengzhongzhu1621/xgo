@@ -103,6 +103,38 @@ func FlattenAndMergeMap(shadow map[string]interface{}, m map[string]interface{},
 	return shadow
 }
 
+// SearchMap recursively searches for a value for path in source map.
+// Returns nil if not found.
+// Note: This assumes that the path entries and map keys are lower cased.
+// 在m中搜索路径path
+func SearchMap(source map[string]interface{}, path []string) interface{} {
+	if len(path) == 0 {
+		return source
+	}
+
+	next, ok := source[path[0]]
+	if ok {
+		// Fast path
+		if len(path) == 1 {
+			return next
+		}
+
+		// Nested case
+		switch next.(type) {
+		case map[interface{}]interface{}:
+			return SearchMap(cast.ToStringMap(next), path[1:])
+		case map[string]interface{}:
+			// Type assertion is safe here since it is only reached
+			// if the type of `next` is the same as the type being asserted
+			return SearchMap(next.(map[string]interface{}), path[1:])
+		default:
+			// got a value but nested key expected, return "nil" for not found
+			return nil
+		}
+	}
+	return nil
+}
+
 // DeepSearch THIS CODE IS COPIED HERE: IT SHOULD NOT BE MODIFIED
 // AT SOME POINT IT WILL BE MOVED TO A COMMON PLACE
 // deepSearch scans deep maps, following the key indexes listed in the
@@ -112,10 +144,10 @@ func FlattenAndMergeMap(shadow map[string]interface{}, m map[string]interface{},
 // In case intermediate keys do not exist, or map to a non-map value,
 // a new map is created and inserted, and the search continues from there:
 // the initial map "m" may be modified!
-// 根据path构造字典，并返回指定路径上的最后一个字典，与 python 中的 setdefault 方法类似.
-func DeepSearch(m map[string]interface{}, paths []string) map[string]interface{} {
+// 深度遍历并构造字典，根据path构造字典，并返回指定路径上的最后一个字典，与 python 中的 setdefault 方法类似.
+func DeepSearch(m map[string]interface{}, path []string) map[string]interface{} {
 	// 遍历 path 数组
-	for _, k := range paths {
+	for _, k := range path {
 		// 判断是否在字典m中存在
 		m2, ok := m[k]
 		if !ok {
