@@ -15,3 +15,26 @@ type IRemoteConfig interface {
 	// secretkeyring is the filepath to your openpgp secret keyring.  e.g. /etc/secrets/myring.gpg
 	SecretKeyring() string
 }
+
+type DefaultRemoteConfig struct {
+	provider      string
+	endpoint      string
+	path          string
+	secretKeyring string
+}
+
+func (rp DefaultRemoteConfig) Provider() string {
+	return rp.provider
+}
+
+func (rp DefaultRemoteConfig) Endpoint() string {
+	return rp.endpoint
+}
+
+func (rp DefaultRemoteConfig) Path() string {
+	return rp.path
+}
+
+func (rp DefaultRemoteConfig) SecretKeyring() string {
+	return rp.secretKeyring
+}
