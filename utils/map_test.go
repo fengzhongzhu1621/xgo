@@ -64,7 +64,7 @@ func TestFlattenAndMergeMap(t *testing.T) {
 	}
 }
 
-func TestSearchSearch(t *testing.T) {
+func TestSearchMap(t *testing.T) {
 	t.Parallel()
 
 	t.Run("OK", func(t *testing.T) {
