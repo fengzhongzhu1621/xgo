@@ -21,3 +21,21 @@ func DecodeHook(hook mapstructure.DecodeHookFunc) DecoderConfigOption {
 		c.DecodeHook = hook
 	}
 }
+
+// defaultDecoderConfig returns default mapsstructure.DecoderConfig with suppot
+// of time.Duration values & string slices
+func DefaultDecoderConfig(output interface{}, opts ...DecoderConfigOption) *mapstructure.DecoderConfig {
+	c := &mapstructure.DecoderConfig{
+		Metadata:         nil,
+		Result:           output,
+		WeaklyTypedInput: true,
+		DecodeHook: mapstructure.ComposeDecodeHookFunc(
+			mapstructure.StringToTimeDurationHookFunc(),
+			mapstructure.StringToSliceHookFunc(","),
+		),
+	}
+	for _, opt := range opts {
+		opt(c)
+	}
+	return c
+}
