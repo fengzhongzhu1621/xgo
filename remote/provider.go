@@ -1,11 +1,11 @@
 package remote
 
-// RemoteProvider stores the configuration necessary
+// IRemoteConfig stores the configuration necessary
 // to connect to a remote key/value store.
 // Optional secretKeyring to unencrypt encrypted values
 // can be provided.
 // 远程key/value存储的客户端配置接口.
-type RemoteProvider interface {
+type IRemoteConfig interface {
 	// provider is a string value: "etcd", "consul" or "firestore" are currently supported.
 	Provider() string
 	// endpoint is the url.  etcd requires http://ip:port  consul requires ip:port

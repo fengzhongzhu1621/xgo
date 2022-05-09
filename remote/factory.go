@@ -2,8 +2,9 @@ package remote
 
 import "io"
 
-type RemoteConfigFactory interface {
-	Get(rp RemoteProvider) (io.Reader, error)
-	Watch(rp RemoteProvider) (io.Reader, error)
-	WatchChannel(rp RemoteProvider) (<-chan *RemoteResponse, chan bool)
+// IRemoteConfigFactory 远程key/value存储的客户端
+type IRemoteConfigFactory interface {
+	Get(rp IRemoteConfig) (io.Reader, error)
+	Watch(rp IRemoteConfig) (io.Reader, error)
+	WatchChannel(rp IRemoteConfig) (<-chan *RemoteResponse, chan bool)
 }
