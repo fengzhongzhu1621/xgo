@@ -353,3 +353,45 @@ func TestSearchIndexableWithPathPrefixes(t *testing.T) {
 		}
 	})
 }
+
+func TestIsPathShadowedInDeepMap(t *testing.T) {
+	t.Parallel()
+
+	t.Run("Ok", func(t *testing.T) {
+		src := map[string]interface{}{
+			"a": "1",
+			"b": map[string]interface{}{
+				"c": "3",
+				"d": map[string]interface{}{
+					"e": "5",
+					"f": "6",
+				},
+			},
+		}
+		keyDelim := "_"
+		path := []string{"b", "c", "c1", "c2"}
+		actual := IsPathShadowedInDeepMap(path, src, keyDelim)
+		expect := "b_c"
+		if !reflect.DeepEqual(actual, expect) {
+			t.Fatalf("IsPathShadowedInDeepMap error actual is %v, expect is %v", actual, expect)
+		}
+	})
+}
+
+func TestIsPathShadowedInFlatMap(t *testing.T) {
+	t.Parallel()
+
+	t.Run("Ok", func(t *testing.T) {
+		src := map[string]interface{}{
+			"B":   1,
+			"A_B": 2,
+		}
+		keyDelim := "_"
+		path := []string{"A", "B", "C"}
+		actual := IsPathShadowedInFlatMap(path, src, keyDelim)
+		expect := "A_B"
+		if !reflect.DeepEqual(actual, expect) {
+			t.Fatalf("IsPathShadowedInFlatMap error actual is %v, expect is %v", actual, expect)
+		}
+	})
+}

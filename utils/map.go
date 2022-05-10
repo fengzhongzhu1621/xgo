@@ -457,3 +457,46 @@ func searchMapWithPathPrefixes(
 	// not found
 	return nil
 }
+
+// IsPathShadowedInDeepMap makes sure the given path is not shadowed somewhere
+// on its path in the map.
+// e.g., if "foo.bar" has a value in the given map, it “shadows”
+//       "foo.bar.baz" in a lower-priority map
+// 判断路径path是否覆盖到m中的一条路径，返回被覆盖的路径
+func IsPathShadowedInDeepMap(path []string, m map[string]interface{}, keyDelim string) string {
+	var parentVal interface{}
+	for i := 1; i < len(path); i++ {
+		parentVal = SearchMap(m, path[0:i])
+		if parentVal == nil {
+			// not found, no need to add more path elements
+			return ""
+		}
+		switch parentVal.(type) {
+		case map[interface{}]interface{}:
+			continue
+		case map[string]interface{}:
+			continue
+		default:
+			// parentVal is a regular value which shadows "path"
+			return strings.Join(path[0:i], keyDelim)
+		}
+	}
+	return ""
+}
+
+// IsPathShadowedInFlatMap makes sure the given path is not shadowed somewhere
+// in a sub-path of the map.
+// e.g., if "foo.bar" has a value in the given map, it “shadows”
+//       "foo.bar.baz" in a lower-priority map
+// 判断路径path是否覆盖到m中的一条路径，返回被覆盖的路径
+func IsPathShadowedInFlatMap(path []string, m map[string]interface{}, keyDelim string) string {
+	// scan paths
+	var parentKey string
+	for i := 1; i < len(path); i++ {
+		parentKey = strings.Join(path[0:i], keyDelim)
+		if _, ok := m[parentKey]; ok {
+			return parentKey
+		}
+	}
+	return ""
+}
