@@ -39,3 +39,12 @@ func DefaultDecoderConfig(output interface{}, opts ...DecoderConfigOption) *maps
 	}
 	return c
 }
+
+// A wrapper around mapstructure.Decode that mimics the WeakDecode functionality
+func Decode(input interface{}, config *mapstructure.DecoderConfig) error {
+	decoder, err := mapstructure.NewDecoder(config)
+	if err != nil {
+		return err
+	}
+	return decoder.Decode(input)
+}

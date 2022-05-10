@@ -462,7 +462,7 @@ func searchMapWithPathPrefixes(
 // on its path in the map.
 // e.g., if "foo.bar" has a value in the given map, it “shadows”
 //       "foo.bar.baz" in a lower-priority map
-// 判断路径path是否覆盖到m中的一条路径，返回被覆盖的路径
+// 判断子路径path是否覆盖到m中的一条路径，返回被覆盖的路径
 func IsPathShadowedInDeepMap(path []string, m map[string]interface{}, keyDelim string) string {
 	var parentVal interface{}
 	for i := 1; i < len(path); i++ {
@@ -488,7 +488,7 @@ func IsPathShadowedInDeepMap(path []string, m map[string]interface{}, keyDelim s
 // in a sub-path of the map.
 // e.g., if "foo.bar" has a value in the given map, it “shadows”
 //       "foo.bar.baz" in a lower-priority map
-// 判断路径path是否覆盖到m中的一条路径，返回被覆盖的路径
+// 判断子路径是否覆盖到m中的一条路径，返回被覆盖的路径
 func IsPathShadowedInFlatMap(path []string, m map[string]interface{}, keyDelim string) string {
 	// scan paths
 	var parentKey string

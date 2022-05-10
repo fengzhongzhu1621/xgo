@@ -9,13 +9,16 @@ import (
 	"reflect"
 	"strings"
 	"sync"
+	"time"
 
+	"xgo/cast"
 	"xgo/encoding"
 	"xgo/encoding/dotenv"
 	"xgo/encoding/hcl"
 	"xgo/encoding/ini"
 	"xgo/encoding/javaproperties"
 	"xgo/encoding/json"
+	"xgo/encoding/mapstructure"
 	"xgo/encoding/toml"
 	"xgo/encoding/yaml"
 	jww "xgo/log"
@@ -53,6 +56,8 @@ func (rp defaultRemoteProvider) SecretKeyring() string {
 }
 
 type Watcher struct {
+	logger jww.Logger
+
 	// The filesystem to read config from.
 	fs afero.Fs
 
@@ -70,15 +75,17 @@ type Watcher struct {
 	configName  string   // 配置文件名
 	configType  string   // 配置文件后缀 (不带 .)
 
-	configFile string                 // 搜索到的配置文件的完整路径
-	config     map[string]interface{} // 从configFile中读取的配置
-
-	logger jww.Logger
+	configFile        string                 // 搜索到的配置文件的完整路径
+	config            map[string]interface{} // 从configFile中读取的配置，即本地文件配置文件
+	configPermissions os.FileMode            // 配置文件模式
 
 	onConfigChange func(fsnotify.Event) // 接受了文件创建和修改实践后自定义处理方法
 
 	// A set of remote providers to search for the configuration
 	remoteProviders []*defaultRemoteProvider
+	kvstore         map[string]interface{} // 远程配置
+
+	automaticEnvApplied bool // 是否从环境变量获取value
 
 	encoderRegistry *encoding.EncoderRegistry
 	decoderRegistry *encoding.DecoderRegistry
@@ -106,15 +113,14 @@ func KeyDelimiter(d string) Option {
 	})
 }
 
-// IniLoadOptions sets the load options for ini parsing.
-func IniLoadOptions(in ini.LoadOptions) Option {
-	return optionFunc(func(v *Watcher) {
-		v.iniLoadOptions = in
-	})
-}
-
 func (v *Watcher) OnConfigChange(run func(in fsnotify.Event)) {
 	v.onConfigChange = run
+}
+
+// AutomaticEnv makes Viper check if environment variables match any of the existing keys
+// (config, default or flags). If matching env vars are found, they are loaded into Viper.
+func (v *Watcher) AutomaticEnv() {
+	v.automaticEnvApplied = true
 }
 
 func (v *Watcher) resetEncoding() {
@@ -272,6 +278,35 @@ func (v *Watcher) SetEnvPrefix(in string) {
 	}
 }
 
+func (v *Watcher) SetFs(fs afero.Fs) {
+	v.fs = fs
+}
+
+func (v *Watcher) SetConfigName(in string) {
+	if in != "" {
+		v.configName = in
+		v.configFile = ""
+	}
+}
+
+func (v *Watcher) SetConfigType(in string) {
+	if in != "" {
+		v.configType = in
+	}
+}
+
+func (v *Watcher) SetConfigPermissions(perm os.FileMode) {
+	v.configPermissions = perm.Perm()
+}
+
+// IniLoadOptions sets the load options for ini parsing.
+func IniLoadOptions(in ini.LoadOptions) Option {
+	return optionFunc(func(v *Viper) {
+		v.iniLoadOptions = in
+	})
+}
+
+// mergeWithEnvPrefix 将环境变量的key加上前缀并大写
 func (v *Watcher) mergeWithEnvPrefix(in string) string {
 	if v.envPrefix != "" {
 		return strings.ToUpper(v.envPrefix + "_" + in)
@@ -379,6 +414,230 @@ func (v *Watcher) AddSecureRemoteProvider(provider, endpoint, path, secretkeyrin
 		}
 	}
 	return nil
+}
+
+// isPathShadowedInAutoEnv makes sure the given path is not shadowed somewhere
+// in the environment, when automatic env is on.
+// e.g., if "foo.bar" has a value in the environment, it “shadows”
+//       "foo.bar.baz" in a lower-priority map
+// 子路径是否是环境变量的key
+func (v *Watcher) isPathShadowedInAutoEnv(path []string) string {
+	var parentKey string
+	for i := 1; i < len(path); i++ {
+		parentKey = strings.Join(path[0:i], v.keyDelim)
+		// 将环境变量的key加上前缀并大写，然后获得环境变量的值
+		if _, ok := v.getEnv(v.mergeWithEnvPrefix(parentKey)); ok {
+			return parentKey
+		}
+	}
+	return ""
+}
+
+// Given a key, find the value.
+//
+// Viper will check to see if an alias exists first.
+// Viper will then check in the following order:
+// flag, env, config file, key/value store.
+// Lastly, if no value was found and flagDefault is true, and if the key
+// corresponds to a flag, the flag's default value is returned.
+//
+// Note: this assumes a lower-cased key given.
+// 根据key依次从环境变量，本地配置，远程配置获取值
+func (v *Watcher) find(lcaseKey string) interface{} {
+	var (
+		val    interface{}
+		path   = strings.Split(lcaseKey, v.keyDelim)
+		nested = len(path) > 1
+	)
+
+	// Env override next
+	if v.automaticEnvApplied {
+		// even if it hasn't been registered, if automaticEnv is used,
+		// check any Get request
+		if val, ok := v.getEnv(v.mergeWithEnvPrefix(lcaseKey)); ok {
+			return val
+		}
+		if nested && v.isPathShadowedInAutoEnv(path) != "" {
+			return nil
+		}
+	}
+
+	// 从本地配置文件内容中获取
+	val = utils.SearchIndexableWithPathPrefixes(v.config, path, v.keyDelim)
+	if val != nil {
+		return val
+	}
+	if nested && utils.IsPathShadowedInDeepMap(path, v.config, v.keyDelim) != "" {
+		return nil
+	}
+
+	// K/V store next
+	val = utils.SearchMap(v.kvstore, path)
+	if val != nil {
+		return val
+	}
+	if nested && utils.IsPathShadowedInDeepMap(path, v.kvstore, v.keyDelim) != "" {
+		return nil
+	}
+
+	return nil
+}
+
+// Get can retrieve any value given the key to use.
+// Get is case-insensitive for a key.
+// Get has the behavior of returning the value associated with the first
+// place from where it is set. Viper will check in the following order:
+// override, flag, env, config file, key/value store, default
+//
+// Get returns an interface. For a specific value use one of the Get____ methods.
+func (v *Watcher) Get(key string) interface{} {
+	lcaseKey := strings.ToLower(key)
+	// 根据key依次从环境变量，本地配置，远程配置获取值
+	val := v.find(lcaseKey)
+	if val == nil {
+		return nil
+	}
+
+	return val
+}
+
+// GetString returns the value associated with the key as a string.
+func (v *Watcher) GetString(key string) string {
+	return cast.ToString(v.Get(key))
+}
+
+// GetBool returns the value associated with the key as a boolean.
+func (v *Watcher) GetBool(key string) bool {
+	return cast.ToBool(v.Get(key))
+}
+
+// GetInt returns the value associated with the key as an integer.
+func (v *Watcher) GetInt(key string) int {
+	return cast.ToInt(v.Get(key))
+}
+
+// GetInt32 returns the value associated with the key as an integer.
+func (v *Watcher) GetInt32(key string) int32 {
+	return cast.ToInt32(v.Get(key))
+}
+
+// GetInt64 returns the value associated with the key as an integer.
+func (v *Watcher) GetInt64(key string) int64 {
+	return cast.ToInt64(v.Get(key))
+}
+
+// GetUint returns the value associated with the key as an unsigned integer.
+func (v *Watcher) GetUint(key string) uint {
+	return cast.ToUint(v.Get(key))
+}
+
+// GetUint32 returns the value associated with the key as an unsigned integer.
+func (v *Watcher) GetUint32(key string) uint32 {
+	return cast.ToUint32(v.Get(key))
+}
+
+// GetUint64 returns the value associated with the key as an unsigned integer.
+func (v *Watcher) GetUint64(key string) uint64 {
+	return cast.ToUint64(v.Get(key))
+}
+
+// GetFloat64 returns the value associated with the key as a float64.
+func (v *Watcher) GetFloat64(key string) float64 {
+	return cast.ToFloat64(v.Get(key))
+}
+
+// GetTime returns the value associated with the key as time.
+func (v *Watcher) GetTime(key string) time.Time {
+	return cast.ToTime(v.Get(key))
+}
+
+// GetDuration returns the value associated with the key as a duration.
+func (v *Watcher) GetDuration(key string) time.Duration {
+	return cast.ToDuration(v.Get(key))
+}
+
+// GetIntSlice returns the value associated with the key as a slice of int values.
+func (v *Watcher) GetIntSlice(key string) []int {
+	return cast.ToIntSlice(v.Get(key))
+}
+
+// GetStringSlice returns the value associated with the key as a slice of strings.
+func (v *Watcher) GetStringSlice(key string) []string {
+	return cast.ToStringSlice(v.Get(key))
+}
+
+// GetStringMap returns the value associated with the key as a map of interfaces.
+func (v *Watcher) GetStringMap(key string) map[string]interface{} {
+	return cast.ToStringMap(v.Get(key))
+}
+
+// GetStringMapString returns the value associated with the key as a map of strings.
+func (v *Watcher) GetStringMapString(key string) map[string]string {
+	return cast.ToStringMapString(v.Get(key))
+}
+
+// GetStringMapStringSlice returns the value associated with the key as a map to a slice of strings.
+func (v *Watcher) GetStringMapStringSlice(key string) map[string][]string {
+	return cast.ToStringMapStringSlice(v.Get(key))
+}
+
+// GetSizeInBytes returns the size of the value associated with the given key
+// in bytes.
+func (v *Watcher) GetSizeInBytes(key string) uint {
+	sizeStr := cast.ToString(v.Get(key))
+	return utils.ParseSizeInBytes(sizeStr)
+}
+
+func (v *Watcher) AllKeys() []string {
+	m := map[string]interface{}{}
+	m = utils.FlattenAndMergeMap(m, v.config, "", v.keyDelim)
+	m = utils.FlattenAndMergeMap(m, v.kvstore, "", v.keyDelim)
+
+	// convert set of paths to list
+	a := make([]string, 0, len(m))
+	for x := range m {
+		a = append(a, x)
+	}
+	return a
+}
+
+// AllSettings 获得所有的key，构造深度字典
+func (v *Watcher) AllSettings() map[string]interface{} {
+	m := map[string]interface{}{}
+	// start from the list of keys, and construct the map one value at a time
+	for _, k := range v.AllKeys() {
+		value := v.Get(k)
+		if value == nil {
+			// should not happen, since AllKeys() returns only keys holding a value,
+			// check just in case anything changes
+			continue
+		}
+		path := strings.Split(k, v.keyDelim)
+		lastKey := strings.ToLower(path[len(path)-1])
+		deepestMap := utils.DeepSearch(m, path[0:len(path)-1])
+		// set innermost value
+		deepestMap[lastKey] = value
+	}
+	return m
+}
+
+// UnmarshalKey takes a single key and unmarshals it into a Struct.
+// 搜索key的值，转换为golang对象rawVal .
+func (v *Watcher) UnmarshalKey(key string, rawVal interface{}, opts ...mapstructure.DecoderConfigOption) error {
+	return mapstructure.Decode(v.Get(key), mapstructure.DefaultDecoderConfig(rawVal, opts...))
+}
+
+// Unmarshal unmarshals the config into a Struct. Make sure that the tags
+// on the fields of the structure are properly set.
+func (v *Watcher) Unmarshal(rawVal interface{}, opts ...mapstructure.DecoderConfigOption) error {
+	return mapstructure.Decode(v.AllSettings(), mapstructure.DefaultDecoderConfig(rawVal, opts...))
+}
+
+func (v *Watcher) UnmarshalExact(rawVal interface{}, opts ...mapstructure.DecoderConfigOption) error {
+	config := mapstructure.DefaultDecoderConfig(rawVal, opts...)
+	config.ErrorUnused = true
+
+	return mapstructure.Decode(v.AllSettings(), config)
 }
 
 func (v *Watcher) unmarshalReader(in io.Reader, c map[string]interface{}) error {
