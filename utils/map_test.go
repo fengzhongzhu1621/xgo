@@ -206,6 +206,8 @@ func TestMergeFlatMap(t *testing.T) {
 }
 
 func TestMergeMaps(t *testing.T) {
+	t.Parallel()
+
 	t.Run("OK", func(t *testing.T) {
 		var src = map[string]interface{}{
 			"a": 1,
@@ -256,6 +258,8 @@ func TestMergeMaps(t *testing.T) {
 }
 
 func TestCreateDeepMap(t *testing.T) {
+	t.Parallel()
+
 	t.Run("UpperKey", func(t *testing.T) {
 		var src = map[string]interface{}{
 			"A":     1,
@@ -322,6 +326,30 @@ func TestSetDeepMapValue(t *testing.T) {
 		}
 		if !reflect.DeepEqual(src, expect) {
 			t.Fatalf("SetDeepMapValue error actual is %v, expect is %v", src, expect)
+		}
+	})
+}
+
+func TestSearchIndexableWithPathPrefixes(t *testing.T) {
+	t.Parallel()
+
+	t.Run("Ok", func(t *testing.T) {
+		src := map[string]interface{}{
+			"a": 1,
+			"b": map[string]interface{}{
+				"c": "3",
+				"d": []interface{}{
+					"5",
+					"6",
+				},
+			},
+		}
+		keyDelim := "_"
+		path := []string{"b", "d", "1"}
+		actual := SearchIndexableWithPathPrefixes(src, path, keyDelim)
+		expect := "6"
+		if !reflect.DeepEqual(actual, expect) {
+			t.Fatalf("SearchIndexableWithPathPrefixes error actual is %v, expect is %v", actual, expect)
 		}
 	})
 }

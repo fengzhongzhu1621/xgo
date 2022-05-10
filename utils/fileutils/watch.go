@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strings"
 	"sync"
 
@@ -27,6 +28,29 @@ import (
 
 var SupportedExts = []string{"json", "toml", "yaml", "yml", "properties", "props", "prop", "hcl", "tfvars", "dotenv", "env", "ini"}
 var SupportedRemoteProviders = []string{"etcd", "consul", "firestore"}
+
+type defaultRemoteProvider struct {
+	provider      string
+	endpoint      string
+	path          string
+	secretKeyring string
+}
+
+func (rp defaultRemoteProvider) Provider() string {
+	return rp.provider
+}
+
+func (rp defaultRemoteProvider) Endpoint() string {
+	return rp.endpoint
+}
+
+func (rp defaultRemoteProvider) Path() string {
+	return rp.path
+}
+
+func (rp defaultRemoteProvider) SecretKeyring() string {
+	return rp.secretKeyring
+}
 
 type Watcher struct {
 	// The filesystem to read config from.
@@ -52,6 +76,9 @@ type Watcher struct {
 	logger jww.Logger
 
 	onConfigChange func(fsnotify.Event) // 接受了文件创建和修改实践后自定义处理方法
+
+	// A set of remote providers to search for the configuration
+	remoteProviders []*defaultRemoteProvider
 
 	encoderRegistry *encoding.EncoderRegistry
 	decoderRegistry *encoding.DecoderRegistry
@@ -284,6 +311,74 @@ func (v *Watcher) AddConfigPath(in string) {
 			v.configPaths = append(v.configPaths, absin)
 		}
 	}
+}
+
+// 判断远程配置对象是否存在
+func (v *Watcher) providerPathExists(p *defaultRemoteProvider) bool {
+	for _, y := range v.remoteProviders {
+		if reflect.DeepEqual(y, p) {
+			return true
+		}
+	}
+	return false
+}
+
+// AddRemoteProvider adds a remote configuration source.
+// Remote Providers are searched in the order they are added.
+// provider is a string value: "etcd", "consul" or "firestore" are currently supported.
+// endpoint is the url.  etcd requires http://ip:port  consul requires ip:port
+// path is the path in the k/v store to retrieve configuration
+// To retrieve a config file called myapp.json from /configs/myapp.json
+// you should set path to /configs and set config name (SetConfigName()) to "myapp"
+// 添加远程配置对象 .
+func (v *Watcher) AddRemoteProvider(providerName, endpoint, path string) error {
+	// 判断是否支持远程key/value存储的类型
+	if !stringutils.StringInSlice(providerName, SupportedRemoteProviders) {
+		return UnsupportedRemoteProviderError(providerName)
+	}
+	if providerName != "" && endpoint != "" {
+		v.logger.Info("adding remote provider", "provider", providerName, "endpoint", endpoint)
+		// 新增一个远程配置对象
+		rp := &defaultRemoteProvider{
+			endpoint: endpoint,
+			provider: providerName,
+			path:     path,
+		}
+		if !v.providerPathExists(rp) {
+			v.remoteProviders = append(v.remoteProviders, rp)
+		}
+	}
+	return nil
+}
+
+// AddSecureRemoteProvider adds a remote configuration source.
+// Secure Remote Providers are searched in the order they are added.
+// provider is a string value: "etcd", "consul" or "firestore" are currently supported.
+// endpoint is the url.  etcd requires http://ip:port  consul requires ip:port
+// secretkeyring is the filepath to your openpgp secret keyring.  e.g. /etc/secrets/myring.gpg
+// path is the path in the k/v store to retrieve configuration
+// To retrieve a config file called myapp.json from /configs/myapp.json
+// you should set path to /configs and set config name (SetConfigName()) to
+// "myapp"
+// Secure Remote Providers are implemented with github.com/bketelsen/crypt
+func (v *Watcher) AddSecureRemoteProvider(provider, endpoint, path, secretkeyring string) error {
+	if !stringutils.StringInSlice(provider, SupportedRemoteProviders) {
+		return UnsupportedRemoteProviderError(provider)
+	}
+	if provider != "" && endpoint != "" {
+		v.logger.Info("adding remote provider", "provider", provider, "endpoint", endpoint)
+
+		rp := &defaultRemoteProvider{
+			endpoint:      endpoint,
+			provider:      provider,
+			path:          path,
+			secretKeyring: secretkeyring,
+		}
+		if !v.providerPathExists(rp) {
+			v.remoteProviders = append(v.remoteProviders, rp)
+		}
+	}
+	return nil
 }
 
 func (v *Watcher) unmarshalReader(in io.Reader, c map[string]interface{}) error {

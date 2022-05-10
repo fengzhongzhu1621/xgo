@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"xgo/cast"
@@ -345,4 +346,114 @@ func SetDeepMapValue(m map[string]interface{}, key string, value interface{}, ke
 
 	// set innermost value
 	deepestMap[lastKey] = value
+}
+
+// SearchIndexableWithPathPrefixes recursively searches for a value for path in source map/slice.
+//
+// While SearchMap() considers each path element as a single map key or slice index, this
+// function searches for, and prioritizes, merged path elements.
+// e.g., if in the source, "foo" is defined with a sub-key "bar", and "foo.bar"
+// is also defined, this latter value is returned for path ["foo", "bar"].
+//
+// This should be useful only at config level (other maps may not contain dots
+// in their keys).
+//
+// Note: This assumes that the path entries and map keys are lower cased.
+// 支持根据字典的key和数组的索引进行搜索
+func SearchIndexableWithPathPrefixes(source interface{}, path []string, keyDelim string) interface{} {
+	if len(path) == 0 {
+		return source
+	}
+
+	// search for path prefixes, starting from the longest one
+	for i := len(path); i > 0; i-- {
+		// 获得当前路径和子路程
+		prefixKey := strings.ToLower(strings.Join(path[0:i], keyDelim))
+
+		var val interface{}
+		switch sourceIndexable := source.(type) {
+		case []interface{}:
+			val = searchSliceWithPathPrefixes(sourceIndexable, prefixKey, i, path, keyDelim)
+		case map[string]interface{}:
+			val = searchMapWithPathPrefixes(sourceIndexable, prefixKey, i, path, keyDelim)
+		}
+		if val != nil {
+			return val
+		}
+	}
+
+	// not found
+	return nil
+}
+
+// searchSliceWithPathPrefixes searches for a value for path in sourceSlice
+//
+// This function is part of the searchIndexableWithPathPrefixes recurring search and
+// should not be called directly from functions other than searchIndexableWithPathPrefixes.
+func searchSliceWithPathPrefixes(
+	sourceSlice []interface{},
+	prefixKey string,
+	pathIndex int,
+	path []string,
+	keyDelim string,
+) interface{} {
+	// if the prefixKey is not a number or it is out of bounds of the slice
+	index, err := strconv.Atoi(prefixKey)
+	if err != nil || len(sourceSlice) <= index {
+		return nil
+	}
+
+	next := sourceSlice[index]
+
+	// Fast path
+	if pathIndex == len(path) {
+		return next
+	}
+
+	switch n := next.(type) {
+	case map[interface{}]interface{}:
+		return SearchIndexableWithPathPrefixes(cast.ToStringMap(n), path[pathIndex:], keyDelim)
+	case map[string]interface{}, []interface{}:
+		return SearchIndexableWithPathPrefixes(n, path[pathIndex:], keyDelim)
+	default:
+		// got a value but nested key expected, do nothing and look for next prefix
+	}
+
+	// not found
+	return nil
+}
+
+// searchMapWithPathPrefixes searches for a value for path in sourceMap
+//
+// This function is part of the searchIndexableWithPathPrefixes recurring search and
+// should not be called directly from functions other than searchIndexableWithPathPrefixes.
+func searchMapWithPathPrefixes(
+	sourceMap map[string]interface{},
+	prefixKey string,
+	pathIndex int,
+	path []string,
+	keyDelim string,
+) interface{} {
+	next, ok := sourceMap[prefixKey]
+	if !ok {
+		return nil
+	}
+
+	// Fast path
+	if pathIndex == len(path) {
+		return next
+	}
+
+	// Nested case
+	switch n := next.(type) {
+	case map[interface{}]interface{}:
+		return SearchIndexableWithPathPrefixes(cast.ToStringMap(n), path[pathIndex:], keyDelim)
+	case map[string]interface{}, []interface{}:
+		return SearchIndexableWithPathPrefixes(n, path[pathIndex:], keyDelim)
+	default:
+		// got a value but nested key expected, do nothing and look for next prefix
+	}
+
+	// not found
+	return nil
 }
