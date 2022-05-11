@@ -2,6 +2,7 @@ package fileutils
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -318,6 +319,75 @@ func (v *Watcher) MergeConfigMap(cfg map[string]interface{}) error {
 	utils.InsensitiviseMap(cfg)
 	utils.MergeMaps(cfg, v.config, nil)
 	return nil
+}
+
+// WriteConfig writes the current configuration to a file.
+func (v *Watcher) WriteConfig() error {
+	filename, err := v.getConfigFile()
+	if err != nil {
+		return err
+	}
+	return v.writeConfig(filename, true)
+}
+
+// SafeWriteConfig writes current configuration to file only if the file does not exist.
+func (v *Watcher) SafeWriteConfig() error {
+	if len(v.configPaths) < 1 {
+		return errors.New("missing configuration for 'configPath'")
+	}
+	return v.SafeWriteConfigAs(filepath.Join(v.configPaths[0], v.configName+"."+v.configType))
+}
+
+// WriteConfigAs writes current configuration to a given filename.
+func (v *Watcher) WriteConfigAs(filename string) error {
+	return v.writeConfig(filename, true)
+}
+
+// SafeWriteConfigAs writes current configuration to a given filename if it does not exist.
+func (v *Watcher) SafeWriteConfigAs(filename string) error {
+	alreadyExists, err := afero.Exists(v.fs, filename)
+	if alreadyExists && err == nil {
+		return ConfigFileAlreadyExistsError(filename)
+	}
+	return v.writeConfig(filename, false)
+}
+
+func (v *Watcher) writeConfig(filename string, force bool) error {
+	v.logger.Info("attempting to write configuration to file")
+
+	var configType string
+
+	ext := filepath.Ext(filename)
+	if ext != "" && ext != filepath.Base(filename) {
+		configType = ext[1:]
+	} else {
+		configType = v.configType
+	}
+	if configType == "" {
+		return fmt.Errorf("config type could not be determined for %s", filename)
+	}
+
+	if !stringutils.StringInSlice(configType, SupportedExts) {
+		return UnsupportedConfigError(configType)
+	}
+	if v.config == nil {
+		v.config = make(map[string]interface{})
+	}
+	flags := os.O_CREATE | os.O_TRUNC | os.O_WRONLY
+	if !force {
+		flags |= os.O_EXCL
+	}
+	f, err := v.fs.OpenFile(filename, flags, v.configPermissions)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	if err := v.marshalWriter(f, configType); err != nil {
+		return err
+	}
+
+	return f.Sync()
 }
 
 // Marshal a map into Writer.
@@ -754,7 +824,7 @@ func (v *Watcher) GetStringMapStringSlice(key string) map[string][]string {
 // in bytes.
 func (v *Watcher) GetSizeInBytes(key string) uint {
 	sizeStr := cast.ToString(v.Get(key))
-	return utils.ParseSizeInBytes(sizeStr)
+	return ParseSizeInBytes(sizeStr)
 }
 
 // IsSet checks to see if the key has been set in any of the data locations.
@@ -945,4 +1015,51 @@ func (v *Watcher) WatchConfig() {
 		eventsWG.Wait() // now, wait for event loop to end in this go-routine...
 	}()
 	initWG.Wait() // make sure that the go routine above fully ended before returning
+}
+
+// New returns an initialized Viper instance.
+func New() *Watcher {
+	v := new(Watcher)
+	v.keyDelim = "."
+	v.configName = "config"
+	v.configPermissions = os.FileMode(0o644)
+	// 定义一个包级变量，并将其设置为指向文件系统的指针.
+	v.fs = afero.NewOsFs()
+	v.config = make(map[string]interface{})
+	v.override = make(map[string]interface{})
+	v.kvstore = make(map[string]interface{})
+	v.logger = jww.JwwLogger{}
+
+	v.resetEncoding()
+
+	return v
+}
+
+// Reset is intended for testing, will reset all to default settings.
+// In the public interface for the viper package so applications
+// can use it in their testing as well.
+func Reset() *Watcher {
+	v = New()
+	SupportedExts = []string{"json", "toml", "yaml", "yml", "properties", "props", "prop", "hcl", "tfvars", "dotenv", "env", "ini"}
+	SupportedRemoteProviders = []string{"etcd", "consul", "firestore"}
+	return v
+}
+
+// NewWithOptions creates a new Viper instance.
+func NewWithOptions(opts ...Option) *Watcher {
+	v := New()
+
+	for _, opt := range opts {
+		opt.apply(v)
+	}
+
+	v.resetEncoding()
+
+	return v
+}
+
+var v *Watcher
+
+func init() {
+	v = New()
 }

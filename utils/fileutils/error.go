@@ -58,3 +58,11 @@ type RemoteConfigError string
 func (rce RemoteConfigError) Error() string {
 	return fmt.Sprintf("Remote Configurations Error: %s", string(rce))
 }
+
+// ConfigFileAlreadyExistsError denotes failure to write new configuration file.
+type ConfigFileAlreadyExistsError string
+
+// Error returns the formatted error when configuration already exists.
+func (faee ConfigFileAlreadyExistsError) Error() string {
+	return fmt.Sprintf("Config File %q Already Exists", string(faee))
+}
