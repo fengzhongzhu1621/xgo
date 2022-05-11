@@ -19,4 +19,5 @@ coverage.out
 count.out
 profile.out
 tmp.out
-.idea/* 
+.idea/*
+build/*

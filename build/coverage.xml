@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-	<testsuite tests="3" failures="0" time="0.411000" name="xgo" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="3" failures="0" time="0.480000" name="xgo" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
@@ -8,14 +8,14 @@
 		<testcase classname="xgo" name="TestDebugPrintWARNINGDefault" time="0.000000"></testcase>
 		<testcase classname="xgo" name="TestVersion" time="0.000000"></testcase>
 	</testsuite>
-	<testsuite tests="2" failures="0" time="0.266000" name="xgo/async" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="2" failures="0" time="0.710000" name="xgo/async" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
-		<testcase classname="xgo/async" name="TestAsync" time="0.000000"></testcase>
+		<testcase classname="xgo/async" name="TestAsync" time="0.010000"></testcase>
 		<testcase classname="xgo/async" name="TestAsyncError" time="0.000000"></testcase>
 	</testsuite>
-	<testsuite tests="23" failures="0" time="0.547000" name="xgo/binding" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="23" failures="0" time="0.707000" name="xgo/binding" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
@@ -43,17 +43,17 @@
 		<testcase classname="xgo/binding" name="TestXMLBindingBindBody" time="0.000000"></testcase>
 		<testcase classname="xgo/binding" name="TestYAMLBindingBindBody" time="0.000000"></testcase>
 	</testsuite>
-	<testsuite tests="0" failures="0" time="0.000000" name="xgo/broadcast" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="0" failures="0" time="0.000000" name="xgo/broadcast" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
 	</testsuite>
-	<testsuite tests="0" failures="0" time="0.000000" name="xgo/cache" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="0" failures="0" time="0.000000" name="xgo/cache" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
 	</testsuite>
-	<testsuite tests="145" failures="0" time="0.307000" name="xgo/cast" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="145" failures="0" time="0.904000" name="xgo/cast" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
@@ -201,20 +201,20 @@
 		<testcase classname="xgo/cast" name="TestToTimeWithTimezones/18;timeFormatType=2;2006-01-02_15:04:05_-0700/default_location_not_UTC" time="0.000000"></testcase>
 		<testcase classname="xgo/cast" name="TestToTimeWithTimezones/18;timeFormatType=2;2006-01-02_15:04:05_-0700/time_in_the_local_timezone_default_location_not_UTC" time="0.000000"></testcase>
 		<testcase classname="xgo/cast" name="TestToTimeWithTimezones/18;timeFormatType=2;2006-01-02_15:04:05_-0700" time="0.000000"></testcase>
-		<testcase classname="xgo/cast" name="TestToTimeWithTimezones" time="0.010000"></testcase>
+		<testcase classname="xgo/cast" name="TestToTimeWithTimezones" time="0.020000"></testcase>
 	</testsuite>
-	<testsuite tests="1" failures="0" time="0.736000" name="xgo/command" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="1" failures="0" time="1.080000" name="xgo/command" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
 		<testcase classname="xgo/command" name="TestRunBashCommand" time="0.010000"></testcase>
 	</testsuite>
-	<testsuite tests="0" failures="0" time="0.000000" name="xgo/config" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="0" failures="0" time="0.000000" name="xgo/config" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
 	</testsuite>
-	<testsuite tests="12" failures="0" time="0.677000" name="xgo/encoding" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="12" failures="0" time="0.580000" name="xgo/encoding" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
@@ -231,7 +231,7 @@
 		<testcase classname="xgo/encoding" name="TestEncoderRegistry_Decode/EncoderNotFound" time="0.000000"></testcase>
 		<testcase classname="xgo/encoding" name="TestEncoderRegistry_Decode" time="0.000000"></testcase>
 	</testsuite>
-	<testsuite tests="6" failures="0" time="0.612000" name="xgo/encoding/dotenv" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="6" failures="0" time="0.759000" name="xgo/encoding/dotenv" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
@@ -242,7 +242,7 @@
 		<testcase classname="xgo/encoding/dotenv" name="TestCodec_Decode/InvalidData" time="0.000000"></testcase>
 		<testcase classname="xgo/encoding/dotenv" name="TestCodec_Decode" time="0.000000"></testcase>
 	</testsuite>
-	<testsuite tests="4" failures="0" time="0.639000" name="xgo/encoding/hcl" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="4" failures="0" time="1.308000" name="xgo/encoding/hcl" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
@@ -251,7 +251,7 @@
 		<testcase classname="xgo/encoding/hcl" name="TestCodec_Decode/InvalidData" time="0.000000"></testcase>
 		<testcase classname="xgo/encoding/hcl" name="TestCodec_Decode" time="0.000000"></testcase>
 	</testsuite>
-	<testsuite tests="6" failures="0" time="0.627000" name="xgo/encoding/ini" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="6" failures="0" time="0.941000" name="xgo/encoding/ini" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
@@ -262,7 +262,7 @@
 		<testcase classname="xgo/encoding/ini" name="TestCodec_Decode/InvalidData" time="0.000000"></testcase>
 		<testcase classname="xgo/encoding/ini" name="TestCodec_Decode" time="0.000000"></testcase>
 	</testsuite>
-	<testsuite tests="5" failures="0" time="0.588000" name="xgo/encoding/javaproperties" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="5" failures="0" time="1.112000" name="xgo/encoding/javaproperties" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
@@ -274,7 +274,7 @@
 		<testcase classname="xgo/encoding/javaproperties" name="TestCodec_Decode" time="0.000000"></testcase>
 		<testcase classname="xgo/encoding/javaproperties" name="TestCodec_DecodeEncode" time="0.000000"></testcase>
 	</testsuite>
-	<testsuite tests="4" failures="0" time="0.431000" name="xgo/encoding/json" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="4" failures="0" time="0.825000" name="xgo/encoding/json" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
@@ -283,12 +283,12 @@
 		<testcase classname="xgo/encoding/json" name="TestCodec_Decode/InvalidData" time="0.000000"></testcase>
 		<testcase classname="xgo/encoding/json" name="TestCodec_Decode" time="0.000000"></testcase>
 	</testsuite>
-	<testsuite tests="0" failures="0" time="0.000000" name="xgo/encoding/mapstructure" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="0" failures="0" time="0.000000" name="xgo/encoding/mapstructure" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
 	</testsuite>
-	<testsuite tests="4" failures="0" time="0.599000" name="xgo/encoding/toml" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="4" failures="0" time="1.419000" name="xgo/encoding/toml" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
@@ -297,7 +297,7 @@
 		<testcase classname="xgo/encoding/toml" name="TestCodec_Decode/InvalidData" time="0.000000"></testcase>
 		<testcase classname="xgo/encoding/toml" name="TestCodec_Decode" time="0.000000"></testcase>
 	</testsuite>
-	<testsuite tests="4" failures="0" time="0.637000" name="xgo/encoding/yaml" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="4" failures="0" time="1.491000" name="xgo/encoding/yaml" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
@@ -306,35 +306,35 @@
 		<testcase classname="xgo/encoding/yaml" name="TestCodec_Decode/InvalidData" time="0.000000"></testcase>
 		<testcase classname="xgo/encoding/yaml" name="TestCodec_Decode" time="0.000000"></testcase>
 	</testsuite>
-	<testsuite tests="8" failures="0" time="3.532000" name="xgo/fastrand" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="8" failures="0" time="5.318000" name="xgo/fastrand" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
-		<testcase classname="xgo/fastrand" name="TestRNGSeed" time="1.550000"></testcase>
-		<testcase classname="xgo/fastrand" name="TestUint32" time="0.360000"></testcase>
-		<testcase classname="xgo/fastrand" name="TestRNGUint32" time="0.270000"></testcase>
-		<testcase classname="xgo/fastrand" name="TestUint32n" time="0.110000"></testcase>
-		<testcase classname="xgo/fastrand" name="TestRNGUint32n" time="0.060000"></testcase>
-		<testcase classname="xgo/fastrand" name="TestInt" time="0.280000"></testcase>
-		<testcase classname="xgo/fastrand" name="TestIntn" time="0.110000"></testcase>
-		<testcase classname="xgo/fastrand" name="TestRangeIntn" time="0.110000"></testcase>
+		<testcase classname="xgo/fastrand" name="TestRNGSeed" time="1.640000"></testcase>
+		<testcase classname="xgo/fastrand" name="TestUint32" time="0.920000"></testcase>
+		<testcase classname="xgo/fastrand" name="TestRNGUint32" time="0.410000"></testcase>
+		<testcase classname="xgo/fastrand" name="TestUint32n" time="0.130000"></testcase>
+		<testcase classname="xgo/fastrand" name="TestRNGUint32n" time="0.130000"></testcase>
+		<testcase classname="xgo/fastrand" name="TestInt" time="0.540000"></testcase>
+		<testcase classname="xgo/fastrand" name="TestIntn" time="0.070000"></testcase>
+		<testcase classname="xgo/fastrand" name="TestRangeIntn" time="0.140000"></testcase>
 	</testsuite>
-	<testsuite tests="20" failures="0" time="9.145000" name="xgo/fsnotify" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="20" failures="0" time="9.985000" name="xgo/fsnotify" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
 		<testcase classname="xgo/fsnotify" name="TestEventStringWithValue" time="0.000000"></testcase>
 		<testcase classname="xgo/fsnotify" name="TestEventOpStringWithValue" time="0.000000"></testcase>
 		<testcase classname="xgo/fsnotify" name="TestEventOpStringWithNoValue" time="0.000000"></testcase>
-		<testcase classname="xgo/fsnotify" name="TestFsnotifyMultipleOperations" time="0.820000"></testcase>
-		<testcase classname="xgo/fsnotify" name="TestFsnotifyMultipleCreates" time="1.050000"></testcase>
-		<testcase classname="xgo/fsnotify" name="TestFsnotifyDirOnly" time="0.690000"></testcase>
+		<testcase classname="xgo/fsnotify" name="TestFsnotifyMultipleOperations" time="0.830000"></testcase>
+		<testcase classname="xgo/fsnotify" name="TestFsnotifyMultipleCreates" time="1.070000"></testcase>
+		<testcase classname="xgo/fsnotify" name="TestFsnotifyDirOnly" time="0.680000"></testcase>
 		<testcase classname="xgo/fsnotify" name="TestFsnotifyDeleteWatchedDir" time="0.520000"></testcase>
 		<testcase classname="xgo/fsnotify" name="TestFsnotifySubDir" time="0.740000"></testcase>
 		<testcase classname="xgo/fsnotify" name="TestFsnotifyRename" time="0.550000"></testcase>
-		<testcase classname="xgo/fsnotify" name="TestFsnotifyRenameToCreate" time="0.550000"></testcase>
+		<testcase classname="xgo/fsnotify" name="TestFsnotifyRenameToCreate" time="0.530000"></testcase>
 		<testcase classname="xgo/fsnotify" name="TestFsnotifyRenameToOverwrite" time="0.550000"></testcase>
-		<testcase classname="xgo/fsnotify" name="TestRemovalOfWatch" time="0.520000"></testcase>
+		<testcase classname="xgo/fsnotify" name="TestRemovalOfWatch" time="0.530000"></testcase>
 		<testcase classname="xgo/fsnotify" name="TestFsnotifyAttrib" time="1.570000"></testcase>
 		<testcase classname="xgo/fsnotify" name="TestFsnotifyClose" time="0.050000"></testcase>
 		<testcase classname="xgo/fsnotify" name="TestFsnotifyFakeSymlink" time="0.500000"></testcase>
@@ -344,37 +344,37 @@
 		<testcase classname="xgo/fsnotify" name="TestRemoveWithClose" time="0.060000"></testcase>
 		<testcase classname="xgo/fsnotify" name="TestWatcherClose" time="0.100000"></testcase>
 	</testsuite>
-	<testsuite tests="2" failures="0" time="0.457000" name="xgo/homedir" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="2" failures="0" time="0.440000" name="xgo/homedir" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
-		<testcase classname="xgo/homedir" name="TestDir" time="0.080000"></testcase>
+		<testcase classname="xgo/homedir" name="TestDir" time="0.090000"></testcase>
 		<testcase classname="xgo/homedir" name="TestExpand" time="0.000000"></testcase>
 	</testsuite>
-	<testsuite tests="1" failures="0" time="0.534000" name="xgo/log" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="1" failures="0" time="0.800000" name="xgo/log" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
 		<testcase classname="xgo/log" name="TestInfo" time="0.000000"></testcase>
 	</testsuite>
-	<testsuite tests="1" failures="0" time="0.245000" name="xgo/pipe" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="1" failures="0" time="0.348000" name="xgo/pipe" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
 		<testcase classname="xgo/pipe" name="TestEndpointPipe" time="0.000000"></testcase>
 	</testsuite>
-	<testsuite tests="1" failures="0" time="2.967000" name="xgo/pool" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="1" failures="0" time="3.036000" name="xgo/pool" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
-		<testcase classname="xgo/pool" name="TestGinkgoSuite" time="2.630000"></testcase>
+		<testcase classname="xgo/pool" name="TestGinkgoSuite" time="2.580000"></testcase>
 	</testsuite>
-	<testsuite tests="0" failures="0" time="0.000000" name="xgo/remote" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="0" failures="0" time="0.000000" name="xgo/remote" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
 	</testsuite>
-	<testsuite tests="30" failures="0" time="0.307000" name="xgo/render" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="30" failures="0" time="0.623000" name="xgo/render" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
@@ -409,17 +409,17 @@
 		<testcase classname="xgo/render" name="TestRenderYAML" time="0.000000"></testcase>
 		<testcase classname="xgo/render" name="TestRenderYAMLFail" time="0.000000"></testcase>
 	</testsuite>
-	<testsuite tests="0" failures="0" time="0.000000" name="xgo/script" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="0" failures="0" time="0.000000" name="xgo/script" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
 	</testsuite>
-	<testsuite tests="0" failures="0" time="0.000000" name="xgo/services/name/client" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="0" failures="0" time="0.000000" name="xgo/services/name/client" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
 	</testsuite>
-	<testsuite tests="3" failures="0" time="0.512000" name="xgo/services/name/client/address" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="3" failures="0" time="0.688000" name="xgo/services/name/client/address" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
@@ -427,69 +427,81 @@
 		<testcase classname="xgo/services/name/client/address" name="TestNameServiceAddressIp" time="0.000000"></testcase>
 		<testcase classname="xgo/services/name/client/address" name="TestNameServiceAddressL5" time="0.000000"></testcase>
 	</testsuite>
-	<testsuite tests="0" failures="0" time="0.000000" name="xgo/services/name/client/options" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="0" failures="0" time="0.000000" name="xgo/services/name/client/options" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
 	</testsuite>
-	<testsuite tests="0" failures="0" time="0.000000" name="xgo/services/name/client/request" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="0" failures="0" time="0.000000" name="xgo/services/name/client/request" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
 	</testsuite>
-	<testsuite tests="1" failures="0" time="0.327000" name="xgo/signature" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="1" failures="0" time="0.583000" name="xgo/signature" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
 		<testcase classname="xgo/signature" name="TestGenerateHmacSignedString" time="0.000000"></testcase>
 	</testsuite>
-	<testsuite tests="0" failures="0" time="0.000000" name="xgo/term" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="0" failures="0" time="0.000000" name="xgo/term" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
 	</testsuite>
-	<testsuite tests="12" failures="0" time="0.267000" name="xgo/utils" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="24" failures="0" time="0.347000" name="xgo/utils" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
+		<testcase classname="xgo/utils" name="TestCopyAndInsensitiviseMap" time="0.000000"></testcase>
+		<testcase classname="xgo/utils" name="TestIsPathShadowedInFlatMap/Ok" time="0.000000"></testcase>
+		<testcase classname="xgo/utils" name="TestIsPathShadowedInFlatMap" time="0.000000"></testcase>
+		<testcase classname="xgo/utils" name="TestIsPathShadowedInDeepMap/Ok" time="0.000000"></testcase>
+		<testcase classname="xgo/utils" name="TestIsPathShadowedInDeepMap" time="0.000000"></testcase>
+		<testcase classname="xgo/utils" name="TestSearchIndexableWithPathPrefixes/Ok" time="0.000000"></testcase>
+		<testcase classname="xgo/utils" name="TestSearchIndexableWithPathPrefixes" time="0.000000"></testcase>
+		<testcase classname="xgo/utils" name="TestSetDeepMapValue/KeyNotExists" time="0.000000"></testcase>
+		<testcase classname="xgo/utils" name="TestSetDeepMapValue/KeyExists" time="0.000000"></testcase>
+		<testcase classname="xgo/utils" name="TestSetDeepMapValue" time="0.000000"></testcase>
+		<testcase classname="xgo/utils" name="TestCreateDeepMap/UpperKey" time="0.000000"></testcase>
+		<testcase classname="xgo/utils" name="TestCreateDeepMap" time="0.000000"></testcase>
 		<testcase classname="xgo/utils" name="TestMergeMaps/OK" time="0.000000"></testcase>
 		<testcase classname="xgo/utils" name="TestMergeMaps" time="0.000000"></testcase>
-		<testcase classname="xgo/utils" name="TestDeepSearchAndCreateMap/UpperKey" time="0.000000"></testcase>
-		<testcase classname="xgo/utils" name="TestDeepSearchAndCreateMap" time="0.000000"></testcase>
-		<testcase classname="xgo/utils" name="TestCopyAndInsensitiviseMap" time="0.000000"></testcase>
 		<testcase classname="xgo/utils" name="TestMergeFlatMap/UpperKey" time="0.000000"></testcase>
 		<testcase classname="xgo/utils" name="TestMergeFlatMap/LowerKey" time="0.000000"></testcase>
 		<testcase classname="xgo/utils" name="TestMergeFlatMap" time="0.000000"></testcase>
 		<testcase classname="xgo/utils" name="TestDeepSearch/OK" time="0.000000"></testcase>
 		<testcase classname="xgo/utils" name="TestDeepSearch/EmptyMap" time="0.000000"></testcase>
 		<testcase classname="xgo/utils" name="TestDeepSearch" time="0.000000"></testcase>
+		<testcase classname="xgo/utils" name="TestSearchMap/OK" time="0.000000"></testcase>
+		<testcase classname="xgo/utils" name="TestSearchMap/NoValue" time="0.000000"></testcase>
+		<testcase classname="xgo/utils" name="TestSearchMap" time="0.000000"></testcase>
 		<testcase classname="xgo/utils" name="TestFlattenAndMergeMap" time="0.000000"></testcase>
 	</testsuite>
-	<testsuite tests="0" failures="0" time="0.000000" name="xgo/utils/atomicutils" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="0" failures="0" time="0.000000" name="xgo/utils/atomicutils" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
 	</testsuite>
-	<testsuite tests="2" failures="0" time="0.409000" name="xgo/utils/bytesconv" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="2" failures="0" time="0.468000" name="xgo/utils/bytesconv" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
 		<testcase classname="xgo/utils/bytesconv" name="TestBytesToString" time="0.000000"></testcase>
 		<testcase classname="xgo/utils/bytesconv" name="TestStringToBytes" time="0.000000"></testcase>
 	</testsuite>
-	<testsuite tests="2" failures="0" time="0.322000" name="xgo/utils/bytesutils" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="2" failures="0" time="0.352000" name="xgo/utils/bytesutils" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
 		<testcase classname="xgo/utils/bytesutils" name="TestHasPrefixAndSuffix" time="0.000000"></testcase>
 		<testcase classname="xgo/utils/bytesutils" name="TestTrimEOL" time="0.000000"></testcase>
 	</testsuite>
-	<testsuite tests="0" failures="0" time="0.000000" name="xgo/utils/decorators" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="0" failures="0" time="0.000000" name="xgo/utils/decorators" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
 	</testsuite>
-	<testsuite tests="15" failures="0" time="0.313000" name="xgo/utils/fileutils" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="15" failures="0" time="0.604000" name="xgo/utils/fileutils" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
@@ -509,36 +521,36 @@
 		<testcase classname="xgo/utils/fileutils" name="TestLocateFile" time="0.000000"></testcase>
 		<testcase classname="xgo/utils/fileutils" name="TestAbsPathify" time="0.000000"></testcase>
 	</testsuite>
-	<testsuite tests="2" failures="0" time="0.304000" name="xgo/utils/flagutils" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="2" failures="0" time="0.369000" name="xgo/utils/flagutils" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
 		<testcase classname="xgo/utils/flagutils" name="TestBindFlagValueSet" time="0.000000"></testcase>
 		<testcase classname="xgo/utils/flagutils" name="TestBindFlagValue" time="0.000000"></testcase>
 	</testsuite>
-	<testsuite tests="1" failures="0" time="0.528000" name="xgo/utils/hashtag" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="1" failures="0" time="0.364000" name="xgo/utils/hashtag" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
-		<testcase classname="xgo/utils/hashtag" name="TestGinkgoSuite" time="0.010000"></testcase>
+		<testcase classname="xgo/utils/hashtag" name="TestGinkgoSuite" time="0.000000"></testcase>
 	</testsuite>
-	<testsuite tests="1" failures="0" time="0.417000" name="xgo/utils/hscan" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="1" failures="0" time="0.392000" name="xgo/utils/hscan" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
 		<testcase classname="xgo/utils/hscan" name="TestGinkgoSuite" time="0.000000"></testcase>
 	</testsuite>
-	<testsuite tests="0" failures="0" time="0.000000" name="xgo/utils/htmlutils" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="0" failures="0" time="0.000000" name="xgo/utils/htmlutils" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
 	</testsuite>
-	<testsuite tests="0" failures="0" time="0.000000" name="xgo/utils/json" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="0" failures="0" time="0.000000" name="xgo/utils/json" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
 	</testsuite>
-	<testsuite tests="3" failures="0" time="0.448000" name="xgo/utils/netutils" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="3" failures="0" time="1.018000" name="xgo/utils/netutils" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
@@ -546,29 +558,29 @@
 		<testcase classname="xgo/utils/netutils" name="TestSplitMimeHeader" time="0.000000"></testcase>
 		<testcase classname="xgo/utils/netutils" name="TestTellHostPort" time="0.000000"></testcase>
 	</testsuite>
-	<testsuite tests="2" failures="0" time="0.508000" name="xgo/utils/proto" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="2" failures="0" time="0.869000" name="xgo/utils/proto" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
 		<testcase classname="xgo/utils/proto" name="TestReader_ReadLine" time="0.000000"></testcase>
-		<testcase classname="xgo/utils/proto" name="TestGinkgoSuite" time="0.010000"></testcase>
+		<testcase classname="xgo/utils/proto" name="TestGinkgoSuite" time="0.000000"></testcase>
 	</testsuite>
-	<testsuite tests="0" failures="0" time="0.000000" name="xgo/utils/randutils" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="0" failures="0" time="0.000000" name="xgo/utils/randutils" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
 	</testsuite>
-	<testsuite tests="0" failures="0" time="0.237000" name="xgo/utils/reflectutils" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="0" failures="0" time="1.196000" name="xgo/utils/reflectutils" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
 	</testsuite>
-	<testsuite tests="0" failures="0" time="0.000000" name="xgo/utils/runtimeutils" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="0" failures="0" time="0.000000" name="xgo/utils/runtimeutils" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
 	</testsuite>
-	<testsuite tests="10" failures="0" time="0.371000" name="xgo/utils/stringutils" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="10" failures="0" time="0.910000" name="xgo/utils/stringutils" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
@@ -583,7 +595,7 @@
 		<testcase classname="xgo/utils/stringutils" name="TestMd5" time="0.000000"></testcase>
 		<testcase classname="xgo/utils/stringutils" name="TestGetValueInBraces" time="0.000000"></testcase>
 	</testsuite>
-	<testsuite tests="18" failures="0" time="0.427000" name="xgo/utils/stringutils/strcase" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="18" failures="0" time="0.559000" name="xgo/utils/stringutils/strcase" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
@@ -606,18 +618,18 @@
 		<testcase classname="xgo/utils/stringutils/strcase" name="TestToScreamingDelimited" time="0.000000"></testcase>
 		<testcase classname="xgo/utils/stringutils/strcase" name="TestToScreamingDelimitedWithIgnore" time="0.000000"></testcase>
 	</testsuite>
-	<testsuite tests="0" failures="0" time="0.000000" name="xgo/utils/testutil" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="0" failures="0" time="0.000000" name="xgo/utils/testutil" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
 	</testsuite>
-	<testsuite tests="1" failures="0" time="0.203000" name="xgo/utils/timeutils" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="1" failures="0" time="0.488000" name="xgo/utils/timeutils" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>
 		<testcase classname="xgo/utils/timeutils" name="TestRetryBackoff" time="0.000000"></testcase>
 	</testsuite>
-	<testsuite tests="0" failures="0" time="0.000000" name="xgo/workers" timestamp="2022-05-07T22:32:59+08:00">
+	<testsuite tests="0" failures="0" time="0.000000" name="xgo/workers" timestamp="2022-05-11T22:26:41+08:00">
 		<properties>
 			<property name="go.version" value="go1.15.5 darwin/amd64"></property>
 		</properties>

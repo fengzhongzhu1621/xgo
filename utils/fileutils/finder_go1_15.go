@@ -47,7 +47,7 @@ func searchInPath(fs afero.Fs, configPath string, configName string,
 	return ""
 }
 
-// Check if file Exists
+// Check if file Exists.
 func Exists(fs afero.Fs, path string) (bool, error) {
 	stat, err := fs.Stat(path)
 	if err == nil {

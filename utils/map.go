@@ -107,7 +107,7 @@ func FlattenAndMergeMap(shadow map[string]interface{}, m map[string]interface{},
 // SearchMap recursively searches for a value for path in source map.
 // Returns nil if not found.
 // Note: This assumes that the path entries and map keys are lower cased.
-// 在m中搜索路径path
+// 在m中搜索路径path.
 func SearchMap(source map[string]interface{}, path []string) interface{} {
 	if len(path) == 0 {
 		return source
@@ -335,7 +335,7 @@ func MapKeys(m map[string]interface{}) []string {
 	return s
 }
 
-// SetDeepMapValue 根据key设置DeepMap的值
+// SetDeepMapValue 根据key设置DeepMap的值.
 func SetDeepMapValue(m map[string]interface{}, key string, value interface{}, keyDelim string) {
 	key = strings.ToLower(key)
 	value = ToCaseInsensitiveValue(value)
@@ -359,7 +359,7 @@ func SetDeepMapValue(m map[string]interface{}, key string, value interface{}, ke
 // in their keys).
 //
 // Note: This assumes that the path entries and map keys are lower cased.
-// 支持根据字典的key和数组的索引进行搜索
+// 支持根据字典的key和数组的索引进行搜索.
 func SearchIndexableWithPathPrefixes(source interface{}, path []string, keyDelim string) interface{} {
 	if len(path) == 0 {
 		return source
@@ -462,7 +462,7 @@ func searchMapWithPathPrefixes(
 // on its path in the map.
 // e.g., if "foo.bar" has a value in the given map, it “shadows”
 //       "foo.bar.baz" in a lower-priority map
-// 判断子路径path是否覆盖到m中的一条路径，返回被覆盖的路径
+// 判断子路径path是否覆盖到m中的一条路径，返回被覆盖的路径.
 func IsPathShadowedInDeepMap(path []string, m map[string]interface{}, keyDelim string) string {
 	var parentVal interface{}
 	for i := 1; i < len(path); i++ {
@@ -488,7 +488,7 @@ func IsPathShadowedInDeepMap(path []string, m map[string]interface{}, keyDelim s
 // in a sub-path of the map.
 // e.g., if "foo.bar" has a value in the given map, it “shadows”
 //       "foo.bar.baz" in a lower-priority map
-// 判断子路径是否覆盖到m中的一条路径，返回被覆盖的路径
+// 判断子路径是否覆盖到m中的一条路径，返回被覆盖的路径.
 func IsPathShadowedInFlatMap(path []string, m map[string]interface{}, keyDelim string) string {
 	// scan paths
 	var parentKey string

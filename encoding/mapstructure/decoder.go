@@ -23,7 +23,7 @@ func DecodeHook(hook mapstructure.DecodeHookFunc) DecoderConfigOption {
 }
 
 // defaultDecoderConfig returns default mapsstructure.DecoderConfig with suppot
-// of time.Duration values & string slices
+// of time.Duration values & string slices.
 func DefaultDecoderConfig(output interface{}, opts ...DecoderConfigOption) *mapstructure.DecoderConfig {
 	c := &mapstructure.DecoderConfig{
 		Metadata:         nil,
@@ -40,7 +40,7 @@ func DefaultDecoderConfig(output interface{}, opts ...DecoderConfigOption) *maps
 	return c
 }
 
-// A wrapper around mapstructure.Decode that mimics the WeakDecode functionality
+// A wrapper around mapstructure.Decode that mimics the WeakDecode functionality.
 func Decode(input interface{}, config *mapstructure.DecoderConfig) error {
 	decoder, err := mapstructure.NewDecoder(config)
 	if err != nil {

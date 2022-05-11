@@ -207,7 +207,7 @@ func (v *Watcher) resetEncoding() {
 	v.decoderRegistry = decoderRegistry
 }
 
-// getConfigFile 在指定路径下查找配置文件的路径
+// getConfigFile 在指定路径下查找配置文件的路径.
 func (v *Watcher) getConfigFile() (string, error) {
 	if v.configFile == "" {
 		cf, err := FindConfigFile(v.fs, v.configPaths, v.configName, SupportedExts, v.configType)
@@ -240,7 +240,7 @@ func (v *Watcher) getConfigType() string {
 	return ""
 }
 
-// ReadInConfig 读取配置文件，返回反序列化后的内容
+// ReadInConfig 读取配置文件，返回反序列化后的内容.
 func (v *Watcher) ReadInConfig() error {
 	// 获得配置文件路径
 	v.logger.Info("attempting to read in config file")
@@ -373,7 +373,7 @@ func (v *Watcher) getKeyValueConfig() error {
 	return RemoteConfigError("No Files Found")
 }
 
-// 从单个远程服务器，根据path获得远程配置，并转换为struct对象
+// 从单个远程服务器，根据path获得远程配置，并转换为struct对象.
 func (v *Watcher) getRemoteConfig(provider remote.IRemoteProvider) (map[string]interface{}, error) {
 	// 获得远程配置
 	reader, err := v.RemoteConfig.Get(provider)
@@ -386,7 +386,7 @@ func (v *Watcher) getRemoteConfig(provider remote.IRemoteProvider) (map[string]i
 }
 
 // Retrieve the first found remote configuration.
-// 监听并获取远程配置服务器的值
+// 监听并获取远程配置服务器的值.
 func (v *Watcher) watchKeyValueConfigOnChannel() error {
 	for _, rp := range v.remoteProviders {
 		// 监听远程配置服务器
@@ -466,7 +466,7 @@ func IniLoadOptions(in ini.LoadOptions) Option {
 	})
 }
 
-// mergeWithEnvPrefix 将环境变量的key加上前缀并大写
+// mergeWithEnvPrefix 将环境变量的key加上前缀并大写.
 func (v *Watcher) mergeWithEnvPrefix(in string) string {
 	if v.envPrefix != "" {
 		return strings.ToUpper(v.envPrefix + "_" + in)
@@ -508,7 +508,7 @@ func (v *Watcher) AddConfigPath(in string) {
 	}
 }
 
-// 判断远程配置对象是否存在
+// 判断远程配置对象是否存在.
 func (v *Watcher) providerPathExists(p *defaultRemoteProvider) bool {
 	for _, y := range v.remoteProviders {
 		if reflect.DeepEqual(y, p) {
@@ -555,7 +555,7 @@ func (v *Watcher) AddRemoteProvider(providerName, endpoint, path string) error {
 // To retrieve a config file called myapp.json from /configs/myapp.json
 // you should set path to /configs and set config name (SetConfigName()) to
 // "myapp"
-// Secure Remote Providers are implemented with github.com/bketelsen/crypt
+// Secure Remote Providers are implemented with github.com/bketelsen/crypt.
 func (v *Watcher) AddSecureRemoteProvider(provider, endpoint, path, secretkeyring string) error {
 	if !stringutils.StringInSlice(provider, SupportedRemoteProviders) {
 		return UnsupportedRemoteProviderError(provider)
@@ -580,7 +580,7 @@ func (v *Watcher) AddSecureRemoteProvider(provider, endpoint, path, secretkeyrin
 // in the environment, when automatic env is on.
 // e.g., if "foo.bar" has a value in the environment, it “shadows”
 //       "foo.bar.baz" in a lower-priority map
-// 子路径是否是环境变量的key
+// 子路径是否是环境变量的key.
 func (v *Watcher) isPathShadowedInAutoEnv(path []string) string {
 	var parentKey string
 	for i := 1; i < len(path); i++ {
@@ -602,7 +602,7 @@ func (v *Watcher) isPathShadowedInAutoEnv(path []string) string {
 // corresponds to a flag, the flag's default value is returned.
 //
 // Note: this assumes a lower-cased key given.
-// 根据key依次从环境变量，本地配置，远程配置获取值
+// 根据key依次从环境变量，本地配置，远程配置获取值.
 func (v *Watcher) find(lcaseKey string) interface{} {
 	var (
 		val    interface{}
@@ -759,7 +759,7 @@ func (v *Watcher) GetSizeInBytes(key string) uint {
 
 // IsSet checks to see if the key has been set in any of the data locations.
 // IsSet is case-insensitive for a key.
-// 判断key是否在环境变量，本地配置，远程配置中存在
+// 判断key是否在环境变量，本地配置，远程配置中存在.
 func (v *Watcher) IsSet(key string) bool {
 	lcaseKey := strings.ToLower(key)
 	val := v.find(lcaseKey)
@@ -767,7 +767,7 @@ func (v *Watcher) IsSet(key string) bool {
 }
 
 // InConfig checks to see if the given key (or an alias) is in the config file.
-// 支持根据字典的key和数组的索引进行搜索
+// 支持根据字典的key和数组的索引进行搜索.
 func (v *Watcher) InConfig(key string) bool {
 	lcaseKey := strings.ToLower(key)
 	path := strings.Split(lcaseKey, v.keyDelim)
@@ -779,7 +779,7 @@ func (v *Watcher) InConfig(key string) bool {
 // Set is case-insensitive for a key.
 // Will be used instead of values obtained via
 // flags, config file, ENV, default, or key/value store.
-// 将字典的key转换为小写，返回新的字典
+// 将字典的key转换为小写，返回新的字典.
 func (v *Watcher) Set(key string, value interface{}) {
 	value = utils.ToCaseInsensitiveValue(value)
 
@@ -792,7 +792,7 @@ func (v *Watcher) Set(key string, value interface{}) {
 	deepestMap[lastKey] = value
 }
 
-// AllKeys 获得所有需要查询的key
+// AllKeys 获得所有需要查询的key.
 func (v *Watcher) AllKeys() []string {
 	m := map[string]interface{}{}
 	m = utils.FlattenAndMergeMap(m, v.override, "", v.keyDelim)
@@ -807,7 +807,7 @@ func (v *Watcher) AllKeys() []string {
 	return a
 }
 
-// AllSettings 获得所有需要查询的key的值
+// AllSettings 获得所有需要查询的key的值.
 func (v *Watcher) AllSettings() map[string]interface{} {
 	m := map[string]interface{}{}
 	// start from the list of keys, and construct the map one value at a time
@@ -846,7 +846,7 @@ func (v *Watcher) UnmarshalExact(rawVal interface{}, opts ...mapstructure.Decode
 	return mapstructure.Decode(v.AllSettings(), config)
 }
 
-// 将io.Reader转换为struct对象
+// 将io.Reader转换为struct对象.
 func (v *Watcher) unmarshalReader(in io.Reader, c map[string]interface{}) error {
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(in)
@@ -866,7 +866,7 @@ func (v *Watcher) unmarshalReader(in io.Reader, c map[string]interface{}) error 
 	return nil
 }
 
-// WatchConfig 监听配置文件的变化
+// WatchConfig 监听配置文件的变化.
 func (v *Watcher) WatchConfig() {
 	initWG := sync.WaitGroup{}
 	initWG.Add(1)

@@ -54,7 +54,7 @@ func (e ConfigMarshalError) Error() string {
 // pull the configuration from the remote provider.
 type RemoteConfigError string
 
-// Error returns the formatted remote provider error
+// Error returns the formatted remote provider error.
 func (rce RemoteConfigError) Error() string {
 	return fmt.Sprintf("Remote Configurations Error: %s", string(rce))
 }
