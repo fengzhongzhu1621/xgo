@@ -2,40 +2,43 @@ package viper
 
 import "github.com/spf13/pflag"
 
-// FlagValueSet is an interface that users can implement
+// IFlagValueSet is an interface that users can implement
 // to bind a set of flags to viper.
 // 使用代理模式访问 pflag.FlagSet，只支持遍历FlagValue .
-type FlagValueSet interface {
+type IFlagValueSet interface {
 	// 遍历标签
-	VisitAll(fn func(FlagValue))
+	VisitAll(fn func(IFlagValue))
 }
 
-// FlagValue is an interface that users can implement
+// IFlagValue is an interface that users can implement
 // to bind different flags to viper.
 // 使用代理模式访问 pflag.Flag，只支持部分接口.
-type FlagValue interface {
+type IFlagValue interface {
 	HasChanged() bool
 	Name() string
 	ValueString() string
 	ValueType() string
 }
 
+var _ IFlagValueSet = (*PFlagValueSet)(nil)
+var _ IFlagValue = (*PFlagValue)(nil)
+
 // pflagValueSet is a wrapper around *pflag.ValueSet
-// that implements FlagValueSet.
+// that implements IFlagValueSet.
 type PFlagValueSet struct {
 	flags *pflag.FlagSet
 }
 
 // VisitAll iterates over all *pflag.Flag inside the *pflag.FlagSet.
-// 遍历所有的 FlagValue .
-func (p PFlagValueSet) VisitAll(fn func(flag FlagValue)) {
+// 遍历所有的 IFlagValue .
+func (p PFlagValueSet) VisitAll(fn func(flag IFlagValue)) {
 	p.flags.VisitAll(func(flag *pflag.Flag) {
 		fn(PFlagValue{flag})
 	})
 }
 
 // pflagValue is a wrapper aroung *pflag.flag
-// that implements FlagValue .
+// that implements IFlagValue .
 type PFlagValue struct {
 	flag *pflag.Flag
 }

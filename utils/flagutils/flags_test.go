@@ -12,11 +12,11 @@ import (
 )
 
 type viper struct {
-	pflags map[string]FlagValue
+	pflags map[string]IFlagValue
 }
 
-func (vp *viper) bindFlagValues(flags FlagValueSet) (err error) {
-	flags.VisitAll(func(flag FlagValue) {
+func (vp *viper) bindFlagValues(flags IFlagValueSet) (err error) {
+	flags.VisitAll(func(flag IFlagValue) {
 		if err = vp.bindFlagValue(flag.Name(), flag); err != nil {
 			return
 		}
@@ -24,7 +24,7 @@ func (vp *viper) bindFlagValues(flags FlagValueSet) (err error) {
 	return nil
 }
 
-func (vp *viper) bindFlagValue(key string, flag FlagValue) error {
+func (vp *viper) bindFlagValue(key string, flag IFlagValue) error {
 	if flag == nil {
 		return fmt.Errorf("flag for %q is nil", key)
 	}
@@ -50,7 +50,7 @@ func (vp *viper) Get(key string) interface{} {
 
 func newViper() *viper {
 	vp := new(viper)
-	vp.pflags = make(map[string]FlagValue)
+	vp.pflags = make(map[string]IFlagValue)
 	return vp
 }
 
