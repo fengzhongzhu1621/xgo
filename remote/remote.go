@@ -19,7 +19,7 @@ var _ IRemoteConfigFactory = (*RemoteConfigProvider)(nil)
 type RemoteConfigProvider struct{}
 
 // Get 根据路径获取配置值.
-func (rc RemoteConfigProvider) Get(rp IRemoteConfig) (io.Reader, error) {
+func (rc RemoteConfigProvider) Get(rp IRemoteProvider) (io.Reader, error) {
 	// 创建远程key/value存储管理器客户端
 	cm, err := GetConfigManager(rp)
 	if err != nil {
@@ -34,7 +34,7 @@ func (rc RemoteConfigProvider) Get(rp IRemoteConfig) (io.Reader, error) {
 }
 
 // Watch 监听指定路径，返回对应的值，实际上是通过Get实现的.
-func (rc RemoteConfigProvider) Watch(rp IRemoteConfig) (io.Reader, error) {
+func (rc RemoteConfigProvider) Watch(rp IRemoteProvider) (io.Reader, error) {
 	// 创建远程key/value存储管理器客户端
 	cm, err := GetConfigManager(rp)
 	if err != nil {
@@ -50,7 +50,7 @@ func (rc RemoteConfigProvider) Watch(rp IRemoteConfig) (io.Reader, error) {
 }
 
 // WatchChannel 监听指定路径，返回管道.
-func (rc RemoteConfigProvider) WatchChannel(rp IRemoteConfig) (<-chan *RemoteResponse, chan bool) {
+func (rc RemoteConfigProvider) WatchChannel(rp IRemoteProvider) (<-chan *RemoteResponse, chan bool) {
 	// 创建 key/value 存储客户端
 	cm, err := GetConfigManager(rp)
 	if err != nil {
@@ -85,7 +85,7 @@ func (rc RemoteConfigProvider) WatchChannel(rp IRemoteConfig) (<-chan *RemoteRes
 }
 
 // 创建远程key/value存储管理器客户端.
-func GetConfigManager(rp IRemoteConfig) (crypt.ConfigManager, error) {
+func GetConfigManager(rp IRemoteProvider) (crypt.ConfigManager, error) {
 	// 声明一个远程配置管理器
 	var cm crypt.ConfigManager
 	var err error

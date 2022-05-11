@@ -39,3 +39,22 @@ type UnsupportedRemoteProviderError string
 func (str UnsupportedRemoteProviderError) Error() string {
 	return fmt.Sprintf("Unsupported Remote Provider Type %q", string(str))
 }
+
+// ConfigMarshalError happens when failing to marshal the configuration.
+type ConfigMarshalError struct {
+	err error
+}
+
+// Error returns the formatted configuration error.
+func (e ConfigMarshalError) Error() string {
+	return fmt.Sprintf("While marshaling config: %s", e.err.Error())
+}
+
+// RemoteConfigError denotes encountering an error while trying to
+// pull the configuration from the remote provider.
+type RemoteConfigError string
+
+// Error returns the formatted remote provider error
+func (rce RemoteConfigError) Error() string {
+	return fmt.Sprintf("Remote Configurations Error: %s", string(rce))
+}

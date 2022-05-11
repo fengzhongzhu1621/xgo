@@ -2,6 +2,7 @@ package fileutils
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -22,6 +23,7 @@ import (
 	"xgo/encoding/toml"
 	"xgo/encoding/yaml"
 	jww "xgo/log"
+	"xgo/remote"
 	"xgo/utils"
 	"xgo/utils/stringutils"
 
@@ -81,11 +83,16 @@ type Watcher struct {
 
 	onConfigChange func(fsnotify.Event) // 接受了文件创建和修改实践后自定义处理方法
 
+	override map[string]interface{} // 保存设置的值
+
 	// A set of remote providers to search for the configuration
 	remoteProviders []*defaultRemoteProvider
 	kvstore         map[string]interface{} // 远程配置
 
 	automaticEnvApplied bool // 是否从环境变量获取value
+
+	// 远程配置服务器客户端
+	RemoteConfig remote.IRemoteConfigFactory
 
 	encoderRegistry *encoding.EncoderRegistry
 	decoderRegistry *encoding.DecoderRegistry
@@ -255,8 +262,8 @@ func (v *Watcher) ReadInConfig() error {
 		return err
 	}
 
+	// 将配置文件内容解码为结构体对象
 	config := make(map[string]interface{})
-
 	err = v.unmarshalReader(bytes.NewReader(file), config)
 	if err != nil {
 		return err
@@ -264,6 +271,159 @@ func (v *Watcher) ReadInConfig() error {
 
 	v.config = config
 	return nil
+}
+
+// ReadConfig will read a configuration file, setting existing keys to nil if the
+// key does not exist in the file.
+func (v *Watcher) ReadConfig(in io.Reader) error {
+	v.config = make(map[string]interface{})
+	return v.unmarshalReader(in, v.config)
+}
+
+// MergeInConfig merges a new configuration with an existing config.
+func (v *Watcher) MergeInConfig() error {
+	v.logger.Info("attempting to merge in config file")
+	filename, err := v.getConfigFile()
+	if err != nil {
+		return err
+	}
+
+	if !stringutils.StringInSlice(v.getConfigType(), SupportedExts) {
+		return UnsupportedConfigError(v.getConfigType())
+	}
+
+	file, err := afero.ReadFile(v.fs, filename)
+	if err != nil {
+		return err
+	}
+
+	return v.MergeConfig(bytes.NewReader(file))
+}
+
+// MergeConfig merges a new configuration with an existing config.
+func (v *Watcher) MergeConfig(in io.Reader) error {
+	cfg := make(map[string]interface{})
+	if err := v.unmarshalReader(in, cfg); err != nil {
+		return err
+	}
+	return v.MergeConfigMap(cfg)
+}
+
+// MergeConfigMap merges the configuration from the map given with an existing config.
+// Note that the map given may be modified.
+func (v *Watcher) MergeConfigMap(cfg map[string]interface{}) error {
+	if v.config == nil {
+		v.config = make(map[string]interface{})
+	}
+	utils.InsensitiviseMap(cfg)
+	utils.MergeMaps(cfg, v.config, nil)
+	return nil
+}
+
+// Marshal a map into Writer.
+func (v *Watcher) marshalWriter(f afero.File, configType string) error {
+	c := v.AllSettings()
+	switch configType {
+	case "yaml", "yml", "json", "toml", "hcl", "tfvars", "ini", "prop", "props", "properties", "dotenv", "env":
+		b, err := v.encoderRegistry.Encode(configType, c)
+		if err != nil {
+			return ConfigMarshalError{err}
+		}
+
+		_, err = f.WriteString(string(b))
+		if err != nil {
+			return ConfigMarshalError{err}
+		}
+	}
+	return nil
+}
+
+func (v *Watcher) ReadRemoteConfig() error {
+	return v.getKeyValueConfig()
+}
+
+func (v *Watcher) WatchRemoteConfig() error {
+	return v.watchKeyValueConfig()
+}
+
+func (v *Watcher) WatchRemoteConfigOnChannel() error {
+	return v.watchKeyValueConfigOnChannel()
+}
+
+// getKeyValueConfig 从多个远程配置服务器，根据path获得远程配置，并转换为struct对象
+// Retrieve the first found remote configuration.
+func (v *Watcher) getKeyValueConfig() error {
+	if v.RemoteConfig == nil {
+		return RemoteConfigError("Enable the remote features by doing a blank import of the viper/remote package: '_ github.com/spf13/viper/remote'")
+	}
+
+	for _, rp := range v.remoteProviders {
+		// 根据path获得远程配置，并转换为struct对象
+		val, err := v.getRemoteConfig(rp)
+		if err != nil {
+			v.logger.Error(fmt.Errorf("get remote config: %w", err).Error())
+
+			continue
+		}
+
+		v.kvstore = val
+
+		return nil
+	}
+	return RemoteConfigError("No Files Found")
+}
+
+// 从单个远程服务器，根据path获得远程配置，并转换为struct对象
+func (v *Watcher) getRemoteConfig(provider remote.IRemoteProvider) (map[string]interface{}, error) {
+	// 获得远程配置
+	reader, err := v.RemoteConfig.Get(provider)
+	if err != nil {
+		return nil, err
+	}
+	// 将io.Reader转换为struct对象
+	err = v.unmarshalReader(reader, v.kvstore)
+	return v.kvstore, err
+}
+
+// Retrieve the first found remote configuration.
+// 监听并获取远程配置服务器的值
+func (v *Watcher) watchKeyValueConfigOnChannel() error {
+	for _, rp := range v.remoteProviders {
+		// 监听远程配置服务器
+		respc, _ := v.RemoteConfig.WatchChannel(rp)
+		// Todo: Add quit channel
+		go func(rc <-chan *remote.RemoteResponse) {
+			for {
+				b := <-rc
+				reader := bytes.NewReader(b.Value)
+				v.unmarshalReader(reader, v.kvstore)
+			}
+		}(respc)
+		return nil
+	}
+	return RemoteConfigError("No Files Found")
+}
+
+// Retrieve the first found remote configuration.
+func (v *Watcher) watchKeyValueConfig() error {
+	for _, rp := range v.remoteProviders {
+		val, err := v.watchRemoteConfig(rp)
+		if err != nil {
+			continue
+		}
+		v.kvstore = val
+		return nil
+	}
+	return RemoteConfigError("No Files Found")
+}
+
+func (v *Watcher) watchRemoteConfig(provider remote.IRemoteProvider) (map[string]interface{}, error) {
+	reader, err := v.RemoteConfig.Watch(provider)
+	if err != nil {
+		return nil, err
+	}
+	err = v.unmarshalReader(reader, v.kvstore)
+	return v.kvstore, err
 }
 
 func (v *Watcher) SetConfigFile(in string) {
@@ -301,7 +461,7 @@ func (v *Watcher) SetConfigPermissions(perm os.FileMode) {
 
 // IniLoadOptions sets the load options for ini parsing.
 func IniLoadOptions(in ini.LoadOptions) Option {
-	return optionFunc(func(v *Viper) {
+	return optionFunc(func(v *Watcher) {
 		v.iniLoadOptions = in
 	})
 }
@@ -450,6 +610,15 @@ func (v *Watcher) find(lcaseKey string) interface{} {
 		nested = len(path) > 1
 	)
 
+	// Set() override first
+	val = utils.SearchMap(v.override, path)
+	if val != nil {
+		return val
+	}
+	if nested && utils.IsPathShadowedInDeepMap(path, v.override, v.keyDelim) != "" {
+		return nil
+	}
+
 	// Env override next
 	if v.automaticEnvApplied {
 		// even if it hasn't been registered, if automaticEnv is used,
@@ -588,8 +757,45 @@ func (v *Watcher) GetSizeInBytes(key string) uint {
 	return utils.ParseSizeInBytes(sizeStr)
 }
 
+// IsSet checks to see if the key has been set in any of the data locations.
+// IsSet is case-insensitive for a key.
+// 判断key是否在环境变量，本地配置，远程配置中存在
+func (v *Watcher) IsSet(key string) bool {
+	lcaseKey := strings.ToLower(key)
+	val := v.find(lcaseKey)
+	return val != nil
+}
+
+// InConfig checks to see if the given key (or an alias) is in the config file.
+// 支持根据字典的key和数组的索引进行搜索
+func (v *Watcher) InConfig(key string) bool {
+	lcaseKey := strings.ToLower(key)
+	path := strings.Split(lcaseKey, v.keyDelim)
+
+	return utils.SearchIndexableWithPathPrefixes(v.config, path, v.keyDelim) != nil
+}
+
+// Set sets the value for the key in the override register.
+// Set is case-insensitive for a key.
+// Will be used instead of values obtained via
+// flags, config file, ENV, default, or key/value store.
+// 将字典的key转换为小写，返回新的字典
+func (v *Watcher) Set(key string, value interface{}) {
+	value = utils.ToCaseInsensitiveValue(value)
+
+	path := strings.Split(key, v.keyDelim)
+	lastKey := strings.ToLower(path[len(path)-1])
+	// 根据路径构造字典
+	deepestMap := utils.DeepSearch(v.override, path[0:len(path)-1])
+
+	// set innermost value
+	deepestMap[lastKey] = value
+}
+
+// AllKeys 获得所有需要查询的key
 func (v *Watcher) AllKeys() []string {
 	m := map[string]interface{}{}
+	m = utils.FlattenAndMergeMap(m, v.override, "", v.keyDelim)
 	m = utils.FlattenAndMergeMap(m, v.config, "", v.keyDelim)
 	m = utils.FlattenAndMergeMap(m, v.kvstore, "", v.keyDelim)
 
@@ -601,7 +807,7 @@ func (v *Watcher) AllKeys() []string {
 	return a
 }
 
-// AllSettings 获得所有的key，构造深度字典
+// AllSettings 获得所有需要查询的key的值
 func (v *Watcher) AllSettings() map[string]interface{} {
 	m := map[string]interface{}{}
 	// start from the list of keys, and construct the map one value at a time
@@ -640,6 +846,7 @@ func (v *Watcher) UnmarshalExact(rawVal interface{}, opts ...mapstructure.Decode
 	return mapstructure.Decode(v.AllSettings(), config)
 }
 
+// 将io.Reader转换为struct对象
 func (v *Watcher) unmarshalReader(in io.Reader, c map[string]interface{}) error {
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(in)
