@@ -22,3 +22,6 @@ tmp.out
 .idea/*
 bin/*
 build/*
+
+build/coverage.txt
+build/coverage.xml
