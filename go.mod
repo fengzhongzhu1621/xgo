@@ -25,7 +25,7 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.11.0
-	github.com/stretchr/testify v1.7.1
+	github.com/stretchr/testify v1.7.5
 	github.com/subosito/gotenv v1.2.0
 	github.com/ugorji/go/codec v1.2.7
 	github.com/wxnacy/wgo v1.0.4
@@ -33,5 +33,5 @@ require (
 	google.golang.org/protobuf v1.28.0
 	gopkg.in/ini.v1 v1.66.4
 	gopkg.in/yaml.v2 v2.4.0
-	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
+	gopkg.in/yaml.v3 v3.0.1
 )
