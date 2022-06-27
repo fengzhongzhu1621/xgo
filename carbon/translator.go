@@ -1,4 +1,4 @@
-package xgo
+package carbon
 
 import (
 	"encoding/json"
@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"xgo/lang"
+	"xgo/carbon/lang"
 )
 
 // Translator helps to translate time based on locale
