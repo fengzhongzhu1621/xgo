@@ -4,16 +4,6 @@ import (
 	"sort"
 )
 
-// In 判断字符串是否在数组中
-func In(target string, src []string) bool {
-	sort.Strings(src)
-	index := sort.SearchStrings(src, target)
-	if index < len(src) && src[index] == target {
-		return true
-	}
-	return false
-}
-
 // Intersect 两个字符串数组的交集
 func Intersect(a, b []string) []string {
 	// 字符串切片排序
