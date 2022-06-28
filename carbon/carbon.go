@@ -1363,6 +1363,7 @@ func (c *Carbon) DiffInSeconds(carb *Carbon, abs bool) int64 {
 	if carb == nil {
 		carb = nowIn(c.Location())
 	}
+	// 时间戳差值
 	diff := carb.Timestamp() - c.Timestamp()
 
 	return absValue(abs, diff)
