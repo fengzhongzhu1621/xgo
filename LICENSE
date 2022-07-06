@@ -43,6 +43,7 @@ The text of each license is also included at licenses/LICENSE-[project].txt.
     (MIT License) async v1.0.0 (https://github.com/rafaeldias/async)
     (MIT License) cast v1.4.1 (https://github.com/spf13/cast)
     (MIT License) viper v1.11.0 (https://github.com/spf13/viper)
+    (MIT License) logrus v1.8.1 (https://github.com/sirupsen/logrus)
 
 ========================================================================
 BSD 3-Clause licenses
@@ -60,4 +61,4 @@ The following components are provided under the Apache 2.0 license. See project 
 The text of each license is also included at licenses/LICENSE-[project].txt.
 
     (Apache 2.0 license) ini v1.63.2 (https://github.com/go-ini/ini)
-    (Apache 2.0 license) ini v0.2.2 (https://github.com/uniplaces/carbon)
+    (Apache 2.0 license) carbon v0.2.2 (https://github.com/uniplaces/carbon)
