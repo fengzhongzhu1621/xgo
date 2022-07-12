@@ -38,12 +38,13 @@ var ErrorKey = "error"
 // Info, Warn, Error, Fatal or Panic is called on it. These objects can be
 // reused and passed around as much as you wish to avoid field duplication.
 type Entry struct {
-	Logger *Logger
+	Logger *LogrusLogger
 
 	// Contains all the fields set by the user.
 	Data Fields
 
 	// Time at which the log entry was created
+	// 日志的创建时间
 	Time time.Time
 
 	// Level the log entry was logged at: Trace, Debug, Info, Warn, Error, Fatal or Panic
@@ -64,4 +65,10 @@ type Entry struct {
 
 	// err may contain a field formatting error
 	err string
+}
+
+func (entry Entry) HasCaller() (has bool) {
+	return entry.Logger != nil &&
+		entry.Logger.ReportCaller &&
+		entry.Caller != nil
 }
