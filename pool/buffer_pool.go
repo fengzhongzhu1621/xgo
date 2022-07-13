@@ -14,11 +14,12 @@ type BufferPool interface {
 	Get() *bytes.Buffer
 }
 
+var _ BufferPool = (*defaultPool)(nil)
+
 type defaultPool struct {
 	pool *sync.Pool
 }
 
-// Put 把不用的对象放回或者提前放到 sync.Pool 中
 func (p *defaultPool) Put(buf *bytes.Buffer) {
 	p.pool.Put(buf)
 }
@@ -43,4 +44,8 @@ func init() {
 			},
 		},
 	})
+}
+
+func GetDefaultBufferPool() BufferPool {
+	return bufferPool
 }
