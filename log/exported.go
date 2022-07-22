@@ -2,6 +2,7 @@ package log
 
 import (
 	"context"
+	"io"
 	"time"
 )
 
@@ -65,4 +66,25 @@ func LogrusWithTime(t time.Time) *Entry {
 // Info logs a message at level Info on the standard logger.
 func LogrusInfo(args ...interface{}) {
 	std.Info(args...)
+}
+
+// SetReportCaller sets whether the standard logger will include the calling
+// method as a field.
+func LogrusSetReportCaller(include bool) {
+	std.SetReportCaller(include)
+}
+
+// SetOutput sets the standard logger output.
+func LogrusSetOutput(out io.Writer) {
+	std.SetOutput(out)
+}
+
+// SetFormatter sets the standard logger formatter.
+func LogrusSetFormatter(formatter Formatter) {
+	std.SetFormatter(formatter)
+}
+
+// AddHook adds a hook to the standard logger hooks.
+func LogrusAddHook(hook Hook) {
+	std.AddHook(hook)
 }

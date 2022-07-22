@@ -303,3 +303,7 @@ func (entry *Entry) log(level Level, msg string) {
 		panic(newEntry)
 	}
 }
+
+func (entry *Entry) Info(args ...interface{}) {
+	entry.Log(InfoLevel, args...)
+}

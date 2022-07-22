@@ -25,3 +25,4 @@ build/*
 
 build/coverage.txt
 build/coverage.xml
+log/log.txt

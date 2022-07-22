@@ -254,3 +254,30 @@ func (logger *LogrusLogger) Exit(code int) {
 	}
 	logger.ExitFunc(code)
 }
+
+func (logger *LogrusLogger) SetReportCaller(reportCaller bool) {
+	logger.mu.Lock()
+	defer logger.mu.Unlock()
+	logger.ReportCaller = reportCaller
+}
+
+// SetOutput sets the logger output.
+func (logger *LogrusLogger) SetOutput(output io.Writer) {
+	logger.mu.Lock()
+	defer logger.mu.Unlock()
+	logger.Out = output
+}
+
+// SetFormatter sets the logger formatter.
+func (logger *LogrusLogger) SetFormatter(formatter Formatter) {
+	logger.mu.Lock()
+	defer logger.mu.Unlock()
+	logger.Formatter = formatter
+}
+
+// AddHook adds a hook to the logger hooks.
+func (logger *LogrusLogger) AddHook(hook Hook) {
+	logger.mu.Lock()
+	defer logger.mu.Unlock()
+	logger.Hooks.Add(hook)
+}
