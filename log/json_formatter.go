@@ -7,6 +7,8 @@ import (
 	"runtime"
 )
 
+var _ Formatter = (*JSONFormatter)(nil)
+
 // JSONFormatter formats logs into parsable json
 type JSONFormatter struct {
 	// TimestampFormat sets the format used for marshaling timestamps.

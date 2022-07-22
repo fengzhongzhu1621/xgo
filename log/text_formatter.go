@@ -24,6 +24,8 @@ const (
 
 var baseTimestamp time.Time
 
+var _ Formatter = (*TextFormatter)(nil)
+
 func init() {
 	baseTimestamp = time.Now()
 }

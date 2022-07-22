@@ -1,8 +1,14 @@
 package log
 
 import (
+	"context"
 	"io"
+	"os"
 	"sync"
+	"sync/atomic"
+	"time"
+
+	"xgo"
 
 	"xgo/pool"
 	"xgo/utils"
@@ -82,6 +88,8 @@ type Ext1FieldLogger interface {
 	Traceln(args ...interface{})
 }
 
+// var _ LogrusLogger = (*Ext1FieldLogger)(null)
+
 type LogrusLogger struct {
 	// The logs are `io.Copy`'d to this in a mutex. It's common to set this to a
 	// file, or leave it default which is `os.Stderr`. You can also set this to
@@ -115,4 +123,134 @@ type LogrusLogger struct {
 	// The buffer pool used to format the log. If it is nil, the default global
 	// buffer pool will be used.
 	BufferPool pool.BufferPool
+}
+
+// Creates a new logger. Configuration should be set by changing `Formatter`,
+// `Out` and `Hooks` directly on the default logger instance.
+// It's recommended to make this a global instance called `log`.
+func New() *LogrusLogger {
+	return &LogrusLogger{
+		Out:          os.Stderr,          // 日志默认输出到标准输出
+		Formatter:    new(TextFormatter), // 日志输出的格式
+		Hooks:        make(LevelHooks),   // 日志的hooks，可以有多个
+		Level:        InfoLevel,          // 默认日志级别
+		ExitFunc:     os.Exit,            // 日志的默认退出行为，是停止当前进程
+		ReportCaller: false,              // 是否输出堆栈信息
+	}
+}
+
+// 新建一条空日志
+func (logger *LogrusLogger) newEntry() *Entry {
+	entry, ok := logger.entryPool.Get().(*Entry)
+	if ok {
+		return entry
+	}
+	return NewEntry(logger)
+}
+
+func (logger *LogrusLogger) releaseEntry(entry *Entry) {
+	entry.Data = map[string]interface{}{}
+	logger.entryPool.Put(entry)
+}
+
+// WithField allocates a new entry and adds a field to it.
+// Debug, Print, Info, Warn, Error, Fatal or Panic must be then applied to
+// this new returned entry.
+// If you want multiple fields, use `WithFields`.
+func (logger *LogrusLogger) WithField(key string, value interface{}) *Entry {
+	// 新建一条空日志
+	entry := logger.newEntry()
+	defer logger.releaseEntry(entry)
+	// 给空日志填充内容，生成一条新的日志
+	return entry.WithField(key, value)
+}
+
+// WithFields Adds a struct of fields to the log entry. All it does is call `WithField` for
+// each `Field`.
+func (logger *LogrusLogger) WithFields(fields Fields) *Entry {
+	// 新建一条空日志
+	entry := logger.newEntry()
+	defer logger.releaseEntry(entry)
+	// 给空日志填充内容，生成一条新的日志
+	return entry.WithFields(fields)
+}
+
+// WithError Add an error as single field to the log entry.  All it does is call
+// `WithError` for the given `error`.
+// 给空日志填充一个key为error的错误
+func (logger *LogrusLogger) WithError(err error) *Entry {
+	// 新建一条空日志
+	entry := logger.newEntry()
+	defer logger.releaseEntry(entry)
+	return entry.WithError(err)
+}
+
+// WithContext Add a context to the log entry.
+func (logger *LogrusLogger) WithContext(ctx context.Context) *Entry {
+	entry := logger.newEntry()
+	defer logger.releaseEntry(entry)
+	return entry.WithContext(ctx)
+}
+
+// Overrides the time of the log entry.
+func (logger *LogrusLogger) WithTime(t time.Time) *Entry {
+	entry := logger.newEntry()
+	defer logger.releaseEntry(entry)
+	return entry.WithTime(t)
+}
+
+// level 获得日志级别，注意并发原子性
+func (logger *LogrusLogger) level() Level {
+	return Level(atomic.LoadUint32((*uint32)(&logger.Level)))
+}
+
+// IsLevelEnabled checks if the log level of the logger is greater than the level param
+func (logger *LogrusLogger) IsLevelEnabled(level Level) bool {
+	return logger.level() >= level
+}
+
+// Logf 打印日志
+func (logger *LogrusLogger) Logf(level Level, format string, args ...interface{}) {
+	if logger.IsLevelEnabled(level) {
+		entry := logger.newEntry()
+		entry.Logf(level, format, args...)
+		logger.releaseEntry(entry)
+	}
+}
+
+// Log will log a message at the level given as parameter.
+// Warning: using Log at Panic or Fatal level will not respectively Panic nor Exit.
+// For this behaviour Logger.Panic or Logger.Fatal should be used instead.
+func (logger *LogrusLogger) Log(level Level, args ...interface{}) {
+	if logger.IsLevelEnabled(level) {
+		entry := logger.newEntry()
+		entry.Log(level, args...)
+		logger.releaseEntry(entry)
+	}
+}
+
+func (logger *LogrusLogger) Info(args ...interface{}) {
+	logger.Log(InfoLevel, args...)
+}
+
+func (logger *LogrusLogger) Fatal(args ...interface{}) {
+	logger.Log(FatalLevel, args...)
+	logger.Exit(1)
+}
+
+// SetLevel sets the logger level.
+func (logger *LogrusLogger) SetLevel(level Level) {
+	atomic.StoreUint32((*uint32)(&logger.Level), uint32(level))
+}
+
+func (logger *LogrusLogger) Panic(args ...interface{}) {
+	logger.Log(PanicLevel, args...)
+}
+
+func (logger *LogrusLogger) Exit(code int) {
+	xgo.RunHandlers()
+	if logger.ExitFunc == nil {
+		logger.ExitFunc = os.Exit
+	}
+	logger.ExitFunc(code)
 }

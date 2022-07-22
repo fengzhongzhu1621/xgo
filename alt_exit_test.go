@@ -27,7 +27,7 @@ func TestRegister(t *testing.T) {
 		t.Fatalf("expected %d handlers, got %d", current+2, len(handlers))
 	}
 
-	runHandlers()
+	RunHandlers()
 
 	if len(results) != 2 {
 		t.Fatalf("expected 2 handlers to be run, ran %d", len(results))
@@ -57,7 +57,7 @@ func TestDefer(t *testing.T) {
 		t.Fatalf("expected %d handlers, got %d", current+2, len(handlers))
 	}
 
-	runHandlers()
+	RunHandlers()
 
 	if len(results) != 2 {
 		t.Fatalf("expected 2 handlers to be run, ran %d", len(results))

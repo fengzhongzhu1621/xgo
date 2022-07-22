@@ -40,7 +40,7 @@ func runHandler(handler func()) {
 	handler()
 }
 
-func runHandlers() {
+func RunHandlers() {
 	for _, handler := range handlers {
 		runHandler(handler)
 	}
@@ -49,7 +49,7 @@ func runHandlers() {
 // Exit runs all the Logrus atexit handlers and then terminates the program using os.Exit(code)
 // 退出程序前执行终止处理函数
 func Exit(code int) {
-	runHandlers()
+	RunHandlers()
 	os.Exit(code)
 }
 

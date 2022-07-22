@@ -16,7 +16,7 @@ type Cmd struct {
 
 var _ Cmder = (*Cmd)(nil)
 
-// 创建一个命令.
+// NewCmd 创建一个命令.
 func NewCmd(ctx context.Context, args ...interface{}) *Cmd {
 	return &Cmd{
 		baseCmd: baseCmd{

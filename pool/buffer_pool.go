@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	bufferPool BufferPool
+	DefaultBufferPool BufferPool
 )
 
 type BufferPool interface {
@@ -31,7 +31,7 @@ func (p *defaultPool) Get() *bytes.Buffer {
 // SetBufferPool allows to replace the default logrus buffer pool
 // to better meets the specific needs of an application.
 func SetBufferPool(bp BufferPool) {
-	bufferPool = bp
+	DefaultBufferPool = bp
 }
 
 // bytes.buffer是一个缓冲byte类型的缓冲器，使用 sync.Pool 减少 bytes.Buffer 创建的成本
@@ -44,8 +44,4 @@ func init() {
 			},
 		},
 	})
-}
-
-func GetDefaultBufferPool() BufferPool {
-	return bufferPool
 }
