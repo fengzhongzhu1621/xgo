@@ -18,6 +18,34 @@ import (
 	"time"
 )
 
+func emailOnly(full string) (string, error) {
+	addr, err := mail.ParseAddress(full)
+	if err != nil {
+		return "", err
+	}
+	return addr.Address, nil
+}
+
+func addressLists(lists ...[]string) ([]string, error) {
+	length := 0
+	for _, lst := range lists {
+		length += len(lst)
+	}
+	combined := make([]string, 0, length)
+
+	for _, lst := range lists {
+		for _, full := range lst {
+			addr, err := emailOnly(full)
+			if err != nil {
+				return nil, err
+			}
+			combined = append(combined, addr)
+		}
+	}
+
+	return combined, nil
+}
+
 // 格式化邮件地址
 func handleAddressList(v []string) []string {
 	res := []string{}
