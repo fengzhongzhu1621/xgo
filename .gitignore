@@ -27,3 +27,4 @@ build/coverage.txt
 build/coverage.xml
 log/log.txt
 log.txt
+.vscode/
