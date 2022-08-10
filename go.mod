@@ -9,6 +9,7 @@ require (
 	github.com/go-playground/validator/v10 v10.11.0
 	github.com/golang/protobuf v1.5.2
 	github.com/hashicorp/hcl v1.0.0
+	github.com/joho/godotenv v1.4.0
 	github.com/json-iterator/go v1.1.12
 	github.com/magiconair/properties v1.8.6
 	github.com/manucorporat/stats v0.0.0-20180402194714-3ba42d56d227
