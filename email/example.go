@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func poolDemo() {
+func examplePool() {
 	ch := make(chan *Email, 10)
 	p, err := NewPool(
 		"smtp.example.com:25",
