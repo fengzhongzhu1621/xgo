@@ -47,6 +47,7 @@ The text of each license is also included at licenses/LICENSE-[project].txt.
     (MIT License) gotenv v1.4.0 (https://github.com/joho/godotenv)
     (MIT License) email v4.0.0 (https://github.com/jordan-wright/email)
     (MIT License) dig v1.15.0 (https://github.com/uber-go/dig)
+    (MIT License) message-bus v1.1.5 (https://github.com/vardius/message-bus)
     
 ========================================================================
 BSD 3-Clause licenses

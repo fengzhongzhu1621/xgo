@@ -32,10 +32,12 @@ require (
 	github.com/wxnacy/wgo v1.0.4
 	golang.org/x/sys v0.0.0-20220627191245-f75cf1eec38b
 	google.golang.org/protobuf v1.28.0
-	gopkg.in/ini.v1 v1.66.6
+	gopkg.in/ini.v1 v1.67.0
 	gopkg.in/yaml.v2 v2.4.0
 	gopkg.in/yaml.v3 v3.0.1
 )
+
+require go.uber.org/dig v1.15.0 // indirect
 
 require (
 	cloud.google.com/go v0.100.2 // indirect
@@ -59,6 +61,7 @@ require (
 	github.com/hashicorp/go-rootcerts v1.0.2 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/hashicorp/serf v0.9.7 // indirect
+	github.com/jessevdk/go-flags v1.5.0
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
