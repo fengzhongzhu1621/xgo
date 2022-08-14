@@ -10,3 +10,20 @@ func IsClosed(done chan struct{}) bool {
 		return false
 	}
 }
+
+// IsChannelClosed returns true if provided `chan struct{}` is closed.
+// IsChannelClosed panics if message is sent to this channel.
+func IsChannelClosed(channel chan struct{}) bool {
+	select {
+	case _, ok := <-channel:
+		if ok {
+			// 如果管道从计划关闭的管道中收到一个消息
+			panic("received unexpected message")
+		}
+		// 管道被关闭
+		return true
+	default:
+		// 管道中没有消息
+		return false
+	}
+}
