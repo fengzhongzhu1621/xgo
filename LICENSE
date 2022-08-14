@@ -46,7 +46,8 @@ The text of each license is also included at licenses/LICENSE-[project].txt.
     (MIT License) logrus v1.8.1 (https://github.com/sirupsen/logrus)
     (MIT License) gotenv v1.4.0 (https://github.com/joho/godotenv)
     (MIT License) email v4.0.0 (https://github.com/jordan-wright/email)
-
+    (MIT License) dig v1.15.0 (https://github.com/uber-go/dig)
+    
 ========================================================================
 BSD 3-Clause licenses
 ========================================================================
@@ -54,7 +55,6 @@ The following components are provided under the BSD 3-Clause license. See projec
 The text of each license is also included at licenses/LICENSE-[project].txt.
 
     (BSD 3 License) go-flags v1.5.0 (https://github.com/jessevdk/go-flags)
-
 
 ========================================================================
 Apache 2.0 licenses

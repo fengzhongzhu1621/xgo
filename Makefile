@@ -1,5 +1,6 @@
 GOVERSION := $(shell go version | cut -d ' ' -f 3 | cut -d '.' -f 2)
 OS = $(shell uname | tr A-Z a-z)
+BENCH_FLAGS ?= -cpuprofile=cpu.pprof -memprofile=mem.pprof -benchmem
 
 # Build variables
 BUILD_DIR ?= build
@@ -65,8 +66,12 @@ lint: bin/golangci-lint ## Run linter
 fix: bin/golangci-lint ## Fix lint violations
 	bin/golangci-lint run --fix
 
-#bench:
+.PHONY: bench
+BENCH ?= .
+bench:
 #	go test -v ./... -test.bench -test.benchmem
+	go list ./... | xargs -n1 go test -bench=$(BENCH) -run="^$$" $(BENCH_FLAGS)
+
 vet:
 	go vet
 
