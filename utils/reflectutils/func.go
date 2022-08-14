@@ -1,4 +1,4 @@
-package dig
+package reflectutils
 
 import (
 	"fmt"

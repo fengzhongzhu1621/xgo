@@ -1,4 +1,4 @@
-package dig
+package reflectutils
 
 import (
 	"fmt"
@@ -38,36 +38,36 @@ func TestInspectFunc(t *testing.T) {
 			desc:           "exported function",
 			give:           SomeExportedFunction,
 			wantName:       "SomeExportedFunction",
-			wantPackage:    "xgo/dig",
-			wantFileSuffix: "/xgo/dig/func_test.go",
+			wantPackage:    "xgo/utils/reflectutils",
+			wantFileSuffix: "/xgo/utils/reflectutils/func_test.go",
 		},
 		{
 			desc:           "unexported function",
 			give:           unexportedFunction,
 			wantName:       "unexportedFunction",
-			wantPackage:    "xgo/dig",
-			wantFileSuffix: "/xgo/dig/func_test.go",
+			wantPackage:    "xgo/utils/reflectutils",
+			wantFileSuffix: "/xgo/utils/reflectutils/func_test.go",
 		},
 		{
 			desc:           "nested function",
 			give:           nested1,
 			wantName:       "nestedFunctions.func1",
-			wantPackage:    "xgo/dig",
-			wantFileSuffix: "/xgo/dig/func_test.go",
+			wantPackage:    "xgo/utils/reflectutils",
+			wantFileSuffix: "/xgo/utils/reflectutils/func_test.go",
 		},
 		{
 			desc:           "second nested function",
 			give:           nested2,
 			wantName:       "nestedFunctions.func2",
-			wantPackage:    "xgo/dig",
-			wantFileSuffix: "/xgo/dig/func_test.go",
+			wantPackage:    "xgo/utils/reflectutils",
+			wantFileSuffix: "/xgo/utils/reflectutils/func_test.go",
 		},
 		{
 			desc:           "nested inside a nested function",
 			give:           nested3,
 			wantName:       "nestedFunctions.func2.1",
-			wantPackage:    "xgo/dig",
-			wantFileSuffix: "/xgo/dig/func_test.go",
+			wantPackage:    "xgo/utils/reflectutils",
+			wantFileSuffix: "/xgo/utils/reflectutils/func_test.go",
 		},
 		{
 			desc:           "dependency",
