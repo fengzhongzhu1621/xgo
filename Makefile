@@ -34,7 +34,7 @@ bin/golangci-lint-${GOLANGCI_VERSION}:
 bin/golangci-lint: bin/golangci-lint-${GOLANGCI_VERSION}
 	@ln -sf golangci-lint-${GOLANGCI_VERSION} bin/golangci-lint
 
-.PHONY: build test bench vet coverage check test-race test-cover-html help clear lint fix
+.PHONY: build test bench vet coverage check test-race test-cover-html help clear lint fix fmt
 .DEFAULT_GOAL := help
 help:	# Empty target rule
 
@@ -52,21 +52,27 @@ test: bin/gotestsum ## Run tests
 	@mkdir -p ${BUILD_DIR}
 	bin/gotestsum --no-summary=skipped --junitfile ${BUILD_DIR}/coverage.xml --format ${TEST_FORMAT} -- -coverprofile=${BUILD_DIR}/coverage.txt -covermode=atomic $(filter-out -v,${GOARGS}) $(if ${TEST_PKGS},${TEST_PKGS},./...)
 
+# test:
+# 	go test ./...
+
+# test_v:
+# 	go test -v ./...
+
+# test_short:
+# 	go test ./... -short
+
 #test-race:
 #	go test -v ./... -race
 test-race: bin/gotestsum ## Run tests with race
 	@mkdir -p ${BUILD_DIR}
 	bin/gotestsum --no-summary=skipped --junitfile ${BUILD_DIR}/coverage.xml --format ${TEST_FORMAT} -- -race -coverprofile=${BUILD_DIR}/coverage.txt -covermode=atomic $(filter-out -v,${GOARGS}) $(if ${TEST_PKGS},${TEST_PKGS},./...)
 
-.PHONY: lint
 lint: bin/golangci-lint ## Run linter
 	bin/golangci-lint run
 
-.PHONY: fix
 fix: bin/golangci-lint ## Fix lint violations
 	bin/golangci-lint run --fix
 
-.PHONY: bench
 BENCH ?= .
 bench:
 #	go test -v ./... -test.bench -test.benchmem
@@ -82,8 +88,20 @@ vet:
 list: ## List all make targets
 	@${MAKE} -pRrn : -f $(MAKEFILE_LIST) 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | egrep -v -e '^[^[:alnum:]]' -e '^$@$$' | sort
 
+fmt:
+	go fmt ./...
+	goimports -l -w .
+
 help:
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
+generate_gomod:
+	rm go.mod go.sum || true
+	go mod init github.com/fengzhongzhu1621/xgo
+
+	go install ./...
+	sed -i '\|go |d' go.mod
+	go mod edit -fmt
 
 clear: ## Clear the working area and the project
 	rm -rf bin/
