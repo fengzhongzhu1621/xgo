@@ -17,3 +17,4 @@ func (f FieldMap) resolve(key fieldKey) string {
 	// key不存在返回key，即将key作为value返回
 	return string(key)
 }
+
