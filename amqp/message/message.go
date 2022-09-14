@@ -34,6 +34,7 @@ type Message struct {
 	// It is something similar to HTTP request's headers.
 	//
 	// Metadata is marshaled and will be saved to the PubSub.
+	// 消息元数据字典
 	Metadata Metadata
 
 	// Payload is the message's payload.
@@ -45,7 +46,7 @@ type Message struct {
 	noAck chan struct{}
 
 	ackMutex    sync.Mutex
-	ackSentType ackType // 消息类型
+	ackSentType ackType // 消息类型，3种
 
 	ctx context.Context
 }
@@ -75,7 +76,7 @@ func (m *Message) Equals(toCompare *Message) bool {
 	if m.UUID != toCompare.UUID {
 		return false
 	}
-	// 字典比较
+	// 字典比较，先比较大小，然后比较value
 	if len(m.Metadata) != len(toCompare.Metadata) {
 		return false
 	}
@@ -102,6 +103,7 @@ func (m *Message) Ack() bool {
 	}
 	if m.ackSentType != noAckSent {
 		// 第一次ack，然后true
+		// 消息已经执行过ack了
 		return true
 	}
 	// ackSentType: noAckSent -> ack
@@ -109,6 +111,7 @@ func (m *Message) Ack() bool {
 	if m.ack == nil {
 		m.ack = closedchan
 	} else {
+		// 收到ack后，关闭应答功能
 		close(m.ack)
 	}
 

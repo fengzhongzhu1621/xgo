@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strings"
 
-	"xgo/utils"
+	"xgo/utils/maps"
 
 	"github.com/magiconair/properties"
 	"github.com/spf13/cast"
@@ -29,7 +29,7 @@ func (c *Codec) Encode(v map[string]interface{}) ([]byte, error) {
 
 	flattened := map[string]interface{}{}
 
-	flattened = utils.FlattenAndMergeMap(flattened, v, "", c.keyDelimiter())
+	flattened = maps.FlattenAndMergeMap(flattened, v, "", c.keyDelimiter())
 
 	keys := make([]string, 0, len(flattened))
 
@@ -70,7 +70,7 @@ func (c *Codec) Decode(b []byte, v map[string]interface{}) error {
 		// recursively build nested maps
 		path := strings.Split(key, c.keyDelimiter())
 		lastKey := strings.ToLower(path[len(path)-1])
-		deepestMap := utils.DeepSearch(v, path[0:len(path)-1])
+		deepestMap := maps.DeepSearch(v, path[0:len(path)-1])
 
 		// set innermost value
 		deepestMap[lastKey] = value

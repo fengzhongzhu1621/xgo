@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strings"
 
-	"xgo/utils"
+	"xgo/utils/maps"
 
 	"github.com/spf13/cast"
 	"gopkg.in/ini.v1"
@@ -26,7 +26,7 @@ func (c Codec) Encode(v map[string]interface{}) ([]byte, error) {
 	ini.PrettyFormat = false
 
 	// 摊平字典
-	flattened := utils.FlattenAndMergeMap(nil, v, "", c.keyDelimiter())
+	flattened := maps.FlattenAndMergeMap(nil, v, "", c.keyDelimiter())
 
 	// 获得字典的key
 	keys := make([]string, 0, len(flattened))
@@ -82,7 +82,7 @@ func (c Codec) Decode(b []byte, v map[string]interface{}) error {
 			key := keys[j]
 			value := cfg.Section(section.Name()).Key(key.Name()).String()
 			// 生成深度遍历字典
-			deepestMap := utils.DeepSearch(v, strings.Split(section.Name(), c.keyDelimiter()))
+			deepestMap := maps.DeepSearch(v, strings.Split(section.Name(), c.keyDelimiter()))
 			// set innermost value
 			deepestMap[key.Name()] = value
 		}

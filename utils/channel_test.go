@@ -27,7 +27,7 @@ func TestIsChannelClosed(t *testing.T) {
 		},
 		{
 			Name:           "closed",
-			Channel:        closed,
+			Channel:        closed, // 已关闭的chan
 			ExpectedPanic:  false,
 			ExpectedClosed: true,
 		},

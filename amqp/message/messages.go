@@ -1,6 +1,6 @@
 package message
 
-// Messages is a slice of messages.
+// Messages is a slice of messages
 type Messages []*Message
 
 // IDs returns a slice of Messages' IDs.

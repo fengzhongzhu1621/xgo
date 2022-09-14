@@ -11,6 +11,7 @@ import (
 func BulkRead(messagesCh <-chan *message.Message, limit int, timeout time.Duration) (receivedMessages message.Messages, all bool) {
 MessagesLoop:
 	for len(receivedMessages) < limit {
+		// 从消息队列读消息
 		select {
 		case msg, ok := <-messagesCh:
 			if !ok {
@@ -31,7 +32,7 @@ MessagesLoop:
 
 // BulkReadWithDeduplication reads provided number of messages from the provided channel, ignoring duplicates,
 // until a timeout occurrs or the limit is reached.
-// 批量消费消息，保证没有重复的消息
+// 批量消费消息，保证当前没有重复的消息，并发送ack信号
 func BulkReadWithDeduplication(messagesCh <-chan *message.Message, limit int, timeout time.Duration) (receivedMessages message.Messages, all bool) {
 	receivedIDs := map[string]struct{}{}
 
@@ -43,11 +44,12 @@ MessagesLoop:
 				// 管道关闭
 				break MessagesLoop
 			}
-			// 去重消息
+			// 当前批次去重消息
 			if _, ok := receivedIDs[msg.UUID]; !ok {
 				receivedIDs[msg.UUID] = struct{}{}
 				receivedMessages = append(receivedMessages, msg)
 			}
+			// 收到消息后发送确认信息
 			msg.Ack()
 		case <-time.After(timeout):
 			break MessagesLoop

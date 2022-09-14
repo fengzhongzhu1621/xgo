@@ -6,7 +6,7 @@ import (
 	"sort"
 	"strings"
 
-	"xgo/utils"
+	"xgo/utils/maps"
 
 	"github.com/subosito/gotenv"
 )
@@ -19,7 +19,7 @@ type Codec struct{}
 
 func (Codec) Encode(v map[string]interface{}) ([]byte, error) {
 	// 摊平字典，key转换为小些
-	flattened := utils.FlattenAndMergeMap(nil, v, "", keyDelimiter)
+	flattened := maps.FlattenAndMergeMap(nil, v, "", keyDelimiter)
 
 	// 获得字典的key
 	keys := make([]string, 0, len(flattened))

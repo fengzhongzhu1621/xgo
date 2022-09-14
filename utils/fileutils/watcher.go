@@ -25,7 +25,7 @@ import (
 	"xgo/encoding/yaml"
 	jww "xgo/log"
 	"xgo/remote"
-	"xgo/utils"
+	"xgo/utils/maps"
 	"xgo/utils/stringutils"
 
 	"github.com/fsnotify/fsnotify"
@@ -316,8 +316,8 @@ func (v *Watcher) MergeConfigMap(cfg map[string]interface{}) error {
 	if v.config == nil {
 		v.config = make(map[string]interface{})
 	}
-	utils.InsensitiviseMap(cfg)
-	utils.MergeMaps(cfg, v.config, nil)
+	maps.InsensitiviseMap(cfg)
+	maps.MergeMaps(cfg, v.config, nil)
 	return nil
 }
 
@@ -681,11 +681,11 @@ func (v *Watcher) find(lcaseKey string) interface{} {
 	)
 
 	// Set() override first
-	val = utils.SearchMap(v.override, path)
+	val = maps.SearchMap(v.override, path)
 	if val != nil {
 		return val
 	}
-	if nested && utils.IsPathShadowedInDeepMap(path, v.override, v.keyDelim) != "" {
+	if nested && maps.IsPathShadowedInDeepMap(path, v.override, v.keyDelim) != "" {
 		return nil
 	}
 
@@ -702,20 +702,20 @@ func (v *Watcher) find(lcaseKey string) interface{} {
 	}
 
 	// 从本地配置文件内容中获取
-	val = utils.SearchIndexableWithPathPrefixes(v.config, path, v.keyDelim)
+	val = maps.SearchIndexableWithPathPrefixes(v.config, path, v.keyDelim)
 	if val != nil {
 		return val
 	}
-	if nested && utils.IsPathShadowedInDeepMap(path, v.config, v.keyDelim) != "" {
+	if nested && maps.IsPathShadowedInDeepMap(path, v.config, v.keyDelim) != "" {
 		return nil
 	}
 
 	// K/V store next
-	val = utils.SearchMap(v.kvstore, path)
+	val = maps.SearchMap(v.kvstore, path)
 	if val != nil {
 		return val
 	}
-	if nested && utils.IsPathShadowedInDeepMap(path, v.kvstore, v.keyDelim) != "" {
+	if nested && maps.IsPathShadowedInDeepMap(path, v.kvstore, v.keyDelim) != "" {
 		return nil
 	}
 
@@ -842,7 +842,7 @@ func (v *Watcher) InConfig(key string) bool {
 	lcaseKey := strings.ToLower(key)
 	path := strings.Split(lcaseKey, v.keyDelim)
 
-	return utils.SearchIndexableWithPathPrefixes(v.config, path, v.keyDelim) != nil
+	return maps.SearchIndexableWithPathPrefixes(v.config, path, v.keyDelim) != nil
 }
 
 // Set sets the value for the key in the override register.
@@ -851,12 +851,12 @@ func (v *Watcher) InConfig(key string) bool {
 // flags, config file, ENV, default, or key/value store.
 // 将字典的key转换为小写，返回新的字典.
 func (v *Watcher) Set(key string, value interface{}) {
-	value = utils.ToCaseInsensitiveValue(value)
+	value = maps.ToCaseInsensitiveValue(value)
 
 	path := strings.Split(key, v.keyDelim)
 	lastKey := strings.ToLower(path[len(path)-1])
 	// 根据路径构造字典
-	deepestMap := utils.DeepSearch(v.override, path[0:len(path)-1])
+	deepestMap := maps.DeepSearch(v.override, path[0:len(path)-1])
 
 	// set innermost value
 	deepestMap[lastKey] = value
@@ -865,9 +865,9 @@ func (v *Watcher) Set(key string, value interface{}) {
 // AllKeys 获得所有需要查询的key.
 func (v *Watcher) AllKeys() []string {
 	m := map[string]interface{}{}
-	m = utils.FlattenAndMergeMap(m, v.override, "", v.keyDelim)
-	m = utils.FlattenAndMergeMap(m, v.config, "", v.keyDelim)
-	m = utils.FlattenAndMergeMap(m, v.kvstore, "", v.keyDelim)
+	m = maps.FlattenAndMergeMap(m, v.override, "", v.keyDelim)
+	m = maps.FlattenAndMergeMap(m, v.config, "", v.keyDelim)
+	m = maps.FlattenAndMergeMap(m, v.kvstore, "", v.keyDelim)
 
 	// convert set of paths to list
 	a := make([]string, 0, len(m))
@@ -890,7 +890,7 @@ func (v *Watcher) AllSettings() map[string]interface{} {
 		}
 		path := strings.Split(k, v.keyDelim)
 		lastKey := strings.ToLower(path[len(path)-1])
-		deepestMap := utils.DeepSearch(m, path[0:len(path)-1])
+		deepestMap := maps.DeepSearch(m, path[0:len(path)-1])
 		// set innermost value
 		deepestMap[lastKey] = value
 	}
@@ -931,7 +931,7 @@ func (v *Watcher) unmarshalReader(in io.Reader, c map[string]interface{}) error 
 	}
 
 	// 将字典的key转换为小写，返回原字典
-	utils.InsensitiviseMap(c)
+	maps.InsensitiviseMap(c)
 
 	return nil
 }
