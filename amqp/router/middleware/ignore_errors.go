@@ -1,0 +1,41 @@
+package middleware
+
+import (
+	"xgo/amqp/message"
+	"xgo/amqp/router"
+
+	"github.com/pkg/errors"
+)
+
+// IgnoreErrors provides a middleware that makes the handler ignore some explicitly whitelisted errors.
+type IgnoreErrors struct {
+	ignoredErrors map[string]struct{}
+}
+
+// NewIgnoreErrors creates a new IgnoreErrors middleware.
+func NewIgnoreErrors(errs []error) IgnoreErrors {
+	errsMap := make(map[string]struct{}, len(errs))
+
+	for _, err := range errs {
+		errsMap[err.Error()] = struct{}{}
+	}
+
+	return IgnoreErrors{errsMap}
+}
+
+// Middleware returns the IgnoreErrors middleware.
+func (i IgnoreErrors) Middleware(h router.HandlerFunc) router.HandlerFunc {
+	return func(msg *message.Message) ([]*message.Message, error) {
+		events, err := h(msg)
+		if err != nil {
+			// 判断异常是否时需要忽略的
+			if _, ok := i.ignoredErrors[errors.Cause(err).Error()]; ok {
+				return events, nil
+			}
+
+			return events, err
+		}
+
+		return events, nil
+	}
+}
