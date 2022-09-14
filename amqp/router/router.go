@@ -469,9 +469,12 @@ func (r *Router) Close() error {
 	r.logger.Info("Closing router", nil)
 	defer r.logger.Info("Router closed", nil)
 
+	// 关闭handler
 	close(r.closeCh)
+
 	defer close(r.closedCh)
 
+	// 等待handlers关闭，如果有handler没有在规定时间内结束，则直接超时终止router
 	timeouted := sync_internal.WaitGroupTimeout(r.handlersWg, r.config.CloseTimeout)
 	if timeouted {
 		return errors.New("router close timeout")
