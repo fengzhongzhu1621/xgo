@@ -4,17 +4,6 @@ import (
 	. "xgo/amqp/message"
 )
 
-// HandlerFunc is function called when message is received.
-//
-// msg.Ack() is called automatically when HandlerFunc doesn't return error.
-// When HandlerFunc returns error, msg.Nack() is called.
-// When msg.Ack() was called in handler and HandlerFunc returns error,
-// msg.Nack() will be not sent because Ack was already sent.
-//
-// HandlerFunc's are executed parallel when multiple messages was received
-// (because msg.Ack() was sent in HandlerFunc or Subscriber supports multiple consumers).
-type HandlerFunc func(msg *Message) ([]*Message, error)
-
 // HandlerMiddleware allows us to write something like decorators to HandlerFunc.
 // It can execute something before handler (for example: modify consumed message)
 // or after (modify produced messages, ack/nack on consumed message, handle errors, logging, etc.).

@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"xgo/amqp/message"
-	"xgo/amqp/router"
 )
 
 // CorrelationIDMetadataKey is used to store the correlation ID in metadata.
@@ -31,7 +30,7 @@ func MessageCorrelationID(message *message.Message) string {
 // ID is based on ID from message received by handler.
 //
 // To make CorrelationID working correctly, SetCorrelationID must be called to first message entering the system.
-func CorrelationID(h router.HandlerFunc) router.HandlerFunc {
+func CorrelationID(h message.HandlerFunc) message.HandlerFunc {
 	return func(message *message.Message) ([]*message.Message, error) {
 		producedMessages, err := h(message)
 		// 添加RPC请求ID，用于标记消息传播链

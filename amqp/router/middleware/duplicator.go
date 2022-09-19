@@ -2,11 +2,10 @@ package middleware
 
 import (
 	"xgo/amqp/message"
-	"xgo/amqp/router"
 )
 
 // Duplicator is processing messages twice, to ensure that the endpoint is idempotent.
-func Duplicator(h router.HandlerFunc) router.HandlerFunc {
+func Duplicator(h message.HandlerFunc) message.HandlerFunc {
 	return func(msg *message.Message) ([]*message.Message, error) {
 		firstProducedMessages, firstErr := h(msg)
 		if firstErr != nil {
