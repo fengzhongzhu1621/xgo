@@ -19,25 +19,6 @@ import (
 // (because msg.Ack() was sent in HandlerFunc or Subscriber supports multiple consumers).
 type HandlerFunc func(msg *Message) ([]*Message, error)
 
-// HandlerMiddleware allows us to write something like decorators to HandlerFunc.
-// It can execute something before handler (for example: modify consumed message)
-// or after (modify produced messages, ack/nack on consumed message, handle errors, logging, etc.).
-//
-// It can be attached to the router by using `AddMiddleware` method.
-//
-// Example:
-//		func ExampleMiddleware(h message.HandlerFunc) message.HandlerFunc {
-//			return func(message *message.Message) ([]*message.Message, error) {
-//				fmt.Println("executed before handler")
-//				producedMessages, err := h(message)
-//				fmt.Println("executed after handler")
-//
-//				return producedMessages, err
-//			}
-//		}
-// 消息中间件装饰器
-type HandlerMiddleware func(h HandlerFunc) HandlerFunc
-
 var closedchan = make(chan struct{})
 
 func init() {

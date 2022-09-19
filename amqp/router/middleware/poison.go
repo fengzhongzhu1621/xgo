@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"xgo/amqp/message"
+	"xgo/amqp/router"
 
 	multierror "github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
@@ -30,7 +31,7 @@ type poisonQueue struct {
 
 // PoisonQueue provides a middleware that salvages unprocessable messages and published them on a separate topic.
 // The main middleware chain then continues on, business as usual.
-func PoisonQueue(pub message.Publisher, topic string) (message.HandlerMiddleware, error) {
+func PoisonQueue(pub message.Publisher, topic string) (router.HandlerMiddleware, error) {
 	if topic == "" {
 		return nil, ErrInvalidPoisonQueueTopic
 	}
@@ -47,7 +48,7 @@ func PoisonQueue(pub message.Publisher, topic string) (message.HandlerMiddleware
 }
 
 // PoisonQueueWithFilter is just like PoisonQueue, but accepts a function that decides which errors qualify for the poison queue.
-func PoisonQueueWithFilter(pub message.Publisher, topic string, shouldGoToPoisonQueue func(err error) bool) (message.HandlerMiddleware, error) {
+func PoisonQueueWithFilter(pub message.Publisher, topic string, shouldGoToPoisonQueue func(err error) bool) (router.HandlerMiddleware, error) {
 	if topic == "" {
 		return nil, ErrInvalidPoisonQueueTopic
 	}
@@ -71,9 +72,9 @@ func (pq poisonQueue) publishPoisonMessage(msg *message.Message, err error) erro
 	// add context why it was poisoned
 	// 将上下文的数据放到元数据中
 	msg.Metadata.Set(ReasonForPoisonedKey, err.Error())
-	msg.Metadata.Set(PoisonedTopicKey, message.SubscribeTopicFromCtx(msg.Context()))
-	msg.Metadata.Set(PoisonedHandlerKey, message.HandlerNameFromCtx(msg.Context()))
-	msg.Metadata.Set(PoisonedSubscriberKey, message.SubscriberNameFromCtx(msg.Context()))
+	msg.Metadata.Set(PoisonedTopicKey, router.SubscribeTopicFromCtx(msg.Context()))
+	msg.Metadata.Set(PoisonedHandlerKey, router.HandlerNameFromCtx(msg.Context()))
+	msg.Metadata.Set(PoisonedSubscriberKey, router.SubscriberNameFromCtx(msg.Context()))
 
 	// don't intercept error from publish. Can't help you if the publisher is down as well.
 	// 将消息发给不良队列
