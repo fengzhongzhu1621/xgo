@@ -87,19 +87,19 @@ func (h *handler) addHandlerContext(messages ...*Message) {
 		ctx := msg.Context()
 
 		if h.name != "" {
-			ctx = context.WithValue(ctx, handlerNameKey, h.name)
+			ctx = context.WithValue(ctx, HandlerNameKey, h.name)
 		}
 		if h.publisherName != "" {
-			ctx = context.WithValue(ctx, publisherNameKey, h.publisherName)
+			ctx = context.WithValue(ctx, PublisherNameKey, h.publisherName)
 		}
 		if h.subscriberName != "" {
-			ctx = context.WithValue(ctx, subscriberNameKey, h.subscriberName)
+			ctx = context.WithValue(ctx, SubscriberNameKey, h.subscriberName)
 		}
 		if h.subscribeTopic != "" {
-			ctx = context.WithValue(ctx, subscribeTopicKey, h.subscribeTopic)
+			ctx = context.WithValue(ctx, SubscribeTopicKey, h.subscribeTopic)
 		}
 		if h.publishTopic != "" {
-			ctx = context.WithValue(ctx, publishTopicKey, h.publishTopic)
+			ctx = context.WithValue(ctx, PublishTopicKey, h.publishTopic)
 		}
 		messages[i].SetContext(ctx)
 	}
