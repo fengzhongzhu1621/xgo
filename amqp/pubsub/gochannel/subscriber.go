@@ -75,6 +75,8 @@ SendToSubscriber:
 			return
 		}
 
+		// 等待监听outputChannel的协程返回ack
+
 		select {
 		case <-msgToSend.Acked():
 			// 消息处理完毕

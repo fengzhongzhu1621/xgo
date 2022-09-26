@@ -119,7 +119,7 @@ func (g *GoChannel) Publish(topic string, messages ...*message.Message) error {
 			return err
 		}
 
-		// 等待订阅者返回ack消息
+		// 等待所有的订阅者处理完成，默认不等待
 		if g.config.BlockPublishUntilSubscriberAck {
 			g.waitForAckFromSubscribers(msg, ackedBySubscribers)
 		}
@@ -143,6 +143,7 @@ func (g *GoChannel) waitForAckFromSubscribers(msg *message.Message, ackedByConsu
 	}
 }
 
+// 生产者发送消息给所有注册的订阅者，并启动协程模拟订阅者接受消息到消息缓存队列，并等待消息返回ack
 func (g *GoChannel) sendMessage(topic string, message *message.Message) (<-chan struct{}, error) {
 	// 根据topic选择多个订阅者
 	subscribers := g.topicSubscribers(topic)
@@ -215,6 +216,7 @@ func (g *GoChannel) Subscribe(ctx context.Context, topic string) (<-chan *messag
 			// unblock
 		}
 
+		// 生产者关闭时，需要关闭订阅者
 		s.Close()
 
 		g.subscribersLock.Lock()
@@ -224,6 +226,7 @@ func (g *GoChannel) Subscribe(ctx context.Context, topic string) (<-chan *messag
 		subLock.(*sync.Mutex).Lock()
 		defer subLock.(*sync.Mutex).Unlock()
 
+		// 注销订阅者
 		g.removeSubscriber(topic, s)
 		g.subscribersWg.Done()
 	}(s, g)
@@ -232,6 +235,7 @@ func (g *GoChannel) Subscribe(ctx context.Context, topic string) (<-chan *messag
 		defer g.subscribersLock.Unlock()
 		defer subLock.(*sync.Mutex).Unlock()
 
+		// 注册消费者
 		g.addSubscriber(topic, s)
 
 		return s.outputChannel, nil
