@@ -15,18 +15,18 @@ import (
 // Config holds the GoChannel Pub/Sub's configuration options.
 type Config struct {
 	// Output channel buffer size.
-	OutputChannelBuffer int64
+	OutputChannelBuffer int64 // 订阅者缓存队列的大小
 
 	// If persistent is set to true, when subscriber subscribes to the topic,
 	// it will receive all previously produced messages.
 	//
 	// All messages are persisted to the memory (simple slice),
 	// so be aware that with large amount of messages you can go out of the memory.
-	Persistent bool
+	Persistent bool // 是否持久化存储
 
 	// When true, Publish will block until subscriber Ack's the message.
 	// If there are no subscribers, Publish will not block (also when Persistent is true).
-	BlockPublishUntilSubscriberAck bool
+	BlockPublishUntilSubscriberAck bool // 是否等待所有的订阅者都处理完同一个消息
 }
 
 // GoChannel is the simplest Pub/Sub implementation.
@@ -41,11 +41,11 @@ type GoChannel struct {
 	logger log.LoggerAdapter
 
 	subscribersWg          sync.WaitGroup
-	subscribers            map[string][]*subscriber // 多个消费者
+	subscribers            map[string][]*GoChannelSubscriber // 多个消费者
 	subscribersLock        sync.RWMutex
 	subscribersByTopicLock sync.Map // map of *sync.Mutex
 
-	closed     bool
+	closed     bool // 关闭标识
 	closedLock sync.Mutex
 	closing    chan struct{}
 
@@ -65,7 +65,7 @@ func NewGoChannel(config Config, logger log.LoggerAdapter) *GoChannel {
 	return &GoChannel{
 		config: config,
 
-		subscribers:            make(map[string][]*subscriber), // 多个订阅者
+		subscribers:            make(map[string][]*GoChannelSubscriber), // 多个订阅者
 		subscribersByTopicLock: sync.Map{},
 		logger: logger.With(log.LogFields{
 			"pubsub_uuid": shortuuid.New(),
@@ -73,7 +73,7 @@ func NewGoChannel(config Config, logger log.LoggerAdapter) *GoChannel {
 
 		closing: make(chan struct{}),
 
-		persistedMessages: map[string][]*message.Message{},
+		persistedMessages: map[string][]*message.Message{}, // 存放持久化的消息
 	}
 }
 
@@ -99,7 +99,7 @@ func (g *GoChannel) Publish(topic string, messages ...*message.Message) error {
 	subLock.(*sync.Mutex).Lock()
 	defer subLock.(*sync.Mutex).Unlock()
 
-	// 消息需要持久化存储
+	// 发送消息后，将消息持久化存储，防止丢失
 	if g.config.Persistent {
 		g.persistedMessagesLock.Lock()
 		if _, ok := g.persistedMessages[topic]; !ok {
@@ -109,10 +109,11 @@ func (g *GoChannel) Publish(topic string, messages ...*message.Message) error {
 		g.persistedMessagesLock.Unlock()
 	}
 
-	// 发送消息
+	// 发送消息给所有的订阅者
 	for i := range messagesToPublish {
 		msg := messagesToPublish[i]
 
+		// 发送消息给订阅者，返回所有的订阅者都处理了消息的信号
 		ackedBySubscribers, err := g.sendMessage(topic, msg)
 		if err != nil {
 			return err
@@ -134,14 +135,16 @@ func (g *GoChannel) waitForAckFromSubscribers(msg *message.Message, ackedByConsu
 
 	select {
 	case <-ackedByConsumer:
+		// 等待所有的订阅者处理完毕
 		g.logger.Trace("Message acked by subscribers", logFields)
 	case <-g.closing:
+		//Gochannl关闭
 		g.logger.Trace("Closing Pub/Sub before ack from subscribers", logFields)
 	}
 }
 
 func (g *GoChannel) sendMessage(topic string, message *message.Message) (<-chan struct{}, error) {
-	// 选择多个订阅者
+	// 根据topic选择多个订阅者
 	subscribers := g.topicSubscribers(topic)
 	ackedBySubscribers := make(chan struct{})
 
@@ -153,7 +156,7 @@ func (g *GoChannel) sendMessage(topic string, message *message.Message) (<-chan 
 		return ackedBySubscribers, nil
 	}
 
-	go func(subscribers []*subscriber) {
+	go func(subscribers []*GoChannelSubscriber) {
 		wg := &sync.WaitGroup{}
 
 		for i := range subscribers {
@@ -161,12 +164,12 @@ func (g *GoChannel) sendMessage(topic string, message *message.Message) (<-chan 
 
 			wg.Add(1)
 			go func() {
-				// 每个订阅者都收到消息
-				subscriber.sendMessageToSubscriber(message, logFields)
+				// 订阅者接受消息
+				subscriber.SendMessageToSubscriber(message, logFields)
 				wg.Done()
 			}()
 		}
-
+		// 等待所有的订阅者都处理了这个消息
 		wg.Wait()
 		close(ackedBySubscribers)
 	}(subscribers)
@@ -178,6 +181,7 @@ func (g *GoChannel) sendMessage(topic string, message *message.Message) (<-chan 
 // Messages are not persisted. If there are no subscribers and message is produced it will be gone.
 //
 // There are no consumer groups support etc. Every consumer will receive every produced message.
+// 创建一个订阅者并返回接收消息的缓存队列
 func (g *GoChannel) Subscribe(ctx context.Context, topic string) (<-chan *message.Message, error) {
 	g.closedLock.Lock()
 
@@ -193,7 +197,8 @@ func (g *GoChannel) Subscribe(ctx context.Context, topic string) (<-chan *messag
 	subLock, _ := g.subscribersByTopicLock.LoadOrStore(topic, &sync.Mutex{})
 	subLock.(*sync.Mutex).Lock()
 
-	s := &subscriber{
+	// 创建一个订阅者
+	s := &GoChannelSubscriber{
 		ctx:           ctx,
 		uuid:          randutils.NewUUID(),
 		outputChannel: make(chan *message.Message, g.config.OutputChannelBuffer),
@@ -201,7 +206,8 @@ func (g *GoChannel) Subscribe(ctx context.Context, topic string) (<-chan *messag
 		closing:       make(chan struct{}),
 	}
 
-	go func(s *subscriber, g *GoChannel) {
+	// 订阅者注销协程
+	go func(s *GoChannelSubscriber, g *GoChannel) {
 		select {
 		case <-ctx.Done():
 			// unblock
@@ -231,20 +237,21 @@ func (g *GoChannel) Subscribe(ctx context.Context, topic string) (<-chan *messag
 		return s.outputChannel, nil
 	}
 
-	go func(s *subscriber) {
+	go func(s *GoChannelSubscriber) {
 		defer g.subscribersLock.Unlock()
 		defer subLock.(*sync.Mutex).Unlock()
 
+		// 获取持久化的消息
 		g.persistedMessagesLock.RLock()
 		messages, ok := g.persistedMessages[topic]
 		g.persistedMessagesLock.RUnlock()
-
+		// 将持久化的消息发给订阅者
 		if ok {
 			for i := range messages {
 				msg := g.persistedMessages[topic][i]
 				logFields := log.LogFields{"message_uuid": msg.UUID, "topic": topic}
 
-				go s.sendMessageToSubscriber(msg, logFields)
+				go s.SendMessageToSubscriber(msg, logFields)
 			}
 		}
 
@@ -254,14 +261,14 @@ func (g *GoChannel) Subscribe(ctx context.Context, topic string) (<-chan *messag
 	return s.outputChannel, nil
 }
 
-func (g *GoChannel) addSubscriber(topic string, s *subscriber) {
+func (g *GoChannel) addSubscriber(topic string, s *GoChannelSubscriber) {
 	if _, ok := g.subscribers[topic]; !ok {
-		g.subscribers[topic] = make([]*subscriber, 0)
+		g.subscribers[topic] = make([]*GoChannelSubscriber, 0)
 	}
 	g.subscribers[topic] = append(g.subscribers[topic], s)
 }
 
-func (g *GoChannel) removeSubscriber(topic string, toRemove *subscriber) {
+func (g *GoChannel) removeSubscriber(topic string, toRemove *GoChannelSubscriber) {
 	removed := false
 	for i, sub := range g.subscribers[topic] {
 		if sub == toRemove {
@@ -276,7 +283,7 @@ func (g *GoChannel) removeSubscriber(topic string, toRemove *subscriber) {
 }
 
 // topicSubscribers 选择多个订阅者
-func (g *GoChannel) topicSubscribers(topic string) []*subscriber {
+func (g *GoChannel) topicSubscribers(topic string) []*GoChannelSubscriber {
 	subscribers, ok := g.subscribers[topic]
 	if !ok {
 		return nil
@@ -284,7 +291,7 @@ func (g *GoChannel) topicSubscribers(topic string) []*subscriber {
 
 	// let's do a copy to avoid race conditions and deadlocks due to lock
 	// 复制订阅者
-	subscribersCopy := make([]*subscriber, len(subscribers))
+	subscribersCopy := make([]*GoChannelSubscriber, len(subscribers))
 	for i, s := range subscribers {
 		subscribersCopy[i] = s
 	}

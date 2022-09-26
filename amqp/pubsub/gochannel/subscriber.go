@@ -8,7 +8,7 @@ import (
 )
 
 // 订阅者
-type subscriber struct {
+type GoChannelSubscriber struct {
 	ctx context.Context
 
 	uuid string
@@ -22,10 +22,11 @@ type subscriber struct {
 }
 
 // Close 关闭订阅者
-func (s *subscriber) Close() {
+func (s *GoChannelSubscriber) Close() {
 	if s.closed {
 		return
 	}
+	// 发送关闭信号
 	close(s.closing)
 
 	s.logger.Debug("Closing subscriber, waiting for sending lock", nil)
@@ -34,14 +35,16 @@ func (s *subscriber) Close() {
 	s.sending.Lock()
 	defer s.sending.Unlock()
 
+	// 设置关闭状态
 	s.logger.Debug("GoChannel Pub/Sub Subscriber closed", nil)
 	s.closed = true
 
+	// 关闭订阅者缓存队列
 	close(s.outputChannel)
 }
 
-// sendMessageToSubscriber 发送消息给订阅者
-func (s *subscriber) sendMessageToSubscriber(msg *message.Message, logFields log.LogFields) {
+// sendMessageToSubscriber 订阅者接收消息到缓存队列
+func (s *GoChannelSubscriber) SendMessageToSubscriber(msg *message.Message, logFields log.LogFields) {
 	s.sending.Lock()
 	defer s.sending.Unlock()
 
@@ -64,7 +67,7 @@ SendToSubscriber:
 
 		select {
 		case s.outputChannel <- msgToSend:
-			// 发给订阅者
+			// 发给订阅者缓存队列
 			s.logger.Trace("Sent message to subscriber", logFields)
 		case <-s.closing:
 			// 接收到关闭信号
@@ -82,6 +85,7 @@ SendToSubscriber:
 			s.logger.Trace("Nack received, resending message", logFields)
 			continue SendToSubscriber
 		case <-s.closing:
+			// 关闭订阅者
 			s.logger.Trace("Closing, message discarded", logFields)
 			return
 		}

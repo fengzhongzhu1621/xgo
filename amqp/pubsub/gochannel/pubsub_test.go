@@ -1,9 +1,8 @@
-package gochannel_test
+package gochannel
 
 import (
 	"context"
 	"fmt"
-	"log"
 	"strconv"
 	"sync"
 	"testing"
@@ -12,28 +11,28 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/ThreeDotsLabs/watermill"
-	"github.com/ThreeDotsLabs/watermill/message"
-	"github.com/ThreeDotsLabs/watermill/message/subscriber"
-	"github.com/ThreeDotsLabs/watermill/pubsub/gochannel"
-	"github.com/ThreeDotsLabs/watermill/pubsub/tests"
+	"xgo/amqp/message"
+	"xgo/amqp/subscriber"
+	"xgo/log"
+	"xgo/utils/randutils"
 )
 
+// 默认生产者和消费者
 func createPersistentPubSub(t *testing.T) (message.Publisher, message.Subscriber) {
-	pubSub := gochannel.NewGoChannel(
-		gochannel.Config{
+	pubSub := NewGoChannel(
+		Config{
 			OutputChannelBuffer: 10000,
 			Persistent:          true,
 		},
-		watermill.NewStdLogger(true, true),
+		log.NewStdLogger(true, true, "[watermill] "),
 	)
 	return pubSub, pubSub
 }
 
 func TestPublishSubscribe_persistent(t *testing.T) {
-	tests.TestPubSub(
+	TestPubSub(
 		t,
-		tests.Features{
+		Features{
 			ConsumerGroups:        false,
 			ExactlyOnceDelivery:   true,
 			GuaranteedOrder:       false,
@@ -47,29 +46,29 @@ func TestPublishSubscribe_persistent(t *testing.T) {
 
 func TestPublishSubscribe_not_persistent(t *testing.T) {
 	messagesCount := 100
-	pubSub := gochannel.NewGoChannel(
-		gochannel.Config{OutputChannelBuffer: int64(messagesCount)},
-		watermill.NewStdLogger(true, true),
+	pubSub := NewGoChannel(
+		Config{OutputChannelBuffer: int64(messagesCount)},
+		log.NewStdLogger(true, true, "[watermill] "),
 	)
-	topicName := "test_topic_" + watermill.NewUUID()
+	topicName := "test_topic_" + randutils.NewUUID()
 
 	msgs, err := pubSub.Subscribe(context.Background(), topicName)
 	require.NoError(t, err)
 
-	sendMessages := tests.PublishSimpleMessages(t, messagesCount, pubSub, topicName)
+	sendMessages := PublishSimpleMessages(t, messagesCount, pubSub, topicName)
 	receivedMsgs, _ := subscriber.BulkRead(msgs, messagesCount, time.Second)
 
-	tests.AssertAllMessagesReceived(t, sendMessages, receivedMsgs)
+	AssertAllMessagesReceived(t, sendMessages, receivedMsgs)
 
 	assert.NoError(t, pubSub.Close())
 }
 
 func TestPublishSubscribe_block_until_ack(t *testing.T) {
-	pubSub := gochannel.NewGoChannel(
-		gochannel.Config{BlockPublishUntilSubscriberAck: true},
-		watermill.NewStdLogger(true, true),
+	pubSub := NewGoChannel(
+		Config{BlockPublishUntilSubscriberAck: true},
+		log.NewStdLogger(true, true, "[watermill] "),
 	)
-	topicName := "test_topic_" + watermill.NewUUID()
+	topicName := "test_topic_" + randutils.NewUUID()
 
 	msgs, err := pubSub.Subscribe(context.Background(), topicName)
 	require.NoError(t, err)
@@ -131,9 +130,9 @@ func TestSubscribe_race_condition_when_closing(t *testing.T) {
 	for i := 0; i < testsCount; i++ {
 		t.Run(fmt.Sprintf("%d", i), func(t *testing.T) {
 			t.Parallel()
-			pubSub := gochannel.NewGoChannel(
-				gochannel.Config{},
-				watermill.NewStdLogger(true, false),
+			pubSub := NewGoChannel(
+				Config{},
+				log.NewStdLogger(true, false, "[watermill] "),
 			)
 			go func() {
 				err := pubSub.Close()
@@ -154,9 +153,9 @@ func TestPublish_race_condition_when_closing(t *testing.T) {
 	for i := 0; i < testsCount; i++ {
 		t.Run(fmt.Sprintf("%d", i), func(t *testing.T) {
 			t.Parallel()
-			pubSub := gochannel.NewGoChannel(
-				gochannel.Config{},
-				watermill.NewStdLogger(true, false),
+			pubSub := NewGoChannel(
+				Config{},
+				log.NewStdLogger(true, false, "[watermill] "),
 			)
 			go func() {
 				_ = pubSub.Publish("topic", message.NewMessage(strconv.Itoa(i), nil))
@@ -169,11 +168,11 @@ func TestPublish_race_condition_when_closing(t *testing.T) {
 }
 
 func TestPublishSubscribe_do_not_block_other_subscribers(t *testing.T) {
-	pubSub := gochannel.NewGoChannel(
-		gochannel.Config{},
-		watermill.NewStdLogger(true, true),
+	pubSub := NewGoChannel(
+		Config{},
+		log.NewStdLogger(true, true, "[watermill] "),
 	)
-	topicName := "test_topic_" + watermill.NewUUID()
+	topicName := "test_topic_" + randutils.NewUUID()
 
 	msgsFromSubscriber1, err := pubSub.Subscribe(context.Background(), topicName)
 	require.NoError(t, err)
@@ -216,12 +215,12 @@ func testPublishSubscribeSubRace(t *testing.T) {
 		subscribersCount = 20
 	}
 
-	pubSub := gochannel.NewGoChannel(
-		gochannel.Config{
+	pubSub := NewGoChannel(
+		Config{
 			OutputChannelBuffer: int64(messagesCount),
 			Persistent:          true,
 		},
-		watermill.NewStdLogger(true, false),
+		log.NewStdLogger(true, false, "[watermill] "),
 	)
 
 	allSent := sync.WaitGroup{}
@@ -231,7 +230,7 @@ func testPublishSubscribeSubRace(t *testing.T) {
 	sentMessages := message.Messages{}
 	go func() {
 		for i := 0; i < messagesCount; i++ {
-			msg := message.NewMessage(watermill.NewUUID(), nil)
+			msg := message.NewMessage(randutils.NewUUID(), nil)
 			sentMessages = append(sentMessages, msg)
 
 			go func() {
@@ -256,17 +255,17 @@ func testPublishSubscribeSubRace(t *testing.T) {
 		}()
 	}
 
-	log.Println("waiting for all sent")
+	log.Info("waiting for all sent")
 	allSent.Wait()
 
-	log.Println("waiting for all received")
+	log.Info("waiting for all received")
 	allReceived.Wait()
 
 	close(subscriberReceivedCh)
 
-	log.Println("asserting")
+	log.Info("asserting")
 
 	for subMsgs := range subscriberReceivedCh {
-		tests.AssertAllMessagesReceived(t, sentMessages, subMsgs)
+		AssertAllMessagesReceived(t, sentMessages, subMsgs)
 	}
 }
