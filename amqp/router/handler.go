@@ -54,6 +54,7 @@ func (h *handler) run(ctx context.Context, middlewares []Middleware) {
 		// 选择匹配的消息处理函数装饰器
 		isValidHandlerLevelMiddleware := currentMiddleware.HandlerName == h.name
 		if currentMiddleware.IsRouterLevel || isValidHandlerLevelMiddleware {
+			// 装饰消息处理函数
 			middlewareHandler = currentMiddleware.Handler(middlewareHandler)
 		}
 	}
@@ -61,6 +62,7 @@ func (h *handler) run(ctx context.Context, middlewares []Middleware) {
 	go h.handleClose(ctx)
 
 	// 阻塞从队列中获取一条格式化后的消息
+	// todo 可优化，会创建大量的 go h.handleMessage，导致资源耗尽
 	for msg := range h.messagesCh {
 		// 标记正在处理一个消息
 		h.runningHandlersWg.Add(1)
@@ -141,6 +143,7 @@ func (h *handler) handleMessage(msg *Message, handler HandlerFunc) {
 	h.logger.Trace("Received message", msgFields)
 
 	// 执行消息处理函数，可能返回多个消息给下一个生产者
+	// handler包含多个handler中间件，可以处理复杂的逻辑
 	producedMessages, err := handler(msg)
 	if err != nil {
 		h.logger.Error("Handler returned error", err, nil)

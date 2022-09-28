@@ -61,6 +61,7 @@ type Router struct {
 func NewRouter(config RouterConfig, logger log.LoggerAdapter) (*Router, error) {
 	// 路由配置初始化默认值
 	config.setDefaults()
+	// 验证配置
 	if err := config.Validate(); err != nil {
 		return nil, errors.Wrap(err, "invalid config")
 	}
@@ -292,7 +293,7 @@ func (r *Router) Run(ctx context.Context) (err error) {
 		}
 	}
 
-	// 创建处理器协程
+	// 创建处理器协程，非阻塞操作
 	if err := r.RunHandlers(ctx); err != nil {
 		return err
 	}
@@ -305,7 +306,7 @@ func (r *Router) Run(ctx context.Context) (err error) {
 	// 使用协程的原因是，关闭事件closeCh可以由其它地方触发Close()方法执行关闭
 	go r.closeWhenAllHandlersStopped()
 
-	// 等待路由关闭事件，由Close()触发
+	// 等待路由关闭事件，由Close()触发，阻塞操作
 	<-r.closeCh
 
 	// 给处理器发送上下文关闭信号
@@ -359,7 +360,7 @@ func (r *Router) RunHandlers(ctx context.Context) error {
 
 		ctx, cancel := context.WithCancel(ctx)
 
-		// 从队列的指定topic获取消息，通常来说，不同的handler处理不同的topic
+		// 从队列的指定topic获取消息，通常来说，不同的handler处理不同的topic，返回消息管道
 		messages, err := h.subscriber.Subscribe(ctx, h.subscribeTopic)
 		if err != nil {
 			cancel()
@@ -425,7 +426,7 @@ func (r *Router) closeWhenAllHandlersStopped() {
 	}
 
 	r.logger.Error("All handlers stopped, closing router", errors.New("all router handlers stopped"), nil)
-
+	// 强制关闭路由
 	if err := r.Close(); err != nil {
 		r.logger.Error("Cannot close router", err, nil)
 	}
@@ -516,6 +517,7 @@ func (r *Router) decorateHandlerSubscriber(h *handler) error {
 	// it goes before other decorators, so that they may take advantage of these values
 	messageTransform := func(msg *Message) {
 		if msg != nil {
+			// 给消息添加上下文
 			h.addHandlerContext(msg)
 		}
 	}

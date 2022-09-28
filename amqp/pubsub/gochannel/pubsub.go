@@ -198,7 +198,7 @@ func (g *GoChannel) Subscribe(ctx context.Context, topic string) (<-chan *messag
 	subLock, _ := g.subscribersByTopicLock.LoadOrStore(topic, &sync.Mutex{})
 	subLock.(*sync.Mutex).Lock()
 
-	// 创建一个订阅者
+	// 自动创建一个订阅者
 	s := &GoChannelSubscriber{
 		ctx:           ctx,
 		uuid:          randutils.NewUUID(),
@@ -250,6 +250,8 @@ func (g *GoChannel) Subscribe(ctx context.Context, topic string) (<-chan *messag
 		messages, ok := g.persistedMessages[topic]
 		g.persistedMessagesLock.RUnlock()
 		// 将持久化的消息发给订阅者
+		// 因为开始发送消息时，订阅者可能不存在，这时候的消息需要缓存下来
+		// 等到订阅者注册后，再从缓存中把重新发给订阅者
 		if ok {
 			for i := range messages {
 				msg := g.persistedMessages[topic][i]
