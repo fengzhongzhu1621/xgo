@@ -43,10 +43,3 @@ func Assert1(guard bool, text string) {
 		panic(text)
 	}
 }
-
-func LastChar(str string) uint8 {
-	if str == "" {
-		panic("The length of the string can't be 0")
-	}
-	return str[len(str)-1]
-}

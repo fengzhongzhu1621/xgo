@@ -3,6 +3,7 @@ package xgo
 import (
 	"bytes"
 	"fmt"
+	"reflect"
 	"strings"
 )
 
@@ -182,4 +183,18 @@ type EncodingError string
 
 func (e EncodingError) Error() string {
 	return string(e)
+}
+
+// NoProtoMessageError is returned when the given value does not implement proto.Message.
+type NoProtoMessageError struct {
+	V interface{}
+}
+
+func (e NoProtoMessageError) Error() string {
+	rv := reflect.ValueOf(e.V)
+	if rv.Kind() != reflect.Ptr {
+		return "v is not proto.Message, you must pass pointer value to implement proto.Message"
+	}
+
+	return "v is not proto.Message"
 }
