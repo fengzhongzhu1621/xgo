@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 
-	"xgo/utils/bytesconv"
+	"github.com/fengzhongzhu1621/xgo/utils/bytesconv"
 )
 
 // redis resp protocol data type.

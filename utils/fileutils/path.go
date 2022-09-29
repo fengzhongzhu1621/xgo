@@ -13,7 +13,7 @@ type PathInfo struct {
 }
 
 // 获得最后一个字符.
-func lastChar(str string) uint8 {
+func LastChar(str string) uint8 {
 	if str == "" {
 		panic("The length of the string can't be 0")
 	}
@@ -27,7 +27,7 @@ func JoinPaths(absolutePath, relativePath string) string {
 	}
 
 	finalPath := path.Join(absolutePath, relativePath)
-	if lastChar(relativePath) == '/' && lastChar(finalPath) != '/' {
+	if LastChar(relativePath) == '/' && LastChar(finalPath) != '/' {
 		return finalPath + "/"
 	}
 	return finalPath

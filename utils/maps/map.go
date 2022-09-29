@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"xgo/cast"
+	"github.com/fengzhongzhu1621/xgo/cast"
 )
 
 // ToCaseInsensitiveValue 将字典的key转换为小写，返回新的字典

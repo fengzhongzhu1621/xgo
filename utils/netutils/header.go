@@ -6,7 +6,7 @@ import (
 	"net/textproto"
 	"strings"
 
-	"xgo/utils/stringutils"
+	"github.com/fengzhongzhu1621/xgo/utils/stringutils"
 )
 
 // 构造header, 返回一个新数组.

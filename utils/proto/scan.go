@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"time"
 
-	"xgo/utils/bytesconv"
+	"github.com/fengzhongzhu1621/xgo/utils/bytesconv"
 )
 
 // Scan parses bytes `b` to `v` with appropriate type.

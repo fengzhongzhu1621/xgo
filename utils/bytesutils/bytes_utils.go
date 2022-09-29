@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"time"
 
-	"xgo/utils/bytesconv"
+	"github.com/fengzhongzhu1621/xgo/utils/bytesconv"
 )
 
 // 判断前缀和后缀是否全部匹配.

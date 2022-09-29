@@ -17,8 +17,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	ms "xgo/encoding/mapstructure"
-	"xgo/utils/testutil"
+	ms "github.com/fengzhongzhu1621/xgo/encoding/mapstructure"
+	"github.com/fengzhongzhu1621/xgo/utils/testutil"
 )
 
 var yamlExampleWithExtras = []byte(`Existing: true

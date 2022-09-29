@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"xgo/utils/bytesconv"
+	"github.com/fengzhongzhu1621/xgo/utils/bytesconv"
 )
 
 type writer interface {

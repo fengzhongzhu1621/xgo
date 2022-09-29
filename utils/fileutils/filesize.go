@@ -4,7 +4,7 @@ import (
 	"strings"
 	"unicode"
 
-	"xgo/cast"
+	"github.com/fengzhongzhu1621/xgo/cast"
 )
 
 func safeMul(a, b uint) uint {

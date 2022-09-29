@@ -12,7 +12,7 @@ import (
 	"time"
 	"unicode"
 
-	"xgo/utils/bytesconv"
+	"github.com/fengzhongzhu1621/xgo/utils/bytesconv"
 )
 
 var HeaderNewlineToSpace = strings.NewReplacer("\n", " ", "\r", " ") // 换行字符替换器

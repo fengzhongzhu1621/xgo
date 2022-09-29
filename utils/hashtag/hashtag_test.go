@@ -3,7 +3,7 @@ package hashtag
 import (
 	"testing"
 
-	"xgo/utils/randutils"
+	"github.com/fengzhongzhu1621/xgo/utils/randutils"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"

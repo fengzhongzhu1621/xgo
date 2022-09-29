@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"xgo/utils/testutil"
+	"github.com/fengzhongzhu1621/xgo/utils/testutil"
 )
 
 func TestAbsPathify(t *testing.T) {

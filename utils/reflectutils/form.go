@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	bytesconv "xgo/utils/bytesconv"
-	json "xgo/utils/json"
+	bytesconv "github.com/fengzhongzhu1621/xgo/utils/bytesconv"
+	json "github.com/fengzhongzhu1621/xgo/utils/json"
 )
 
 var ErrUnknownType = errors.New("unknown type")
