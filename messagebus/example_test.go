@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sync"
 
-	"xgo/messagebus"
+	"github.com/fengzhongzhu1621/xgo/messagebus"
 )
 
 func Example() {

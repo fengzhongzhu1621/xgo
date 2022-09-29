@@ -6,7 +6,7 @@ import (
 	"sort"
 	"strings"
 
-	"xgo/utils/maps"
+	"github.com/fengzhongzhu1621/xgo/utils/maps"
 
 	"github.com/subosito/gotenv"
 )

@@ -8,7 +8,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"xgo/utils"
+	"github.com/fengzhongzhu1621/xgo/utils"
 )
 
 var (

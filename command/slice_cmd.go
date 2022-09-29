@@ -3,8 +3,8 @@ package command
 import (
 	"context"
 
-	"xgo/utils/hscan"
-	"xgo/utils/proto"
+	"github.com/fengzhongzhu1621/xgo/utils/hscan"
+	"github.com/fengzhongzhu1621/xgo/utils/proto"
 )
 
 type SliceCmd struct {

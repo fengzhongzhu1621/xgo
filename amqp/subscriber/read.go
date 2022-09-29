@@ -3,7 +3,7 @@ package subscriber
 import (
 	"time"
 
-	"xgo/amqp/message"
+	"github.com/fengzhongzhu1621/xgo/amqp/message"
 )
 
 // BulkRead reads provided amount of messages from the provided channel, until a timeout occurrs or the limit is reached.

@@ -3,8 +3,9 @@ package gochannel
 import (
 	"context"
 	"sync"
-	"xgo/amqp/message"
-	"xgo/log"
+
+	"github.com/fengzhongzhu1621/xgo/amqp/message"
+	"github.com/fengzhongzhu1621/xgo/log"
 )
 
 // 订阅者

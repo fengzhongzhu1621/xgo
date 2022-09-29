@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"sync"
 
-	"xgo/amqp/message"
-	"xgo/amqp/router"
-	"xgo/log"
+	"github.com/fengzhongzhu1621/xgo/amqp/message"
+	"github.com/fengzhongzhu1621/xgo/amqp/router"
+	"github.com/fengzhongzhu1621/xgo/log"
 )
 
 // FanOut is a component that receives messages from the subscriber and passes them

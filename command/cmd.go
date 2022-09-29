@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"xgo/utils/proto"
+	"github.com/fengzhongzhu1621/xgo/utils/proto"
 )
 
 type Cmd struct {

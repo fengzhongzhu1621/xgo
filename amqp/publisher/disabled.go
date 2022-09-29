@@ -1,7 +1,7 @@
 package publisher
 
 import (
-	. "xgo/amqp/message"
+	. "github.com/fengzhongzhu1621/xgo/amqp/message"
 )
 
 var _ Publisher = (*DisabledPublisher)(nil)

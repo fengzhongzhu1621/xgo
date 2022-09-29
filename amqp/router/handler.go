@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"runtime/debug"
 	"sync"
-	. "xgo/amqp/message"
-	. "xgo/amqp/publisher"
-	"xgo/log"
+
+	. "github.com/fengzhongzhu1621/xgo/amqp/message"
+	. "github.com/fengzhongzhu1621/xgo/amqp/publisher"
+	"github.com/fengzhongzhu1621/xgo/log"
 
 	"github.com/pkg/errors"
 )

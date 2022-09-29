@@ -3,7 +3,8 @@ package gochannel
 import (
 	"sort"
 	"testing"
-	"xgo/amqp/message"
+
+	"github.com/fengzhongzhu1621/xgo/amqp/message"
 
 	"github.com/stretchr/testify/assert"
 )

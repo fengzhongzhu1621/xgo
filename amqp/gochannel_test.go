@@ -4,10 +4,11 @@ import (
 	"context"
 	"testing"
 	"time"
-	"xgo/amqp/message"
-	"xgo/amqp/pubsub/gochannel"
-	"xgo/log"
-	"xgo/utils/randutils"
+
+	"github.com/fengzhongzhu1621/xgo/amqp/message"
+	"github.com/fengzhongzhu1621/xgo/amqp/pubsub/gochannel"
+	"github.com/fengzhongzhu1621/xgo/log"
+	"github.com/fengzhongzhu1621/xgo/utils/randutils"
 )
 
 var logger = log.JwwLogger{}

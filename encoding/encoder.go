@@ -3,7 +3,7 @@ package encoding
 import (
 	"sync"
 
-	"xgo"
+	"github.com/fengzhongzhu1621/xgo"
 )
 
 // Encoder encodes the contents of v into a byte representation.

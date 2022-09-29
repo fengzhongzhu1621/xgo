@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"xgo/amqp/message"
+	"github.com/fengzhongzhu1621/xgo/amqp/message"
 )
 
 // Timeout makes the handler cancel the incoming message's context after a specified time.

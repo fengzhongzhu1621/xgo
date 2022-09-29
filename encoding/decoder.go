@@ -3,7 +3,7 @@ package encoding
 import (
 	"sync"
 
-	"xgo"
+	"github.com/fengzhongzhu1621/xgo"
 )
 
 // Decoder decodes the contents of b into v.

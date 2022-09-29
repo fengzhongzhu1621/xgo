@@ -19,8 +19,8 @@ import (
 	"testing"
 	"time"
 
-	"xgo/utils/atomicutils"
-	"xgo/utils/testutil"
+	"github.com/fengzhongzhu1621/xgo/utils/atomicutils"
+	"github.com/fengzhongzhu1621/xgo/utils/testutil"
 )
 
 const (

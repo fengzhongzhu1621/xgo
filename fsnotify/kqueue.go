@@ -16,8 +16,8 @@ import (
 	"sync"
 	"time"
 
-	"xgo/utils/fileutils"
-	"xgo/utils/timeutils"
+	"github.com/fengzhongzhu1621/xgo/utils/fileutils"
+	"github.com/fengzhongzhu1621/xgo/utils/timeutils"
 
 	"golang.org/x/sys/unix"
 )

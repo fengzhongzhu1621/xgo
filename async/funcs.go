@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"runtime"
 
-	"xgo"
+	"github.com/fengzhongzhu1621/xgo"
 )
 
 // Internal usage to gather results from tasks.

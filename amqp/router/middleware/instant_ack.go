@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"xgo/amqp/message"
+	"github.com/fengzhongzhu1621/xgo/amqp/message"
 )
 
 // InstantAck makes the handler instantly acknowledge the incoming message, regardless of any errors.

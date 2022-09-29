@@ -8,10 +8,10 @@ import (
 	"sync/atomic"
 	"time"
 
-	"xgo"
+	"github.com/fengzhongzhu1621/xgo"
 
-	"xgo/pool"
-	"xgo/utils"
+	"github.com/fengzhongzhu1621/xgo/pool"
+	"github.com/fengzhongzhu1621/xgo/utils"
 )
 
 type exitFunc func(int)

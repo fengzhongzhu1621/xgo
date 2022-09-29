@@ -7,8 +7,8 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"xgo/amqp/message"
-	"xgo/amqp/router/middleware"
+	"github.com/fengzhongzhu1621/xgo/amqp/message"
+	"github.com/fengzhongzhu1621/xgo/amqp/router/middleware"
 )
 
 func TestTimeout(t *testing.T) {

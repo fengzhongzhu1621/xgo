@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strings"
 
-	"xgo/utils/maps"
+	"github.com/fengzhongzhu1621/xgo/utils/maps"
 
 	"github.com/magiconair/properties"
 	"github.com/spf13/cast"

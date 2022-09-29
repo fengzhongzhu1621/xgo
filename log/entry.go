@@ -11,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	"xgo/pool"
+	"github.com/fengzhongzhu1621/xgo/pool"
 )
 
 var (

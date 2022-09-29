@@ -11,7 +11,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	reflect_utils "xgo/utils/reflectutils"
+	reflect_utils "github.com/fengzhongzhu1621/xgo/utils/reflectutils"
 )
 
 func TestMappingBaseTypes(t *testing.T) {

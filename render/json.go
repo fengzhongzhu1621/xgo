@@ -10,9 +10,9 @@ import (
 	"html/template"
 	"net/http"
 
-	bytesconv "xgo/utils/bytesconv"
-	bytes_utils "xgo/utils/bytesutils"
-	json "xgo/utils/json"
+	bytesconv "github.com/fengzhongzhu1621/xgo/utils/bytesconv"
+	bytes_utils "github.com/fengzhongzhu1621/xgo/utils/bytesutils"
+	json "github.com/fengzhongzhu1621/xgo/utils/json"
 )
 
 // JSON contains the given interface object.

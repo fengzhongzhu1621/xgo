@@ -3,7 +3,7 @@ package middleware
 import (
 	"testing"
 
-	"xgo/amqp/message"
+	"github.com/fengzhongzhu1621/xgo/amqp/message"
 
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"

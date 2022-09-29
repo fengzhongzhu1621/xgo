@@ -3,7 +3,7 @@ package middleware
 import (
 	"time"
 
-	"xgo/amqp/message"
+	"github.com/fengzhongzhu1621/xgo/amqp/message"
 )
 
 // Throttle provides a middleware that limits the amount of messages processed per unit of time.

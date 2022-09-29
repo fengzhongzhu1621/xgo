@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"xgo/pool"
+	"github.com/fengzhongzhu1621/xgo/pool"
 )
 
 type poolGetPutBenchmark struct {

@@ -17,7 +17,7 @@ import (
 	"strings"
 	"time"
 
-	"xgo/utils"
+	"github.com/fengzhongzhu1621/xgo/utils"
 )
 
 const (

@@ -3,8 +3,8 @@ package middleware_test
 import (
 	"testing"
 
-	"xgo/amqp/message"
-	"xgo/amqp/router/middleware"
+	"github.com/fengzhongzhu1621/xgo/amqp/message"
+	"github.com/fengzhongzhu1621/xgo/amqp/router/middleware"
 
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"

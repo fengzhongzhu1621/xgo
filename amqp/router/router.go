@@ -7,11 +7,11 @@ import (
 
 	"github.com/pkg/errors"
 
-	. "xgo/amqp/message"
-	. "xgo/amqp/publisher"
-	"xgo/log"
-	"xgo/utils"
-	sync_internal "xgo/utils/sync"
+	. "github.com/fengzhongzhu1621/xgo/amqp/message"
+	. "github.com/fengzhongzhu1621/xgo/amqp/publisher"
+	"github.com/fengzhongzhu1621/xgo/log"
+	"github.com/fengzhongzhu1621/xgo/utils"
+	sync_internal "github.com/fengzhongzhu1621/xgo/utils/sync"
 )
 
 // NoPublishHandlerFunc is HandlerFunc alternative, which doesn't produce any messages.

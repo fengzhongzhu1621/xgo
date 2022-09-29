@@ -6,8 +6,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"xgo/amqp/message"
-	"xgo/amqp/router/middleware"
+	"github.com/fengzhongzhu1621/xgo/amqp/message"
+	"github.com/fengzhongzhu1621/xgo/amqp/router/middleware"
 )
 
 var (

@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"xgo/amqp/message"
-	"xgo/amqp/router"
+	"github.com/fengzhongzhu1621/xgo/amqp/message"
+	"github.com/fengzhongzhu1621/xgo/amqp/router"
 
 	multierror "github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"

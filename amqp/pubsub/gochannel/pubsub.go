@@ -3,13 +3,14 @@ package gochannel
 import (
 	"context"
 	"sync"
-	"xgo/log"
-	"xgo/utils/randutils"
+
+	"github.com/fengzhongzhu1621/xgo/log"
+	"github.com/fengzhongzhu1621/xgo/utils/randutils"
 
 	"github.com/lithammer/shortuuid/v3"
 	"github.com/pkg/errors"
 
-	"xgo/amqp/message"
+	"github.com/fengzhongzhu1621/xgo/amqp/message"
 )
 
 // Config holds the GoChannel Pub/Sub's configuration options.

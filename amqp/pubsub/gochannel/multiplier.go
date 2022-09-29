@@ -3,7 +3,8 @@ package gochannel
 import (
 	"context"
 	"sync"
-	"xgo/amqp/message"
+
+	"github.com/fengzhongzhu1621/xgo/amqp/message"
 
 	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"

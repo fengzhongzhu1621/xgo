@@ -6,8 +6,8 @@ import (
 
 	"github.com/cenkalti/backoff/v3"
 
-	"xgo/amqp/message"
-	"xgo/log"
+	"github.com/fengzhongzhu1621/xgo/amqp/message"
+	"github.com/fengzhongzhu1621/xgo/log"
 )
 
 // Retry provides a middleware that retries the handler if errors are returned.

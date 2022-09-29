@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"xgo/amqp/message"
+	"github.com/fengzhongzhu1621/xgo/amqp/message"
 )
 
 // Duplicator is processing messages twice, to ensure that the endpoint is idempotent.

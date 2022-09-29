@@ -1,7 +1,7 @@
 package router
 
 import (
-	. "xgo/amqp/message"
+	. "github.com/fengzhongzhu1621/xgo/amqp/message"
 )
 
 // HandlerMiddleware allows us to write something like decorators to HandlerFunc.
