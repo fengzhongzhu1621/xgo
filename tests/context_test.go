@@ -112,3 +112,24 @@ func TestStopLoop(t *testing.T) {
 		}
 	}
 }
+
+// TestDontUseContext 不使用context的实现方式
+func TestDonotUseContext(t *testing.T) {
+	closed := make(chan struct{})
+
+	for i := 0; i < 2; i++ {
+		go func(i int) {
+			select {
+			case <-closed:
+				fmt.Printf("%d Closed\n", i)
+			}
+		}(i)
+	}
+
+	ta := time.After(1 * time.Second)
+	select {
+	case <-ta:
+		// 1秒后发送信号关闭所有子协程
+		close(closed)
+	}
+}
