@@ -44,3 +44,43 @@ func TestStructName(t *testing.T) {
 		})
 	}
 }
+
+func TestFullyQualifiedStructName(t *testing.T) {
+	type Object struct{}
+
+	assert.Equal(t, "utils.Object", FullyQualifiedStructName(Object{}))
+	assert.Equal(t, "utils.Object", FullyQualifiedStructName(&Object{}))
+}
+
+func BenchmarkFullyQualifiedStructName(b *testing.B) {
+	type Object struct{}
+	o := Object{}
+
+	for i := 0; i < b.N; i++ {
+		FullyQualifiedStructName(o)
+	}
+}
+
+func TestStructName2(t *testing.T) {
+	type Object struct{}
+
+	assert.Equal(t, "Object", RawStructName(Object{}))
+	assert.Equal(t, "Object", RawStructName(&Object{}))
+}
+
+func TestNamedStruct(t *testing.T) {
+	assert.Equal(t, "named object", NamedStruct(RawStructName)(namedObject{}))
+	assert.Equal(t, "named object", NamedStruct(RawStructName)(&namedObject{}))
+
+	// Test fallback
+	type Object struct{}
+
+	assert.Equal(t, "Object", NamedStruct(RawStructName)(Object{}))
+	assert.Equal(t, "Object", NamedStruct(RawStructName)(&Object{}))
+}
+
+type namedObject struct{}
+
+func (namedObject) Name() string {
+	return "named object"
+}

@@ -4,7 +4,7 @@ import (
 	"reflect"
 )
 
-func isPointer(v interface{}) error {
+func IsPointer(v interface{}) error {
 	rv := reflect.ValueOf(v)
 
 	if rv.Kind() != reflect.Ptr || rv.IsNil() {
