@@ -1,4 +1,4 @@
-module xgo
+module github.com/fengzhongzhu1621/xgo
 
 go 1.18
 
@@ -31,23 +31,23 @@ require (
 	github.com/ugorji/go/codec v1.2.7
 	github.com/wxnacy/wgo v1.0.4
 	golang.org/x/sys v0.0.0-20220627191245-f75cf1eec38b
-	google.golang.org/protobuf v1.28.0
+	google.golang.org/protobuf v1.28.1
 	gopkg.in/ini.v1 v1.67.0
 	gopkg.in/yaml.v2 v2.4.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
-	github.com/ThreeDotsLabs/watermill v1.2.0-rc.11 // indirect
-	github.com/ThreeDotsLabs/watermill-amqp v1.1.4 // indirect
-	github.com/cenkalti/backoff/v3 v3.2.2 // indirect
-	github.com/google/uuid v1.3.0 // indirect
+	github.com/VividCortex/ewma v1.1.1 // indirect
+	github.com/beorn7/perks v1.0.1 // indirect
+	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
-	github.com/hashicorp/go-multierror v1.1.1 // indirect
-	github.com/lithammer/shortuuid/v3 v3.0.7 // indirect
-	github.com/oklog/ulid v1.3.1 // indirect
-	github.com/streadway/amqp v1.0.0 // indirect
-	go.uber.org/dig v1.15.0 // indirect
+	github.com/mattn/go-runewidth v0.0.12 // indirect
+	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
+	github.com/prometheus/client_model v0.2.0 // indirect
+	github.com/prometheus/common v0.37.0 // indirect
+	github.com/prometheus/procfs v0.8.0 // indirect
+	github.com/rivo/uniseg v0.2.0 // indirect
 )
 
 require (
@@ -59,9 +59,10 @@ require (
 	github.com/coreos/go-systemd/v22 v22.3.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fatih/color v1.13.0 // indirect
+	github.com/go-chi/chi/v5 v5.0.7
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
-	github.com/gogo/protobuf v1.3.2 // indirect
+	github.com/gogo/protobuf v1.3.2
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/google/go-cmp v0.5.8 // indirect
 	github.com/googleapis/gax-go/v2 v2.4.0 // indirect
@@ -72,7 +73,6 @@ require (
 	github.com/hashicorp/go-rootcerts v1.0.2 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/hashicorp/serf v0.9.7 // indirect
-	github.com/jessevdk/go-flags v1.5.0
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
@@ -98,4 +98,16 @@ require (
 	google.golang.org/genproto v0.0.0-20220519153652-3a47de7e79bd // indirect
 	google.golang.org/grpc v1.46.2 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
+)
+
+require (
+	github.com/ThreeDotsLabs/watermill v1.2.0-rc.11
+	github.com/cenkalti/backoff/v3 v3.2.2
+	github.com/cheggaaa/pb/v3 v3.1.0
+	github.com/go-sql-driver/mysql v1.6.0
+	github.com/google/uuid v1.3.0
+	github.com/hashicorp/go-multierror v1.1.1
+	github.com/lithammer/shortuuid/v3 v3.0.7
+	github.com/oklog/ulid v1.3.1
+	github.com/prometheus/client_golang v1.13.0
 )
