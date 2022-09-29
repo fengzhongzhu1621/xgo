@@ -361,6 +361,7 @@ func (r *Router) RunHandlers(ctx context.Context) error {
 		ctx, cancel := context.WithCancel(ctx)
 
 		// 从队列的指定topic获取消息，通常来说，不同的handler处理不同的topic，返回消息管道
+		// 在订阅到消息后，给消息添加上下文
 		messages, err := h.subscriber.Subscribe(ctx, h.subscribeTopic)
 		if err != nil {
 			cancel()
