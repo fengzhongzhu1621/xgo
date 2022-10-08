@@ -101,7 +101,7 @@ func (p CommandProcessor) AddHandlersToRouter(r *router.Router) error {
 		handlerName := handler.HandlerName()
 		commandName := p.marshaler.Name(handler.NewCommand())
 		topicName := p.generateTopic(commandName)
-
+		// 忽略重复的命令
 		if _, ok := handledCommands[commandName]; ok {
 			return DuplicateCommandHandlerError{commandName}
 		}

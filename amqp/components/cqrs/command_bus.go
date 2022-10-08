@@ -12,7 +12,7 @@ import (
 type CommandBus struct {
 	publisher     message.Publisher
 	generateTopic func(commandName string) string
-	marshaler     CommandEventMarshaler
+	marshaler     CommandEventMarshaler // 消息编解码器
 }
 
 func NewCommandBus(
@@ -35,15 +35,17 @@ func NewCommandBus(
 
 // Send sends command to the command bus.
 func (c CommandBus) Send(ctx context.Context, cmd interface{}) error {
+	// 将cmd转换为消息
 	msg, err := c.marshaler.Marshal(cmd)
 	if err != nil {
 		return err
 	}
-
+	// 获得topic名称
 	commandName := c.marshaler.Name(cmd)
 	topicName := c.generateTopic(commandName)
 
 	msg.SetContext(ctx)
 
+	// 发送消息
 	return c.publisher.Publish(topicName, msg)
 }

@@ -10,6 +10,8 @@ import (
 	"github.com/pkg/errors"
 )
 
+var _ CommandEventMarshaler = (*ProtobufMarshaler)(nil)
+
 // ProtobufMarshaler is the default Protocol Buffers marshaler.
 type ProtobufMarshaler struct {
 	NewUUID      func() string
@@ -20,7 +22,7 @@ type ProtobufMarshaler struct {
 func (m ProtobufMarshaler) Marshal(v interface{}) (*message.Message, error) {
 	protoMsg, ok := v.(proto.Message)
 	if !ok {
-		return nil, errors.WithStack(xgo.NoProtoMessageError{v})
+		return nil, errors.WithStack(xgo.NoProtoMessageError{V: v})
 	}
 
 	b, err := proto.Marshal(protoMsg)
