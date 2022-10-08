@@ -7,12 +7,13 @@ import (
 	"testing"
 	"time"
 
+	"github.com/fengzhongzhu1621/xgo/amqp/components/fanin"
+	"github.com/fengzhongzhu1621/xgo/amqp/message"
+	"github.com/fengzhongzhu1621/xgo/amqp/pubsub/gochannel"
+	"github.com/fengzhongzhu1621/xgo/amqp/router"
+	"github.com/fengzhongzhu1621/xgo/log"
+	"github.com/fengzhongzhu1621/xgo/utils/randutils"
 	"github.com/stretchr/testify/require"
-
-	"github.com/ThreeDotsLabs/watermill"
-	"github.com/ThreeDotsLabs/watermill/components/fanin"
-	"github.com/ThreeDotsLabs/watermill/message"
-	"github.com/ThreeDotsLabs/watermill/pubsub/gochannel"
 )
 
 func TestFanIn(t *testing.T) {
@@ -33,9 +34,9 @@ func TestFanIn(t *testing.T) {
 		upstreamTopics = append(upstreamTopics, topic)
 	}
 
-	logger := watermill.NopLogger{}
+	logger := log.NopLogger{}
 
-	pubsub := gochannel.NewGoChannel(gochannel.Config{}, watermill.NopLogger{})
+	pubsub := gochannel.NewGoChannel(gochannel.Config{}, log.NopLogger{})
 
 	fi, err := fanin.NewFanIn(
 		pubsub,
@@ -48,7 +49,7 @@ func TestFanIn(t *testing.T) {
 	)
 	require.NoError(t, err)
 
-	router, err := message.NewRouter(message.RouterConfig{}, logger)
+	router, err := router.NewRouter(router.RouterConfig{}, logger)
 	require.NoError(t, err)
 
 	expectedNumberOfMessages := workersCount * messagesCount * upstreamTopicsCount
@@ -89,7 +90,7 @@ func TestFanIn(t *testing.T) {
 	for _, topic := range upstreamTopics {
 		go func(topic string) {
 			for i := 0; i < messagesCount; i++ {
-				msg := message.NewMessage(watermill.NewUUID(), []byte(topic))
+				msg := message.NewMessage(randutils.NewUUID(), []byte(topic))
 				err := pubsub.Publish(topic, msg)
 				require.NoError(t, err)
 
