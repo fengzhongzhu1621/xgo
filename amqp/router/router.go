@@ -60,7 +60,7 @@ type Router struct {
 // NewRouter creates a new Router with given configuration.
 func NewRouter(config RouterConfig, logger log.LoggerAdapter) (*Router, error) {
 	// 路由配置初始化默认值
-	config.setDefaults()
+	config.SetDefaults()
 	// 验证配置
 	if err := config.Validate(); err != nil {
 		return nil, errors.Wrap(err, "invalid config")
@@ -247,6 +247,7 @@ func (r *Router) AddHandler(
 // subscriber is Subscriber from which messages will be consumed.
 //
 // If handler is added while router is already running, you need to explicitly call RunHandlers().
+// 不转发给新的生产者
 func (r *Router) AddNoPublisherHandler(
 	handlerName string,
 	subscribeTopic string,

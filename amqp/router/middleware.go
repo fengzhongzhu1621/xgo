@@ -1,7 +1,7 @@
 package router
 
 import (
-	. "github.com/fengzhongzhu1621/xgo/amqp/message"
+	"github.com/fengzhongzhu1621/xgo/amqp/message"
 )
 
 // HandlerMiddleware allows us to write something like decorators to HandlerFunc.
@@ -21,7 +21,7 @@ import (
 //			}
 //		}
 // 消息中间件装饰器
-type HandlerMiddleware func(h HandlerFunc) HandlerFunc
+type HandlerMiddleware func(h message.HandlerFunc) message.HandlerFunc
 
 type Middleware struct {
 	Handler       HandlerMiddleware // 消息处理函数，使用中间件装饰器进行装饰

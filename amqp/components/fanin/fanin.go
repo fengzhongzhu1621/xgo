@@ -30,7 +30,7 @@ type FanIn struct {
 	logger watermill.LoggerAdapter
 }
 
-func (c *Config) setDefaults() {
+func (c *Config) SetDefaults() {
 	if c.CloseTimeout == 0 {
 		c.CloseTimeout = time.Second * 30
 	}
@@ -74,7 +74,7 @@ func NewFanIn(
 		return nil, errors.New("missing publisher")
 	}
 
-	config.setDefaults()
+	config.SetDefaults()
 	if err := config.Validate(); err != nil {
 		return nil, err
 	}

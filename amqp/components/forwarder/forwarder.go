@@ -12,6 +12,8 @@ import (
 
 const defaultForwarderTopic = "forwarder_topic"
 
+var _ router.IRouterConfig = (*Config)(nil)
+
 type Config struct {
 	// ForwarderTopic is a topic on which the forwarder will be listening to enveloped messages to forward.
 	// Defaults to `forwarder_topic`.
@@ -27,7 +29,7 @@ type Config struct {
 	AckWhenCannotUnwrap bool
 }
 
-func (c *Config) setDefaults() {
+func (c *Config) SetDefaults() {
 	if c.CloseTimeout == 0 {
 		c.CloseTimeout = time.Second * 30
 	}
@@ -45,6 +47,7 @@ func (c *Config) Validate() error {
 }
 
 // Forwarder subscribes to the topic provided in the config and publishes them to the destination topic embedded in the enveloped message.
+// 从router.Router派生的子类
 type Forwarder struct {
 	router    *router.Router
 	publisher message.Publisher
@@ -60,25 +63,28 @@ type Forwarder struct {
 // Note: Keep in mind that by default the forwarder will nack all messages which weren't sent using a decorated publisher.
 // You can change this behavior by passing a middleware which will ack them instead.
 func NewForwarder(subscriberIn message.Subscriber, publisherOut message.Publisher, logger log.LoggerAdapter, config Config) (*Forwarder, error) {
-	config.setDefaults()
+	config.SetDefaults()
 
 	routerConfig := router.RouterConfig{CloseTimeout: config.CloseTimeout}
 	if err := routerConfig.Validate(); err != nil {
 		return nil, errors.Wrap(err, "invalid router config")
 	}
 
+	// 初始化父类
 	router, err := router.NewRouter(routerConfig, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "cannot create a router")
 	}
 
+	// 初始化子类
 	f := &Forwarder{router, publisherOut, logger, config}
 
+	// 添加消费者
 	router.AddNoPublisherHandler(
-		"events_forwarder",
-		config.ForwarderTopic,
-		subscriberIn,
-		f.forwardMessage,
+		"events_forwarder",    // handler name
+		config.ForwarderTopic, // subscribeTopic
+		subscriberIn,          // message.Subscriber
+		f.forwardMessage,      // NoPublishHandlerFunc
 	)
 
 	router.AddMiddleware(config.Middlewares...)
@@ -106,6 +112,7 @@ func (f *Forwarder) Running() chan struct{} {
 }
 
 func (f *Forwarder) forwardMessage(msg *message.Message) error {
+	// 将消息从信封拿出来
 	destTopic, unwrappedMsg, err := unwrapMessageFromEnvelope(msg)
 	if err != nil {
 		f.logger.Error("Could not unwrap a message from an envelope", err, log.LogFields{
@@ -116,6 +123,7 @@ func (f *Forwarder) forwardMessage(msg *message.Message) error {
 		})
 
 		if f.config.AckWhenCannotUnwrap {
+			// 忽略解码失败
 			return nil
 		}
 		return errors.Wrap(err, "cannot unwrap message from an envelope")

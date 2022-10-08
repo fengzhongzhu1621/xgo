@@ -145,6 +145,7 @@ func (h *handler) handleMessage(msg *Message, handler HandlerFunc) {
 
 	// 执行消息处理函数，可能返回多个消息给下一个生产者
 	// handler包含多个handler中间件，可以处理复杂的逻辑
+	// 如果消息不重新给下一个生产者，则producedMessages必为nil
 	producedMessages, err := handler(msg)
 	if err != nil {
 		h.logger.Error("Handler returned error", err, nil)
@@ -169,6 +170,7 @@ func (h *handler) handleMessage(msg *Message, handler HandlerFunc) {
 
 func (h *handler) publishProducedMessages(producedMessages Messages, msgFields log.LogFields) error {
 	if len(producedMessages) == 0 {
+		// 消息不需要发给下一个生产者
 		return nil
 	}
 

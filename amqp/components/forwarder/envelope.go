@@ -40,17 +40,21 @@ func (e *messageEnvelope) validate() error {
 	return nil
 }
 
+// wrapMessageInEnvelope 将消息放进信封
 func wrapMessageInEnvelope(destinationTopic string, msg *message.Message) (*message.Message, error) {
+	// 创建一个信封
 	envelope, err := newMessageEnvelope(destinationTopic, msg)
 	if err != nil {
 		return nil, errors.Wrap(err, "cannot envelope a message")
 	}
 
+	// 将对象转换为字节数组
 	envelopedMessage, err := json.Marshal(envelope)
 	if err != nil {
 		return nil, errors.Wrap(err, "cannot marshal a message")
 	}
 
+	// 将信封转化为一个信封消息
 	wrappedMsg := message.NewMessage(randutils.NewUUID(), envelopedMessage)
 	wrappedMsg.SetContext(msg.Context())
 
