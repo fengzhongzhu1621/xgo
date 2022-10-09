@@ -9,6 +9,7 @@ import (
 )
 
 // CommandBus transports commands to command handlers.
+// 用于将接收到的command对象分发到指定的handler
 type CommandBus struct {
 	publisher     message.Publisher
 	generateTopic func(commandName string) string
@@ -35,7 +36,7 @@ func NewCommandBus(
 
 // Send sends command to the command bus.
 func (c CommandBus) Send(ctx context.Context, cmd interface{}) error {
-	// 将cmd转换为消息
+	// 将cmd对象转换为消息
 	msg, err := c.marshaler.Marshal(cmd)
 	if err != nil {
 		return err
@@ -46,6 +47,6 @@ func (c CommandBus) Send(ctx context.Context, cmd interface{}) error {
 
 	msg.SetContext(ctx)
 
-	// 发送消息
+	// 发送消息给队列
 	return c.publisher.Publish(topicName, msg)
 }

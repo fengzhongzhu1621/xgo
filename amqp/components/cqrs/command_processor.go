@@ -41,10 +41,10 @@ type CommandsSubscriberConstructor func(handlerName string) (message.Subscriber,
 
 // CommandProcessor determines which CommandHandler should handle the command received from the command bus.
 type CommandProcessor struct {
-	handlers      []CommandHandler
+	handlers      []CommandHandler // 命令处理器
 	generateTopic func(commandName string) string
 
-	subscriberConstructor CommandsSubscriberConstructor
+	subscriberConstructor CommandsSubscriberConstructor // 获取消费者
 
 	marshaler CommandEventMarshaler
 	logger    log.LoggerAdapter
@@ -96,6 +96,7 @@ func (d DuplicateCommandHandlerError) Error() string {
 func (p CommandProcessor) AddHandlersToRouter(r *router.Router) error {
 	handledCommands := map[string]struct{}{}
 
+	// 遍历所有的命令处理器，通常一种命令只能有一个命令处理器
 	for i := range p.Handlers() {
 		handler := p.handlers[i]
 		handlerName := handler.HandlerName()
@@ -111,19 +112,19 @@ func (p CommandProcessor) AddHandlersToRouter(r *router.Router) error {
 			"command_handler_name": handlerName,
 			"topic":                topicName,
 		})
-
+		// 生成消息处理函数
 		handlerFunc, err := p.routerHandlerFunc(handler, logger)
 		if err != nil {
 			return err
 		}
 
 		logger.Debug("Adding CQRS command handler to router", nil)
-
+		// 获得消费者，通常每个命令处理器对应一个消费者
 		subscriber, err := p.subscriberConstructor(handlerName)
 		if err != nil {
 			return errors.Wrap(err, "cannot create subscriber for command processor")
 		}
-
+		// 将消息处理器添加到router上
 		r.AddNoPublisherHandler(
 			handlerName,
 			topicName,
@@ -140,6 +141,7 @@ func (p CommandProcessor) Handlers() []CommandHandler {
 	return p.handlers
 }
 
+// routerHandlerFunc 构造消息处理器装饰器
 func (p CommandProcessor) routerHandlerFunc(handler CommandHandler, logger log.LoggerAdapter) (router.NoPublishHandlerFunc, error) {
 	cmd := handler.NewCommand()
 	cmdName := p.marshaler.Name(cmd)

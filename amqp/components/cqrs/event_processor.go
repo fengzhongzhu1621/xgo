@@ -110,7 +110,7 @@ func (p EventProcessor) AddHandlersToRouter(r *router.Router) error {
 		if err != nil {
 			return errors.Wrap(err, "cannot create subscriber for event processor")
 		}
-
+		// 将消息处理器附加到router上
 		r.AddNoPublisherHandler(
 			handlerName,
 			topicName,
@@ -126,7 +126,7 @@ func (p EventProcessor) Handlers() []EventHandler {
 	return p.handlers
 }
 
-// routerHandlerFunc 消费者的消息处理函数
+// routerHandlerFunc 构造消费者的消息处理函数装饰器
 func (p EventProcessor) routerHandlerFunc(handler EventHandler, logger log.LoggerAdapter) (router.NoPublishHandlerFunc, error) {
 	initEvent := handler.NewEvent()
 	if err := p.validateEvent(initEvent); err != nil {
