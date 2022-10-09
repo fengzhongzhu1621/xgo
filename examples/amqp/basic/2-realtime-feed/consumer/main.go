@@ -41,11 +41,13 @@ func main() {
 		panic(err)
 	}
 
+	// 执行一次
 	retryMiddleware := middleware.Retry{
 		MaxRetries:      1,
 		InitialInterval: time.Millisecond * 10,
 	}
 
+	// 消费者在处理消息后，将消费转发给poison_queue队列
 	poisonQueue, err := middleware.PoisonQueue(pub, "poison_queue")
 	if err != nil {
 		panic(err)
@@ -93,9 +95,9 @@ func main() {
 	// but production ready implementation would save posts to some persistent storage.
 	r.AddNoPublisherHandler(
 		"feed_generator",
-		"posts_published",
+		"posts_published", // 消费topic
 		createSubscriber("feed_generator", logger),
-		FeedGenerator{printFeedStorage{}}.UpdateFeed,
+		FeedGenerator{printFeedStorage{}}.UpdateFeed, // 消息处理函数
 	)
 
 	if err = r.Run(context.Background()); err != nil {

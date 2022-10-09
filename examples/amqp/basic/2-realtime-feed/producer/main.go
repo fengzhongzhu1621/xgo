@@ -31,6 +31,7 @@ func main() {
 	// 设置随机种子
 	rand.Seed(time.Now().Unix())
 
+	// 创建生产者
 	publisher, err := kafka.NewPublisher(
 		kafka.PublisherConfig{
 			Brokers:   brokers,
@@ -59,9 +60,11 @@ func main() {
 	<-c
 
 	// signal for the workers to stop publishing
+	// 发送生产者停止信号
 	close(closeCh)
 
 	// Waiting for all messages to be published
+	// 等待所有的生产者全部停止
 	workersGroup.Wait()
 
 	logger.Info("All messages published", nil)
@@ -69,6 +72,7 @@ func main() {
 
 // worker publishes messages until closeCh is closed.
 func worker(publisher message.Publisher, wg *sync.WaitGroup, closeCh chan struct{}) {
+	// 创建一个定时器用于sleep
 	ticker := time.NewTicker(time.Duration(int(time.Second) / messagesPerSecond))
 
 	for {
@@ -79,6 +83,7 @@ func worker(publisher message.Publisher, wg *sync.WaitGroup, closeCh chan struct
 			return
 
 		case <-ticker.C:
+			// 用于sleep 0.1s
 		}
 
 		//  随机一个消息
@@ -96,7 +101,7 @@ func worker(publisher message.Publisher, wg *sync.WaitGroup, closeCh chan struct
 
 		msg := message.NewMessage(watermill.NewUUID(), payload)
 
-		// 发送消息
+		// 生产者发送消息
 		// Use a middleware to set the correlation ID, it's useful for debugging
 		middleware.SetCorrelationID(watermill.NewShortUUID(), msg)
 		err = publisher.Publish("posts_published", msg)

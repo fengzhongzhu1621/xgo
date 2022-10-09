@@ -16,7 +16,7 @@ import (
 var (
 	// kafka客户端连接配置
 	brokers      = []string{"kafka:9092"}
-	consumeTopic = "events"
+	consumeTopic = "events"           // 消费者topic
 	publishTopic = "events-processed" // 消费者将接收到的消息发给这个topic
 
 	logger = watermill.NewStdLogger(
@@ -41,7 +41,8 @@ func main() {
 
 	// Subscriber is created with consumer group handler_1
 	// 创建消费者
-	subscriber := createSubscriber("handler_1")
+	consumerGroup := "handler_1"
+	subscriber := createSubscriber(consumerGroup)
 
 	// 创建消费者路由
 	router, err := message.NewRouter(message.RouterConfig{}, logger)
@@ -58,12 +59,12 @@ func main() {
 	// Adding a handler (multiple handlers can be added)
 	router.AddHandler(
 		"handler_1",  // handler name, must be unique
-		consumeTopic, // topic from which messages should be consumed
+		consumeTopic, // 消费者topic topic from which messages should be consumed
 		subscriber,
 		publishTopic, // topic to which messages should be published
 		publisher,
 		func(msg *message.Message) ([]*message.Message, error) {
-			// 将json字符串转换为event对象
+			// 解码消息，将json字符串转换为event对象
 			consumedPayload := event{}
 			err := json.Unmarshal(msg.Payload, &consumedPayload)
 			if err != nil {
@@ -77,7 +78,7 @@ func main() {
 
 			log.Printf("received event %+v", consumedPayload)
 
-			// 格式化接收到的消息
+			// 格式化接收到的消息，添加当前时间，发给新的队列
 			newPayload, err := json.Marshal(processedEvent{
 				ProcessedID: consumedPayload.ID,
 				Time:        time.Now(),
@@ -85,7 +86,6 @@ func main() {
 			if err != nil {
 				return nil, err
 			}
-
 			newMessage := message.NewMessage(watermill.NewUUID(), newPayload)
 
 			return []*message.Message{newMessage}, nil
@@ -93,8 +93,10 @@ func main() {
 	)
 
 	// Simulate incoming events in the background
+	// 模拟生产者发送消息
 	go simulateEvents(publisher)
 
+	// 启动路由，开始消费消息
 	if err := router.Run(context.Background()); err != nil {
 		panic(err)
 	}
