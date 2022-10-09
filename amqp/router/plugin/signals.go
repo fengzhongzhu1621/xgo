@@ -16,6 +16,7 @@ func SignalsHandler(r *message.Router) error {
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 
 	go func() {
+		// 接收到指定信号
 		sig := <-sigs
 		r.Logger().Info(fmt.Sprintf("Received %s signal, closing\n", sig), nil)
 		// 关闭router
