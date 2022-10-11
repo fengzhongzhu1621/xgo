@@ -172,16 +172,19 @@ var amqpAddress = "amqp://guest:guest@rabbitmq:5672/"
 
 func main() {
 	logger := watermill.NewStdLogger(false, false)
+	// 创建消息编解码器
 	cqrsMarshaler := cqrs.ProtobufMarshaler{}
 
 	// You can use any Pub/Sub implementation from here: https://watermill.io/docs/pub-sub-implementations/
 	// Detailed RabbitMQ implementation: https://watermill.io/docs/pub-sub-implementations/#rabbitmq-amqp
 	// Commands will be send to queue, because they need to be consumed once.
+	// 创建rabbitmq生产者，发送命令
 	commandsAMQPConfig := amqp.NewDurableQueueConfig(amqpAddress)
 	commandsPublisher, err := amqp.NewPublisher(commandsAMQPConfig, logger)
 	if err != nil {
 		panic(err)
 	}
+	// 创建rabbitmq消费者，处理命令
 	commandsSubscriber, err := amqp.NewSubscriber(commandsAMQPConfig, logger)
 	if err != nil {
 		panic(err)
@@ -189,6 +192,7 @@ func main() {
 
 	// Events will be published to PubSub configured Rabbit, because they may be consumed by multiple consumers.
 	// (in that case BookingsFinancialReport and OrderBeerOnRoomBooked).
+	// 创建rabbitmq生产者，发送event
 	eventsPublisher, err := amqp.NewPublisher(amqp.NewDurablePubSubConfig(amqpAddress, nil), logger)
 	if err != nil {
 		panic(err)
@@ -210,17 +214,21 @@ func main() {
 	// cqrs.Facade is facade for Command and Event buses and processors.
 	// You can use facade, or create buses and processors manually (you can inspire with cqrs.NewFacade)
 	cqrsFacade, err := cqrs.NewFacade(cqrs.FacadeConfig{
+		// 根据命令名获得topic名称
 		GenerateCommandsTopic: func(commandName string) string {
 			// we are using queue RabbitMQ config, so we need to have topic per command type
 			return commandName
 		},
+		// 命令字处理器
 		CommandHandlers: func(cb *cqrs.CommandBus, eb *cqrs.EventBus) []cqrs.CommandHandler {
 			return []cqrs.CommandHandler{
 				BookRoomHandler{eb},
 				OrderBeerHandler{eb},
 			}
 		},
+		// 命令发送生产者
 		CommandsPublisher: commandsPublisher,
+		// 根据处理器名获得消费者
 		CommandsSubscriberConstructor: func(handlerName string) (message.Subscriber, error) {
 			// we can reuse subscriber, because all commands have separated topics
 			return commandsSubscriber, nil
@@ -256,6 +264,7 @@ func main() {
 	}
 
 	// publish BookRoom commands every second to simulate incoming traffic
+	// 发送命令
 	go publishCommands(cqrsFacade.CommandBus())
 
 	// processors are based on router, so they will work when router will start

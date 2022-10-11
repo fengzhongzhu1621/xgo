@@ -50,9 +50,11 @@ func main() {
 
 	// For simplicity, we are using the gochannel Pub/Sub here,
 	// You can replace it with any Pub/Sub implementation, it will work the same.
+	// 创建生产者和消费者
 	pubSub := gochannel.NewGoChannel(gochannel.Config{}, logger)
 
 	// Producing some incoming messages in background
+	// 模拟生产者发送消息
 	go publishMessages(pubSub)
 
 	// AddHandler returns a handler which can be used to add handler level middleware

@@ -95,6 +95,9 @@ fmt:
 help:
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
+clear: ## Clear the working area and the project
+	rm -rf bin/
+
 generate_gomod:
 	rm go.mod go.sum || true
 	go mod init github.com/fengzhongzhu1621/xgo
@@ -103,5 +106,6 @@ generate_gomod:
 	sed -i '\|go |d' go.mod
 	go mod edit -fmt
 
-clear: ## Clear the working area and the project
-	rm -rf bin/
+validate_examples:
+	go run dev/update-examples-deps/main.go
+	go run dev/validate-examples/main.go

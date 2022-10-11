@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/cheggaaa/pb/v3"
+	"github.com/cheggaaa/pb/v3" // 进度条
 	"github.com/go-sql-driver/mysql"
 	"github.com/google/uuid"
 )
@@ -40,6 +40,7 @@ func main() {
 	wg := &sync.WaitGroup{}
 	wg.Add(messagesCount)
 
+	// 创建一个进度条
 	bar := pb.StartNew(messagesCount)
 
 	// sending value to sendCounter counter HTTP call
@@ -60,6 +61,7 @@ func main() {
 		close(sendCounter)
 	}()
 
+	// 顺序发送请求
 	for i := 0; i < senderGoroutines; i++ {
 		go func() {
 			for range sendCounter {

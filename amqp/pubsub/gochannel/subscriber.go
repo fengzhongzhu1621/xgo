@@ -66,6 +66,7 @@ SendToSubscriber:
 			return
 		}
 
+		// 接收消息到缓冲队列
 		select {
 		case s.outputChannel <- msgToSend:
 			// 发给订阅者缓存队列
@@ -76,6 +77,7 @@ SendToSubscriber:
 			return
 		}
 
+		// 等待消息处理函数处理完消息
 		// 等待监听outputChannel的协程返回ack
 
 		select {

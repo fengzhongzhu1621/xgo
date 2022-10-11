@@ -57,7 +57,7 @@ type Message struct {
 	noAck chan struct{}
 
 	ackMutex    sync.Mutex
-	ackSentType ackType // 消息类型，3种
+	ackSentType ackType // 消息类型，3种，默认值是noAckSent
 
 	ctx context.Context
 }
@@ -113,10 +113,11 @@ func (m *Message) Ack() bool {
 		return false
 	}
 	if m.ackSentType != noAckSent {
-		// 第一次ack，然后true
+		// 第n(n>1)次ack，然后true
 		// 消息已经执行过ack了
 		return true
 	}
+	// 第一次ack
 	// ackSentType: noAckSent -> ack
 	m.ackSentType = ack
 	if m.ack == nil {

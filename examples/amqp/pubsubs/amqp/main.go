@@ -41,6 +41,7 @@ func main() {
 		panic(err)
 	}
 
+	// 发送消息
 	publishMessages(publisher)
 }
 

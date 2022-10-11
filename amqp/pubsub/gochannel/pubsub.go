@@ -101,6 +101,8 @@ func (g *GoChannel) Publish(topic string, messages ...*message.Message) error {
 	defer subLock.(*sync.Mutex).Unlock()
 
 	// 发送消息后，将消息持久化存储，防止丢失
+	// 1. 在没有消费者的情况下，先缓冲生产者发送的消息
+	// 2. 在消费者启动后，再接收缓冲的消息
 	if g.config.Persistent {
 		g.persistedMessagesLock.Lock()
 		if _, ok := g.persistedMessages[topic]; !ok {
@@ -158,6 +160,7 @@ func (g *GoChannel) sendMessage(topic string, message *message.Message) (<-chan 
 		return ackedBySubscribers, nil
 	}
 
+	// 多个消费者处理同一个消息
 	go func(subscribers []*GoChannelSubscriber) {
 		wg := &sync.WaitGroup{}
 
@@ -166,7 +169,7 @@ func (g *GoChannel) sendMessage(topic string, message *message.Message) (<-chan 
 
 			wg.Add(1)
 			go func() {
-				// 订阅者接受消息
+				// 模拟订阅者接受消息
 				subscriber.SendMessageToSubscriber(message, logFields)
 				wg.Done()
 			}()
