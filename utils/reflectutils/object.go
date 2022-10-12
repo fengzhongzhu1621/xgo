@@ -21,3 +21,68 @@ type NonPointerError struct {
 func (e NonPointerError) Error() string {
 	return "non-pointer command: " + e.Type.String() + ", handler.NewCommand() should return pointer to the command"
 }
+
+// IsEmptyValue From src/pkg/encoding/json/encode.go.
+func IsEmptyValue(v reflect.Value) bool {
+	switch v.Kind() {
+	case reflect.Array, reflect.Map, reflect.Slice, reflect.String:
+		return v.Len() == 0
+	case reflect.Bool:
+		return !v.Bool()
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+		return v.Int() == 0
+	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr:
+		return v.Uint() == 0
+	case reflect.Float32, reflect.Float64:
+		return v.Float() == 0
+	case reflect.Interface, reflect.Ptr:
+		if v.IsNil() {
+			return true
+		}
+		return IsEmptyValue(v.Elem())
+	case reflect.Func:
+		return v.IsNil()
+	case reflect.Invalid:
+		return true
+	}
+	return false
+}
+
+func IsExportedComponent(field *reflect.StructField) bool {
+	pkgPath := field.PkgPath
+	if len(pkgPath) > 0 {
+		// 结构体字段不是一个struct类型
+		// 普通字段，例如 Manager.title
+		return false
+	}
+	// 结构体字段是一个struct类型，例如 Manager中的User
+	// type User struct {
+	//     Id   int
+	//	   Name string
+	//	   Age  int
+	// }
+	//
+	// type Manager struct {
+	//     User
+	//	   title string
+	// }
+	c := field.Name[0]
+	if 'a' <= c && c <= 'z' || c == '_' {
+		return false
+	}
+	// 首字母大写
+	return true
+}
+
+// IsReflectNil is the reflect value provided nil
+func IsReflectNil(v reflect.Value) bool {
+	k := v.Kind()
+	switch k {
+	case reflect.Interface, reflect.Slice, reflect.Chan, reflect.Func, reflect.Map, reflect.Ptr:
+		// Both interface and slice are nil if first word is 0.
+		// Both are always bigger than a word; assume flagIndir.
+		return v.IsNil()
+	default:
+		return false
+	}
+}
