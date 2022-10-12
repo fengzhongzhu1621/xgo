@@ -49,6 +49,7 @@ The text of each license is also included at licenses/LICENSE-[project].txt.
     (MIT License) dig v1.15.0 (https://github.com/uber-go/dig)
     (MIT License) message-bus v1.1.5 (https://github.com/vardius/message-bus)
     (MIT License) watermill v1.2.0-rc.11 (https://github.com/ThreeDotsLabs/watermill)
+    (MIT License) copier v0.3.5 (https://github.com/jinzhu/copier)
     
 ========================================================================
 BSD 3-Clause licenses
