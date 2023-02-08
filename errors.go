@@ -2,6 +2,7 @@ package xgo
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"reflect"
 	"strings"
@@ -148,6 +149,14 @@ var (
 	ErrInvalidArg     = fmt.Errorf("%s", "invalid argument")
 	ErrInvalidAddress = fmt.Errorf("%s", "invalid address")
 	ErrUnknown        = fmt.Errorf("%s", "unknown")
+)
+
+var (
+	ErrInvalidCopyDestination        = errors.New("copy destination must be non-nil and addressable")
+	ErrInvalidCopyFrom               = errors.New("copy from must be non-nil and addressable")
+	ErrMapKeyNotMatch                = errors.New("map's key type doesn't match")
+	ErrNotSupported                  = errors.New("not supported")
+	ErrFieldNameTagStartNotUpperCase = errors.New("copier field name tag must be start upper case")
 )
 
 var errTable = map[int32]error{}
