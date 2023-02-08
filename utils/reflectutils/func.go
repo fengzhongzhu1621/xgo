@@ -115,3 +115,15 @@ func splitFuncName(function string) (pname string, fname string) {
 
 	return
 }
+
+// MakeAddressable returns a value that is always addressable.
+// It returns the input verbatim if it is already addressable,
+// otherwise it creates a new value and returns an addressable copy.
+func MakeAddressable(v reflect.Value) reflect.Value {
+	if v.CanAddr() {
+		return v
+	}
+	vc := reflect.New(v.Type()).Elem()
+	vc.Set(v)
+	return vc
+}
