@@ -58,7 +58,8 @@ The following components are provided under the BSD 3-Clause license. See projec
 The text of each license is also included at licenses/LICENSE-[project].txt.
 
     (BSD 3 License) go-flags v1.5.0 (https://github.com/jessevdk/go-flags)
-    (BSD 3 License) mergo v0.3.13 (https://github.com/imdario/mergo/tree/master)
+    (BSD 3 License) mergo v0.3.13 (https://github.com/imdario/mergo)
+    (BSD 3 License) go-cmp v0.5.9 (https://github.com/google/go-cmp)
 
 ========================================================================
 Apache 2.0 licenses

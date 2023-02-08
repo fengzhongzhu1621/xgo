@@ -65,7 +65,7 @@ require (
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/gogo/protobuf v1.3.2
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
-	github.com/google/go-cmp v0.5.8 // indirect
+	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/googleapis/gax-go/v2 v2.4.0 // indirect
 	github.com/hashicorp/consul/api v1.12.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
