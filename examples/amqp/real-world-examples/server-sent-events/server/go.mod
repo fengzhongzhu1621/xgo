@@ -18,9 +18,9 @@ require (
 	github.com/klauspost/compress v1.13.6 // indirect
 	github.com/nats-io/stan.go v0.10.0
 	go.mongodb.org/mongo-driver v1.7.3
-	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519 // indirect
+	golang.org/x/crypto v0.1.0 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
-	golang.org/x/text v0.3.7 // indirect
+	golang.org/x/text v0.4.0 // indirect
 )
 
 require (
