@@ -155,6 +155,7 @@ func CopyDir(src string, dst string, fileInfo os.FileInfo) error {
 
 // 复制文件.
 func CopyFile(src string, dest string, fileInfo os.FileInfo) error {
+	// 如果没有 FileInfo，则获取源文件的 FileInfo
 	if fileInfo == nil {
 		fileInfo2, err := os.Lstat(src)
 		if err != nil {
@@ -162,29 +163,34 @@ func CopyFile(src string, dest string, fileInfo os.FileInfo) error {
 		}
 		fileInfo = fileInfo2
 	}
-	// 创建目录文件夹
+	// 递归创建目录文件夹
 	fileModel := fileInfo.Mode()
 	if err := os.MkdirAll(filepath.Dir(dest), fileModel); err != nil {
 		return err
 	}
 
+	// 创建文件
 	f, err := os.Create(dest)
 	if err != nil {
 		return err
 	}
 	defer f.Close()
 
+	// 设置文件的权限
 	if err = os.Chmod(f.Name(), fileModel); err != nil {
 		return err
 	}
 
+	// 打开源文件
 	s, err := os.Open(src)
 	if err != nil {
 		return err
 	}
 	defer s.Close()
 
+	// 复制文件
 	_, err = io.Copy(f, s)
+
 	return err
 }
 
