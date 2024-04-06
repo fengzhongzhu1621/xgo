@@ -61,3 +61,12 @@ func TestLocateFile(t *testing.T) {
 		})
 	}
 }
+
+func TestWhich(t *testing.T) {
+	filepath, _ := Which("sh")
+	assert.Equal(t, filepath, "/bin/sh")
+
+	filepath, err := Which("xxx")
+	assert.Equal(t, filepath, "")
+	assert.ErrorContains(t, err, "no such file or directory")
+}
