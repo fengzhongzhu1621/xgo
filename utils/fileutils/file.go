@@ -304,7 +304,7 @@ func Which(cmd string) (filepath string, err error) {
 	// 获得当前PATH环境变量
 	envPath := os.Getenv("PATH")
 	// 分割为多个路径
-	path_list := strings.Split(envPath, ":")
+	path_list := strings.Split(envPath, string(os.PathListSeparator))
 	for _, dirpath := range path_list {
 		// 判断环境变量路径是否是目录
 		dirInfo, err := os.Stat(dirpath)
@@ -318,7 +318,7 @@ func Which(cmd string) (filepath string, err error) {
 		filepath := path.Join(dirpath, cmd)
 		_, err = os.Stat(filepath)
 		if err == nil || os.IsExist(err) {
-			return filepath, nil
+			return filepath, err
 		}
 	}
 	return "", err
