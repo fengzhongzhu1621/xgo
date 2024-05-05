@@ -1,87 +1,60 @@
 run:
-  concurrency: 8
+  #concurrency: 8
   deadline: 5m
-  tests: false
+  #tests: false
 
 linters:
-  enable-all: true
-  disable:
-    - bodyclose
-    - deadcode
+  enable:
+    - asciicheck
     - dogsled
-    - dupl
     - durationcheck
-    - exhaustive
+    - errcheck
+    - errorlint
     - exportloopref
     - gci
     - gofmt
-    - gofumpt
     - goimports
-    - gomoddirectives
-    - goprintffuncname
-    - govet
-    - importas
-    - ineffassign
-    - makezero
+    - gosec
     - misspell
     - nakedret
     - nilerr
-    - noctx
     - nolintlint
-    - prealloc
-    - predeclared
     - revive
-    - rowserrcheck
-    - sqlclosecheck
-    - staticcheck
-    - structcheck
-    - stylecheck
-    - tparallel
-    - typecheck
-    - unconvert
-    - unparam
-    - unused
-    - varcheck
     - wastedassign
-    - whitespace
 
-    # fixme
-    # - cyclop
-    # - errcheck
-    # - errorlint
-    # - exhaustivestruct
-    # - forbidigo
-    # - forcetypeassert
-    # - gochecknoglobals
-    # - gochecknoinits
-    # - gocognit
-    # - goconst
-    # - gocritic
-    # - gocyclo
-    # - godot
-    # - gosec
-    # - gosimple
-    # - ifshort
-    # - lll
-    # - nlreturn
-    # - paralleltest
-    # - scopelint
-    # - thelper
-    # - wrapcheck
+linters-settings:
+  gosec:
+    # To select a subset of rules to run.
+    # Available rules: https://github.com/securego/gosec#available-rules
+    # Default: [] - means include all rules
+    includes:
+      - G102
+      - G106
+      - G108
+      - G109
+      - G111
+      - G112
+      - G201
+      - G203
 
-    # unused
-    # - depguard
-    # - goheader
-    # - gomodguard
-
-    # don't enable:
-    # - asciicheck
-    # - funlen
-    # - godox
-    # - goerr113
-    # - gomnd
-    # - interfacer
-    # - maligned
-    # - nestif
-    # - testpackage
-    # - wsl
+issues:
+  exclude-rules:
+    - linters:
+        - structcheck
+        - unused
+      text: "`data` is unused"
+    - linters:
+        - staticcheck
+      text: "SA1019:"
+    - linters:
+        - revive
+      text: "var-naming:"
+    - linters:
+        - revive
+      text: "exported:"
+    - path: _test\.go
+      linters:
+        - gosec # security is not make sense in tests
+    - linters:
+        - revive
+      path: _test\.go
