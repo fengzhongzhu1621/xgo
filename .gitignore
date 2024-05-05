@@ -17,16 +17,20 @@ vendor/*
 !vendor/vendor.json
 coverage.out
 count.out
+test
 profile.out
 tmp.out
-.idea/*
 bin/*
 build/*
+
+# Develop tools
+.idea/
+.vscode/
 
 build/coverage.txt
 build/coverage.xml
 log/log.txt
 log.txt
-.vscode/
 cpu.pprof
 mem.pprof
+
