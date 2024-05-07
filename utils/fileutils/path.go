@@ -57,6 +57,7 @@ func GetHomeDir() string {
 	return home
 }
 
+// 格式化路径字符串为 unix 下的绝对路径
 // cleanPath is the URL version of path.Clean, it returns a canonical URL path
 // for p, eliminating . and .. elements.
 //
