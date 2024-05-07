@@ -42,6 +42,7 @@ require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
+	github.com/hashicorp/go-version v1.6.0 // indirect
 	github.com/jinzhu/copier v0.3.5 // indirect
 	github.com/kyokomi/emoji/v2 v2.2.13 // indirect
 	github.com/mattn/go-runewidth v0.0.12 // indirect
