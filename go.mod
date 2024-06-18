@@ -40,6 +40,7 @@ require (
 require (
 	github.com/VividCortex/ewma v1.1.1 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
+	github.com/bndr/gotabulate v1.1.2 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/golang/mock v1.6.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect

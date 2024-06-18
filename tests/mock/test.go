@@ -4,6 +4,7 @@
 //
 // 安装 mockgen 工具
 // go install go.uber.org/mock/mockgen@latest
+// mockgen -version
 // go get go.uber.org/mock/gomock
 //
 // 在使用 mockgen 生成模拟对象（Mock Objects）时，通常需要指定三个主要参数：
