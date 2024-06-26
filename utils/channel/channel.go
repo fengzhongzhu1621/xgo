@@ -1,12 +1,14 @@
-package utils
+package channel
 
 // IsClosed 判断是否收到关闭事件
 // 当发送者 close(done)时，会发送一个零值，标记已关闭.
 func IsClosed(done chan struct{}) bool {
+	// select 语句用于在多个通道操作中进行选择
 	select {
 	case <-done:
 		return true
 	default:
+		// 当没有其他分支可以执行时，将执行默认情况
 		return false
 	}
 }
