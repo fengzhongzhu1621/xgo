@@ -7,10 +7,8 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-func TestInsertConnect(t *testing.T) {
-	// create database xgo charset utf8mb4;
-	// 创建数据库连接 用户名:密码@协议(IP:port)/数据库名?a=xxx&b=xxx
-	// 创建一个默认的连接池
+
+func TestUpdate(t *testing.T) {
 	conn, err := gorm.Open("mysql", "root:@tcp(127.0.0.1:3306)/xgo?parseTime=True&loc=Local")
 	if err != nil {
 		fmt.Println("gorm.Open err: ", err)
@@ -20,14 +18,24 @@ func TestInsertConnect(t *testing.T) {
 	defer conn.Close()
 
 	// 创建非复数表名，默认创建复数表名
-
 	var stu Student
 	stu.Name = "bob"
 	stu.Age = 10
+	stu.Id = 1
 
 	// 创建非复数表名，默认创建复数表名
 	// 必须使用，需要和表创建时的参数保持一致
 	conn.SingularTable(true)
-	// 参数必须使用 &
-	fmt.Println(conn.Create(&stu).Error)
+
+	// Save() 根据主键更新，如果数据没有指定主键，则为 insert 操作
+	fmt.Println(conn.Save(&stu).Error)
+
+	// 更新一个字段
+	fmt.Println(conn.Model(new(Student)).Where("name = ?", "username_a").Update("age", 11).Error)
+
+	// 更新多个字段
+	fmt.Println(conn.Model(new(Student)).Where("name = ?", "username_a").Updates(map[string]interface{} {
+		"name": "bob",
+		"age": 11,
+	}).Error)
 }
