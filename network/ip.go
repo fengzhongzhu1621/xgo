@@ -5,6 +5,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"net"
+	"net/http"
 	"strings"
 )
 
@@ -35,7 +36,34 @@ func GetIPByEthName(name string) (string, error) {
 	return "", nil
 }
 
-// 通过本机所有的IP.
+// GetRealIP 从请求头获取客户端 IP 地址
+func GetRealIP(req *http.Request) string {
+	xip := req.Header.Get("X-Real-IP")
+	if xip == "" {
+		xip = strings.Split(req.RemoteAddr, ":")[0]
+	}
+	return xip
+}
+
+
+// GetLocalIP returns the non loopback local IP of the host
+func GetLocalIP() string {
+	addrs, err := net.InterfaceAddrs()
+	if err != nil {
+		return ""
+	}
+	for _, address := range addrs {
+		// check the address type and if it is not a loopback the display it
+		if ipnet, ok := address.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
+			if ipnet.IP.To4() != nil {
+				return ipnet.IP.String()
+			}
+		}
+	}
+	return ""
+}
+
+// GetAllIP 通过本机所有的IP.
 func GetAllIP() []string {
 	// 返回 interface 结构体对象的列表，包含了全部网卡信息
 	interfaces, err := net.Interfaces()
@@ -61,6 +89,8 @@ func GetAllIP() []string {
 	}
 	return ips
 }
+
+
 
 // 获得和远端服务器通信的IP地址.
 func GetLocalConnectionIP(host string, port int) (string, error) {

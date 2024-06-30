@@ -1,4 +1,4 @@
-package fileutils
+package file
 
 import (
 	"bytes"
@@ -13,20 +13,20 @@ import (
 	"sync"
 	"time"
 
+	"github.com/fengzhongzhu1621/xgo/buildin/stringutils"
 	"github.com/fengzhongzhu1621/xgo/cast"
-	"github.com/fengzhongzhu1621/xgo/encoding"
+	"github.com/fengzhongzhu1621/xgo/collections/maps"
+	"github.com/fengzhongzhu1621/xgo/crypto/encoding"
+	"github.com/fengzhongzhu1621/xgo/crypto/encoding/hcl"
+	"github.com/fengzhongzhu1621/xgo/crypto/encoding/ini"
+	"github.com/fengzhongzhu1621/xgo/crypto/encoding/javaproperties"
+	"github.com/fengzhongzhu1621/xgo/crypto/encoding/json"
+	"github.com/fengzhongzhu1621/xgo/crypto/encoding/mapstructure"
+	"github.com/fengzhongzhu1621/xgo/crypto/encoding/toml"
+	"github.com/fengzhongzhu1621/xgo/crypto/encoding/yaml"
 	"github.com/fengzhongzhu1621/xgo/encoding/dotenv"
-	"github.com/fengzhongzhu1621/xgo/encoding/hcl"
-	"github.com/fengzhongzhu1621/xgo/encoding/ini"
-	"github.com/fengzhongzhu1621/xgo/encoding/javaproperties"
-	"github.com/fengzhongzhu1621/xgo/encoding/json"
-	"github.com/fengzhongzhu1621/xgo/encoding/mapstructure"
-	"github.com/fengzhongzhu1621/xgo/encoding/toml"
-	"github.com/fengzhongzhu1621/xgo/encoding/yaml"
 	jww "github.com/fengzhongzhu1621/xgo/log"
 	"github.com/fengzhongzhu1621/xgo/remote"
-	"github.com/fengzhongzhu1621/xgo/utils/maps"
-	"github.com/fengzhongzhu1621/xgo/utils/stringutils"
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/afero"
