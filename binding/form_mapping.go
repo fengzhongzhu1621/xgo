@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"reflect"
 
+	string_utils "github.com/fengzhongzhu1621/xgo/str/string"
 	reflect_utils "github.com/fengzhongzhu1621/xgo/utils/reflectutils"
-	string_utils "github.com/fengzhongzhu1621/xgo/utils/stringutils"
 )
 
 type setOptions struct {

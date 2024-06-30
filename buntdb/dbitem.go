@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/fengzhongzhu1621/xgo/utils/timeutils"
+	"github.com/fengzhongzhu1621/xgo/datetime"
 )
 
 // dbItemOpts holds various meta information about an item.
@@ -76,7 +76,7 @@ func (dbi *dbItem) expired() bool {
 // not expire `maxTime` is used.
 func (dbi *dbItem) expiresAt() time.Time {
 	if dbi.opts == nil || !dbi.opts.ex {
-		return timeutils.MaxTime
+		return datetime.MaxTime
 	}
 	return dbi.opts.exat
 }

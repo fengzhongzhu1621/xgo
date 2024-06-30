@@ -14,8 +14,8 @@ import (
 	"time"
 
 	"github.com/fengzhongzhu1621/xgo"
-	"github.com/fengzhongzhu1621/xgo/utils/stringutils"
-	"github.com/fengzhongzhu1621/xgo/utils/timeutils"
+	"github.com/fengzhongzhu1621/xgo/datetime"
+	stringutils "github.com/fengzhongzhu1621/xgo/str/stringutils"
 	"github.com/tidwall/assert"
 	"github.com/tidwall/lotsa"
 )
@@ -1292,7 +1292,7 @@ func ExampleDB_CreateIndex_multipleFields() {
 
 func TestNoExpiringItem(t *testing.T) {
 	item := &dbItem{key: "key", val: "val"}
-	if !item.expiresAt().Equal(timeutils.MaxTime) {
+	if !item.expiresAt().Equal(datetime.MaxTime) {
 		t.Fatal("item.expiresAt() != maxTime")
 	}
 	if min, max := item.Rect(nil); min != nil || max != nil {

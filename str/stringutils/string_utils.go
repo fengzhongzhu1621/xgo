@@ -5,12 +5,12 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"fmt"
-	"reflect"
 	"sort"
 	"strconv"
 	"strings"
 	"time"
 	"unicode"
+	"unicode/utf8"
 
 	"github.com/fengzhongzhu1621/xgo/str/bytesconv"
 )
@@ -127,65 +127,23 @@ func UnicodeUnTitle(s string) string {
 	return ""
 }
 
+// ChangeInitialCase 将字符串的首字符转换为指定格式
+func ChangeInitialCase(s string, mapper func(rune) rune) string {
+	if s == "" {
+		return s
+	}
+	// 返回第一个utf8字符，n是字符的长度，即返回首字符
+	r, n := utf8.DecodeRuneInString(s)
+	// 根据mapper方法转换首字符
+	return string(mapper(r)) + s[n:]
+}
+
+
 // Last 返回数组最后一个元素.
 func Last(list []string) string {
 	return list[len(list)-1]
 }
 
-// Deprecated: 切片比较.
-func CompareStringSliceReflect(a, b []string) bool {
-	return reflect.DeepEqual(a, b)
-}
-
-// CompareStringSlice 切片比较.
-func CompareStringSlice(a, b []string) bool {
-	if len(a) != len(b) {
-		return false
-	}
-
-	if (a == nil) != (b == nil) {
-		return false
-	}
-
-	// Golang提供BCE特性，即Bounds-checking elimination
-	// 通过b = b[:len(a)]处的bounds check能够明确保证v != b[i]中的b[i]不会出现越界错误，从而避免了b[i]中的越界检查从而提高效率
-	b = b[:len(a)]
-	for i, v := range a {
-		if v != b[i] {
-			return false
-		}
-	}
-
-	return true
-}
-
-// Deprecated: 翻转切片 panic if s is not a slice.
-func ReflectReverseSlice(s interface{}) {
-	n := reflect.ValueOf(s).Len()
-	swap := reflect.Swapper(s)
-	for i, j := 0, n-1; i < j; i, j = i+1, j-1 {
-		swap(i, j)
-	}
-}
-
-// Deprecated: 翻转切片，返回一个新的切片，有copy的耗损.
-func ReverseSliceGetNew(s []string) []string {
-	a := make([]string, len(s))
-	copy(a, s)
-
-	for left, right := 0, len(a)-1; left < right; left, right = left+1, right-1 {
-		a[left], a[right] = a[right], a[left]
-	}
-
-	return a
-}
-
-// ReverseSlice 翻转切片，值会改变，性能最高.
-func ReverseSlice(a []string) {
-	for left, right := 0, len(a)-1; left < right; left, right = left+1, right-1 {
-		a[left], a[right] = a[right], a[left]
-	}
-}
 
 // GenerateID 获得随机字符串.
 func GenerateID() string {

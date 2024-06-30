@@ -1,6 +1,7 @@
 package stringutils
 
 import (
+	"reflect"
 	"strconv"
 
 	"github.com/tidwall/gjson"
@@ -104,4 +105,31 @@ func IndexJSONCaseSensitive(path string) func(a, b string) bool {
 // Desc is a helper function that changes the order of an index.
 func Desc(less func(a, b string) bool) func(a, b string) bool {
 	return func(a, b string) bool { return less(b, a) }
+}
+
+// Deprecated: 切片比较.
+func CompareStringSliceReflect(a, b []string) bool {
+	return reflect.DeepEqual(a, b)
+}
+
+// CompareStringSlice 切片比较.
+func CompareStringSlice(a, b []string) bool {
+	if len(a) != len(b) {
+		return false
+	}
+
+	if (a == nil) != (b == nil) {
+		return false
+	}
+
+	// Golang提供BCE特性，即Bounds-checking elimination
+	// 通过b = b[:len(a)]处的bounds check能够明确保证v != b[i]中的b[i]不会出现越界错误，从而避免了b[i]中的越界检查从而提高效率
+	b = b[:len(a)]
+	for i, v := range a {
+		if v != b[i] {
+			return false
+		}
+	}
+
+	return true
 }
