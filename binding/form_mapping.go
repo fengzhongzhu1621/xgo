@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"reflect"
 
-	string_utils "github.com/fengzhongzhu1621/xgo/str/string"
+	string_utils "github.com/fengzhongzhu1621/xgo/str/stringutils"
 	reflect_utils "github.com/fengzhongzhu1621/xgo/utils/reflectutils"
 )
 

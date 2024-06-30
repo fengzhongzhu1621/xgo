@@ -5,9 +5,12 @@ import (
 	"net/http"
 	"net/textproto"
 	"strings"
-
-	"github.com/fengzhongzhu1621/xgo/str/stringutils"
 )
+
+var HeaderNewlineToSpace = strings.NewReplacer("\n", " ", "\r", " ") // 换行字符替换器
+
+var HeaderDashToUnderscore = strings.NewReplacer("-", "_") // 短横线字符替换器
+
 
 // 构造header, 返回一个新数组.
 func AppendEnv(env []string, k string, v ...string) []string {
@@ -19,7 +22,7 @@ func AppendEnv(env []string, k string, v ...string) []string {
 	vCleaned := make([]string, 0, len(v))
 	// 将数组元素去掉换行符和首尾的空白字符
 	for _, val := range v {
-		vCleaned = append(vCleaned, strings.TrimSpace(stringutils.HeaderNewlineToSpace.Replace(val)))
+		vCleaned = append(vCleaned, strings.TrimSpace(HeaderNewlineToSpace.Replace(val)))
 	}
 	return append(env, fmt.Sprintf("%s=%s",
 		strings.ToUpper(k),

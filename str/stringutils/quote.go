@@ -32,6 +32,7 @@ func QuoteIfNeededV(s []string) []string {
 	return ret
 }
 
+// 将普通字符串转换为带有转义字符的带引号的字符串字面值
 func QuoteV(s []string) []string {
 	ret := make([]string, len(s))
 
@@ -42,6 +43,7 @@ func QuoteV(s []string) []string {
 	return ret
 }
 
+// 用于将带有转义字符的带引号的字符串字面值转换为普通字符串
 func UnquoteIfPossible(s string) (string, error) {
 	if len(s) == 0 || s[0] != '"' {
 		return s, nil
