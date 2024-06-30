@@ -1,4 +1,4 @@
-package script
+package crypto
 
 import (
 	"crypto/sha1"
