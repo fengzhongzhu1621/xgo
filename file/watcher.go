@@ -944,7 +944,7 @@ func (v *Watcher) WatchConfig() {
 		// 创建文件监听器
 		watcher, err := fsnotify.NewWatcher()
 		if err != nil {
-			logging.Fatal(err)
+			log.Fatal(err)
 		}
 		defer watcher.Close()
 
@@ -1002,7 +1002,7 @@ func (v *Watcher) WatchConfig() {
 
 				case err, ok := <-watcher.Errors:
 					if ok { // 'Errors' channel is not closed
-						logging.Printf("watcher error: %v\n", err)
+						log.Printf("watcher error: %v\n", err)
 					}
 					eventsWG.Done()
 					return

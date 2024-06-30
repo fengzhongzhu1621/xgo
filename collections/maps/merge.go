@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/fengzhongzhu1621/xgo/buildin/reflectutils"
 	"github.com/fengzhongzhu1621/xgo/cast"
-	"github.com/fengzhongzhu1621/xgo/utils/reflectutils"
 )
 
 // FlattenAndMergeMap recursively flattens the given map into a new map

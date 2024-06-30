@@ -6,8 +6,8 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/fengzhongzhu1621/xgo/utils/reflectutils"
-	"github.com/fengzhongzhu1621/xgo/utils/stringutils"
+	"github.com/fengzhongzhu1621/xgo/buildin/reflectutils"
+	"github.com/fengzhongzhu1621/xgo/str/stringutils"
 )
 
 // DeepSearchAndCreateMap 将摊平的字典转换成收缩的字典.

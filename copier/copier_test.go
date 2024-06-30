@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/fengzhongzhu1621/xgo/buildin/reflectutils"
 	"github.com/fengzhongzhu1621/xgo/copier"
-	"github.com/fengzhongzhu1621/xgo/utils/reflectutils"
 )
 
 type User struct {

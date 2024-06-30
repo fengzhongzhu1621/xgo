@@ -19,7 +19,7 @@ import (
 	"unicode"
 
 	"github.com/fengzhongzhu1621/xgo"
-	"github.com/fengzhongzhu1621/xgo/utils/reflectutils"
+	"github.com/fengzhongzhu1621/xgo/buildin/reflectutils"
 )
 
 // These flags define options for tag handling
