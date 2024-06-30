@@ -4,10 +4,10 @@ import (
 	"context"
 	"time"
 
-	"github.com/fengzhongzhu1621/xgo/buildin/bytesconv"
-	"github.com/fengzhongzhu1621/xgo/buildin/bytesutils"
-	"github.com/fengzhongzhu1621/xgo/buildin/stringutils"
 	"github.com/fengzhongzhu1621/xgo/proto"
+	"github.com/fengzhongzhu1621/xgo/str/bytesconv"
+	"github.com/fengzhongzhu1621/xgo/str/bytesutils"
+	"github.com/fengzhongzhu1621/xgo/str/stringutils"
 )
 
 type Cmder interface {

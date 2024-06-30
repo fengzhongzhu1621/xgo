@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/fengzhongzhu1621/xgo/buildin/bytesconv"
+	"github.com/fengzhongzhu1621/xgo/str/bytesconv"
 )
 
 // HasPrefixAndSuffix 判断前缀和后缀是否全部匹配.

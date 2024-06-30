@@ -96,6 +96,11 @@ func GetHomeDir() string {
 	return home
 }
 
+// Convert path to normal paths
+func SlashAndCleanPath(path string) string {
+	return filepath.ToSlash(filepath.Clean(path))
+}
+
 // 格式化路径字符串为 unix 下的绝对路径
 // cleanPath is the URL version of path.Clean, it returns a canonical URL path
 // for p, eliminating . and .. elements.
@@ -218,6 +223,7 @@ func CleanPath(p string) string {
 	}
 	return string(buf[:w])
 }
+
 
 // bufApp 将字符串 s[:w]拷贝到缓存 buf 中，重新计算缓存的大小刚好能容纳字符串的长度
 // 并修改指定索引位置的字符值

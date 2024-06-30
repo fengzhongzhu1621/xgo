@@ -13,7 +13,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/fengzhongzhu1621/xgo/buildin/stringutils"
 	"github.com/fengzhongzhu1621/xgo/cast"
 	"github.com/fengzhongzhu1621/xgo/collections/maps"
 	"github.com/fengzhongzhu1621/xgo/crypto/encoding"
@@ -27,6 +26,7 @@ import (
 	"github.com/fengzhongzhu1621/xgo/encoding/dotenv"
 	jww "github.com/fengzhongzhu1621/xgo/log"
 	"github.com/fengzhongzhu1621/xgo/remote"
+	"github.com/fengzhongzhu1621/xgo/str/stringutils"
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/afero"

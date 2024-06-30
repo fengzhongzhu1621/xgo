@@ -240,6 +240,17 @@ func IsFileType(path string) bool {
 	return !IsDirType(path)
 }
 
+func IsFile(path string) bool {
+	info, err := os.Stat(path)
+	return err == nil && info.Mode().IsRegular()
+}
+
+func IsDir(path string) bool {
+	info, err := os.Stat(path)
+	return err == nil && info.Mode().IsDir()
+}
+
+
 // 从指定的目录中查询文件，返回查找到的文件的绝对路径
 // - 如果文件没有找到，返回err
 // - 如果查找到多个文件，返回err.
