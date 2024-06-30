@@ -6,10 +6,10 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/fengzhongzhu1621/xgo/utils/bytesutils"
+	"github.com/fengzhongzhu1621/xgo/str/bytesutils"
 
-	. "github.com/fengzhongzhu1621/xgo/command"
-	. "github.com/fengzhongzhu1621/xgo/log"
+	. "github.com/fengzhongzhu1621/xgo/logging"
+	. "github.com/fengzhongzhu1621/xgo/shell/command"
 )
 
 type ProcessEndpoint struct {
@@ -21,11 +21,11 @@ type ProcessEndpoint struct {
 }
 
 // 构造函数.
-func NewProcessEndpoint(process *LaunchedProcess, bin bool, log *LogScope) *ProcessEndpoint {
+func NewProcessEndpoint(process *LaunchedProcess, bin bool, logging *LogScope) *ProcessEndpoint {
 	return &ProcessEndpoint{
 		process: process,
 		output:  make(chan []byte),
-		log:     log,
+		log:     logging,
 		bin:     bin,
 	}
 }

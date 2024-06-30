@@ -9,7 +9,7 @@ import (
 
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/amqp/router/middleware"
-	"github.com/fengzhongzhu1621/xgo/log"
+	"github.com/fengzhongzhu1621/xgo/logging"
 
 	"github.com/pkg/errors"
 )
@@ -41,7 +41,7 @@ func TestRetry_retry(t *testing.T) {
 func TestRetry_max_retries(t *testing.T) {
 	retry := middleware.Retry{
 		MaxRetries: 1,
-		Logger:     log.NewStdLogger(true, true, "[watermill] "),
+		Logger:     logging.NewStdLogger(true, true, "[watermill] "),
 	}
 
 	runCount := 0
@@ -76,7 +76,7 @@ func TestRetry_retry_hook(t *testing.T) {
 }
 
 func TestRetry_logger(t *testing.T) {
-	logger := log.NewCaptureLogger()
+	logger := logging.NewCaptureLogger()
 
 	retry := middleware.Retry{
 		MaxRetries: 2,

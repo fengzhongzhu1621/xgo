@@ -7,7 +7,7 @@ import (
 	"github.com/cenkalti/backoff/v3"
 
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
-	"github.com/fengzhongzhu1621/xgo/log"
+	"github.com/fengzhongzhu1621/xgo/logging"
 )
 
 // Retry provides a middleware that retries the handler if errors are returned.
@@ -32,7 +32,7 @@ type Retry struct {
 	// The number of the current retry is passed as retryNum,
 	OnRetryHook func(retryNum int, delay time.Duration)
 
-	Logger log.LoggerAdapter
+	Logger logging.LoggerAdapter
 }
 
 // Middleware returns the Retry middleware.
@@ -80,7 +80,7 @@ func (r Retry) Middleware(h message.HandlerFunc) message.HandlerFunc {
 			}
 
 			if r.Logger != nil {
-				r.Logger.Error("Error occurred, retrying", err, log.LogFields{
+				r.Logger.Error("Error occurred, retrying", err, logging.LogFields{
 					"retry_no":     retryNum,
 					"max_retries":  r.MaxRetries,
 					"wait_time":    waitTime,

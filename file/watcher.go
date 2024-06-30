@@ -24,7 +24,7 @@ import (
 	"github.com/fengzhongzhu1621/xgo/crypto/encoding/toml"
 	"github.com/fengzhongzhu1621/xgo/crypto/encoding/yaml"
 	"github.com/fengzhongzhu1621/xgo/encoding/dotenv"
-	jww "github.com/fengzhongzhu1621/xgo/log"
+	jww "github.com/fengzhongzhu1621/xgo/logging"
 	"github.com/fengzhongzhu1621/xgo/remote"
 	"github.com/fengzhongzhu1621/xgo/str/stringutils"
 
@@ -944,7 +944,7 @@ func (v *Watcher) WatchConfig() {
 		// 创建文件监听器
 		watcher, err := fsnotify.NewWatcher()
 		if err != nil {
-			log.Fatal(err)
+			logging.Fatal(err)
 		}
 		defer watcher.Close()
 
@@ -1002,7 +1002,7 @@ func (v *Watcher) WatchConfig() {
 
 				case err, ok := <-watcher.Errors:
 					if ok { // 'Errors' channel is not closed
-						log.Printf("watcher error: %v\n", err)
+						logging.Printf("watcher error: %v\n", err)
 					}
 					eventsWG.Done()
 					return

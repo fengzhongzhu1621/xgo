@@ -8,15 +8,15 @@ import (
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/amqp/pubsub/gochannel"
 	"github.com/fengzhongzhu1621/xgo/crypto/randutils"
-	"github.com/fengzhongzhu1621/xgo/logger"
+	"github.com/fengzhongzhu1621/xgo/logging"
 )
 
-var jwwlogger = logger.JwwLogger{}
+var logger = logging.JwwLogger{}
 
 func TestGochannle(t *testing.T) {
 	pubSub := gochannel.NewGoChannel(
 		gochannel.Config{},
-		logger.NewStdLogger(false, false, "[watermill] "),
+		logging.NewStdLogger(false, false, "[watermill] "),
 	)
 	// 创建并注册一个订阅者并返回接收消息的缓存队列
 	messages, err := pubSub.Subscribe(context.Background(), "example.topic")

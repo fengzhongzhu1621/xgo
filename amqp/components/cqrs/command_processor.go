@@ -9,7 +9,7 @@ import (
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/amqp/router"
 	"github.com/fengzhongzhu1621/xgo/buildin/reflectutils"
-	"github.com/fengzhongzhu1621/xgo/log"
+	"github.com/fengzhongzhu1621/xgo/logging"
 )
 
 // CommandHandler receives a command defined by NewCommand and handles it with the Handle method.
@@ -47,7 +47,7 @@ type CommandProcessor struct {
 	subscriberConstructor CommandsSubscriberConstructor // 获取消费者
 
 	marshaler CommandEventMarshaler
-	logger    log.LoggerAdapter
+	logger    logging.LoggerAdapter
 }
 
 // NewCommandProcessor creates a new CommandProcessor.
@@ -56,7 +56,7 @@ func NewCommandProcessor(
 	generateTopic func(commandName string) string,
 	subscriberConstructor CommandsSubscriberConstructor,
 	marshaler CommandEventMarshaler,
-	logger log.LoggerAdapter,
+	logger logging.LoggerAdapter,
 ) (*CommandProcessor, error) {
 	if len(handlers) == 0 {
 		return nil, errors.New("missing handlers")
@@ -71,7 +71,7 @@ func NewCommandProcessor(
 		return nil, errors.New("missing marshaler")
 	}
 	if logger == nil {
-		logger = log.NopLogger{}
+		logger = logging.NopLogger{}
 	}
 
 	return &CommandProcessor{
@@ -108,7 +108,7 @@ func (p CommandProcessor) AddHandlersToRouter(r *router.Router) error {
 		}
 		handledCommands[commandName] = struct{}{}
 
-		logger := p.logger.With(log.LogFields{
+		logger := p.logger.With(logging.LogFields{
 			"command_handler_name": handlerName,
 			"topic":                topicName,
 		})
@@ -142,7 +142,7 @@ func (p CommandProcessor) Handlers() []CommandHandler {
 }
 
 // routerHandlerFunc 构造消息处理器装饰器
-func (p CommandProcessor) routerHandlerFunc(handler CommandHandler, logger log.LoggerAdapter) (router.NoPublishHandlerFunc, error) {
+func (p CommandProcessor) routerHandlerFunc(handler CommandHandler, logger logging.LoggerAdapter) (router.NoPublishHandlerFunc, error) {
 	cmd := handler.NewCommand()
 	cmdName := p.marshaler.Name(cmd)
 
@@ -155,7 +155,7 @@ func (p CommandProcessor) routerHandlerFunc(handler CommandHandler, logger log.L
 		messageCmdName := p.marshaler.NameFromMessage(msg)
 
 		if messageCmdName != cmdName {
-			logger.Trace("Received different command type than expected, ignoring", log.LogFields{
+			logger.Trace("Received different command type than expected, ignoring", logging.LogFields{
 				"message_uuid":          msg.UUID,
 				"expected_command_type": cmdName,
 				"received_command_type": messageCmdName,
@@ -163,7 +163,7 @@ func (p CommandProcessor) routerHandlerFunc(handler CommandHandler, logger log.L
 			return nil
 		}
 
-		logger.Debug("Handling command", log.LogFields{
+		logger.Debug("Handling command", logging.LogFields{
 			"message_uuid":          msg.UUID,
 			"received_command_type": messageCmdName,
 		})
@@ -173,7 +173,7 @@ func (p CommandProcessor) routerHandlerFunc(handler CommandHandler, logger log.L
 		}
 
 		if err := handler.Handle(msg.Context(), cmd); err != nil {
-			logger.Debug("Error when handling command", log.LogFields{"err": err})
+			logger.Debug("Error when handling command", logging.LogFields{"err": err})
 			return err
 		}
 

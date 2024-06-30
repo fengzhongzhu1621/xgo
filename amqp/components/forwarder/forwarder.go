@@ -5,7 +5,7 @@ import (
 
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/amqp/router"
-	"github.com/fengzhongzhu1621/xgo/log"
+	"github.com/fengzhongzhu1621/xgo/logging"
 	"github.com/pkg/errors"
 )
 
@@ -14,7 +14,7 @@ import (
 type Forwarder struct {
 	router    *router.Router
 	publisher message.Publisher
-	logger    log.LoggerAdapter
+	logger    logging.LoggerAdapter
 	config    Config
 }
 
@@ -25,7 +25,7 @@ type Forwarder struct {
 //
 // Note: Keep in mind that by default the forwarder will nack all messages which weren't sent using a decorated publisher.
 // You can change this behavior by passing a middleware which will ack them instead.
-func NewForwarder(subscriberIn message.Subscriber, publisherOut message.Publisher, logger log.LoggerAdapter, config Config) (*Forwarder, error) {
+func NewForwarder(subscriberIn message.Subscriber, publisherOut message.Publisher, logger logging.LoggerAdapter, config Config) (*Forwarder, error) {
 	config.SetDefaults()
 
 	routerConfig := router.RouterConfig{CloseTimeout: config.CloseTimeout}
@@ -78,7 +78,7 @@ func (f *Forwarder) forwardMessage(msg *message.Message) error {
 	// 将消息从信封拿出来
 	destTopic, unwrappedMsg, err := unwrapMessageFromEnvelope(msg)
 	if err != nil {
-		f.logger.Error("Could not unwrap a message from an envelope", err, log.LogFields{
+		f.logger.Error("Could not unwrap a message from an envelope", err, logging.LogFields{
 			"uuid":     msg.UUID,
 			"payload":  msg.Payload,
 			"metadata": msg.Metadata,

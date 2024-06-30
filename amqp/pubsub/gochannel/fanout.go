@@ -8,7 +8,7 @@ import (
 
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/amqp/router"
-	"github.com/fengzhongzhu1621/xgo/log"
+	"github.com/fengzhongzhu1621/xgo/logging"
 )
 
 // FanOut is a component that receives messages from the subscriber and passes them
@@ -27,7 +27,7 @@ type FanOut struct {
 
 	subscriber message.Subscriber
 
-	logger log.LoggerAdapter
+	logger logging.LoggerAdapter
 
 	subscribedTopics map[string]struct{}
 	subscribedLock   sync.Mutex
@@ -36,13 +36,13 @@ type FanOut struct {
 // NewFanOut creates a new FanOut.
 func NewFanOut(
 	subscriber message.Subscriber,
-	logger log.LoggerAdapter,
+	logger logging.LoggerAdapter,
 ) (*FanOut, error) {
 	if subscriber == nil {
 		return nil, errors.New("missing subscriber")
 	}
 	if logger == nil {
-		logger = log.NopLogger{}
+		logger = logging.NopLogger{}
 	}
 
 	router, err := router.NewRouter(router.RouterConfig{}, logger)
@@ -75,7 +75,7 @@ func (f *FanOut) AddSubscription(topic string) {
 		return
 	}
 
-	f.logger.Trace("Adding fan-out subscription for topic", log.LogFields{
+	f.logger.Trace("Adding fan-out subscription for topic", logging.LogFields{
 		"topic": topic,
 	})
 

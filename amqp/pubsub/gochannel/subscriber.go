@@ -5,7 +5,7 @@ import (
 	"sync"
 
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
-	"github.com/fengzhongzhu1621/xgo/log"
+	"github.com/fengzhongzhu1621/xgo/logging"
 )
 
 // 订阅者
@@ -17,7 +17,7 @@ type GoChannelSubscriber struct {
 	sending       sync.Mutex
 	outputChannel chan *message.Message
 
-	logger  log.LoggerAdapter
+	logger  logging.LoggerAdapter
 	closed  bool
 	closing chan struct{}
 }
@@ -45,7 +45,7 @@ func (s *GoChannelSubscriber) Close() {
 }
 
 // sendMessageToSubscriber 订阅者接收消息到缓存队列
-func (s *GoChannelSubscriber) SendMessageToSubscriber(msg *message.Message, logFields log.LogFields) {
+func (s *GoChannelSubscriber) SendMessageToSubscriber(msg *message.Message, logFields logging.LogFields) {
 	s.sending.Lock()
 	defer s.sending.Unlock()
 

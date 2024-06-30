@@ -4,8 +4,8 @@ import (
 	"context"
 	"sync"
 
-	"github.com/fengzhongzhu1621/xgo/log"
-	"github.com/fengzhongzhu1621/xgo/utils/randutils"
+	"github.com/fengzhongzhu1621/xgo/crypto/randutils"
+	"github.com/fengzhongzhu1621/xgo/logging"
 
 	"github.com/lithammer/shortuuid/v3"
 	"github.com/pkg/errors"
@@ -39,7 +39,7 @@ type Config struct {
 // When GoChannel is persistent, messages order is not guaranteed.
 type GoChannel struct {
 	config Config // 生产者配置
-	logger log.LoggerAdapter
+	logger logging.LoggerAdapter
 
 	subscribersWg          sync.WaitGroup
 	subscribers            map[string][]*GoChannelSubscriber // 多个消费者
@@ -58,9 +58,9 @@ type GoChannel struct {
 //
 // This GoChannel is not persistent.
 // That means if you send a message to a topic to which no subscriber is subscribed, that message will be discarded.
-func NewGoChannel(config Config, logger log.LoggerAdapter) *GoChannel {
+func NewGoChannel(config Config, logger logging.LoggerAdapter) *GoChannel {
 	if logger == nil {
-		logger = log.NopLogger{}
+		logger = logging.NopLogger{}
 	}
 
 	return &GoChannel{
@@ -68,7 +68,7 @@ func NewGoChannel(config Config, logger log.LoggerAdapter) *GoChannel {
 
 		subscribers:            make(map[string][]*GoChannelSubscriber), // 多个订阅者
 		subscribersByTopicLock: sync.Map{},
-		logger: logger.With(log.LogFields{
+		logger: logger.With(logging.LogFields{
 			"pubsub_uuid": shortuuid.New(),
 		}),
 
@@ -133,7 +133,7 @@ func (g *GoChannel) Publish(topic string, messages ...*message.Message) error {
 
 // waitForAckFromSubscribers 等待订阅者返回ack消息
 func (g *GoChannel) waitForAckFromSubscribers(msg *message.Message, ackedByConsumer <-chan struct{}) {
-	logFields := log.LogFields{"message_uuid": msg.UUID}
+	logFields := logging.LogFields{"message_uuid": msg.UUID}
 	g.logger.Debug("Waiting for subscribers ack", logFields)
 
 	select {
@@ -152,7 +152,7 @@ func (g *GoChannel) sendMessage(topic string, message *message.Message) (<-chan 
 	subscribers := g.topicSubscribers(topic)
 	ackedBySubscribers := make(chan struct{})
 
-	logFields := log.LogFields{"message_uuid": message.UUID, "topic": topic}
+	logFields := logging.LogFields{"message_uuid": message.UUID, "topic": topic}
 
 	if len(subscribers) == 0 {
 		close(ackedBySubscribers)
@@ -259,7 +259,7 @@ func (g *GoChannel) Subscribe(ctx context.Context, topic string) (<-chan *messag
 		if ok {
 			for i := range messages {
 				msg := g.persistedMessages[topic][i]
-				logFields := log.LogFields{"message_uuid": msg.UUID, "topic": topic}
+				logFields := logging.LogFields{"message_uuid": msg.UUID, "topic": topic}
 
 				go s.SendMessageToSubscriber(msg, logFields)
 			}

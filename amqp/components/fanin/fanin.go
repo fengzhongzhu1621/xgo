@@ -6,7 +6,7 @@ import (
 
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/amqp/router"
-	"github.com/fengzhongzhu1621/xgo/log"
+	"github.com/fengzhongzhu1621/xgo/logging"
 	"github.com/pkg/errors"
 )
 
@@ -16,7 +16,7 @@ import (
 type FanIn struct {
 	router *router.Router
 	config Config
-	logger log.LoggerAdapter
+	logger logging.LoggerAdapter
 }
 
 // NewFanIn creates a new FanIn.
@@ -24,7 +24,7 @@ func NewFanIn(
 	subscriber message.Subscriber,
 	publisher message.Publisher,
 	config Config,
-	logger log.LoggerAdapter,
+	logger logging.LoggerAdapter,
 ) (*FanIn, error) {
 	if subscriber == nil {
 		return nil, errors.New("missing subscriber")
@@ -38,7 +38,7 @@ func NewFanIn(
 		return nil, err
 	}
 	if logger == nil {
-		logger = log.NopLogger{}
+		logger = logging.NopLogger{}
 	}
 
 	routerConfig := router.RouterConfig{CloseTimeout: config.CloseTimeout}

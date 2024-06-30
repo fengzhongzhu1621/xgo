@@ -8,14 +8,14 @@ import (
 
 	. "github.com/fengzhongzhu1621/xgo/amqp/message"
 	. "github.com/fengzhongzhu1621/xgo/amqp/publisher"
-	"github.com/fengzhongzhu1621/xgo/log"
+	"github.com/fengzhongzhu1621/xgo/logging"
 
 	"github.com/pkg/errors"
 )
 
 type handler struct {
 	name   string
-	logger log.LoggerAdapter
+	logger logging.LoggerAdapter
 
 	subscriber     Subscriber
 	subscribeTopic string
@@ -40,7 +40,7 @@ type handler struct {
 }
 
 func (h *handler) run(ctx context.Context, middlewares []Middleware) {
-	h.logger.Info("Starting handler", log.LogFields{
+	h.logger.Info("Starting handler", logging.LogFields{
 		"subscriber_name": h.name,
 		"topic":           h.subscribeTopic,
 	})
@@ -128,7 +128,7 @@ func (h *handler) handleClose(ctx context.Context) {
 func (h *handler) handleMessage(msg *Message, handler HandlerFunc) {
 	// 标记一个消息处理完成
 	defer h.runningHandlersWg.Done()
-	msgFields := log.LogFields{"message_uuid": msg.UUID}
+	msgFields := logging.LogFields{"message_uuid": msg.UUID}
 
 	defer func() {
 		if recovered := recover(); recovered != nil {
@@ -168,7 +168,7 @@ func (h *handler) handleMessage(msg *Message, handler HandlerFunc) {
 	h.logger.Trace("Message acked", msgFields)
 }
 
-func (h *handler) publishProducedMessages(producedMessages Messages, msgFields log.LogFields) error {
+func (h *handler) publishProducedMessages(producedMessages Messages, msgFields logging.LogFields) error {
 	if len(producedMessages) == 0 {
 		// 消息不需要发给下一个生产者
 		return nil
@@ -178,7 +178,7 @@ func (h *handler) publishProducedMessages(producedMessages Messages, msgFields l
 		return ErrOutputInNoPublisherHandler
 	}
 
-	h.logger.Trace("Sending produced messages", msgFields.Add(log.LogFields{
+	h.logger.Trace("Sending produced messages", msgFields.Add(logging.LogFields{
 		"produced_messages_count": len(producedMessages),
 		"publish_topic":           h.publishTopic,
 	}))
@@ -186,7 +186,7 @@ func (h *handler) publishProducedMessages(producedMessages Messages, msgFields l
 	for _, msg := range producedMessages {
 		if err := h.publisher.Publish(h.publishTopic, msg); err != nil {
 			// todo - how to deal with it better/transactional/retry?
-			h.logger.Error("Cannot publish message", err, msgFields.Add(log.LogFields{
+			h.logger.Error("Cannot publish message", err, msgFields.Add(logging.LogFields{
 				"not_sent_message": fmt.Sprintf("%#v", producedMessages),
 			}))
 
@@ -208,7 +208,7 @@ type Handler struct {
 // The order of middleware matters. Middleware added at the beginning is executed first.
 func (h *Handler) AddMiddleware(m ...HandlerMiddleware) {
 	handler := h.handler
-	handler.logger.Debug("Adding middleware to handler", log.LogFields{
+	handler.logger.Debug("Adding middleware to handler", logging.LogFields{
 		"count":       fmt.Sprintf("%d", len(m)),
 		"handlerName": handler.name,
 	})

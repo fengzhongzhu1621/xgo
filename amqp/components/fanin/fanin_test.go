@@ -11,8 +11,8 @@ import (
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/amqp/pubsub/gochannel"
 	"github.com/fengzhongzhu1621/xgo/amqp/router"
-	"github.com/fengzhongzhu1621/xgo/log"
-	"github.com/fengzhongzhu1621/xgo/utils/randutils"
+	"github.com/fengzhongzhu1621/xgo/crypto/randutils"
+	"github.com/fengzhongzhu1621/xgo/logging"
 	"github.com/stretchr/testify/require"
 )
 
@@ -34,9 +34,9 @@ func TestFanIn(t *testing.T) {
 		upstreamTopics = append(upstreamTopics, topic)
 	}
 
-	logger := log.NopLogger{}
+	logger := logging.NopLogger{}
 
-	pubsub := gochannel.NewGoChannel(gochannel.Config{}, log.NopLogger{})
+	pubsub := gochannel.NewGoChannel(gochannel.Config{}, logging.NopLogger{})
 
 	fi, err := fanin.NewFanIn(
 		pubsub,

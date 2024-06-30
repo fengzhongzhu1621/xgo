@@ -9,9 +9,9 @@ import (
 
 	. "github.com/fengzhongzhu1621/xgo/amqp/message"
 	. "github.com/fengzhongzhu1621/xgo/amqp/publisher"
-	"github.com/fengzhongzhu1621/xgo/log"
-	"github.com/fengzhongzhu1621/xgo/utils"
-	sync_internal "github.com/fengzhongzhu1621/xgo/utils/sync"
+	"github.com/fengzhongzhu1621/xgo/buildin"
+	sync_internal "github.com/fengzhongzhu1621/xgo/channel/sync"
+	"github.com/fengzhongzhu1621/xgo/logging"
 )
 
 // NoPublishHandlerFunc is HandlerFunc alternative, which doesn't produce any messages.
@@ -48,7 +48,7 @@ type Router struct {
 	closed     bool          // 路由是否已经关闭
 	closedLock sync.Mutex
 
-	logger log.LoggerAdapter
+	logger logging.LoggerAdapter
 
 	publisherDecorators  []PublisherDecorator  // 生产者装饰器
 	subscriberDecorators []SubscriberDecorator // 消费者装饰器
@@ -58,7 +58,7 @@ type Router struct {
 }
 
 // NewRouter creates a new Router with given configuration.
-func NewRouter(config RouterConfig, logger log.LoggerAdapter) (*Router, error) {
+func NewRouter(config RouterConfig, logger logging.LoggerAdapter) (*Router, error) {
 	// 路由配置初始化默认值
 	config.SetDefaults()
 	// 验证配置
@@ -85,7 +85,7 @@ func NewRouter(config RouterConfig, logger log.LoggerAdapter) (*Router, error) {
 }
 
 // Logger returns the Router's logger.
-func (r *Router) Logger() log.LoggerAdapter {
+func (r *Router) Logger() logging.LoggerAdapter {
 	return r.logger
 }
 
@@ -93,7 +93,7 @@ func (r *Router) Logger() log.LoggerAdapter {
 //
 // The order of middleware matters. Middleware added at the beginning is executed first.
 func (r *Router) AddMiddleware(m ...HandlerMiddleware) {
-	r.logger.Debug("Adding middleware", log.LogFields{"count": fmt.Sprintf("%d", len(m))})
+	r.logger.Debug("Adding middleware", logging.LogFields{"count": fmt.Sprintf("%d", len(m))})
 
 	r.addRouterLevelMiddleware(m...)
 }
@@ -127,7 +127,7 @@ func (r *Router) addHandlerLevelMiddleware(handlerName string, m ...HandlerMiddl
 //
 // A plugin can, for example, close the router after SIGINT or SIGTERM is sent to the process (SignalsHandler plugin).
 func (r *Router) AddPlugin(p ...RouterPlugin) {
-	r.logger.Debug("Adding plugins", log.LogFields{"count": fmt.Sprintf("%d", len(p))})
+	r.logger.Debug("Adding plugins", logging.LogFields{"count": fmt.Sprintf("%d", len(p))})
 
 	r.plugins = append(r.plugins, p...)
 }
@@ -136,7 +136,7 @@ func (r *Router) AddPlugin(p ...RouterPlugin) {
 // The first decorator is the innermost, i.e. calls the original publisher.
 // 添加生产者装饰器
 func (r *Router) AddPublisherDecorators(dec ...PublisherDecorator) {
-	r.logger.Debug("Adding publisher decorators", log.LogFields{"count": fmt.Sprintf("%d", len(dec))})
+	r.logger.Debug("Adding publisher decorators", logging.LogFields{"count": fmt.Sprintf("%d", len(dec))})
 
 	r.publisherDecorators = append(r.publisherDecorators, dec...)
 }
@@ -145,7 +145,7 @@ func (r *Router) AddPublisherDecorators(dec ...PublisherDecorator) {
 // The first decorator is the innermost, i.e. calls the original subscriber.
 // 添加消费者装饰器
 func (r *Router) AddSubscriberDecorators(dec ...SubscriberDecorator) {
-	r.logger.Debug("Adding subscriber decorators", log.LogFields{"count": fmt.Sprintf("%d", len(dec))})
+	r.logger.Debug("Adding subscriber decorators", logging.LogFields{"count": fmt.Sprintf("%d", len(dec))})
 
 	r.subscriberDecorators = append(r.subscriberDecorators, dec...)
 }
@@ -182,7 +182,7 @@ func (r *Router) AddHandler(
 	publisher Publisher, // 生产者，消费后的数据重新发给指定生产者
 	handlerFunc HandlerFunc, // 消息处理函数
 ) *Handler {
-	r.logger.Info("Adding handler", log.LogFields{
+	r.logger.Info("Adding handler", logging.LogFields{
 		"handler_name": handlerName,
 		"topic":        subscribeTopic,
 	})
@@ -195,7 +195,7 @@ func (r *Router) AddHandler(
 		panic(DuplicateHandlerNameError{handlerName})
 	}
 	// 获得生产者和消费者的结构体名称
-	publisherName, subscriberName := utils.StructName(publisher), utils.StructName(subscriber)
+	publisherName, subscriberName := buildin.StructName(publisher), buildin.StructName(subscriber)
 
 	newHandler := &handler{
 		name:   handlerName,
@@ -313,7 +313,7 @@ func (r *Router) Run(ctx context.Context) (err error) {
 	// 给处理器发送上下文关闭信号
 	cancel()
 
-	r.logger.Info("Waiting for messages", log.LogFields{
+	r.logger.Info("Waiting for messages", logging.LogFields{
 		"timeout": r.config.CloseTimeout,
 	})
 
@@ -354,7 +354,7 @@ func (r *Router) RunHandlers(ctx context.Context) error {
 			return errors.Wrapf(err, "could not decorate subscriber of handler %s", name)
 		}
 
-		r.logger.Debug("Subscribing to topic", log.LogFields{
+		r.logger.Debug("Subscribing to topic", logging.LogFields{
 			"subscriber_name": h.name,
 			"topic":           h.subscribeTopic,
 		})
@@ -389,7 +389,7 @@ func (r *Router) RunHandlers(ctx context.Context) error {
 
 			// 告诉router，handler执行完毕
 			r.handlersWg.Done()
-			r.logger.Info("Subscriber stopped", log.LogFields{
+			r.logger.Info("Subscriber stopped", logging.LogFields{
 				"subscriber_name": h.name,
 				"topic":           h.subscribeTopic,
 			})

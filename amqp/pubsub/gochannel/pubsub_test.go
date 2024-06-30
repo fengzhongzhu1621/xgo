@@ -13,7 +13,7 @@ import (
 
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/amqp/subscriber"
-	"github.com/fengzhongzhu1621/xgo/log"
+	"github.com/fengzhongzhu1621/xgo/logging"
 	"github.com/fengzhongzhu1621/xgo/utils/randutils"
 )
 
@@ -24,7 +24,7 @@ func createPersistentPubSub(t *testing.T) (message.Publisher, message.Subscriber
 			OutputChannelBuffer: 10000,
 			Persistent:          true,
 		},
-		log.NewStdLogger(true, true, "[watermill] "),
+		logging.NewStdLogger(true, true, "[watermill] "),
 	)
 	return pubSub, pubSub
 }
@@ -48,7 +48,7 @@ func TestPublishSubscribe_not_persistent(t *testing.T) {
 	messagesCount := 100
 	pubSub := NewGoChannel(
 		Config{OutputChannelBuffer: int64(messagesCount)},
-		log.NewStdLogger(true, true, "[watermill] "),
+		logging.NewStdLogger(true, true, "[watermill] "),
 	)
 	topicName := "test_topic_" + randutils.NewUUID()
 
@@ -66,7 +66,7 @@ func TestPublishSubscribe_not_persistent(t *testing.T) {
 func TestPublishSubscribe_block_until_ack(t *testing.T) {
 	pubSub := NewGoChannel(
 		Config{BlockPublishUntilSubscriberAck: true},
-		log.NewStdLogger(true, true, "[watermill] "),
+		logging.NewStdLogger(true, true, "[watermill] "),
 	)
 	topicName := "test_topic_" + randutils.NewUUID()
 
@@ -132,7 +132,7 @@ func TestSubscribe_race_condition_when_closing(t *testing.T) {
 			t.Parallel()
 			pubSub := NewGoChannel(
 				Config{},
-				log.NewStdLogger(true, false, "[watermill] "),
+				logging.NewStdLogger(true, false, "[watermill] "),
 			)
 			go func() {
 				err := pubSub.Close()
@@ -155,7 +155,7 @@ func TestPublish_race_condition_when_closing(t *testing.T) {
 			t.Parallel()
 			pubSub := NewGoChannel(
 				Config{},
-				log.NewStdLogger(true, false, "[watermill] "),
+				logging.NewStdLogger(true, false, "[watermill] "),
 			)
 			go func() {
 				_ = pubSub.Publish("topic", message.NewMessage(strconv.Itoa(i), nil))
@@ -170,7 +170,7 @@ func TestPublish_race_condition_when_closing(t *testing.T) {
 func TestPublishSubscribe_do_not_block_other_subscribers(t *testing.T) {
 	pubSub := NewGoChannel(
 		Config{},
-		log.NewStdLogger(true, true, "[watermill] "),
+		logging.NewStdLogger(true, true, "[watermill] "),
 	)
 	topicName := "test_topic_" + randutils.NewUUID()
 
@@ -220,7 +220,7 @@ func testPublishSubscribeSubRace(t *testing.T) {
 			OutputChannelBuffer: int64(messagesCount),
 			Persistent:          true,
 		},
-		log.NewStdLogger(true, false, "[watermill] "),
+		logging.NewStdLogger(true, false, "[watermill] "),
 	)
 
 	allSent := sync.WaitGroup{}
@@ -255,15 +255,15 @@ func testPublishSubscribeSubRace(t *testing.T) {
 		}()
 	}
 
-	log.Info("waiting for all sent")
+	logging.Info("waiting for all sent")
 	allSent.Wait()
 
-	log.Info("waiting for all received")
+	logging.Info("waiting for all received")
 	allReceived.Wait()
 
 	close(subscriberReceivedCh)
 
-	log.Info("asserting")
+	logging.Info("asserting")
 
 	for subMsgs := range subscriberReceivedCh {
 		AssertAllMessagesReceived(t, sentMessages, subMsgs)

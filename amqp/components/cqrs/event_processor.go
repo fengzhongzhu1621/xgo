@@ -5,8 +5,8 @@ import (
 
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/amqp/router"
-	"github.com/fengzhongzhu1621/xgo/log"
-	"github.com/fengzhongzhu1621/xgo/utils/reflectutils"
+	"github.com/fengzhongzhu1621/xgo/buildin/reflectutils"
+	"github.com/fengzhongzhu1621/xgo/logging"
 	"github.com/pkg/errors"
 )
 
@@ -47,7 +47,7 @@ type EventProcessor struct {
 	subscriberConstructor EventsSubscriberConstructor // 获得handlerName获得对应的消费者对象
 
 	marshaler CommandEventMarshaler // 消息编解码器
-	logger    log.LoggerAdapter
+	logger    logging.LoggerAdapter
 }
 
 func NewEventProcessor(
@@ -55,7 +55,7 @@ func NewEventProcessor(
 	generateTopic func(eventName string) string,
 	subscriberConstructor EventsSubscriberConstructor,
 	marshaler CommandEventMarshaler,
-	logger log.LoggerAdapter,
+	logger logging.LoggerAdapter,
 ) (*EventProcessor, error) {
 	if len(handlers) == 0 {
 		return nil, errors.New("missing handlers")
@@ -70,7 +70,7 @@ func NewEventProcessor(
 		return nil, errors.New("missing marshaler")
 	}
 	if logger == nil {
-		logger = log.NopLogger{}
+		logger = logging.NopLogger{}
 	}
 
 	return &EventProcessor{
@@ -92,7 +92,7 @@ func (p EventProcessor) AddHandlersToRouter(r *router.Router) error {
 		// 根据消息类型生成topic
 		topicName := p.generateTopic(eventName)
 
-		logger := p.logger.With(log.LogFields{
+		logger := p.logger.With(logging.LogFields{
 			"event_handler_name": handlerName,
 			"topic":              topicName,
 		})
@@ -127,7 +127,7 @@ func (p EventProcessor) Handlers() []EventHandler {
 }
 
 // routerHandlerFunc 构造消费者的消息处理函数装饰器
-func (p EventProcessor) routerHandlerFunc(handler EventHandler, logger log.LoggerAdapter) (router.NoPublishHandlerFunc, error) {
+func (p EventProcessor) routerHandlerFunc(handler EventHandler, logger logging.LoggerAdapter) (router.NoPublishHandlerFunc, error) {
 	initEvent := handler.NewEvent()
 	if err := p.validateEvent(initEvent); err != nil {
 		return nil, err
@@ -142,7 +142,7 @@ func (p EventProcessor) routerHandlerFunc(handler EventHandler, logger log.Logge
 
 		// 判断消息类型是否一致
 		if messageEventName != expectedEventName {
-			logger.Trace("Received different event type than expected, ignoring", log.LogFields{
+			logger.Trace("Received different event type than expected, ignoring", logging.LogFields{
 				"message_uuid":        msg.UUID,
 				"expected_event_type": expectedEventName,
 				"received_event_type": messageEventName,
@@ -150,7 +150,7 @@ func (p EventProcessor) routerHandlerFunc(handler EventHandler, logger log.Logge
 			return nil
 		}
 
-		logger.Debug("Handling event", log.LogFields{
+		logger.Debug("Handling event", logging.LogFields{
 			"message_uuid":        msg.UUID,
 			"received_event_type": messageEventName,
 		})
@@ -162,7 +162,7 @@ func (p EventProcessor) routerHandlerFunc(handler EventHandler, logger log.Logge
 
 		// 处理消息
 		if err := handler.Handle(msg.Context(), event); err != nil {
-			logger.Debug("Error when handling event", log.LogFields{"err": err})
+			logger.Debug("Error when handling event", logging.LogFields{"err": err})
 			return err
 		}
 

@@ -3,7 +3,7 @@ package cqrs
 import (
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/amqp/router"
-	"github.com/fengzhongzhu1621/xgo/log"
+	"github.com/fengzhongzhu1621/xgo/logging"
 	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
 )
@@ -49,7 +49,7 @@ type FacadeConfig struct {
 
 	CommandEventMarshaler CommandEventMarshaler
 
-	Logger log.LoggerAdapter
+	Logger logging.LoggerAdapter
 }
 
 func (c FacadeConfig) Validate() error {
