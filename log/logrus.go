@@ -10,8 +10,8 @@ import (
 
 	"github.com/fengzhongzhu1621/xgo"
 
+	"github.com/fengzhongzhu1621/xgo/channel"
 	"github.com/fengzhongzhu1621/xgo/pool"
-	"github.com/fengzhongzhu1621/xgo/utils"
 )
 
 type exitFunc func(int)
@@ -115,7 +115,7 @@ type LogrusLogger struct {
 	// logged.
 	Level Level
 	// Used to sync writing to the log. Locking is enabled by Default
-	mu utils.MutexWrap
+	mu channel.MutexWrap
 	// Reusable empty entry
 	entryPool sync.Pool
 	// Function to exit the application, defaults to `os.Exit()`

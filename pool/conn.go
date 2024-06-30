@@ -7,7 +7,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/fengzhongzhu1621/xgo/utils/proto"
+	"github.com/fengzhongzhu1621/xgo/proto"
 )
 
 var noDeadline = time.Time{}

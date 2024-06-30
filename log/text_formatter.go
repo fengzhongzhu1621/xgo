@@ -12,7 +12,7 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/fengzhongzhu1621/xgo/term"
+	"github.com/fengzhongzhu1621/xgo/shell/term"
 )
 
 const (
