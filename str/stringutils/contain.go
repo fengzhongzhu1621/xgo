@@ -35,3 +35,29 @@ func In(target string, src []string) bool {
 	return false
 }
 
+func SublimeContains(s, substr string) bool {
+	// 将字符串转换为 rune 切片，您可以逐个访问和处理字符串中的每个字符，而无需担心底层编码细节
+	rs, rsubstr := []rune(s), []rune(substr)
+	// 判断子串的长度
+	if len(rsubstr) > len(rs) {
+		return false
+	}
+
+	var ok = true
+	var i, j = 0, 0
+	for ; i < len(rsubstr); i++ {
+		found := -1
+		for ; j < len(rs); j++ {
+			if rsubstr[i] == rs[j] {
+				found = j
+				break
+			}
+		}
+		if found == -1 {
+			ok = false
+			break
+		}
+		j += 1
+	}
+	return ok
+}

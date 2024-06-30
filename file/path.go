@@ -10,6 +10,11 @@ import (
 	"github.com/mitchellh/go-homedir"
 )
 
+type PathInfo struct {
+	Name  string // 路径名称
+	IsDir bool   // 是否是目录
+}
+
 func userHomeDir() string {
 	if runtime.GOOS == "windows" {
 		home := os.Getenv("HOMEDRIVE") + os.Getenv("HOMEPATH")
@@ -46,10 +51,6 @@ func AbsPathify(inPath string) string {
 	return ""
 }
 
-type PathInfo struct {
-	Name  string // 路径名称
-	IsDir bool   // 是否是目录
-}
 
 // 获得最后一个字符.
 func LastChar(str string) uint8 {
