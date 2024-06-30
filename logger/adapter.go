@@ -1,4 +1,4 @@
-package log
+package logger
 
 import (
 	"fmt"
@@ -130,8 +130,8 @@ func (l *StdLoggerAdapter) With(fields LogFields) LoggerAdapter {
 	}
 }
 
-func (l *StdLoggerAdapter) log(logger *log.Logger, level string, msg string, fields LogFields) {
-	if logger == nil {
+func (l *StdLoggerAdapter) log(logLogger *log.Logger, level string, msg string, fields LogFields) {
+	if logLogger == nil {
 		return
 	}
 
@@ -165,7 +165,7 @@ func (l *StdLoggerAdapter) log(logger *log.Logger, level string, msg string, fie
 		fieldsStr += key + "=" + valueStr + " "
 	}
 
-	logger.Output(3, fmt.Sprintf("\t"+`level=%s msg="%s" %s`, level, msg, fieldsStr))
+	logLogger.Output(3, fmt.Sprintf("\t"+`level=%s msg="%s" %s`, level, msg, fieldsStr))
 }
 
 type CapturedMessage struct {

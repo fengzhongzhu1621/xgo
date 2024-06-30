@@ -1,4 +1,4 @@
-package log
+package logger
 
 import (
 	"context"
@@ -140,37 +140,37 @@ func New() *LogrusLogger {
 }
 
 // 新建一条空日志
-func (logger *LogrusLogger) newEntry() *Entry {
-	entry, ok := logger.entryPool.Get().(*Entry)
+func (logrusLogger *LogrusLogger) newEntry() *Entry {
+	entry, ok := logrusLogger.entryPool.Get().(*Entry)
 	if ok {
 		return entry
 	}
-	return NewEntry(logger)
+	return NewEntry(logrusLogger)
 }
 
-func (logger *LogrusLogger) releaseEntry(entry *Entry) {
+func (logrusLogger *LogrusLogger) releaseEntry(entry *Entry) {
 	entry.Data = map[string]interface{}{}
-	logger.entryPool.Put(entry)
+	logrusLogger.entryPool.Put(entry)
 }
 
 // WithField allocates a new entry and adds a field to it.
 // Debug, Print, Info, Warn, Error, Fatal or Panic must be then applied to
 // this new returned entry.
 // If you want multiple fields, use `WithFields`.
-func (logger *LogrusLogger) WithField(key string, value interface{}) *Entry {
+func (logrusLogger *LogrusLogger) WithField(key string, value interface{}) *Entry {
 	// 新建一条空日志
-	entry := logger.newEntry()
-	defer logger.releaseEntry(entry)
+	entry := logrusLogger.newEntry()
+	defer logrusLogger.releaseEntry(entry)
 	// 给空日志填充内容，生成一条新的日志
 	return entry.WithField(key, value)
 }
 
 // WithFields Adds a struct of fields to the log entry. All it does is call `WithField` for
 // each `Field`.
-func (logger *LogrusLogger) WithFields(fields Fields) *Entry {
+func (logrusLogger *LogrusLogger) WithFields(fields Fields) *Entry {
 	// 新建一条空日志
-	entry := logger.newEntry()
-	defer logger.releaseEntry(entry)
+	entry := logrusLogger.newEntry()
+	defer logrusLogger.releaseEntry(entry)
 	// 给空日志填充内容，生成一条新的日志
 	return entry.WithFields(fields)
 }
@@ -178,106 +178,106 @@ func (logger *LogrusLogger) WithFields(fields Fields) *Entry {
 // WithError Add an error as single field to the log entry.  All it does is call
 // `WithError` for the given `error`.
 // 给空日志填充一个key为error的错误
-func (logger *LogrusLogger) WithError(err error) *Entry {
+func (logrusLogger *LogrusLogger) WithError(err error) *Entry {
 	// 新建一条空日志
-	entry := logger.newEntry()
-	defer logger.releaseEntry(entry)
+	entry := logrusLogger.newEntry()
+	defer logrusLogger.releaseEntry(entry)
 	return entry.WithError(err)
 }
 
 // WithContext Add a context to the log entry.
-func (logger *LogrusLogger) WithContext(ctx context.Context) *Entry {
-	entry := logger.newEntry()
-	defer logger.releaseEntry(entry)
+func (logrusLogger *LogrusLogger) WithContext(ctx context.Context) *Entry {
+	entry := logrusLogger.newEntry()
+	defer logrusLogger.releaseEntry(entry)
 	return entry.WithContext(ctx)
 }
 
 // Overrides the time of the log entry.
-func (logger *LogrusLogger) WithTime(t time.Time) *Entry {
-	entry := logger.newEntry()
-	defer logger.releaseEntry(entry)
+func (logrusLogger *LogrusLogger) WithTime(t time.Time) *Entry {
+	entry := logrusLogger.newEntry()
+	defer logrusLogger.releaseEntry(entry)
 	return entry.WithTime(t)
 }
 
 // level 获得日志级别，注意并发原子性
-func (logger *LogrusLogger) level() Level {
-	return Level(atomic.LoadUint32((*uint32)(&logger.Level)))
+func (logrusLogger *LogrusLogger) level() Level {
+	return Level(atomic.LoadUint32((*uint32)(&logrusLogger.Level)))
 }
 
 // IsLevelEnabled checks if the log level of the logger is greater than the level param
-func (logger *LogrusLogger) IsLevelEnabled(level Level) bool {
-	return logger.level() >= level
+func (logrusLogger *LogrusLogger) IsLevelEnabled(level Level) bool {
+	return logrusLogger.level() >= level
 }
 
 // Logf 打印日志
-func (logger *LogrusLogger) Logf(level Level, format string, args ...interface{}) {
-	if logger.IsLevelEnabled(level) {
-		entry := logger.newEntry()
+func (logrusLogger *LogrusLogger) Logf(level Level, format string, args ...interface{}) {
+	if logrusLogger.IsLevelEnabled(level) {
+		entry := logrusLogger.newEntry()
 		entry.Logf(level, format, args...)
-		logger.releaseEntry(entry)
+		logrusLogger.releaseEntry(entry)
 	}
 }
 
 // Log will log a message at the level given as parameter.
 // Warning: using Log at Panic or Fatal level will not respectively Panic nor Exit.
 // For this behaviour Logger.Panic or Logger.Fatal should be used instead.
-func (logger *LogrusLogger) Log(level Level, args ...interface{}) {
-	if logger.IsLevelEnabled(level) {
-		entry := logger.newEntry()
+func (logrusLogger *LogrusLogger) Log(level Level, args ...interface{}) {
+	if logrusLogger.IsLevelEnabled(level) {
+		entry := logrusLogger.newEntry()
 		entry.Log(level, args...)
-		logger.releaseEntry(entry)
+		logrusLogger.releaseEntry(entry)
 	}
 }
 
-func (logger *LogrusLogger) Info(args ...interface{}) {
-	logger.Log(InfoLevel, args...)
+func (logrusLogger *LogrusLogger) Info(args ...interface{}) {
+	logrusLogger.Log(InfoLevel, args...)
 }
 
-func (logger *LogrusLogger) Fatal(args ...interface{}) {
-	logger.Log(FatalLevel, args...)
-	logger.Exit(1)
+func (logrusLogger *LogrusLogger) Fatal(args ...interface{}) {
+	logrusLogger.Log(FatalLevel, args...)
+	logrusLogger.Exit(1)
 }
 
 // SetLevel sets the logger level.
-func (logger *LogrusLogger) SetLevel(level Level) {
-	atomic.StoreUint32((*uint32)(&logger.Level), uint32(level))
+func (logrusLogger *LogrusLogger) SetLevel(level Level) {
+	atomic.StoreUint32((*uint32)(&logrusLogger.Level), uint32(level))
 }
 
-func (logger *LogrusLogger) Panic(args ...interface{}) {
-	logger.Log(PanicLevel, args...)
+func (logrusLogger *LogrusLogger) Panic(args ...interface{}) {
+	logrusLogger.Log(PanicLevel, args...)
 }
 
-func (logger *LogrusLogger) Exit(code int) {
+func (logrusLogger *LogrusLogger) Exit(code int) {
 	xgo.RunHandlers()
-	if logger.ExitFunc == nil {
-		logger.ExitFunc = os.Exit
+	if logrusLogger.ExitFunc == nil {
+		logrusLogger.ExitFunc = os.Exit
 	}
-	logger.ExitFunc(code)
+	logrusLogger.ExitFunc(code)
 }
 
-func (logger *LogrusLogger) SetReportCaller(reportCaller bool) {
-	logger.mu.Lock()
-	defer logger.mu.Unlock()
-	logger.ReportCaller = reportCaller
+func (logrusLogger *LogrusLogger) SetReportCaller(reportCaller bool) {
+	logrusLogger.mu.Lock()
+	defer logrusLogger.mu.Unlock()
+	logrusLogger.ReportCaller = reportCaller
 }
 
 // SetOutput sets the logger output.
-func (logger *LogrusLogger) SetOutput(output io.Writer) {
-	logger.mu.Lock()
-	defer logger.mu.Unlock()
-	logger.Out = output
+func (logrusLogger *LogrusLogger) SetOutput(output io.Writer) {
+	logrusLogger.mu.Lock()
+	defer logrusLogger.mu.Unlock()
+	logrusLogger.Out = output
 }
 
 // SetFormatter sets the logger formatter.
-func (logger *LogrusLogger) SetFormatter(formatter Formatter) {
-	logger.mu.Lock()
-	defer logger.mu.Unlock()
-	logger.Formatter = formatter
+func (logrusLogger *LogrusLogger) SetFormatter(formatter Formatter) {
+	logrusLogger.mu.Lock()
+	defer logrusLogger.mu.Unlock()
+	logrusLogger.Formatter = formatter
 }
 
 // AddHook adds a hook to the logger hooks.
-func (logger *LogrusLogger) AddHook(hook Hook) {
-	logger.mu.Lock()
-	defer logger.mu.Unlock()
-	logger.Hooks.Add(hook)
+func (logrusLogger *LogrusLogger) AddHook(hook Hook) {
+	logrusLogger.mu.Lock()
+	defer logrusLogger.mu.Unlock()
+	logrusLogger.Hooks.Add(hook)
 }

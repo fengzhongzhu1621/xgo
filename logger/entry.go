@@ -1,4 +1,4 @@
-package log
+package logger
 
 import (
 	"bytes"
@@ -132,9 +132,9 @@ func (entry Entry) HasCaller() (has bool) {
 }
 
 // NewEntry 新建一条日志
-func NewEntry(logger *LogrusLogger) *Entry {
+func NewEntry(logrustLogger *LogrusLogger) *Entry {
 	return &Entry{
-		Logger: logger,
+		Logger: logrustLogger,
 		// Default is three fields, plus one optional.  Give a little extra room.
 		Data: make(Fields, 6),
 	}

@@ -7,8 +7,6 @@ import (
 	"sync"
 	"sync/atomic"
 	"time"
-
-	"github.com/fengzhongzhu1621/xgo/log"
 )
 
 var (
@@ -402,7 +400,6 @@ func (p *ConnPool) popIdle() (*Conn, error) {
 func (p *ConnPool) Put(ctx context.Context, cn *Conn) {
 	// 判断连接是否还有未传输完成的数据
 	if cn.rd.Buffered() > 0 {
-		log.SimpleLogger.Printf(ctx, "Conn has unread data")
 		p.Remove(ctx, cn, BadConnError{})
 		return
 	}
@@ -549,7 +546,6 @@ func (p *ConnPool) reaper(frequency time.Duration) {
 			// 关闭过期的所有空闲连接
 			_, err := p.ReapStaleConns()
 			if err != nil {
-				log.SimpleLogger.Printf(context.Background(), "ReapStaleConns failed: %s", err)
 				continue
 			}
 		case <-p.closedCh:

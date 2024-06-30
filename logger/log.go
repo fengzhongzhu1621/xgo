@@ -1,4 +1,4 @@
-package log
+package logger
 
 import (
 	"io"
@@ -48,14 +48,14 @@ type LoggerConfig struct {
 }
 
 type ILogFormatter interface {
-	Format(logger *LoggerConfig, t time.Time, level LogLevel, message string) error
+	Format(loggerConfig *LoggerConfig, t time.Time, level LogLevel, message string) error
 }
 
 type DefaultFormatter struct {
 }
 
-func (formatter *DefaultFormatter) Format(logger *LoggerConfig, t time.Time, level LogLevel, message string) error {
-	buf := &logger.buf
+func (formatter *DefaultFormatter) Format(loggerConfig *LoggerConfig, t time.Time, level LogLevel, message string) error {
+	buf := &loggerConfig.buf
 	*buf = append(*buf, t.Format(DATETIME_DEFAULT_FORMAT)...)
 	// year, month, day := t.Date()
 	// bytesconv.Itoa(buf, year, 4)
@@ -73,57 +73,57 @@ func (formatter *DefaultFormatter) Format(logger *LoggerConfig, t time.Time, lev
 	return nil
 }
 
-var logger = NewLogger(os.Stderr)
+var loggerConfig = NewLogger(os.Stderr)
 
 func NewLogger(w io.Writer) *LoggerConfig {
 	return &LoggerConfig{out: os.Stderr, level: LOG_INFO, Formatter: &DefaultFormatter{}}
 }
 
-func (logger *LoggerConfig) SetFlags(flag int) {
-	logger.mu.Lock()
-	defer logger.mu.Unlock()
-	logger.flag = flag
+func (loggerConfig *LoggerConfig) SetFlags(flag int) {
+	loggerConfig.mu.Lock()
+	defer loggerConfig.mu.Unlock()
+	loggerConfig.flag = flag
 }
 
-func (logger *LoggerConfig) SetFormatter(formatter ILogFormatter) {
-	logger.mu.Lock()
-	defer logger.mu.Unlock()
-	logger.Formatter = formatter
+func (loggerConfig *LoggerConfig) SetFormatter(formatter ILogFormatter) {
+	loggerConfig.mu.Lock()
+	defer loggerConfig.mu.Unlock()
+	loggerConfig.Formatter = formatter
 }
 
-func (logger *LoggerConfig) SetOutputWriter(out io.Writer) {
-	logger.mu.Lock()
-	defer logger.mu.Unlock()
-	logger.out = out
+func (loggerConfig *LoggerConfig) SetOutputWriter(out io.Writer) {
+	loggerConfig.mu.Lock()
+	defer loggerConfig.mu.Unlock()
+	loggerConfig.out = out
 }
 
-func (logger *LoggerConfig) SetLevel(level LogLevel) {
-	logger.mu.Lock()
-	defer logger.mu.Unlock()
-	logger.level = level
+func (loggerConfig *LoggerConfig) SetLevel(level LogLevel) {
+	loggerConfig.mu.Lock()
+	defer loggerConfig.mu.Unlock()
+	loggerConfig.level = level
 }
 
-func (logger *LoggerConfig) Output(calldepth int, level LogLevel, message string) error {
+func (loggerConfig *LoggerConfig) Output(calldepth int, level LogLevel, message string) error {
 	now := time.Now() // get this early.
-	logger.mu.Lock()
-	defer logger.mu.Unlock()
-	logger.buf = logger.buf[:0]
-	logger.Formatter.Format(logger, now, level, message)
-	_, err := logger.out.Write(logger.buf)
+	loggerConfig.mu.Lock()
+	defer loggerConfig.mu.Unlock()
+	loggerConfig.buf = loggerConfig.buf[:0]
+	loggerConfig.Formatter.Format(loggerConfig, now, level, message)
+	_, err := loggerConfig.out.Write(loggerConfig.buf)
 	return err
 }
 
-func (logger *LoggerConfig) log(level LogLevel, message string) error {
-	if logger.level > level {
+func (loggerConfig *LoggerConfig) log(level LogLevel, message string) error {
+	if loggerConfig.level > level {
 		return nil
 	}
-	return logger.Output(2, level, message)
+	return loggerConfig.Output(2, level, message)
 }
 
-func (logger *LoggerConfig) Info(message string) error {
-	return logger.log(LOG_INFO, message)
+func (loggerConfig *LoggerConfig) Info(message string) error {
+	return loggerConfig.log(LOG_INFO, message)
 }
 
 func Info(message string) error {
-	return logger.Info(message)
+	return loggerConfig.Info(message)
 }
