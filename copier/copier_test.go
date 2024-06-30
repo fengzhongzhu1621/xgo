@@ -143,6 +143,7 @@ func TestCopyStruct(t *testing.T) {
 	checkEmployee(*employee5, user, t, "Copy From Employee To Employee")
 }
 
+// 将结构体拷贝到结构体切片
 func TestCopyFromStructToSlice(t *testing.T) {
 	user := User{Name: "Jinzhu", Age: 18, Role: "Admin", Notes: []string{"hello world"}}
 	employees := []Employee{}
@@ -179,6 +180,7 @@ func TestCopyFromStructToSlice(t *testing.T) {
 	}
 }
 
+// 将 结构体 slice 拷贝到结构体 slice
 func TestCopyFromSliceToSlice(t *testing.T) {
 	users := []User{
 		{Name: "Jinzhu", Age: 18, Role: "Admin", Notes: []string{"hello world"}},

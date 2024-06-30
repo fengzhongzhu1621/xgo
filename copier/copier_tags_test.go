@@ -3,13 +3,15 @@ package copier_test
 import (
 	"testing"
 
-	"github.com/fengzhongzhu1621/xgo/copier"
+	"github.com/jinzhu/copier"
 )
 
 type EmployeeTags struct {
+	// 如果字段不能拷贝，则 panic
 	Name    string `copier:"must"`
 	DOB     string
 	Address string
+	// 忽略拷贝这个字段
 	ID      int `copier:"-"`
 }
 
@@ -26,9 +28,11 @@ type User2 struct {
 	ID      int
 }
 
+// 测试自定字段不拷贝
 func TestCopyTagIgnore(t *testing.T) {
 	employee := EmployeeTags{ID: 100}
 	user := User1{Name: "Dexter Ledesma", DOB: "1 November, 1970", Address: "21 Jump Street", ID: 12345}
+	// 不拷贝 ID 字段
 	copier.Copy(&employee, user)
 	if employee.ID == user.ID {
 		t.Error("Was not expected to copy IDs")
@@ -38,8 +42,10 @@ func TestCopyTagIgnore(t *testing.T) {
 	}
 }
 
+// 字段不存在触发 panic
 func TestCopyTagMust(t *testing.T) {
 	employee := &EmployeeTags{}
+	// User2 不包含 Name 字段
 	user := &User2{DOB: "1 January 1970"}
 	defer func() {
 		if r := recover(); r == nil {
@@ -49,6 +55,7 @@ func TestCopyTagMust(t *testing.T) {
 	copier.Copy(employee, user)
 }
 
+// 根据字段映射拷贝字段
 func TestCopyTagFieldName(t *testing.T) {
 	t.Run("another name field copy", func(t *testing.T) {
 		type SrcTags struct {
