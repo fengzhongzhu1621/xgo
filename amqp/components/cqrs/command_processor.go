@@ -8,8 +8,8 @@ import (
 
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/amqp/router"
+	"github.com/fengzhongzhu1621/xgo/buildin/reflectutils"
 	"github.com/fengzhongzhu1621/xgo/log"
-	"github.com/fengzhongzhu1621/xgo/utils/reflectutils"
 )
 
 // CommandHandler receives a command defined by NewCommand and handles it with the Handle method.

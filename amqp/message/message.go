@@ -5,7 +5,7 @@ import (
 	"context"
 	"sync"
 
-	. "github.com/fengzhongzhu1621/xgo/utils/maps"
+	. "github.com/fengzhongzhu1621/xgo/collections/maps"
 )
 
 // HandlerFunc is function called when message is received.
