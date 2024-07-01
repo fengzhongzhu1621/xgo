@@ -7,14 +7,13 @@ func TestSanitizedName(t *testing.T) {
 		orig   string
 		expect string
 	}{
-		{"/a.log", "a.log"},
-		{"//a.log", "a.log"},
-		{"/../a.log", "../a.log"},
-		{"/a/..b/c.log", "a/..b/c.log"},
-		{"/a/b/../c.log", "a/c.log"},
-		{"a/b/../c.log", "a/c.log"},
-		{"/a/b/c/d.log", "a/b/c/d.log"},
-		{"a/b/c/d.log", "a/b/c/d.log"},
+		{"", "."},
+		{"//../foo", "foo"},
+		{"/../../", ""},
+		{"/hello/world/..", "hello"},
+		{"/..", ""},
+		{"/foo/..", ""},
+		{"/-/foo", "-/foo"},
 	}
 	for _, v := range tests {
 		res := SanitizedName(v.orig)

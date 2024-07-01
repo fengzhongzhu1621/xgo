@@ -11,6 +11,7 @@ type Zip struct {
 	*zip.Writer
 }
 
+// 将文件添加到zip压缩包
 func (z *Zip) Add(relpath, abspath string) error {
 	// 判断文件类型并返回一个 io.ReadCloser，用于后续读取文件内容
 	info, rdc, err := file.StatFile(abspath)
@@ -33,7 +34,7 @@ func (z *Zip) Add(relpath, abspath string) error {
 	if err != nil {
 		return err
 	}
-	// 格式化文件名
+	// 获得相对路径
 	hdr.Name = file.SanitizedName(relpath)
 	if info.IsDir() {
 		hdr.Name += "/"
