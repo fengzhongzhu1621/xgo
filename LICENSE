@@ -52,6 +52,7 @@ The text of each license is also included at licenses/LICENSE-[project].txt.
     (MIT License) copier v0.3.5 (https://github.com/jinzhu/copier)
     (MIT License) buntdb v1.2.10 (https://github.com/tidwall/buntdb)
     (MIT License) gin v1.9.1 (https://github.com/gin-gonic/gin)
+    (MIT License) gohttpserver 1.2.0 (https://github.com/codeskyblue/gohttpserver)
     
 ========================================================================
 BSD 3-Clause licenses
