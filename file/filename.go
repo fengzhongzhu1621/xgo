@@ -1,6 +1,7 @@
 package file
 
 import (
+	"fmt"
 	"runtime"
 	"strings"
 )
@@ -14,6 +15,7 @@ func SanitizedName(filename string) string {
 	}
 	// 去掉开头的 /
 	filename = strings.TrimLeft(strings.Replace(filename, `\`, "/", -1), `/`)
+	fmt.Println(filename)
 	// 将 Windows 风格的路径中的反斜杠替换为正斜杠，而对于 Unix 风格的路径，它不执行任何操作
 	filename = SlashAndCleanPath(filename)
 

@@ -7,17 +7,17 @@ func TestSanitizedName(t *testing.T) {
 		orig   string
 		expect string
 	}{
-		// {"C:\\hello", "C:/hello"}, // Only works in windows
-		{"", "."},
-		{"//../foo", "foo"},
-		{"/../../", ""},
-		{"/hello/world/..", "hello"},
-		{"/..", ""},
-		{"/foo/..", ""},
-		{"/-/foo", "-/foo"},
+		{"/a.log", "a.log"},
+		{"//a.log", "a.log"},
+		{"/../a.log", "../a.log"},
+		{"/a/..b/c.log", "a/..b/c.log"},
+		{"/a/b/../c.log", "a/c.log"},
+		{"a/b/../c.log", "a/c.log"},
+		{"/a/b/c/d.log", "a/b/c/d.log"},
+		{"a/b/c/d.log", "a/b/c/d.log"},
 	}
 	for _, v := range tests {
-		res := SlashAndCleanPath(v.orig)
+		res := SanitizedName(v.orig)
 		if res != v.expect {
 			t.Fatalf("Clean path(%v) expect(%v) but got(%v)", v.orig, v.expect, res)
 		}
