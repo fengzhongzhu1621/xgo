@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/fengzhongzhu1621/xgo/tests/testutil"
+	"github.com/fengzhongzhu1621/xgo/tests"
 )
 
 func TestEventStringWithValue(t *testing.T) {
@@ -53,7 +53,7 @@ func TestEventOpStringWithNoValue(t *testing.T) {
 func TestWatcherClose(t *testing.T) {
 	t.Parallel()
 	// 创建临时文件
-	name := testutil.TempMkFile(t, "", "fsnotify")
+	name := tests.TempMkFile(t, "", "fsnotify")
 	// 监听临时文件
 	w := newWatcher(t)
 	err := w.Add(name)

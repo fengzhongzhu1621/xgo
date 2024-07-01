@@ -9,19 +9,19 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/fengzhongzhu1621/xgo/tests/testutil"
+	"github.com/fengzhongzhu1621/xgo/tests"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestAbsPathify(t *testing.T) {
-	testutil.SkipWindows(t)
+	tests.SkipWindows(t)
 
 	home := userHomeDir()
 	homer := filepath.Join(home, "homer")
 	wd, _ := os.Getwd()
 
-	testutil.Setenv(t, "HOMER_ABSOLUTE_PATH", homer)
-	testutil.Setenv(t, "VAR_WITH_RELATIVE_PATH", "relative")
+	tests.Setenv(t, "HOMER_ABSOLUTE_PATH", homer)
+	tests.Setenv(t, "VAR_WITH_RELATIVE_PATH", "relative")
 
 	tests := []struct {
 		input  string

@@ -17,8 +17,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	ms "github.com/fengzhongzhu1621/xgo/encoding/mapstructure"
-	"github.com/fengzhongzhu1621/xgo/tests/testutil"
+	ms "github.com/fengzhongzhu1621/xgo/crypto/encoding/mapstructure"
+	"github.com/fengzhongzhu1621/xgo/tests"
 )
 
 var yamlExampleWithExtras = []byte(`Existing: true
@@ -242,7 +242,7 @@ func TestAutoEnv(t *testing.T) {
 
 	v.AutomaticEnv()
 
-	testutil.Setenv(t, "FOO_BAR", "13")
+	tests.Setenv(t, "FOO_BAR", "13")
 
 	assert.Equal(t, "13", v.Get("foo_bar"))
 }
@@ -253,7 +253,7 @@ func TestAutoEnvWithPrefix(t *testing.T) {
 	v.AutomaticEnv()
 	v.SetEnvPrefix("Baz")
 
-	testutil.Setenv(t, "BAZ_BAR", "13")
+	tests.Setenv(t, "BAZ_BAR", "13")
 
 	assert.Equal(t, "13", v.Get("bar"))
 }
@@ -457,7 +457,7 @@ func TestSafeWriteConfigWithMissingConfigPath(t *testing.T) {
 func TestSafeWriteConfigWithExistingFile(t *testing.T) {
 	v := New()
 	fs := afero.NewMemMapFs()
-	fs.Create(testutil.AbsFilePath(t, "/test/c.yaml"))
+	fs.Create(tests.AbsFilePath(t, "/test/c.yaml"))
 	v.SetFs(fs)
 	v.AddConfigPath("/test")
 	v.SetConfigName("c")

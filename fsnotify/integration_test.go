@@ -20,7 +20,7 @@ import (
 	"time"
 
 	"github.com/fengzhongzhu1621/xgo/channel/atomicutils"
-	"github.com/fengzhongzhu1621/xgo/tests/testutil"
+	"github.com/fengzhongzhu1621/xgo/tests"
 )
 
 const (
@@ -58,11 +58,11 @@ func TestFsnotifyMultipleOperations(t *testing.T) {
 	}()
 
 	// Create directory to watch
-	testDir := testutil.TempMkdir(t, "fsnotify")
+	testDir := tests.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDir)
 
 	// Create directory that's not watched
-	testDirToMoveFiles := testutil.TempMkdir(t, "fsnotify")
+	testDirToMoveFiles := tests.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDirToMoveFiles)
 
 	testFile := filepath.Join(testDir, "TestFsnotifySeq.testfile")
@@ -179,7 +179,7 @@ func TestFsnotifyMultipleCreates(t *testing.T) {
 	}()
 
 	// Create directory to watch
-	testDir := testutil.TempMkdir(t, "fsnotify")
+	testDir := tests.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDir)
 
 	testFile := filepath.Join(testDir, "TestFsnotifySeq.testfile")
@@ -298,7 +298,7 @@ func TestFsnotifyDirOnly(t *testing.T) {
 	watcher := newWatcher(t)
 
 	// Create directory to watch
-	testDir := testutil.TempMkdir(t, "fsnotify")
+	testDir := tests.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDir)
 
 	// Create a file before watching directory
@@ -401,7 +401,7 @@ func TestFsnotifyDeleteWatchedDir(t *testing.T) {
 	defer watcher.Close()
 
 	// Create directory to watch
-	testDir := testutil.TempMkdir(t, "fsnotify")
+	testDir := tests.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDir)
 
 	// Create a file before watching directory
@@ -459,7 +459,7 @@ func TestFsnotifySubDir(t *testing.T) {
 	watcher := newWatcher(t)
 
 	// Create directory to watch
-	testDir := testutil.TempMkdir(t, "fsnotify")
+	testDir := tests.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDir)
 
 	testFile1 := filepath.Join(testDir, "TestFsnotifyFile1.testfile")
@@ -553,7 +553,7 @@ func TestFsnotifyRename(t *testing.T) {
 	watcher := newWatcher(t)
 
 	// Create directory to watch
-	testDir := testutil.TempMkdir(t, "fsnotify")
+	testDir := tests.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDir)
 
 	addWatch(t, watcher, testDir)
@@ -631,11 +631,11 @@ func TestFsnotifyRenameToCreate(t *testing.T) {
 	watcher := newWatcher(t)
 
 	// Create directory to watch
-	testDir := testutil.TempMkdir(t, "fsnotify")
+	testDir := tests.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDir)
 
 	// Create directory to get file
-	testDirFrom := testutil.TempMkdir(t, "fsnotify")
+	testDirFrom := tests.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDirFrom)
 
 	addWatch(t, watcher, testDir)
@@ -712,11 +712,11 @@ func TestFsnotifyRenameToOverwrite(t *testing.T) {
 	watcher := newWatcher(t)
 
 	// Create directory to watch
-	testDir := testutil.TempMkdir(t, "fsnotify")
+	testDir := tests.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDir)
 
 	// Create directory to get file
-	testDirFrom := testutil.TempMkdir(t, "fsnotify")
+	testDirFrom := tests.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDirFrom)
 
 	testFile := filepath.Join(testDirFrom, "TestFsnotifyEvents.testfile")
@@ -793,7 +793,7 @@ func TestFsnotifyRenameToOverwrite(t *testing.T) {
 
 func TestRemovalOfWatch(t *testing.T) {
 	// Create directory to watch
-	testDir := testutil.TempMkdir(t, "fsnotify")
+	testDir := tests.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDir)
 
 	// Create a file before watching directory
@@ -853,7 +853,7 @@ func TestFsnotifyAttrib(t *testing.T) {
 	watcher := newWatcher(t)
 
 	// Create directory to watch
-	testDir := testutil.TempMkdir(t, "fsnotify")
+	testDir := tests.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDir)
 
 	// Receive errors on the error channel on a separate goroutine
@@ -989,7 +989,7 @@ func TestFsnotifyClose(t *testing.T) {
 		t.Fatal("double Close() test failed: second Close() call didn't return")
 	}
 
-	testDir := testutil.TempMkdir(t, "fsnotify")
+	testDir := tests.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDir)
 
 	if err := watcher.Add(testDir); err == nil {
@@ -1005,7 +1005,7 @@ func TestFsnotifyFakeSymlink(t *testing.T) {
 	watcher := newWatcher(t)
 
 	// Create directory to watch
-	testDir := testutil.TempMkdir(t, "fsnotify")
+	testDir := tests.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDir)
 
 	var errorsReceived atomicutils.Counter
@@ -1068,7 +1068,7 @@ func TestCyclicSymlink(t *testing.T) {
 
 	watcher := newWatcher(t)
 
-	testDir := testutil.TempMkdir(t, "fsnotify")
+	testDir := tests.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDir)
 
 	link := path.Join(testDir, "link")
@@ -1117,7 +1117,7 @@ func TestConcurrentRemovalOfWatch(t *testing.T) {
 	}
 
 	// Create directory to watch
-	testDir := testutil.TempMkdir(t, "fsnotify")
+	testDir := tests.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDir)
 
 	// Create a file before watching directory
@@ -1154,7 +1154,7 @@ func TestConcurrentRemovalOfWatch(t *testing.T) {
 
 func TestClose(t *testing.T) {
 	// Regression test for #59 bad file descriptor from Close
-	testDir := testutil.TempMkdir(t, "fsnotify")
+	testDir := tests.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDir)
 
 	watcher := newWatcher(t)
@@ -1170,13 +1170,13 @@ func TestClose(t *testing.T) {
 // TestRemoveWithClose tests if one can handle Remove events and, at the same
 // time, close Watcher object without any data races.
 func TestRemoveWithClose(t *testing.T) {
-	testDir := testutil.TempMkdir(t, "fsnotify")
+	testDir := tests.TempMkdir(t, "fsnotify")
 	defer os.RemoveAll(testDir)
 
 	const fileN = 200
 	tempFiles := make([]string, 0, fileN)
 	for i := 0; i < fileN; i++ {
-		tempFiles = append(tempFiles, testutil.TempMkFile(t, testDir, "fsnotify"))
+		tempFiles = append(tempFiles, tests.TempMkFile(t, testDir, "fsnotify"))
 	}
 	watcher := newWatcher(t)
 	if err := watcher.Add(testDir); err != nil {

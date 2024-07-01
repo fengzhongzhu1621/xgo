@@ -7,7 +7,7 @@ require (
 	github.com/fsnotify/fsnotify v1.5.4
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-playground/validator/v10 v10.11.0
-	github.com/golang/protobuf v1.5.3
+	github.com/golang/protobuf v1.5.4
 	github.com/hashicorp/hcl v1.0.0
 	github.com/joho/godotenv v1.4.0
 	github.com/json-iterator/go v1.1.12
@@ -29,45 +29,36 @@ require (
 	github.com/stretchr/testify v1.8.1
 	github.com/subosito/gotenv v1.4.0
 	github.com/ugorji/go/codec v1.2.7
-	github.com/wxnacy/wgo v1.0.4
 	golang.org/x/sys v0.15.0
-	google.golang.org/protobuf v1.31.0
+	google.golang.org/protobuf v1.33.0
 	gopkg.in/ini.v1 v1.67.0
 	gopkg.in/yaml.v2 v2.4.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
+	cloud.google.com/go/compute/metadata v0.2.3 // indirect
+	cloud.google.com/go/longrunning v0.5.4 // indirect
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/VividCortex/ewma v1.1.1 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
-	github.com/bndr/gotabulate v1.1.2 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
-	github.com/golang/mock v1.6.0 // indirect
+	github.com/google/s2a-go v0.1.7 // indirect
+	github.com/googleapis/enterprise-certificate-proxy v0.3.2 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
-	github.com/hashicorp/go-version v1.6.0 // indirect
-	github.com/jinzhu/copier v0.4.0 // indirect
-	github.com/jinzhu/gorm v1.9.16 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
-	github.com/kyokomi/emoji/v2 v2.2.13 // indirect
 	github.com/mattn/go-runewidth v0.0.12 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.37.0 // indirect
 	github.com/prometheus/procfs v0.8.0 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
-	github.com/tidwall/assert v0.1.0 // indirect
-	github.com/tidwall/btree v1.6.0 // indirect
-	github.com/tidwall/gjson v1.14.4 // indirect
-	github.com/tidwall/grect v0.1.4 // indirect
-	github.com/tidwall/lotsa v1.0.3 // indirect
-	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
-	github.com/tidwall/rtred v0.1.2 // indirect
 	github.com/tidwall/tinyqueue v0.1.1 // indirect
-	go.uber.org/mock v0.4.0 // indirect
-	golang.org/x/mod v0.11.0 // indirect
-	golang.org/x/tools v0.6.0 // indirect
+	golang.org/x/sync v0.5.0 // indirect
+	golang.org/x/time v0.5.0 // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20231106174013-bbf56f31fb17 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20231120223509-83a465c0220f // indirect
 )
 
 require (
@@ -78,13 +69,12 @@ require (
 	github.com/coreos/go-semver v0.3.0 // indirect
 	github.com/coreos/go-systemd/v22 v22.3.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/fatih/color v1.16.0 // indirect
+	github.com/fatih/color v1.16.0
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/gogo/protobuf v1.3.2
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
-	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/googleapis/gax-go/v2 v2.12.0 // indirect
 	github.com/hashicorp/consul/api v1.12.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
@@ -122,12 +112,25 @@ require (
 
 require (
 	github.com/ThreeDotsLabs/watermill v1.2.0-rc.11
+	github.com/bndr/gotabulate v1.1.2
 	github.com/cenkalti/backoff/v3 v3.2.2
 	github.com/cheggaaa/pb/v3 v3.1.0
 	github.com/go-sql-driver/mysql v1.8.1
 	github.com/google/uuid v1.6.0
 	github.com/hashicorp/go-multierror v1.1.1
+	github.com/hashicorp/go-version v1.6.0
+	github.com/jinzhu/copier v0.4.0
+	github.com/jinzhu/gorm v1.9.16
+	github.com/kyokomi/emoji/v2 v2.2.13
 	github.com/lithammer/shortuuid/v3 v3.0.7
 	github.com/oklog/ulid v1.3.1
 	github.com/prometheus/client_golang v1.13.0
+	github.com/tidwall/assert v0.1.0
+	github.com/tidwall/btree v1.6.0
+	github.com/tidwall/gjson v1.14.4
+	github.com/tidwall/grect v0.1.4
+	github.com/tidwall/lotsa v1.0.3
+	github.com/tidwall/match v1.1.1
+	github.com/tidwall/rtred v0.1.2
+	go.uber.org/mock v0.4.0
 )

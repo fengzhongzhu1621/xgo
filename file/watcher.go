@@ -16,6 +16,7 @@ import (
 	"github.com/fengzhongzhu1621/xgo/cast"
 	"github.com/fengzhongzhu1621/xgo/collections/maps"
 	"github.com/fengzhongzhu1621/xgo/crypto/encoding"
+	"github.com/fengzhongzhu1621/xgo/crypto/encoding/dotenv"
 	"github.com/fengzhongzhu1621/xgo/crypto/encoding/hcl"
 	"github.com/fengzhongzhu1621/xgo/crypto/encoding/ini"
 	"github.com/fengzhongzhu1621/xgo/crypto/encoding/javaproperties"
@@ -23,7 +24,6 @@ import (
 	"github.com/fengzhongzhu1621/xgo/crypto/encoding/mapstructure"
 	"github.com/fengzhongzhu1621/xgo/crypto/encoding/toml"
 	"github.com/fengzhongzhu1621/xgo/crypto/encoding/yaml"
-	"github.com/fengzhongzhu1621/xgo/encoding/dotenv"
 	jww "github.com/fengzhongzhu1621/xgo/logging"
 	"github.com/fengzhongzhu1621/xgo/remote"
 	"github.com/fengzhongzhu1621/xgo/str/stringutils"
@@ -649,7 +649,9 @@ func (v *Watcher) AddSecureRemoteProvider(provider, endpoint, path, secretkeyrin
 // isPathShadowedInAutoEnv makes sure the given path is not shadowed somewhere
 // in the environment, when automatic env is on.
 // e.g., if "foo.bar" has a value in the environment, it “shadows”
-//       "foo.bar.baz" in a lower-priority map
+//
+//	"foo.bar.baz" in a lower-priority map
+//
 // 子路径是否是环境变量的key.
 func (v *Watcher) isPathShadowedInAutoEnv(path []string) string {
 	var parentKey string

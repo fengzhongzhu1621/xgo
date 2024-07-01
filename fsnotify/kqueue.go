@@ -17,7 +17,7 @@ import (
 	"time"
 
 	"github.com/fengzhongzhu1621/xgo/datetime"
-	"github.com/fengzhongzhu1621/xgo/file/"
+	"github.com/fengzhongzhu1621/xgo/file"
 
 	"golang.org/x/sys/unix"
 )
