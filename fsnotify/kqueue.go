@@ -37,7 +37,7 @@ type Watcher struct {
 	// 监听的目录和监听的事件的映射关系
 	dirFlags map[string]uint32
 	// Map file descriptors to path names for processing kqueue events. 文件描述符和路径对象的映射关系
-	paths map[int]fileutils.PathInfo
+	paths map[int]file.PathInfo
 	// Keep track of if we know this file exists (to stop duplicate create events).
 	fileExists map[string]bool
 	isClosed   bool // Set to true when Close() is first called
@@ -55,7 +55,7 @@ func NewWatcher() (*Watcher, error) {
 		kq:              kq,
 		watches:         make(map[string]int), // 文件描述符
 		dirFlags:        make(map[string]uint32),
-		paths:           make(map[int]fileutils.PathInfo),
+		paths:           make(map[int]file.PathInfo),
 		fileExists:      make(map[string]bool),
 		externalWatches: make(map[string]bool),
 		Events:          make(chan Event),

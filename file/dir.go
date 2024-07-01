@@ -6,8 +6,6 @@ import (
 	"path/filepath"
 )
 
-const currentProcessFd = "/proc/self/fd"
-
 // 删除所有的子目录.
 func RemoveContents(dir string) error {
 	// 获得目录下所有的文件名

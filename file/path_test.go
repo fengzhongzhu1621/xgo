@@ -7,7 +7,6 @@ import (
 
 	"os"
 	"path/filepath"
-	"testing"
 
 	"github.com/fengzhongzhu1621/xgo/tests"
 	"github.com/stretchr/testify/assert"
