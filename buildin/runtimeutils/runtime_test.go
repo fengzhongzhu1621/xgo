@@ -8,6 +8,6 @@ import (
 
 func TestGetPackage(t *testing.T) {
 	actual := GetPackage()
-	expect := "xgo/utils/runtimeutils"
+	expect := "xgo/buildin/runtimeutils"
 	assert.Equal(t, expect, actual)
 }

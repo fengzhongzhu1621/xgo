@@ -3,7 +3,7 @@ package hashtag
 import (
 	"strings"
 
-	"github.com/fengzhongzhu1621/xgo/utils/randutils"
+	"github.com/fengzhongzhu1621/xgo/crypto/randutils"
 )
 
 const slotNumber = 16384

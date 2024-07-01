@@ -3,8 +3,8 @@ package cqrs
 import (
 	"github.com/fengzhongzhu1621/xgo"
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
-	"github.com/fengzhongzhu1621/xgo/utils"
-	"github.com/fengzhongzhu1621/xgo/utils/randutils"
+	"github.com/fengzhongzhu1621/xgo/buildin"
+	"github.com/fengzhongzhu1621/xgo/crypto/randutils"
 
 	"github.com/gogo/protobuf/proto"
 	"github.com/pkg/errors"
@@ -59,7 +59,7 @@ func (m ProtobufMarshaler) Name(cmdOrEvent interface{}) string {
 		return m.GenerateName(cmdOrEvent)
 	}
 
-	return utils.FullyQualifiedStructName(cmdOrEvent)
+	return buildin.FullyQualifiedStructName(cmdOrEvent)
 }
 
 // NameFromMessage returns the metadata name value for a given Message.

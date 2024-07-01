@@ -13,8 +13,8 @@ import (
 
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/amqp/subscriber"
+	"github.com/fengzhongzhu1621/xgo/crypto/randutils"
 	"github.com/fengzhongzhu1621/xgo/logging"
-	"github.com/fengzhongzhu1621/xgo/utils/randutils"
 )
 
 // 默认生产者和消费者

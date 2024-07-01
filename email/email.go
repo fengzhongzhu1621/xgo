@@ -17,7 +17,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/fengzhongzhu1621/xgo/utils"
+	"github.com/fengzhongzhu1621/xgo/buildin"
 )
 
 const (
@@ -505,7 +505,7 @@ func NewEmail() *Email {
 // This function expects the data in RFC 5322 format.
 func NewEmailFromReader(r io.Reader) (*Email, error) {
 	e := NewEmail()
-	s := &utils.TrimReader{Rd: r}
+	s := &buildin.TrimReader{Rd: r}
 	tp := textproto.NewReader(bufio.NewReader(s))
 	// Parse the main headers
 	hdrs, err := tp.ReadMIMEHeader()

@@ -2,7 +2,7 @@ package middleware_test
 
 import (
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
-	"github.com/fengzhongzhu1621/xgo/utils/randutils"
+	"github.com/fengzhongzhu1621/xgo/crypto/randutils"
 
 	"github.com/pkg/errors"
 )

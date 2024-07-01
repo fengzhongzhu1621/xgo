@@ -16,8 +16,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/fengzhongzhu1621/xgo/utils/fileutils"
-	"github.com/fengzhongzhu1621/xgo/utils/timeutils"
+	"github.com/fengzhongzhu1621/xgo/datetime"
+	"github.com/fengzhongzhu1621/xgo/file/"
 
 	"golang.org/x/sys/unix"
 )
@@ -180,7 +180,7 @@ func (w *Watcher) WatchList() []string {
 const noteAllEvents = unix.NOTE_DELETE | unix.NOTE_WRITE | unix.NOTE_ATTRIB | unix.NOTE_RENAME
 
 // keventWaitTime to block on each read from kevent.
-var keventWaitTime = timeutils.DurationToTimespec(100 * time.Millisecond)
+var keventWaitTime = datetime.DurationToTimespec(100 * time.Millisecond)
 
 // addWatch adds name to the watched file set.
 // The flags are interpreted as described in kevent(2).
@@ -265,7 +265,7 @@ func (w *Watcher) addWatch(name string, flags uint32) (string, error) {
 	if !alreadyWatching {
 		w.mu.Lock()
 		w.watches[name] = watchfd
-		w.paths[watchfd] = fileutils.PathInfo{Name: name, IsDir: isDir}
+		w.paths[watchfd] = file.PathInfo{Name: name, IsDir: isDir}
 		w.mu.Unlock()
 	}
 

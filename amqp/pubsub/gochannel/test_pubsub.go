@@ -17,7 +17,7 @@ import (
 
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/amqp/subscriber"
-	"github.com/fengzhongzhu1621/xgo/utils/randutils"
+	"github.com/fengzhongzhu1621/xgo/crypto/randutils"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

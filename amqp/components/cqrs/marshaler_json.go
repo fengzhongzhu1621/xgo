@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
-	"github.com/fengzhongzhu1621/xgo/utils"
-	"github.com/fengzhongzhu1621/xgo/utils/randutils"
+	"github.com/fengzhongzhu1621/xgo/buildin"
+	"github.com/fengzhongzhu1621/xgo/crypto/randutils"
 )
 
 var _ CommandEventMarshaler = (*JSONMarshaler)(nil)
@@ -51,7 +51,7 @@ func (m JSONMarshaler) Name(cmdOrEvent interface{}) string {
 		return m.GenerateName(cmdOrEvent)
 	}
 
-	return utils.FullyQualifiedStructName(cmdOrEvent)
+	return buildin.FullyQualifiedStructName(cmdOrEvent)
 }
 
 func (m JSONMarshaler) NameFromMessage(msg *message.Message) string {

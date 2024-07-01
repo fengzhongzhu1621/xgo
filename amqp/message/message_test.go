@@ -3,7 +3,7 @@ package message
 import (
 	"testing"
 
-	. "github.com/fengzhongzhu1621/xgo/utils/maps"
+	. "github.com/fengzhongzhu1621/xgo/collections/maps"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

@@ -17,7 +17,7 @@ import (
 	"sync"
 	"unsafe"
 
-	"xgo/utils/channel"
+	"xgo/channel"
 
 	"golang.org/x/sys/unix"
 )

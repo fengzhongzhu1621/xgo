@@ -3,7 +3,7 @@ package metrics
 import (
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/amqp/router"
-	"github.com/fengzhongzhu1621/xgo/utils"
+	"github.com/fengzhongzhu1621/xgo/buildin"
 
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus"
@@ -41,7 +41,7 @@ func (b PrometheusMetricsBuilder) DecoratePublisher(pub message.Publisher) (mess
 	var err error
 	d := PublisherPrometheusMetricsDecorator{
 		pub:           pub,
-		publisherName: utils.StructName(pub),
+		publisherName: buildin.StructName(pub),
 	}
 
 	d.publishTimeSeconds, err = b.registerHistogramVec(prometheus.NewHistogramVec(
@@ -64,7 +64,7 @@ func (b PrometheusMetricsBuilder) DecorateSubscriber(sub message.Subscriber) (me
 	var err error
 	d := &SubscriberPrometheusMetricsDecorator{
 		closing:        make(chan struct{}),
-		subscriberName: utils.StructName(sub),
+		subscriberName: buildin.StructName(sub),
 	}
 
 	d.subscriberMessagesReceivedTotal, err = b.registerCounterVec(prometheus.NewCounterVec(

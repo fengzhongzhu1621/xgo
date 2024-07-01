@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/fengzhongzhu1621/xgo/utils/testutil"
+	"github.com/fengzhongzhu1621/xgo/tests/testutil"
 )
 
 func TestEventStringWithValue(t *testing.T) {

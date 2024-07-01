@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/fengzhongzhu1621/xgo/utils/testutil"
+	"github.com/fengzhongzhu1621/xgo/tests/testutil"
 	"github.com/stretchr/testify/assert"
 )
 
