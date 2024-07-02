@@ -25,6 +25,7 @@ func StatFile(filename string) (info os.FileInfo, reader io.ReadCloser, err erro
 		}
 		// 实现了 io.Closer 接口，但不会执行任何实际操作
 		// 可以将任何实现了 io.Reader 接口的类型转换为 io.Closer 接口类型，而无需实际实现关闭操作。
+		// bytes.NewBuffer 接受一个字节切片（[]byte）作为参数，并返回一个包含这些字节的缓冲区（*bytes.Buffer 类型）
 		reader = io.NopCloser(bytes.NewBuffer([]byte(target)))
 	} else if !info.IsDir() {
 		// 打开文件
