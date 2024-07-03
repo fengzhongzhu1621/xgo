@@ -25,12 +25,13 @@ func ParseApkInfo(path string) (ai *ApkInfo) {
 	}()
 	apkf, err := apk.OpenFile(path)
 	if err != nil {
-		return 
+		return nil
 	}
 	ai = &ApkInfo{}
 	ai.MainActivity, _ = apkf.MainActivity()
 	ai.PackageName = apkf.PackageName()
 	ai.Version.Code = apkf.Manifest().VersionCode
 	ai.Version.Name = apkf.Manifest().VersionName
-	return
+	
+	return ai
 }
