@@ -24,6 +24,7 @@ import (
 	"github.com/fengzhongzhu1621/xgo/crypto/encoding/mapstructure"
 	"github.com/fengzhongzhu1621/xgo/crypto/encoding/toml"
 	"github.com/fengzhongzhu1621/xgo/crypto/encoding/yaml"
+	"github.com/fengzhongzhu1621/xgo/file/pathutils"
 	jww "github.com/fengzhongzhu1621/xgo/logging"
 	"github.com/fengzhongzhu1621/xgo/remote"
 	"github.com/fengzhongzhu1621/xgo/str/stringutils"
@@ -569,7 +570,7 @@ func (v *Watcher) ConfigFileUsed() string {
 func (v *Watcher) AddConfigPath(in string) {
 	if in != "" {
 		// 获得绝对路径
-		absin := AbsPathify(in)
+		absin := pathutils.AbsPathify(in)
 
 		v.logger.Info("adding path to search paths", "path", absin)
 		if !stringutils.StringInSlice(absin, v.configPaths) {
