@@ -2,10 +2,11 @@ package file
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 )
 
-// 从指定的目录中查询文件，返回查找到的文件的绝对路径
+// 从指定的多个目录中查询文件（查询深度为 1），返回查找到的文件的绝对路径
 // - 如果文件没有找到，返回err
 // - 如果查找到多个文件，返回err.
 func LocateFile(filename string, dirs []string) (string, error) {
@@ -29,9 +30,28 @@ func LocateFile(filename string, dirs []string) (string, error) {
 		return "", fmt.Errorf("%s was found in more than one directory: %v", filename, dirs)
 	}
 
+	// 获得文件的绝对路径
 	absPath, err := filepath.Abs(filepaths[0])
 	if err != nil {
 		return "", err
 	}
 	return absPath, nil
+}
+
+// 在根目录查询文件 name，指定搜索深度
+func DeepPath(basedir, name string, maxDepth int) string {
+	// loop max 5, incase of for loop not finished
+	for depth := 0; depth <= maxDepth; depth += 1 {
+		// 读取指定目录中的文件和子目录。它返回一个 []os.FileInfo 类型的切片，其中包含目录中文件和子目录的信息。
+		finfos, err := os.ReadDir(filepath.Join(basedir, name))
+		if err != nil || len(finfos) != 1 {
+			break
+		}
+		if finfos[0].IsDir() {
+			name = filepath.ToSlash(filepath.Join(name, finfos[0].Name()))
+		} else {
+			break
+		}
+	}
+	return name
 }

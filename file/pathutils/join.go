@@ -1,6 +1,8 @@
 package pathutils
 
-import "path"
+import (
+	"path"
+)
 
 // JoinPaths 路径合并.
 func JoinPaths(absolutePath, relativePath string) string {
@@ -14,3 +16,4 @@ func JoinPaths(absolutePath, relativePath string) string {
 	}
 	return finalPath
 }
+
