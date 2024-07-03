@@ -43,13 +43,9 @@ require (
 	github.com/VividCortex/ewma v1.1.1 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
-	github.com/codeskyblue/dockerignore v0.0.0-20151214070507-de82dee623d9 // indirect
-	github.com/codeskyblue/openid-go v0.0.0-20160923065855-0d30842b2fb4 // indirect
-	github.com/fork2fix/go-plist v0.0.0-20181126021357-36960be5e636 // indirect
 	github.com/google/s2a-go v0.1.7 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.2 // indirect
 	github.com/gorilla/securecookie v1.1.2 // indirect
-	github.com/gorilla/sessions v1.3.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/mattn/go-runewidth v0.0.12 // indirect
@@ -58,12 +54,14 @@ require (
 	github.com/prometheus/common v0.37.0 // indirect
 	github.com/prometheus/procfs v0.8.0 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
+	github.com/smartystreets/goconvey v1.8.1 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/tidwall/tinyqueue v0.1.1 // indirect
 	golang.org/x/sync v0.5.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20231106174013-bbf56f31fb17 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20231120223509-83a465c0220f // indirect
+	howett.net/plist v1.0.1 // indirect
 )
 
 require (
@@ -106,7 +104,7 @@ require (
 	golang.org/x/crypto v0.16.0 // indirect
 	golang.org/x/net v0.19.0 // indirect
 	golang.org/x/oauth2 v0.15.0 // indirect
-	golang.org/x/text v0.14.0 // indirect
+	golang.org/x/text v0.14.0
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/api v0.152.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
@@ -120,8 +118,12 @@ require (
 	github.com/bndr/gotabulate v1.1.2
 	github.com/cenkalti/backoff/v3 v3.2.2
 	github.com/cheggaaa/pb/v3 v3.1.0
+	github.com/codeskyblue/dockerignore v0.0.0-20151214070507-de82dee623d9
+	github.com/codeskyblue/openid-go v0.0.0-20160923065855-0d30842b2fb4
+	github.com/fork2fix/go-plist v0.0.0-20181126021357-36960be5e636
 	github.com/go-sql-driver/mysql v1.8.1
 	github.com/google/uuid v1.6.0
+	github.com/gorilla/sessions v1.3.0
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/hashicorp/go-version v1.6.0
 	github.com/jinzhu/copier v0.4.0
@@ -130,6 +132,7 @@ require (
 	github.com/lithammer/shortuuid/v3 v3.0.7
 	github.com/oklog/ulid v1.3.1
 	github.com/prometheus/client_golang v1.13.0
+	github.com/shogo82148/androidbinary v1.0.5
 	github.com/tidwall/assert v0.1.0
 	github.com/tidwall/btree v1.6.0
 	github.com/tidwall/gjson v1.14.4
