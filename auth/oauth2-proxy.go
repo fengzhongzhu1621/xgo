@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/url"
+
+	"github.com/fengzhongzhu1621/xgo/network/nethttp/staticserver"
 )
 
 func HandleOauth2() {
@@ -15,7 +17,7 @@ func HandleOauth2() {
 			fullName = k
 			break
 		}
-		user := &UserInfo{
+		user := &staticserver.UserInfo{
 			Email:    r.Header.Get("X-Auth-Request-Email"),
 			Name:     fullName,
 			NickName: r.Header.Get("X-Auth-Request-User"),

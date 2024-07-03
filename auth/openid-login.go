@@ -9,34 +9,14 @@ import (
 	"strings"
 
 	"github.com/codeskyblue/openid-go"
-	"github.com/gorilla/sessions"
+	"github.com/fengzhongzhu1621/xgo/network/nethttp/staticserver"
 )
-
-var (
-	// 创建一个新的SimpleNonceStore实例。SimpleNonceStore是一个用于存储和检索随机数（nonce）的简单容器
-	// 在密码学中，nonce 是一个只使用一次的数值，通常与密码散列函数一起使用，以确保先前的散列不会在未来被重复使用。这对于防止重放攻击特别重要。
-	nonceStore = openid.NewSimpleNonceStore()
-	// 用于创建一个新的SimpleDiscoveryCache实例。SimpleDiscoveryCache是一个用于缓存OpenID提供者元数据的简单容器。
-	// 这些元数据包括提供者的端点URL、公钥等，用于在OpenID认证过程中进行验证和授权。
-	discoveryCache = openid.NewSimpleDiscoveryCache()
-	// 用于创建一个新的基于 cookie 的 session 存储引擎。
-	// 接受一个密钥（key）切片作为参数，这些密钥用于对 cookie 数据进行签名和加密，以确保数据的安全性和完整性。
-	store              = sessions.NewCookieStore([]byte("something-very-secret"))
-	defaultSessionName = "ghs-session"
-)
-
-type UserInfo struct {
-	Id       string `json:"id"`
-	Email    string `json:"email"`
-	Name     string `json:"name"`
-	NickName string `json:"nickName"`
-}
 
 type M map[string]interface{}
 
 func init() {
 	// 注册用户自定义的类型，以便在编码和解码时使用
-	gob.Register(&UserInfo{})
+	gob.Register(&staticserver.UserInfo{})
 	gob.Register(&M{})
 }
 
@@ -68,18 +48,18 @@ func HandleOpenID(loginUrl string, secure bool) {
 
 	// 注册登录链接路由
 	http.HandleFunc("/-/openidcallback", func(w http.ResponseWriter, r *http.Request) {
-		id, err := openid.Verify("http://"+r.Host+r.URL.String(), discoveryCache, nonceStore)
+		id, err := openid.Verify("http://"+r.Host+r.URL.String(), staticserver.DiscoveryCache, staticserver.NonceStore)
 		if err != nil {
 			io.WriteString(w, "Authentication check failed.")
 			return
 		}
 		// 将用户信息存放到 session 中
-		session, err := store.Get(r, defaultSessionName)
+		session, err := staticserver.Store.Get(r, staticserver.DefaultSessionName)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		user := &UserInfo{
+		user := &staticserver.UserInfo{
 			Id:       id,
 			Email:    r.FormValue("openid.sreg.email"),
 			Name:     r.FormValue("openid.sreg.fullname"),
@@ -97,8 +77,9 @@ func HandleOpenID(loginUrl string, secure bool) {
 		http.Redirect(w, r, nextUrl, 302)
 	})
 
+	// 获得登录用户信息
 	http.HandleFunc("/-/user", func(w http.ResponseWriter, r *http.Request) {
-		session, err := store.Get(r, defaultSessionName)
+		session, err := staticserver.Store.Get(r, staticserver.DefaultSessionName)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -113,7 +94,7 @@ func HandleOpenID(loginUrl string, secure bool) {
 
 	http.HandleFunc("/-/logout", func(w http.ResponseWriter, r *http.Request) {
 		// 删除 session 中的用户信息
-		session, err := store.Get(r, defaultSessionName)
+		session, err := staticserver.Store.Get(r, staticserver.DefaultSessionName)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

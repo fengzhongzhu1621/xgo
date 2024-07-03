@@ -2,6 +2,7 @@ package xgo
 
 import (
 	"embed"
+	"io"
 	"net/http"
 )
 
@@ -16,3 +17,18 @@ var assetsFS embed.FS
 // http.FS 提供了一种灵活的方式来访问远程文件系统，而无需显式地下载文件到本地。你可以使用 http
 // Assets contains project assets.
 var Assets = http.FS(assetsFS)
+
+
+// 读取资源文件的内容
+func ReadAssetsContent(name string) string {
+	fd, err := Assets.Open(name)
+	if err != nil {
+		panic(err)
+	}
+	data, err := io.ReadAll(fd)
+	if err != nil {
+		panic(err)
+	}
+	// 将字节数组转换为字符串
+	return string(data)
+}
