@@ -41,7 +41,7 @@ func init() {
 }
 
 // 注册 openid 登录相关的路由
-func handleOpenID(loginUrl string, secure bool) {
+func HandleOpenID(loginUrl string, secure bool) {
 	// 注册登录路由
 	http.HandleFunc("/-/login", func(w http.ResponseWriter, r *http.Request) {
 		// 从 HTTP 请求中获取表单字段的值，值为登录成功后的跳转链接
