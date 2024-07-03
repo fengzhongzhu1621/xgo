@@ -2,6 +2,8 @@ package nethttp
 
 import (
 	"net"
+	"net/http"
+	"net/url"
 	"strings"
 )
 
@@ -21,4 +23,13 @@ func TellHostPort(host string, ssl bool) (server, port string, err error) {
 		}
 	}
 	return server, port, err
+}
+
+// 根据 path 构造 url
+func CombineURL(r *http.Request, path string) *url.URL {
+	return &url.URL{
+		Scheme: r.URL.Scheme,
+		Host:   r.Host,
+		Path:   path,
+	}
 }
