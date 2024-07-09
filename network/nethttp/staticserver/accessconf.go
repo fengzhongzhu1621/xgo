@@ -1,4 +1,4 @@
-package staticserver
+package staticServer
 
 import (
 	"net/http"
@@ -30,6 +30,7 @@ type UserInfo struct {
 	NickName string `json:"nickName"`
 }
 
+// 用于判断登录用户的权限
 type UserControl struct {
 	Email string
 	// Access bool
@@ -38,6 +39,7 @@ type UserControl struct {
 	Token  string
 }
 
+// 根据正则表达式判断文件的权限
 type AccessTable struct {
 	Regex string `yaml:"regex"`
 	Allow bool   `yaml:"allow"`
@@ -46,16 +48,19 @@ type AccessTable struct {
 
 // 配置访问类
 type AccessConf struct {
+	// 非登录用户的上传文件的权限
 	Upload       bool          `yaml:"upload" json:"upload"`
+	// 非登录用户的的删除权限
 	Delete       bool          `yaml:"delete" json:"delete"`
 	Users        []UserControl `yaml:"users" json:"users"`
 	// 根据正则表达式判断是否有某个文件的访问权限
 	AccessTables []AccessTable `yaml:"accessTables"`
 }
 
+// 正则表达式缓冲
 var reCache = make(map[string]*regexp.Regexp)
 
-// 判断用户是否有指定的文件权限，使用正则表达式匹配文件名，确认文件是否可以被访问
+// 判断文件权限，与用户无关；使用正则表达式匹配文件名，确认文件是否可以被访问
 func (c *AccessConf) canAccess(fileName string) bool {
 	for _, table := range c.AccessTables {
 		// 缓存正则表达式
@@ -114,6 +119,7 @@ func (c *AccessConf) canUploadByToken(token string) bool {
 func (c *AccessConf) canUpload(r *http.Request) bool {
 	token := r.FormValue("token")
 	if token != "" {
+		// 判断是否有根据 token 上传的权限
 		return c.canUploadByToken(token)
 	}
 
