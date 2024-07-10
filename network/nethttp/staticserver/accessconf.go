@@ -1,4 +1,4 @@
-package staticServer
+package staticserver
 
 import (
 	"net/http"
@@ -7,7 +7,6 @@ import (
 	"github.com/codeskyblue/openid-go"
 	"github.com/gorilla/sessions"
 )
-
 
 var (
 	// 创建一个新的SimpleNonceStore实例。SimpleNonceStore是一个用于存储和检索随机数（nonce）的简单容器
@@ -21,7 +20,6 @@ var (
 	Store              = sessions.NewCookieStore([]byte("something-very-secret"))
 	DefaultSessionName = "ghs-session"
 )
-
 
 type UserInfo struct {
 	Id       string `json:"id"`
@@ -45,14 +43,13 @@ type AccessTable struct {
 	Allow bool   `yaml:"allow"`
 }
 
-
 // 配置访问类
 type AccessConf struct {
 	// 非登录用户的上传文件的权限
-	Upload       bool          `yaml:"upload" json:"upload"`
+	Upload bool `yaml:"upload" json:"upload"`
 	// 非登录用户的的删除权限
-	Delete       bool          `yaml:"delete" json:"delete"`
-	Users        []UserControl `yaml:"users" json:"users"`
+	Delete bool          `yaml:"delete" json:"delete"`
+	Users  []UserControl `yaml:"users" json:"users"`
 	// 根据正则表达式判断是否有某个文件的访问权限
 	AccessTables []AccessTable `yaml:"accessTables"`
 }
@@ -61,7 +58,7 @@ type AccessConf struct {
 var reCache = make(map[string]*regexp.Regexp)
 
 // 判断文件权限，与用户无关；使用正则表达式匹配文件名，确认文件是否可以被访问
-func (c *AccessConf) canAccess(fileName string) bool {
+func (c *AccessConf) CanAccess(fileName string) bool {
 	for _, table := range c.AccessTables {
 		// 缓存正则表达式
 		pattern, ok := reCache[table.Regex]
@@ -83,8 +80,8 @@ func (c *AccessConf) canAccess(fileName string) bool {
 	return true
 }
 
-// 判断登录用户是否有删除权限
-func (c *AccessConf) canDelete(r *http.Request) bool {
+// CanDelete 判断登录用户是否有删除权限
+func (c *AccessConf) CanDelete(r *http.Request) bool {
 	// 用户没有登录则返回默认权限
 	session, err := Store.Get(r, DefaultSessionName)
 	if err != nil {
@@ -106,7 +103,7 @@ func (c *AccessConf) canDelete(r *http.Request) bool {
 }
 
 // 判断是否有根据 token 上传的权限
-func (c *AccessConf) canUploadByToken(token string) bool {
+func (c *AccessConf) CanUploadByToken(token string) bool {
 	for _, rule := range c.Users {
 		if rule.Token == token {
 			return rule.Upload
@@ -115,12 +112,12 @@ func (c *AccessConf) canUploadByToken(token string) bool {
 	return c.Upload
 }
 
-// 判断登录用户是否有上传权限
-func (c *AccessConf) canUpload(r *http.Request) bool {
+// CanUpload 判断登录用户是否有上传权限
+func (c *AccessConf) CanUpload(r *http.Request) bool {
 	token := r.FormValue("token")
 	if token != "" {
 		// 判断是否有根据 token 上传的权限
-		return c.canUploadByToken(token)
+		return c.CanUploadByToken(token)
 	}
 
 	// 用户没有登录则返回默认权限

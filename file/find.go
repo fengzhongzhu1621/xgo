@@ -38,7 +38,7 @@ func LocateFile(filename string, dirs []string) (string, error) {
 	return absPath, nil
 }
 
-// 在根目录查询文件 name，指定搜索深度
+// DeepPath 在目录下查询子目录，获得子目录的路径
 func DeepPath(basedir, name string, maxDepth int) string {
 	// loop max 5, incase of for loop not finished
 	for depth := 0; depth <= maxDepth; depth += 1 {

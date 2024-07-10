@@ -1,4 +1,4 @@
-package httpStaticServer
+package httpstaticserver
 
 import (
 	"net/http"
@@ -8,7 +8,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// 获得静态路由执行的文件所在的绝对路径
+// getRealPath 获得静态路由执行的文件所在的绝对路径
 func (s *HTTPStaticServer) getRealPath(r *http.Request) string {
 	// 获得请求路由的路径
 	path := mux.Vars(r)["path"]

@@ -14,6 +14,7 @@ import (
 	"golang.org/x/text/encoding/simplifiedchinese"
 )
 
+// ExtractFromZip 从压缩包中解压指定路径的文件
 func ExtractFromZip(zipFile, path string, w io.Writer) (err error) {
 	// 用于打开 ZIP 文件并返回一个 *zip.Reader 类型的值
 	cf, err := zip.OpenReader(zipFile)

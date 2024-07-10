@@ -1,4 +1,4 @@
-package httpStaticServer
+package httpstaticserver
 
 import (
 	"os"
@@ -9,10 +9,11 @@ import (
 
 // 索引配置
 type IndexFileItem struct {
-	Path string // 静态文件相对于 Root 的路径
+	Path string      // 静态文件相对于 Root 的路径
 	Info os.FileInfo // 静态文件的元数据信息
 }
 
+// 目录大小
 type Directory struct {
 	size  map[string]int64
 	mutex *sync.RWMutex
@@ -21,14 +22,14 @@ type Directory struct {
 type HTTPStaticServer struct {
 	Root             string // 根路径
 	Prefix           string // 路径前缀
-	Upload           bool // 非登录用户的上传权限
-	Delete           bool // 非登录用户的删除权限
+	Upload           bool   // 非登录用户的上传权限
+	Delete           bool   // 非登录用户的删除权限
 	Title            string
 	Theme            string
 	PlistProxy       string
 	GoogleTrackerID  string
 	AuthType         string
-	DeepPathMaxDepth int
+	DeepPathMaxDepth int // 路径搜素的最大深度
 	NoIndex          bool
 
 	indexes []IndexFileItem // 所有静态文件的索引配置
@@ -40,9 +41,9 @@ type FileJSONInfo struct {
 	Name    string      `json:"name"`
 	Type    string      `json:"type"`
 	Size    int64       `json:"size"`
-	Path    string      `json:"path"`
-	ModTime int64       `json:"mtime"`
-	Extra   interface{} `json:"extra,omitempty"`
+	Path    string      `json:"path"`            // 文件 http请求路径
+	ModTime int64       `json:"mtime"`           // 文件最新修改时间
+	Extra   interface{} `json:"extra,omitempty"` // omitempty 标签选项可用于在 JSON 序列化和反序列化过程中忽略零值字段
 }
 
 type HTTPFileInfo struct {

@@ -12,7 +12,7 @@ import (
 	goplist "github.com/fork2fix/go-plist"
 )
 
-// 读取压缩包中的 Info.plist 文件
+// ParseIPA 读取压缩包中的 Info.plist 文件
 func ParseIPA(path string) (plinfo *plistBundle, err error) {
 	plistre := regexp.MustCompile(`^Payload/[^/]*/Info\.plist$`)
 	r, err := zip.OpenReader(path)

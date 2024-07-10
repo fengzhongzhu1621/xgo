@@ -1,4 +1,4 @@
-package httpStaticServer
+package httpstaticserver
 
 import (
 	"log"
@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-// 生成所有静态文件的索引配置
+// 生成所有静态文件的索引配置，索引由相对路径和文件的元数据构造
 func (s *HTTPStaticServer) makeIndex() error {
 	var indexes = make([]IndexFileItem, 0)
 	// 遍历所有的静态文件
@@ -30,13 +30,11 @@ func (s *HTTPStaticServer) makeIndex() error {
 		return nil
 	})
 
-	
 	s.indexes = indexes
 	return err
 }
 
-
-// 查找索引，根据相对路径查找
+// findIndex 根据相对路径查找查找索引
 func (s *HTTPStaticServer) findIndex(text string) []IndexFileItem {
 	ret := make([]IndexFileItem, 0)
 	// 遍历索引配置
