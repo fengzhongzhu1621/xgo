@@ -13,6 +13,7 @@ type IndexFileItem struct {
 	Info os.FileInfo // 静态文件的元数据信息
 }
 
+// 目录大小
 type Directory struct {
 	size  map[string]int64
 	mutex *sync.RWMutex
