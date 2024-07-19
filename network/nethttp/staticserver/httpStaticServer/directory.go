@@ -12,7 +12,6 @@ func (s *HTTPStaticServer) historyDirSize(dir string) int64 {
 	if ok {
 		return size
 	}
-
 	// 遍历索引查找索引匹配的文件大小之和
 	for _, fitem := range s.indexes {
 		if filepath.HasPrefix(fitem.Path, dir) {
