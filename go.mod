@@ -43,6 +43,7 @@ require (
 	github.com/VividCortex/ewma v1.1.1 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
+	github.com/codeskyblue/go-accesslog v0.0.0-20171215023101-6188d3bd9371 // indirect
 	github.com/google/s2a-go v0.1.7 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.2 // indirect
 	github.com/gorilla/securecookie v1.1.2 // indirect
