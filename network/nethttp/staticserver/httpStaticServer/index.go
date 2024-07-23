@@ -2,10 +2,15 @@ package httpstaticserver
 
 import (
 	"log"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
+
+	"github.com/fengzhongzhu1621/xgo/file"
+	"github.com/fengzhongzhu1621/xgo/tpl"
+	"github.com/gorilla/mux"
 )
 
 // 生成所有静态文件的索引配置，索引由相对路径和文件的元数据构造
@@ -63,4 +68,43 @@ func (s *HTTPStaticServer) findIndex(text string) []IndexFileItem {
 		}
 	}
 	return ret
+}
+
+func (s *HTTPStaticServer) hIndex(w http.ResponseWriter, r *http.Request) {
+	path := mux.Vars(r)["path"]
+	realPath := s.getRealPath(r)
+	if r.FormValue("json") == "true" {
+		s.hJSONList(w, r)
+		return
+	}
+
+	if r.FormValue("op") == "info" {
+		s.hInfo(w, r)
+		return
+	}
+
+	if r.FormValue("op") == "archive" {
+		s.hZip(w, r)
+		return
+	}
+
+	log.Println("GET", path, realPath)
+	if r.FormValue("raw") == "false" || file.IsDir(realPath) {
+		if r.Method == "HEAD" {
+			return
+		}
+		tpl.RenderHTML(w, "assets/index.html", s)
+	} else {
+		if filepath.Base(path) == YAMLCONF {
+			auth := s.readAccessConf(realPath)
+			if !auth.Delete {
+				http.Error(w, "Security warning, not allowed to read", http.StatusForbidden)
+				return
+			}
+		}
+		if r.FormValue("download") == "true" {
+			w.Header().Set("Content-Disposition", "attachment; filename="+strconv.Quote(filepath.Base(path)))
+		}
+		http.ServeFile(w, r, realPath)
+	}
 }

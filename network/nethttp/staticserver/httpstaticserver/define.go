@@ -95,3 +95,5 @@ var (
 	GITCOMMIT = "unknown git commit"
 	SITE      = "https://github.com/codeskyblue/gohttpserver"
 )
+
+const YAMLCONF = ".ghs.yml"
