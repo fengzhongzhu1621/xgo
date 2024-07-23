@@ -57,7 +57,7 @@ type HTTPFileInfo struct {
 var dirInfoSize = Directory{size: make(map[string]int64), mutex: &sync.RWMutex{}}
 
 type Configure struct {
-	Conf            *os.File `yaml:"-"`
+	Conf            *os.File `yaml:"-"` // 配置文件路径
 	Addr            string   `yaml:"addr"`
 	Port            int      `yaml:"port"`
 	Root            string   `yaml:"root"`
