@@ -35,7 +35,7 @@ func main() {
 		fmt.Printf("--- config ---\n%s\n", string(data))
 	}
 	// 日志添加文件行号和时间
-	log.SetFlags(log.Lshortfile | log.LstdFlags)
+	log.SetFlags(log.Llongfile | log.LstdFlags)
 
 	// make sure prefix matches: ^/.*[^/]$
 	gcfg.Prefix = stringutils.FixPrefix(gcfg.Prefix)

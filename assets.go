@@ -21,7 +21,6 @@ var assetsFS embed.FS
 // Assets contains project assets.
 var Assets = http.FS(assetsFS)
 
-
 // 读取资源文件的内容
 func ReadAssetsContent(name string) string {
 	// 打开资源文件
@@ -38,17 +37,17 @@ func ReadAssetsContent(name string) string {
 	return string(data)
 }
 
-
 var (
 	FuncMap template.FuncMap // 定义的模板函数
 )
 
-
 func init() {
+	// 初始化模板函数
 	FuncMap = template.FuncMap{
 		"title": strings.ToTitle, // 首字母大写
+		// 在资源文件路径后面添加生成时间，用于发布后取消前端对静态资源的缓存
 		"urlhash": func(path string) string {
-			// 打开资源文件
+			// 打开资源文件，例如 js/index.js
 			httpFile, err := Assets.Open(path)
 			if err != nil {
 				return path + "#no-such-file"

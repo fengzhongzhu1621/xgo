@@ -70,9 +70,13 @@ func (s *HTTPStaticServer) findIndex(text string) []IndexFileItem {
 	return ret
 }
 
+// hIndex 显示索引页面
 func (s *HTTPStaticServer) hIndex(w http.ResponseWriter, r *http.Request) {
 	path := mux.Vars(r)["path"]
+	// 获得静态路由执行的文件所在的绝对路径
 	realPath := s.getRealPath(r)
+	log.Printf("GET hIndex path = %s realPath = %s raw = %s json = %s", path, realPath, r.FormValue("raw"), r.FormValue("json"))
+
 	if r.FormValue("json") == "true" {
 		s.hJSONList(w, r)
 		return
@@ -88,8 +92,8 @@ func (s *HTTPStaticServer) hIndex(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Println("GET", path, realPath)
 	if r.FormValue("raw") == "false" || file.IsDir(realPath) {
+		// 首页访问
 		if r.Method == "HEAD" {
 			return
 		}

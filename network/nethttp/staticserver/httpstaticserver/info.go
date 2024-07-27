@@ -18,6 +18,8 @@ func (s *HTTPStaticServer) hInfo(w http.ResponseWriter, r *http.Request) {
 	path := mux.Vars(r)["path"]
 	relPath := s.getRealPath(r)
 
+	log.Printf("hInfo path = %s realPath = %s", path, relPath)
+
 	// 获得文件的元数据
 	fi, err := os.Stat(relPath)
 	if err != nil {
@@ -58,6 +60,8 @@ func (s *HTTPStaticServer) hJSONList(w http.ResponseWriter, r *http.Request) {
 	requestPath := mux.Vars(r)["path"]
 	realPath := s.getRealPath(r)
 
+	log.Printf("hJSONList path = %s realPath = %s", requestPath, realPath)
+
 	// 从路径所在的目录和祖先目录读取静态文件关联的配置文件，转换为结构体
 	auth := s.readAccessConf(realPath)
 	// 判断登录用户是否有上传权限
@@ -85,6 +89,7 @@ func (s *HTTPStaticServer) hJSONList(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	} else {
+		// 读取指定目录下的所有条目（包括文件和子目录）。
 		infos, err := os.ReadDir(realPath)
 		if err != nil {
 			http.Error(w, err.Error(), 500)

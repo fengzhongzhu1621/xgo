@@ -1,7 +1,7 @@
 #!/bin/bash -
-go build main.go
+go build -o run_gohttpserver
 
-cp gohttpserver ../run_gohttpserver
+cp -a run_gohttpserver ../
 
 cd ..
 ./run_gohttpserver
