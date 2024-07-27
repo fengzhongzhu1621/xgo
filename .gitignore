@@ -54,7 +54,7 @@ _cgo_export.*
 
 _testmain.go
 
-gohttpserver
+gohttpserver/gohttpserver
 bindata_assetfs.go
 assets_vfsdata.go
 
