@@ -57,31 +57,31 @@ type HTTPFileInfo struct {
 var dirInfoSize = Directory{size: make(map[string]int64), mutex: &sync.RWMutex{}}
 
 type Configure struct {
-	Conf            *os.File `yaml:"-"` // 配置文件路径
-	Addr            string   `yaml:"addr"`
-	Port            int      `yaml:"port"`
-	Root            string   `yaml:"root"`
+	Conf            *os.File `yaml:"-"`    // 配置文件路径
+	Addr            string   `yaml:"addr"` // 静态服务的地址
+	Port            int      `yaml:"port"` // 静态服务端口号
+	Root            string   `yaml:"root"` // 静态资源根目录
 	Prefix          string   `yaml:"prefix"`
 	HTTPAuth        string   `yaml:"httpauth"`
 	Cert            string   `yaml:"cert"`
 	Key             string   `yaml:"key"`
-	Theme           string   `yaml:"theme"`
+	Theme           string   `yaml:"theme"` // 样式主题
 	XHeaders        bool     `yaml:"xheaders"`
-	Upload          bool     `yaml:"upload"`
-	Delete          bool     `yaml:"delete"`
+	Upload          bool     `yaml:"upload"` // 是否有文件上传权限
+	Delete          bool     `yaml:"delete"` // 是否有文件删除权限
 	PlistProxy      string   `yaml:"plistproxy"`
-	Title           string   `yaml:"title"`
+	Title           string   `yaml:"title"` // 静态服务的标题
 	Debug           bool     `yaml:"debug"`
 	GoogleTrackerID string   `yaml:"google-tracker-id"`
 	Auth            struct {
-		Type   string `yaml:"type"` // openid|http|github
-		OpenID string `yaml:"openid"`
+		Type   string `yaml:"type"`   // openid|http|github
+		OpenID string `yaml:"openid"` // openid 认证地址
 		HTTP   string `yaml:"http"`
 		ID     string `yaml:"id"`     // for oauth2
 		Secret string `yaml:"secret"` // for oauth2
 	} `yaml:"auth"`
-	DeepPathMaxDepth int  `yaml:"deep-path-max-depth"`
-	NoIndex          bool `yaml:"no-index"`
+	DeepPathMaxDepth int  `yaml:"deep-path-max-depth"` // 路径搜索深度
+	NoIndex          bool `yaml:"no-index"`            // 进程启动时是否创建索引
 }
 
 var (

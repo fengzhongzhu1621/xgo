@@ -24,14 +24,17 @@ import (
 )
 
 func main() {
+	// 解析命令行参数和配置文件
 	if err := httpstaticserver.ParseFlags(); err != nil {
 		log.Fatal(err)
 	}
 	gcfg := httpstaticserver.GetGcfg()
 	if gcfg.Debug {
+		// DEBUG模式下打印配置文件的内容
 		data, _ := yaml.Marshal(gcfg)
 		fmt.Printf("--- config ---\n%s\n", string(data))
 	}
+	// 日志添加文件行号和时间
 	log.SetFlags(log.Lshortfile | log.LstdFlags)
 
 	// make sure prefix matches: ^/.*[^/]$
@@ -40,6 +43,7 @@ func main() {
 		log.Printf("url prefix: %s", gcfg.Prefix)
 	}
 
+	// 创结静态服务对象, http.Handler，构造handler
 	ss := httpstaticserver.NewHTTPStaticServer(gcfg.Root, gcfg.NoIndex)
 	ss.Prefix = gcfg.Prefix
 	ss.Theme = gcfg.Theme
@@ -61,11 +65,13 @@ func main() {
 	if ss.PlistProxy != "" {
 		log.Printf("plistproxy: %s", strconv.Quote(ss.PlistProxy))
 	}
-
 	var hdlr http.Handler = ss
+
+	// 设置日志处理
 	var logger = httpstaticserver.GetLogger()
 	hdlr = accesslog.NewLoggingHandler(hdlr, logger)
 
+	// 添加认证处理器
 	// HTTP Basic Authentication
 	userpass := strings.SplitN(gcfg.Auth.HTTP, ":", 2)
 	switch gcfg.Auth.Type {
@@ -82,13 +88,15 @@ func main() {
 		auth.HandleOauth2()
 	}
 
-	// CORS
+	// 添加 CORS headers
 	hdlr = nethttp.Cors(hdlr)
 
+	// 添加代理头
 	if gcfg.XHeaders {
 		hdlr = handlers.ProxyHeaders(hdlr)
 	}
 
+	// 添加路由
 	mainRouter := mux.NewRouter()
 	router := mainRouter
 	if gcfg.Prefix != "" {
@@ -99,8 +107,13 @@ func main() {
 		})
 	}
 
-	var version = httpstaticserver.GetVersion()
+	// 添加静态资源路由， 从请求的 URL 路径中删除指定的前缀
+	// 将匹配的路径 /-/assets/ -> assets/ 交给 http.FileServer 处理
+	// 例子 http://localhost:8000/-/assets/css/style.css
 	router.PathPrefix("/-/assets/").Handler(http.StripPrefix(gcfg.Prefix+"/-/", http.FileServer(xgo.Assets)))
+	// 添加版本路由
+	// 例子 http://localhost:8000/-/sysinfo
+	var version = httpstaticserver.GetVersion()
 	router.HandleFunc("/-/sysinfo", func(w http.ResponseWriter, r *http.Request) {
 		data, _ := json.Marshal(map[string]interface{}{
 			"version": version,
@@ -109,8 +122,11 @@ func main() {
 		w.Header().Set("Content-Length", fmt.Sprintf("%d", len(data)))
 		w.Write(data)
 	})
+	// 添加业务逻辑路由
+	// http://localhost:8000/assets/css
 	router.PathPrefix("/").Handler(hdlr)
 
+	// 格式化服务器地址
 	if gcfg.Addr == "" {
 		gcfg.Addr = fmt.Sprintf(":%d", gcfg.Port)
 	}
@@ -120,11 +136,11 @@ func main() {
 	_, port, _ := net.SplitHostPort(gcfg.Addr)
 	log.Printf("listening on %s, local address http://%s:%s\n", strconv.Quote(gcfg.Addr), network.GetLocalIP(), port)
 
+	// 启动服务
 	srv := &http.Server{
 		Handler: mainRouter,
 		Addr:    gcfg.Addr,
 	}
-
 	var err error
 	if gcfg.Key != "" && gcfg.Cert != "" {
 		err = srv.ListenAndServeTLS(gcfg.Cert, gcfg.Key)

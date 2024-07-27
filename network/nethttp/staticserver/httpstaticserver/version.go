@@ -6,6 +6,7 @@ import (
 	"runtime"
 )
 
+// versionMessage 获得静态服务的版本信息
 func versionMessage() string {
 	// 创建字符串模板
 	t := template.Must(template.New("version").Parse(`GoHTTPServer
@@ -15,7 +16,7 @@ func versionMessage() string {
   Git commit:     {{.GitCommit}}
   Built:          {{.Built}}
   Site:           {{.Site}}`))
-	// 渲染模板
+	// 渲染模板，将结果输出到 buf 中
 	buf := bytes.NewBuffer(nil)
 	t.Execute(buf, map[string]interface{}{
 		"Version":   VERSION,
@@ -25,5 +26,7 @@ func versionMessage() string {
 		"Built":     BUILDTIME,
 		"Site":      SITE,
 	})
+
+	// 将 bytes.Buffer 转换为 string
 	return buf.String()
 }

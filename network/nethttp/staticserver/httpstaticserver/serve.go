@@ -16,10 +16,6 @@ func (s *HTTPStaticServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func NewHTTPStaticServer(root string, noIndex bool) *HTTPStaticServer {
-	// if root == "" {
-	// 	root = "./"
-	// }
-	// root = filepath.ToSlash(root)
 	root = filepath.ToSlash(filepath.Clean(root))
 	if !strings.HasSuffix(root, "/") {
 		root = root + "/"
