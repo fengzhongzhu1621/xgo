@@ -41,12 +41,11 @@ require (
 	cloud.google.com/go/longrunning v0.5.4 // indirect
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/VividCortex/ewma v1.1.1 // indirect
-	github.com/alecthomas/kingpin v2.2.6+incompatible // indirect
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
 	github.com/alecthomas/units v0.0.0-20190924025748-f65c72e2690d // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
-	github.com/codeskyblue/go-accesslog v0.0.0-20171215023101-6188d3bd9371 // indirect
+	github.com/felixge/httpsnoop v1.0.3 // indirect
 	github.com/google/s2a-go v0.1.7 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.2 // indirect
 	github.com/gorilla/securecookie v1.1.2 // indirect
@@ -119,14 +118,19 @@ require (
 
 require (
 	github.com/ThreeDotsLabs/watermill v1.2.0-rc.11
+	github.com/alecthomas/kingpin v2.2.6+incompatible
 	github.com/bndr/gotabulate v1.1.2
 	github.com/cenkalti/backoff/v3 v3.2.2
 	github.com/cheggaaa/pb/v3 v3.1.0
 	github.com/codeskyblue/dockerignore v0.0.0-20151214070507-de82dee623d9
+	github.com/codeskyblue/go-accesslog v0.0.0-20171215023101-6188d3bd9371
 	github.com/codeskyblue/openid-go v0.0.0-20160923065855-0d30842b2fb4
 	github.com/fork2fix/go-plist v0.0.0-20181126021357-36960be5e636
 	github.com/go-sql-driver/mysql v1.8.1
+	github.com/go-yaml/yaml v2.1.0+incompatible
+	github.com/goji/httpauth v0.0.0-20160601135302-2da839ab0f4d
 	github.com/google/uuid v1.6.0
+	github.com/gorilla/handlers v1.5.2
 	github.com/gorilla/mux v1.8.1
 	github.com/gorilla/sessions v1.3.0
 	github.com/hashicorp/go-multierror v1.1.1
@@ -137,7 +141,7 @@ require (
 	github.com/lithammer/shortuuid/v3 v3.0.7
 	github.com/oklog/ulid v1.3.1
 	github.com/prometheus/client_golang v1.13.0
-	github.com/shogo82148/androidbinary v1.0.5
+	github.com/shogo82148/androidbinary v0.0.0-20180627093851-01c4bfa8b3b5
 	github.com/tidwall/assert v0.1.0
 	github.com/tidwall/btree v1.6.0
 	github.com/tidwall/gjson v1.14.4

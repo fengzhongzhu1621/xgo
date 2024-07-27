@@ -97,3 +97,19 @@ var (
 )
 
 const YAMLCONF = ".ghs.yml"
+
+func GetGcfg() Configure {
+	return gcfg
+}
+
+func GetLogger() httpLogger {
+	return logger
+}
+
+func GetVersion() string {
+	return VERSION
+}
+
+func GetYamlConf() string {
+	return YAMLCONF
+}

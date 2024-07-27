@@ -7,7 +7,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-func parseFlags() error {
+func ParseFlags() error {
 	// initial default conf
 	gcfg.Root = "./"
 	gcfg.Port = 8000

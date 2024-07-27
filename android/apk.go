@@ -15,8 +15,7 @@ type ApkInfo struct {
 	} `json:"version"`
 }
 
-
-// path should be absolute
+// ParseApkInfo path should be absolute
 func ParseApkInfo(path string) (ai *ApkInfo) {
 	defer func() {
 		if err := recover(); err != nil {
@@ -32,6 +31,6 @@ func ParseApkInfo(path string) (ai *ApkInfo) {
 	ai.PackageName = apkf.PackageName()
 	ai.Version.Code = apkf.Manifest().VersionCode
 	ai.Version.Name = apkf.Manifest().VersionName
-	
+
 	return ai
 }
