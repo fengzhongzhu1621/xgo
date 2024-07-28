@@ -126,6 +126,7 @@ func (s *HTTPStaticServer) hJSONList(w http.ResponseWriter, r *http.Request) {
 		}
 		if info.IsDir() {
 			// 在目录下查询子目录，获得子目录的路径
+			// info.Name() 目录名
 			name := file.DeepPath(realPath, info.Name(), maxDepth)
 			lr.Name = name
 			lr.Path = filepath.Join(filepath.Dir(path), name)

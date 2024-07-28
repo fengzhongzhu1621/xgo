@@ -1,6 +1,6 @@
 module github.com/fengzhongzhu1621/xgo
 
-go 1.22.2
+go 1.22.5
 
 require (
 	github.com/dustin/go-broadcast v0.0.0-20211018055107-71439988bd91

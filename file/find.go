@@ -38,7 +38,7 @@ func LocateFile(filename string, dirs []string) (string, error) {
 	return absPath, nil
 }
 
-// DeepPath 在目录下查询子目录，获得子目录的路径
+// DeepPath 在目录下查询子目录，获得子目录的路径（如果子目录只有一个，则继续查询子目录）
 func DeepPath(basedir, name string, maxDepth int) string {
 	// loop max 5, incase of for loop not finished
 	for depth := 0; depth <= maxDepth; depth += 1 {
@@ -48,6 +48,7 @@ func DeepPath(basedir, name string, maxDepth int) string {
 			break
 		}
 		if finfos[0].IsDir() {
+			// 如果目录下只有一个子目录，则继续查询子目录
 			name = filepath.ToSlash(filepath.Join(name, finfos[0].Name()))
 		} else {
 			break
