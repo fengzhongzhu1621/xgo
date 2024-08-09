@@ -29,6 +29,12 @@ type StudentTimestamp struct {
 	Join     time.Time `gorm:"type:timestamp"`
 }
 
+type User struct {
+	ID       int
+	Name     string    `gorm:"index"`
+	Students []Student `gorm:"many2many:user_students;"`
+}
+
 // 根据结构体创建数据表
 func TestAutoMigrate(t *testing.T) {
 	// create database xgo charset=utf8;
@@ -80,4 +86,20 @@ func TestAutoMigrate(t *testing.T) {
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 	*/
 	fmt.Println(conn.AutoMigrate(new(StudentTimestamp)).Error)
+
+	/*
+		CREATE TABLE `user` (
+			`id` int NOT NULL AUTO_INCREMENT,
+			`name` varchar(255) DEFAULT NULL,
+			PRIMARY KEY (`id`),
+			KEY `idx_user_name` (`name`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+		CREATE TABLE `user_students` (
+			`user_id` int NOT NULL,
+			`student_id` int NOT NULL,
+			PRIMARY KEY (`user_id`,`student_id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+	*/
+	fmt.Println(conn.AutoMigrate(new(User)).Error)
 }
