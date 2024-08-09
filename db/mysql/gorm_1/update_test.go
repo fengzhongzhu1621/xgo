@@ -1,4 +1,4 @@
-package mysql
+package gorm_1
 
 import (
 	"fmt"
@@ -6,7 +6,6 @@ import (
 
 	"github.com/jinzhu/gorm"
 )
-
 
 func TestUpdate(t *testing.T) {
 	conn, err := gorm.Open("mysql", "root:@tcp(127.0.0.1:3306)/xgo?parseTime=True&loc=Local")
@@ -34,8 +33,8 @@ func TestUpdate(t *testing.T) {
 	fmt.Println(conn.Model(new(Student)).Where("name = ?", "username_a").Update("age", 11).Error)
 
 	// 更新多个字段
-	fmt.Println(conn.Model(new(Student)).Where("name = ?", "username_a").Updates(map[string]interface{} {
+	fmt.Println(conn.Model(new(Student)).Where("name = ?", "username_a").Updates(map[string]interface{}{
 		"name": "bob",
-		"age": 11,
+		"age":  11,
 	}).Error)
 }

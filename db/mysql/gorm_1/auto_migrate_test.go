@@ -1,4 +1,4 @@
-package mysql
+package gorm_1
 
 import (
 	"fmt"
@@ -17,16 +17,16 @@ type Student struct {
 
 type StudentSize struct {
 	Name string `gorm:"size:100;default:''"`
-	Age  int `gorm:not null"`
+	Age  int    `gorm:not null"`
 	Id   int
 }
 
 type StudentTimestamp struct {
-	Name string `gorm:"size:100;default:''"`
-	Age  int `gorm:not null"`
-	Id   int
+	Name     string `gorm:"size:100;default:''"`
+	Age      int    `gorm:not null"`
+	Id       int
 	CreateAt time.Time
-	Join time.Time `gorm:"type:timestamp"`
+	Join     time.Time `gorm:"type:timestamp"`
 }
 
 // 根据结构体创建数据表
@@ -54,31 +54,30 @@ func TestAutoMigrate(t *testing.T) {
 
 	fmt.Println(conn.AutoMigrate(new(Student)).Error)
 
-
 	// 设置字段属性，生效场景
 	// 1. 第一次创建表时
 	// 2. 表增加新字段时
 	// 其他场景下，修改表属性，在 gorm 操作中，是无效的
 	/*
-	CREATE TABLE `student_size` (
-		`name` varchar(100) DEFAULT '',
-		`age` int DEFAULT NULL,
-		`id` int NOT NULL AUTO_INCREMENT,
-		PRIMARY KEY (`id`)
-	) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+		CREATE TABLE `student_size` (
+			`name` varchar(100) DEFAULT '',
+			`age` int DEFAULT NULL,
+			`id` int NOT NULL AUTO_INCREMENT,
+			PRIMARY KEY (`id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 	*/
 	fmt.Println(conn.AutoMigrate(new(StudentSize)).Error)
-	
+
 	// 设置时间字段格式
 	/*
-	CREATE TABLE `student_timestamp` (
-		`name` varchar(100) DEFAULT '',
-		`age` int DEFAULT NULL,
-		`id` int NOT NULL AUTO_INCREMENT,
-		`create_at` datetime DEFAULT NULL,
-		`join` timestamp NULL DEFAULT NULL,
-		PRIMARY KEY (`id`)
-	) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+		CREATE TABLE `student_timestamp` (
+			`name` varchar(100) DEFAULT '',
+			`age` int DEFAULT NULL,
+			`id` int NOT NULL AUTO_INCREMENT,
+			`create_at` datetime DEFAULT NULL,
+			`join` timestamp NULL DEFAULT NULL,
+			PRIMARY KEY (`id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 	*/
 	fmt.Println(conn.AutoMigrate(new(StudentTimestamp)).Error)
 }

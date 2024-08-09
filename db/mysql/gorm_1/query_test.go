@@ -1,4 +1,4 @@
-package mysql
+package gorm_1
 
 import (
 	"fmt"
@@ -51,8 +51,8 @@ func TestQueryConnect(t *testing.T) {
 	// 过滤
 	// select name, age from studuent where name = "username_1"
 	var stu6 []Student
-	conn.Select("name", "age").Where("name = ?", "username_1").Where("age = ?", 10).Find(&stu6);
+	conn.Select("name", "age").Where("name = ?", "username_1").Where("age = ?", 10).Find(&stu6)
 	fmt.Println(stu6) // {username_1 10 1}
-	conn.Select("name", "age").Where("name = ? and age = ?", "username_1", 10).Find(&stu6);
+	conn.Select("name", "age").Where("name = ? and age = ?", "username_1", 10).Find(&stu6)
 	fmt.Println(stu6) // {username_1 10 1}
 }
