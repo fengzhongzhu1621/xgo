@@ -15,6 +15,11 @@ type Student struct {
 	Id   int
 }
 
+// TableName 解决gorm表明映射
+func (Student) TableName() string {
+	return "Student"
+}
+
 func createStudent(db *gorm.DB, activity *Student) {
 	result := db.Create(activity)
 	if result.Error != nil {
