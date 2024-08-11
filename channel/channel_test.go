@@ -110,3 +110,19 @@ func TestIsChannelClosed(t *testing.T) {
 		})
 	}
 }
+
+func worker(done chan bool) {
+	fmt.Println("Goroutine started")
+	// do some work
+	fmt.Println("Goroutine finished")
+	done <- true
+}
+
+// 测试主进程等待协程执行完成
+func TestWaitDone(t *testing.T) {
+	done := make(chan bool, 1)
+	go worker(done)
+	// wait for worker to finish
+	<-done
+	fmt.Println("Program finished")
+}

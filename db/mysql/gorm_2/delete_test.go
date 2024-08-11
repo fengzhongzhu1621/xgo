@@ -11,7 +11,19 @@ import (
 )
 
 func deleteStudent(db *gorm.DB, id int) {
-	db.Delete(&Student{}, id)
+	// 根据主键删除
+	result := db.Delete(&Student{}, id)
+	if result.Error != nil {
+		log.Fatal(result.Error)
+	}
+
+	// 根据记录对象删除
+	var student Student
+	db.First(&student, id)
+	result = db.Delete(&student)
+	if result.Error != nil {
+		log.Fatal(result.Error)
+	}
 }
 
 func TestDelete(t *testing.T) {

@@ -10,9 +10,9 @@ import (
 )
 
 type Student struct {
-	Name string
+	Name string `gorm:"size:255;uniqueIndex"`
 	Age  int
-	Id   int
+	Id   int `gorm:"primaryKey"`
 }
 
 type StudentSize struct {
@@ -35,6 +35,61 @@ type User struct {
 	Students []Student `gorm:"many2many:user_students;"`
 }
 
+type User2 struct {
+	ID        uint   `gorm:"column:user_id"`
+	Name      string `gorm:"column:user_name"`
+	Email     string `gorm:"column:user_email"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
+func (User2) TableName() string {
+	return "users"
+}
+
+// one2one
+type CreditCard struct {
+	ID     uint
+	Number string
+	UserID uint
+	User   User
+}
+
+type User3 struct {
+	ID          uint
+	Name        string
+	Email       string
+	CreditCard3 CreditCard
+}
+
+// one2many
+type Order struct {
+	ID     uint
+	Amount float64
+	UserID uint
+}
+
+type User4 struct {
+	ID     uint
+	Name   string
+	Email  string
+	Orders []Order
+}
+
+// many2many
+type Product struct {
+	ID    uint
+	Name  string
+	Users []User `gorm:"many2many:user_products;"`
+}
+
+type User5 struct {
+	ID       uint
+	Name     string
+	Email    string
+	Products []Product `gorm:"many2many:user_products;"`
+}
+
 // 根据结构体创建数据表
 func TestAutoMigrate(t *testing.T) {
 	// create database xgo charset=utf8;
@@ -51,13 +106,14 @@ func TestAutoMigrate(t *testing.T) {
 	conn.SingularTable(true)
 
 	// 创建数据表
-	// CREATE TABLE `student` (
-	//   `name` varchar(255) DEFAULT NULL,
-	//   `age` int DEFAULT NULL,
-	//   `id` int NOT NULL AUTO_INCREMENT,
-	//   PRIMARY KEY (`id`)
-	// ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-
+	/*
+		CREATE TABLE `student` (
+			`name` varchar(255) DEFAULT NULL,
+			`age` int DEFAULT NULL,
+			`id` int NOT NULL AUTO_INCREMENT,
+			PRIMARY KEY (`id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+	*/
 	fmt.Println(conn.AutoMigrate(new(Student)).Error)
 
 	// 设置字段属性，生效场景
@@ -102,4 +158,76 @@ func TestAutoMigrate(t *testing.T) {
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 	*/
 	fmt.Println(conn.AutoMigrate(new(User)).Error)
+
+	/*
+		CREATE TABLE `users` (
+			`user_id` int unsigned DEFAULT NULL,
+			`user_name` varchar(255) DEFAULT NULL,
+			`user_email` varchar(255) DEFAULT NULL,
+			`created_at` datetime DEFAULT NULL,
+			`updated_at` datetime DEFAULT NULL
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+	*/
+	fmt.Println(conn.AutoMigrate(new(User2)).Error)
+
+	/*
+		CREATE TABLE `credit_card` (
+			`id` int unsigned NOT NULL AUTO_INCREMENT,
+			`number` varchar(255) DEFAULT NULL,
+			`user_id` int unsigned DEFAULT NULL,
+			PRIMARY KEY (`id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+
+		CREATE TABLE `user3` (
+			`id` int unsigned NOT NULL AUTO_INCREMENT,
+			`name` varchar(255) DEFAULT NULL,
+			`email` varchar(255) DEFAULT NULL,
+			PRIMARY KEY (`id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+	*/
+	fmt.Println(conn.AutoMigrate(new(CreditCard)).Error)
+	fmt.Println(conn.AutoMigrate(new(User3)).Error)
+
+	/*
+		CREATE TABLE `order` (
+			`id` int unsigned NOT NULL AUTO_INCREMENT,
+			`amount` double DEFAULT NULL,
+			`user_id` int unsigned DEFAULT NULL,
+			PRIMARY KEY (`id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+		CREATE TABLE `user4` (
+			`id` int unsigned NOT NULL AUTO_INCREMENT,
+			`name` varchar(255) DEFAULT NULL,
+			`email` varchar(255) DEFAULT NULL,
+			PRIMARY KEY (`id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+	*/
+	fmt.Println(conn.AutoMigrate(new(Order)).Error)
+	fmt.Println(conn.AutoMigrate(new(User4)).Error)
+
+	/*
+		CREATE TABLE `product` (
+			`id` int unsigned NOT NULL AUTO_INCREMENT,
+			`name` varchar(255) DEFAULT NULL,
+			PRIMARY KEY (`id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+		CREATE TABLE `user5` (
+			`id` int unsigned NOT NULL AUTO_INCREMENT,
+			`name` varchar(255) DEFAULT NULL,
+			`email` varchar(255) DEFAULT NULL,
+			PRIMARY KEY (`id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+		 CREATE TABLE `user_products` (
+			`product_id` int unsigned NOT NULL,
+			`user_id` int NOT NULL,
+			PRIMARY KEY (`product_id`,`user_id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+	*/
+	fmt.Println(conn.AutoMigrate(new(Product)).Error)
+	fmt.Println(conn.AutoMigrate(new(User5)).Error)
+
 }

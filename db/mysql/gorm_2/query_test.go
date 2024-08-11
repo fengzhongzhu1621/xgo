@@ -13,6 +13,7 @@ import (
 
 func getStudent(db *gorm.DB, id int) *Student {
 	var student Student
+	// 根据主键查询
 	result := db.First(&student, id)
 	if result.Error != nil {
 		log.Fatal(result.Error)
@@ -22,7 +23,7 @@ func getStudent(db *gorm.DB, id int) *Student {
 
 func paginateStudents(db *gorm.DB, page, pageSize int) []Student {
 	var activities []Student
-	db.Offset((page - 1) * pageSize).Limit(pageSize).Find(&activities)
+	db.Where("name = ?", "bob").Or("name = ?", "foo").Order("created_at desc").Offset((page - 1) * pageSize).Limit(pageSize).Find(&activities)
 	return activities
 }
 

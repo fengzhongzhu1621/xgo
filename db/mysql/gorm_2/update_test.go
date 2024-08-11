@@ -17,7 +17,18 @@ func updateStudent(db *gorm.DB, id int, newName string) {
 		log.Fatal(result.Error)
 	}
 	student.Name = newName
-	db.Save(&student)
+
+	// 使用 save 方法更新
+	result = db.Save(&student)
+	if result.Error != nil {
+		log.Fatal(result.Error)
+	}
+	// 使用 updates 方法更新
+	result = db.Model(&student).Updates(Student{Name: "newName"})
+	if result.Error != nil {
+		log.Fatal(result.Error)
+	}
+
 }
 
 func batchUpdateStudents(db *gorm.DB, students []Student) {

@@ -37,4 +37,10 @@ func TestRawSql(t *testing.T) {
 	for i, student := range rawSqlQuery(db, query) {
 		fmt.Println(i, student)
 	}
+
+	var students []Student
+	db.Raw("select * from student where name = ?", "bob").Scan(&students)
+	for i, student2 := range students {
+		fmt.Println(i, student2)
+	}
 }

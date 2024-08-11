@@ -31,7 +31,7 @@ type HTMLProduction struct {
 
 // HTMLDebug contains template delims and pattern and function with file list.
 type HTMLDebug struct {
-	Files   []string
+	Files   []string // 多个模板文件
 	Glob    string
 	Delims  Delims
 	FuncMap template.FuncMap
@@ -63,6 +63,8 @@ func (r HTMLDebug) Instance(name string, data interface{}) Render {
 		Data:     data,
 	}
 }
+
+// 加载多个模板文件
 func (r HTMLDebug) loadTemplate() *template.Template {
 	// 初始化FuncMap
 	if r.FuncMap == nil {

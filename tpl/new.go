@@ -3,7 +3,8 @@ package tpl
 import "html/template"
 
 var (
-	tmpl      *template.Template
+	tmpl *template.Template
+	// 定义了模板缓存
 	templates = map[string]string{
 		"index":       "res/index.tmpl.html",
 		"ipa-install": "res/ipa-install.tmpl.html",
