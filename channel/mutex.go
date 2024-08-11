@@ -7,7 +7,7 @@ import (
 // MutexWrap 锁代理，支持禁用
 type MutexWrap struct {
 	lock     sync.Mutex
-	disabled bool
+	disabled bool // 是否禁用，禁用后锁失效
 }
 
 func (mw *MutexWrap) Lock() {

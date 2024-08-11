@@ -10,15 +10,17 @@ import (
 func WaitGroupTimeout(wg *sync.WaitGroup, timeout time.Duration) bool {
 	wgClosed := make(chan struct{}, 1)
 	go func() {
-		// 等待协程执行完成
+		// 等待所有协程完成
 		wg.Wait()
 		wgClosed <- struct{}{}
 	}()
 
 	select {
 	case <-wgClosed:
+		// 没有超时，返回 false
 		return false
 	case <-time.After(timeout):
+		// 超时返回 true
 		return true
 	}
 }
