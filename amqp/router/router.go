@@ -10,7 +10,7 @@ import (
 	. "github.com/fengzhongzhu1621/xgo/amqp/message"
 	. "github.com/fengzhongzhu1621/xgo/amqp/publisher"
 	"github.com/fengzhongzhu1621/xgo/buildin"
-	sync_internal "github.com/fengzhongzhu1621/xgo/channel/sync"
+	"github.com/fengzhongzhu1621/xgo/channel"
 	"github.com/fengzhongzhu1621/xgo/logging"
 )
 
@@ -436,10 +436,11 @@ func (r *Router) closeWhenAllHandlersStopped() {
 
 // Running is closed when router is running.
 // In other words: you can wait till router is running using
-//		fmt.Println("Starting router")
-//		go r.Run(ctx)
-//		<- r.Running()
-//		fmt.Println("Router is running")
+//
+//	fmt.Println("Starting router")
+//	go r.Run(ctx)
+//	<- r.Running()
+//	fmt.Println("Router is running")
 func (r *Router) Running() chan struct{} {
 	return r.running
 }
@@ -478,7 +479,7 @@ func (r *Router) Close() error {
 	defer close(r.closedCh)
 
 	// 等待handlers关闭，如果有handler没有在规定时间内结束，则直接超时终止router
-	timeouted := sync_internal.WaitGroupTimeout(r.handlersWg, r.config.CloseTimeout)
+	timeouted := channel.WaitGroupTimeout(r.handlersWg, r.config.CloseTimeout)
 	if timeouted {
 		return errors.New("router close timeout")
 	}

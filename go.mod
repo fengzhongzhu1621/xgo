@@ -43,11 +43,8 @@ require (
 	github.com/VividCortex/ewma v1.1.1 // indirect
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
 	github.com/alecthomas/units v0.0.0-20190924025748-f65c72e2690d // indirect
-	github.com/araujo88/lambda-go v0.0.0-20240731183007-b33464d3e215 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
-	github.com/duke-git/lancet v1.4.3 // indirect
-	github.com/duke-git/lancet/v2 v2.3.2 // indirect
 	github.com/felixge/httpsnoop v1.0.3 // indirect
 	github.com/google/s2a-go v0.1.7 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.2 // indirect
@@ -124,12 +121,14 @@ require (
 require (
 	github.com/ThreeDotsLabs/watermill v1.2.0-rc.11
 	github.com/alecthomas/kingpin v2.2.6+incompatible
+	github.com/araujo88/lambda-go v0.0.0-20240731183007-b33464d3e215
 	github.com/bndr/gotabulate v1.1.2
 	github.com/cenkalti/backoff/v3 v3.2.2
 	github.com/cheggaaa/pb/v3 v3.1.0
 	github.com/codeskyblue/dockerignore v0.0.0-20151214070507-de82dee623d9
 	github.com/codeskyblue/go-accesslog v0.0.0-20171215023101-6188d3bd9371
 	github.com/codeskyblue/openid-go v0.0.0-20160923065855-0d30842b2fb4
+	github.com/duke-git/lancet/v2 v2.3.2
 	github.com/fork2fix/go-plist v0.0.0-20181126021357-36960be5e636
 	github.com/go-playground/assert/v2 v2.0.1
 	github.com/go-sql-driver/mysql v1.8.1
