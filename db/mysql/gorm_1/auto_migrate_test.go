@@ -90,6 +90,14 @@ type User5 struct {
 	Products []Product `gorm:"many2many:user_products;"`
 }
 
+type Product2 struct {
+	ID         uint `gorm:"primaryKey"`
+	Name       string
+	CategoryID int     `gorm:"index:idx_category"`
+	Price      float64 `gorm:"index:idx_price"`
+	CreatedAt  time.Time
+}
+
 // 根据结构体创建数据表
 func TestAutoMigrate(t *testing.T) {
 	// create database xgo charset=utf8;
@@ -230,4 +238,17 @@ func TestAutoMigrate(t *testing.T) {
 	fmt.Println(conn.AutoMigrate(new(Product)).Error)
 	fmt.Println(conn.AutoMigrate(new(User5)).Error)
 
+	/*
+		CREATE TABLE `product2` (
+		  `id` int unsigned NOT NULL AUTO_INCREMENT,
+		  `name` varchar(255) DEFAULT NULL,
+		  `category_id` int DEFAULT NULL,
+		  `price` double DEFAULT NULL,
+		  `created_at` datetime DEFAULT NULL,
+		  PRIMARY KEY (`id`),
+		  KEY `idx_category` (`category_id`),
+		  KEY `idx_price` (`price`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+	*/
+	fmt.Println(conn.AutoMigrate(new(Product2)).Error)
 }

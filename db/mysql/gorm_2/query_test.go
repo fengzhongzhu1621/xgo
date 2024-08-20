@@ -52,4 +52,8 @@ func TestQueryConnect(t *testing.T) {
 
 	// 分页查询
 	paginateStudents(db, 1, 10)
+
+	var products []Product2
+	categoryId := 1
+	db.Find(&products, "CategoryID = ?", categoryId)
 }

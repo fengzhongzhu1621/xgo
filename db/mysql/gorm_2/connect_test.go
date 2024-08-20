@@ -27,6 +27,14 @@ type User struct {
 	Students []Student `gorm:"many2many:user_students;"`
 }
 
+type Product2 struct {
+	ID         uint `gorm:"primaryKey"`
+	Name       string
+	CategoryID int     `gorm:"index:idx_category"`
+	Price      float64 `gorm:"index:idx_price"`
+	CreatedAt  time.Time
+}
+
 func TestCreateConnect(t *testing.T) {
 	dsn := "root:@tcp(127.0.0.1:3306)/xgo?charset=utf8mb4&parseTime=True&loc=Local"
 
