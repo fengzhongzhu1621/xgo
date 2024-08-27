@@ -11,7 +11,7 @@ var (
 	_tmpls = make(map[string]*template.Template)
 )
 
-// 根据文件名，读取模板文件，并使用 v 进行渲染模板内容
+// RenderHTML 根据文件名，读取模板文件，并使用 v 进行渲染模板内容
 func RenderHTML(w http.ResponseWriter, name string, v interface{}) {
 	if t, ok := _tmpls[name]; ok {
 		// 使用模板渲染

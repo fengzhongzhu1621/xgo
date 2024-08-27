@@ -11,7 +11,7 @@ var (
 	}
 )
 
-// 创建一个名为 name 的模板对象，解析模板内容 content
+// ParseTemplate 创建一个名为 name 的模板对象，解析模板内容 content
 func ParseTemplate(name string, content string) {
 	if tmpl == nil {
 		// 创建一个新的模板对象
