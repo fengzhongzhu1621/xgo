@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-// 读取go mod文件，返回模块名.
+// GetGoModeName 读取go mod文件，返回模块名.
 func GetGoModeName() (mod string, err error) {
 	d, err := os.Getwd()
 	if err != nil {
@@ -36,7 +36,7 @@ func GetGoModeName() (mod string, err error) {
 	return
 }
 
-// 实现 unix whtich 命令功能
+// Which 实现 unix whtich 命令功能
 func Which(cmd string) (filepath string, err error) {
 	// 获得当前PATH环境变量
 	envPath := os.Getenv("PATH")

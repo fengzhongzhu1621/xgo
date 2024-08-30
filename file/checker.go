@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// 判断文件是否被修改.
+// IsFileModified 判断文件是否被修改.
 func IsFileModified(filePath string, lastModifyTime time.Time) bool {
 	baseFile, err := os.Stat(filePath)
 	if err != nil {
@@ -17,7 +17,17 @@ func IsFileModified(filePath string, lastModifyTime time.Time) bool {
 	return false
 }
 
-// 判断文件是否存在.
+// FileExists 判断文件是否存在（返回错误原因）.
+func FileExists(filename string) (bool, error) {
+	if _, err := os.Stat(filename); os.IsNotExist(err) {
+		return false, nil
+	} else if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+// IsFileExists 判断文件是否存在（不返回错误）.
 func IsFileExists(path string) bool {
 	if _, err := os.Stat(path); err != nil {
 		return os.IsExist(err)
@@ -25,7 +35,7 @@ func IsFileExists(path string) bool {
 	return true
 }
 
-// 判断是否是目录.
+// IsDirType 判断是否是目录.
 func IsDirType(path string) bool {
 	s, err := os.Stat(path)
 	if err != nil {
@@ -34,7 +44,7 @@ func IsDirType(path string) bool {
 	return s.IsDir()
 }
 
-// 判断是否是文件.
+// IsFileType 判断是否是文件.
 func IsFileType(path string) bool {
 	return !IsDirType(path)
 }

@@ -8,7 +8,7 @@ import (
 	"github.com/fengzhongzhu1621/xgo/file/pathutils"
 )
 
-// 格式化文件名
+// SanitizedName 格式化文件名
 func SanitizedName(filename string) string {
 	// 去掉 C:
 	if len(filename) > 1 && filename[1] == ':' &&
@@ -24,8 +24,7 @@ func SanitizedName(filename string) string {
 	return filename
 }
 
-
-// 判断文件名是否包含特殊字符
+// CheckFilename 判断文件名是否包含特殊字符
 func CheckFilename(name string) error {
 	// 用于检查一个字符串中是否包含指定的任何字符集。
 	if strings.ContainsAny(name, "\\/:*<>|") {

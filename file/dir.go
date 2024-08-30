@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 )
 
-// 删除所有的子目录.
+// RemoveContents 删除所有的子目录.
 func RemoveContents(dir string) error {
 	// 获得目录下所有的文件名
 	d, err := os.Open(dir)
