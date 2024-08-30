@@ -3,12 +3,51 @@ package ip
 import (
 	"bytes"
 	"encoding/binary"
+	"encoding/hex"
 	"fmt"
+	"math/big"
 	"net"
+	"strings"
 )
 
-// IPtoUint32 IP从字符串转换为整型.
-func IPtoUint32(ip string) uint32 {
+// Inet4ToInt64 net.Ip 类型转换为 int64 类型
+func Inet4ToInt64(ip net.IP) int64 {
+	ipv4Int := big.NewInt(0)
+	ipv4Int.SetBytes(ip.To4())
+	return ipv4Int.Int64()
+}
+
+// Ipv4ToInt64 ipv4 字符串转换为 int64 类型
+func Ipv4ToInt64(ip string) int64 {
+	ipt := net.ParseIP(ip)
+	if ipt == nil {
+		return 0
+	}
+	return Inet4ToInt64(ipt)
+}
+
+// InetToHexStr net.Ip 类型转换为十六进制字符串
+func InetToHexStr(ip net.IP) string {
+	ipv4 := false
+	// 判断是否是 ipv4
+	if ip.To4() != nil {
+		ipv4 = true
+	}
+
+	ipInt := big.NewInt(0)
+	if ipv4 {
+		ipInt.SetBytes(ip.To4())
+		ipHex := hex.EncodeToString(ipInt.Bytes())
+		return ipHex
+	}
+
+	ipInt.SetBytes(ip.To16())
+	ipHex := hex.EncodeToString(ipInt.Bytes())
+	return ipHex
+}
+
+// IpToUint32 IP从字符串转换为整型.
+func IpToUint32(ip string) uint32 {
 	// 检查IP地址格式是否有效
 	// 解析为IP地址，并返回该地址。如果s不是合法的IP地址文本表示，ParseIP会返回nil
 	ips := net.ParseIP(ip)
@@ -51,11 +90,66 @@ func ConvertEndian(num uint32) uint32 {
 		((num << 24) & 0xff000000)
 }
 
-// AddressToIPUint32 将IP:PORT格式的地址转换IP的整型.
-func AddressToIPUint32(addr string) uint32 {
+// AddressToIpUint32 将IP:PORT格式的地址转换IP的整型.
+func AddressToIpUint32(addr string) uint32 {
 	ip, _, err := net.SplitHostPort(addr)
 	if err != nil {
 		return 0
 	}
-	return IPtoUint32(ip)
+	return IpToUint32(ip)
+}
+
+// CheckIpCidr 判断 ip 是否在 ip 段列表中
+func CheckIpInCidrList(srcIp string, cidrList []string) bool {
+	// 活的 ip 地址中的 ip 部分
+	var ip string
+	if strings.Contains(srcIp, ":") {
+		host, _, err := net.SplitHostPort(srcIp)
+		if err != nil {
+			return false
+		}
+		ip = host
+	} else {
+		ip = srcIp
+	}
+	// 将 ip 字符串转换为 net.IP
+	netIp := net.ParseIP(ip)
+	if netIp == nil {
+		return false
+	}
+
+	// 判断 ip 是否在 ip 段中
+	for _, v := range cidrList {
+		// 获得 ip 地址范围
+		_, ipNet, err := net.ParseCIDR(v)
+		if err != nil {
+			continue
+		}
+		if ipNet.Contains(netIp) {
+			return true
+		}
+	}
+
+	return false
+}
+
+// ToCanonicalIP replaces ":0:0" in IPv6 addresses with "::"
+// ToCanonicalIP("192.168.0.1") -> "192.168.0.1"
+// ToCanonicalIP("100:200:0:0:0:0:0:1") -> "100:200::1".
+func ToCanonicalIP(host string) string {
+	val := net.ParseIP(host)
+	if val == nil {
+		return host
+	}
+	return val.String()
+}
+
+// ExpandIP expands IPv6 addresses "::" to ":0:0..."
+func ExpandIP(host string) string {
+	if !strings.Contains(host, "::") {
+		return host
+	}
+	expected := 7
+	existing := strings.Count(host, ":") - 1
+	return strings.Replace(host, "::", strings.Repeat(":0", expected-existing)+":", 1)
 }

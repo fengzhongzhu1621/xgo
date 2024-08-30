@@ -2,13 +2,14 @@ package ip
 
 import (
 	"fmt"
+	"io"
 	"net"
 	"net/http"
 	"strings"
 )
 
-// 通过eth网卡名称获取机器ip.
-func GetIPByEthName(name string) (string, error) {
+// GetIpByEthName 通过eth网卡名称获取机器ip.
+func GetIpByEthName(name string) (string, error) {
 	// 返回 interface 结构体对象的列表，包含了全部网卡信息
 	interfaces, err := net.Interfaces()
 	if err != nil {
@@ -87,7 +88,7 @@ func GetAllIP() []string {
 	return ips
 }
 
-// 获得和远端服务器通信的IP地址.
+// GetLocalConnectionIP 获得和远端服务器通信的IP地址.
 func GetLocalConnectionIP(host string, port int) (string, error) {
 	conn, err := net.Dial("udp", fmt.Sprintf("%s:%d", host, port))
 	if err != nil {
@@ -97,4 +98,33 @@ func GetLocalConnectionIP(host string, port int) (string, error) {
 	localAddr := conn.LocalAddr().String()
 	idx := strings.LastIndex(localAddr, ":")
 	return localAddr[0:idx], nil
+}
+
+// Get preferred outbound ip of this machine
+func GetPrivateIP() (ip string, err error) {
+	conn, err := net.Dial("udp", "8.8.8.8:80")
+
+	if err != nil {
+		return "", err
+	}
+
+	defer conn.Close()
+
+	localAddr := conn.LocalAddr().(*net.UDPAddr)
+
+	ip = localAddr.IP.String()
+	return
+}
+
+func GetPublicIP() (ip string, err error) {
+	resp, err := http.Get("https://ifconfig.me/ip")
+
+	if err != nil {
+		return "", err
+	}
+
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+	ip = string(body)
+	return
 }
