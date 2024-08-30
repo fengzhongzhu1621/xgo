@@ -17,8 +17,8 @@ func IsFileModified(filePath string, lastModifyTime time.Time) bool {
 	return false
 }
 
-// FileExists 判断文件是否存在（返回错误原因）.
-func FileExists(filename string) (bool, error) {
+// FileExists 判断文件/文件夹是否存在（返回错误原因）.
+func FileOrDirExists(filename string) (bool, error) {
 	if _, err := os.Stat(filename); os.IsNotExist(err) {
 		return false, nil
 	} else if err != nil {
@@ -27,8 +27,8 @@ func FileExists(filename string) (bool, error) {
 	return true, nil
 }
 
-// IsFileExists 判断文件是否存在（不返回错误）.
-func IsFileExists(path string) bool {
+// IsFileExists 判断文件/文件夹是否存在（不返回错误）.
+func IsFileOrDirExists(path string) bool {
 	if _, err := os.Stat(path); err != nil {
 		return os.IsExist(err)
 	}

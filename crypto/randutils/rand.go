@@ -5,6 +5,8 @@ import (
 	"sync"
 )
 
+var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
 // Int returns a non-negative pseudo-random int.
 func Int() int { return pseudo.Int() }
 
@@ -50,3 +52,12 @@ func (s *source) Seed(seed int64) {
 // n is the number of elements.
 // swap swaps the elements with indexes i and j.
 func Shuffle(n int, swap func(i, j int)) { pseudo.Shuffle(n, swap) }
+
+// RandomString 生成一个指定长度的随机字符串
+func RandomString(length int) string {
+	b := make([]rune, length)
+	for i := range b {
+		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+	}
+	return string(b)
+}
