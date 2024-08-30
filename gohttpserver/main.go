@@ -13,7 +13,7 @@ import (
 	accesslog "github.com/codeskyblue/go-accesslog"
 	"github.com/fengzhongzhu1621/xgo"
 	"github.com/fengzhongzhu1621/xgo/auth"
-	"github.com/fengzhongzhu1621/xgo/network"
+	"github.com/fengzhongzhu1621/xgo/network/ip"
 	"github.com/fengzhongzhu1621/xgo/network/nethttp"
 	"github.com/fengzhongzhu1621/xgo/network/nethttp/staticserver/httpstaticserver"
 	"github.com/fengzhongzhu1621/xgo/str/stringutils"
@@ -134,7 +134,7 @@ func main() {
 		gcfg.Addr = ":" + gcfg.Addr
 	}
 	_, port, _ := net.SplitHostPort(gcfg.Addr)
-	log.Printf("listening on %s, local address http://%s:%s\n", strconv.Quote(gcfg.Addr), network.GetLocalIP(), port)
+	log.Printf("listening on %s, local address http://%s:%s\n", strconv.Quote(gcfg.Addr), ip.GetLocalIP(), port)
 
 	// 启动服务
 	srv := &http.Server{
