@@ -39,7 +39,7 @@ func TestCopy(t *testing.T) {
 	var dst string = "./file_test2.go"
 	err := Copy("./file_test.go", dst)
 	fmt.Println(err)
-	assert.Equal(t, IsFileExists(dst), true)
+	assert.Equal(t, IsFileOrDirExists(dst), true)
 	err = os.Remove(dst)
 	assert.NoError(t, err)
 }

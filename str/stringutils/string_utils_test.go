@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/fengzhongzhu1621/xgo/crypto"
+	"github.com/fengzhongzhu1621/xgo/crypto/randutils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -45,7 +45,7 @@ func TestReverseSlice(t *testing.T) {
 }
 
 func TestGenerateId(t *testing.T) {
-	actual := crypto.GenerateID()
+	actual := randutils.GenerateID()
 	s, err := strconv.ParseUint(actual, 10, 64)
 	assert.Equal(t, err, nil)
 	assert.Equal(t, s > 0, true)
@@ -70,7 +70,7 @@ func TestMergeGetAndPostParamWithKey(t *testing.T) {
 
 func TestMd5(t *testing.T) {
 	src := "123456789"
-	actual := crypto.Md5(src)
+	actual := randutils.Md5(src)
 	expect := "25f9e794323b453885f5181f1b624d0b"
 	assert.Equal(t, expect, actual)
 }

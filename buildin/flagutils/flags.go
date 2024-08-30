@@ -1,6 +1,8 @@
-package viper
+package flagutils
 
-import "github.com/spf13/pflag"
+import (
+	"github.com/spf13/pflag"
+)
 
 // IFlagValueSet is an interface that users can implement
 // to bind a set of flags to viper.
