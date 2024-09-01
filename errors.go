@@ -2,6 +2,7 @@ package xgo
 
 import (
 	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"reflect"
@@ -106,6 +107,7 @@ func (e ErrType) Error() string {
 	return e.String()
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Error represents a parser error. The error returned from Parse is of this
 // type. The error contains both a Type and Message.
 type Error struct {
@@ -143,6 +145,43 @@ func WrapError(err error) *Error {
 	return ret
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+type Code struct {
+	ErrCode int    `json:"Code" form:"Code"`
+	Message string `json:"Message" form:"Message"`
+}
+
+func (code *Code) Error() string {
+	errs, _ := json.Marshal(code)
+	return string(errs)
+}
+
+func NewErrCode(code int, message string) *Code {
+	return &Code{
+		ErrCode: code,
+		Message: message,
+	}
+}
+
+func (code *Code) ToError() error {
+	errs, _ := json.Marshal(code)
+	return fmt.Errorf("%s", string(errs))
+}
+
+// ParseErrCode 将字符串转换为 Code 对象
+func ParseErrCode(s string) (*Code, error) {
+	var (
+		code Code
+	)
+	err := json.Unmarshal([]byte(s), &code)
+	if err != nil {
+		return nil, err
+	}
+
+	return &code, nil
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 如下是更好的设计方式.
 var (
 	ErrUnauthorized   = fmt.Errorf("%s", "unauthorized")
