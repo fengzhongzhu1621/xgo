@@ -8,6 +8,8 @@ import (
 	"github.com/ugorji/go/codec"
 )
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 创建了一个名为defaultJsonHandle的变量，该变量的类型是codec.JsonHandle。
 type Codec struct{}
 
 // Encode 将字典转换为字符串
@@ -21,6 +23,7 @@ func (Codec) Decode(b []byte, v map[string]interface{}) error {
 	return json.Unmarshal(b, &v)
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 创建了一个名为defaultJsonHandle的变量，该变量的类型是codec.JsonHandle。
 // codec.JsonHandle是Go标准库encoding/json包中的一个结构体，用于自定义JSON编码和解码的行为。
 //
@@ -55,4 +58,14 @@ func EncodeJSON(v interface{}, s *[]byte) error {
 func EncodeJSONWriter(v interface{}, s io.Writer) error {
 	enc := codec.NewEncoder(s, &defaultJsonHandle)
 	return enc.Encode(v)
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 创建了一个名为defaultJsonHandle的变量，该变量的类型是codec.JsonHandle。
+// 将字符串 s 转换为 json 对象 v
+// jsonStringToObject attempts to unmarshall a string as JSON into
+// the object passed as pointer.
+func JsonStringToObject(s string, v interface{}) error {
+	data := []byte(s)
+	return json.Unmarshal(data, v)
 }
