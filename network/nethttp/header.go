@@ -1,4 +1,4 @@
-package network
+package nethttp
 
 import (
 	"fmt"
@@ -11,8 +11,13 @@ var HeaderNewlineToSpace = strings.NewReplacer("\n", " ", "\r", " ") // 换行�
 
 var HeaderDashToUnderscore = strings.NewReplacer("-", "_") // 短横线字符替换器
 
+// HeaderSet http header set
+type HeaderSet struct {
+	Key   string
+	Value string
+}
 
-// 构造header, 返回一个新数组.
+// AppendEnv 构造header, 返回一个新数组.
 func AppendEnv(env []string, k string, v ...string) []string {
 	if len(v) == 0 {
 		return env
@@ -20,7 +25,7 @@ func AppendEnv(env []string, k string, v ...string) []string {
 
 	// 创建一个字符串空数组
 	vCleaned := make([]string, 0, len(v))
-	// 将数组元素去掉换行符和首尾的空白字符
+	// 将数组元素 v 去掉换行符和首尾的空白字符
 	for _, val := range v {
 		vCleaned = append(vCleaned, strings.TrimSpace(HeaderNewlineToSpace.Replace(val)))
 	}
