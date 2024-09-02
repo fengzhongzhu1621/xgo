@@ -65,11 +65,11 @@ func ServerTslConfVerity(certFile, keyFile, passwd string) (*tls.Config, error) 
 		return nil, err
 	}
 
-	conf := &tls.Config{
+	tlsConfig := &tls.Config{
 		Certificates: []tls.Certificate{*cert}, // 服务器证书和私钥
 	}
 
-	return conf, nil
+	return tlsConfig, nil
 }
 
 // ServerTslConfVerityClient 创建一个 TLS 服务器的 SSL/TLS 配置，包括加载 CA 证书、服务器证书和私钥，并要求客户端提供并验证其证书。
@@ -87,11 +87,11 @@ func ServerTslConfVerityClient(caFile, certFile, keyFile, passwd string) (*tls.C
 		return nil, err
 	}
 
-	conf := &tls.Config{
+	tlsConfig := &tls.Config{
 		ClientCAs:    caPool, // CA 证书池，用于验证客户端证书
 		Certificates: []tls.Certificate{*cert}, // 服务器证书和私钥
 		ClientAuth:   tls.RequireAndVerifyClientCert, // 要求客户端提供证书并验证其有效性
 	}
 
-	return conf, nil
+	return tlsConfig, nil
 }
