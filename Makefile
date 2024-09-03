@@ -43,14 +43,19 @@ check: test-race vet
 build:
 	go build -v ./...
 
-#test:
-#	go test -v ./... -cover
 test: TEST_FORMAT ?= short
 test: SHELL = /bin/bash
 test: export CGO_ENABLED=1
 test: bin/gotestsum ## Run tests
 	@mkdir -p ${BUILD_DIR}
 	bin/gotestsum --no-summary=skipped --junitfile ${BUILD_DIR}/coverage.xml --format ${TEST_FORMAT} -- -coverprofile=${BUILD_DIR}/coverage.txt -covermode=atomic $(filter-out -v,${GOARGS}) $(if ${TEST_PKGS},${TEST_PKGS},./...)
+
+# test:
+#	go test -v ./... -cover
+
+# test:
+#	go test -mod=vendor -gcflags=all=-l $(shell go list ./... | grep -v mock | grep -v docs) -covermode=count -coverprofile .coverage.cov
+#	go tool cover -func=.coverage.cov
 
 # test:
 # 	go test ./...
@@ -61,7 +66,7 @@ test: bin/gotestsum ## Run tests
 # test_short:
 # 	go test ./... -short
 
-#test-race:
+# test-race:
 #	go test -v ./... -race
 test-race: bin/gotestsum ## Run tests with race
 	@mkdir -p ${BUILD_DIR}
@@ -75,6 +80,7 @@ fix: bin/golangci-lint ## Fix lint violations
 
 BENCH ?= .
 bench:
+# 	go test -run=nonthingplease -benchmem -bench=. $(shell go list ./... | grep -v /vendor/)
 #	go test -v ./... -test.bench -test.benchmem
 	go list ./... | xargs -n1 go test -bench=$(BENCH) -run="^$$" $(BENCH_FLAGS)
 
@@ -109,3 +115,7 @@ generate_gomod:
 validate_examples:
 	go run dev/update-examples-deps/main.go
 	go run dev/validate-examples/main.go
+
+godoc:
+	echo "http://127.0.0.1:6060"
+	godoc -http=127.0.0.1:6060 -goroot="."

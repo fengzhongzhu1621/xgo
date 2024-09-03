@@ -3,6 +3,8 @@ package maps
 import (
 	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestCopyAndInsensitiviseMap(t *testing.T) {
@@ -394,4 +396,14 @@ func TestIsPathShadowedInFlatMap(t *testing.T) {
 			t.Fatalf("IsPathShadowedInFlatMap error actual is %v, expect is %v", actual, expect)
 		}
 	})
+}
+
+func TestExistsKey(t *testing.T) {
+	obj := map[string]interface{}{
+		"key_1": "val_1",
+		"key_3": "val_3",
+	}
+	assert.True(t, ExistsKey(obj, "key_1"))
+	assert.False(t, ExistsKey(obj, "key_2"))
+	assert.True(t, ExistsKey(obj, "key_3"))
 }

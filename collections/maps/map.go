@@ -29,6 +29,13 @@ func CreateDeepMap(m map[string]interface{}, keyDelim string) map[string]interfa
 	return m2
 }
 
+// ExistsKey 判断 key 是否存在于 map 中
+func ExistsKey(obj map[string]interface{}, key string) bool {
+	_, ok := obj[key]
+	return ok
+}
+
+
 // KeyExists 判断字段中是否存在指定key，key不区分大小写，返回源key.
 func KeyExists(k string, m map[string]interface{}) string {
 	lk := strings.ToLower(k)

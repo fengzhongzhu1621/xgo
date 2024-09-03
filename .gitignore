@@ -29,11 +29,14 @@ tmp.out
 bin/*
 build/*
 dist/
+/Godeps/
 
 # Develop tools
 .idea/
 .vscode/
 .DS_Store
+.envrc
+.coverage.cov
 
 build/coverage.txt
 build/coverage.xml
