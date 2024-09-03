@@ -3,6 +3,8 @@ package randutils
 import (
 	"sync"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func testuUniqness(t *testing.T, genFunc func() string) {
@@ -51,4 +53,8 @@ func TestShortUUID(t *testing.T) {
 
 func TestULID(t *testing.T) {
 	testuUniqness(t, NewULID)
+}
+
+func TestMD5Hash(t *testing.T) {
+	assert.Equal(t, "098f6bcd4621d373cade4e832627b4f6", MD5Hash("test"))
 }

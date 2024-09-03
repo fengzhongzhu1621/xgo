@@ -42,3 +42,9 @@ func Md5(src string) string {
 	value := hex.EncodeToString(cipher)
 	return value
 }
+
+// MD5Hash 计算字符串的MD5值
+func MD5Hash(text string) string {
+	hash := md5.Sum([]byte(text))
+	return hex.EncodeToString(hash[:])
+}
