@@ -56,6 +56,7 @@ func ToFloat64E(i interface{}) (float64, error) {
 	}
 }
 
+// indirect	获得对象的值；如果是指针，获得指针指向的值
 // From html/template/content.go
 // Copyright 2011 The Go Authors. All rights reserved.
 // indirect returns the value, after dereferencing as many times
@@ -64,7 +65,7 @@ func indirect(a interface{}) interface{} {
 	if a == nil {
 		return nil
 	}
-	// 如果类型不是指针类型，则直接返回
+	// 判断是否是指针类型，如果类型不是指针类型，则直接返回 a
 	if t := reflect.TypeOf(a); t.Kind() != reflect.Ptr {
 		// Avoid creating a reflect.Value if it's not a pointer.
 		return a
@@ -231,9 +232,9 @@ func ToFloat32E(i interface{}) (float32, error) {
 	}
 }
 
-// 转换为Int64类型
-// ToInt64E casts an interface to an int64 type.
+// ToInt64E 转换为Int64类型 casts an interface to an int64 type.
 func ToInt64E(i interface{}) (int64, error) {
+	// 获得对象的值；如果是指针，获得指针指向的值
 	i = indirect(i)
 
 	switch s := i.(type) {

@@ -4,24 +4,6 @@ import (
 	"reflect"
 )
 
-func IsPointer(v interface{}) error {
-	rv := reflect.ValueOf(v)
-
-	if rv.Kind() != reflect.Ptr || rv.IsNil() {
-		return NonPointerError{rv.Type()}
-	}
-
-	return nil
-}
-
-type NonPointerError struct {
-	Type reflect.Type
-}
-
-func (e NonPointerError) Error() string {
-	return "non-pointer command: " + e.Type.String() + ", handler.NewCommand() should return pointer to the command"
-}
-
 // IsEmptyValue From src/pkg/encoding/json/encode.go.
 func IsEmptyValue(v reflect.Value) bool {
 	switch v.Kind() {
@@ -46,32 +28,6 @@ func IsEmptyValue(v reflect.Value) bool {
 		return true
 	}
 	return false
-}
-
-func IsExportedComponent(field *reflect.StructField) bool {
-	pkgPath := field.PkgPath
-	if len(pkgPath) > 0 {
-		// 结构体字段不是一个struct类型
-		// 普通字段，例如 Manager.title
-		return false
-	}
-	// 结构体字段是一个struct类型，例如 Manager中的User
-	// type User struct {
-	//     Id   int
-	//	   Name string
-	//	   Age  int
-	// }
-	//
-	// type Manager struct {
-	//     User
-	//	   title string
-	// }
-	c := field.Name[0]
-	if 'a' <= c && c <= 'z' || c == '_' {
-		return false
-	}
-	// 首字母大写
-	return true
 }
 
 // IsReflectNil is the reflect value provided nil
