@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	json "github.com/fengzhongzhu1621/xgo/crypto/json"
+	json "github.com/fengzhongzhu1621/xgo/crypto/encoding/json"
 	bytesconv "github.com/fengzhongzhu1621/xgo/str/bytesconv"
 )
 
