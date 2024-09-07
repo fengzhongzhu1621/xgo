@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-// ErrType ErrorType represents the type of error.
+// ErrType 错误类型 / 错误编码 ErrorType represents the type of error.
 type ErrType uint
 
 const (
@@ -65,7 +65,7 @@ const (
 	ErrInvalidTag
 )
 
-// 将错误码转换为错误信息.
+// String 将错误码转换为错误信息.
 func (e ErrType) String() string {
 	switch e {
 	case ErrUnknown:
@@ -103,6 +103,7 @@ func (e ErrType) String() string {
 	return "unrecognized error type"
 }
 
+// ErrType 也是一种错误
 func (e ErrType) Error() string {
 	return e.String()
 }
@@ -151,9 +152,15 @@ type Code struct {
 	Message string `json:"Message" form:"Message"`
 }
 
+// Error 将 code 转换为字符串
 func (code *Code) Error() string {
 	errs, _ := json.Marshal(code)
 	return string(errs)
+}
+
+func (code *Code) ToError() error {
+	errs, _ := json.Marshal(code)
+	return fmt.Errorf("%s", string(errs))
 }
 
 func NewErrCode(code int, message string) *Code {
@@ -161,11 +168,6 @@ func NewErrCode(code int, message string) *Code {
 		ErrCode: code,
 		Message: message,
 	}
-}
-
-func (code *Code) ToError() error {
-	errs, _ := json.Marshal(code)
-	return fmt.Errorf("%s", string(errs))
 }
 
 // ParseErrCode 将字符串转换为 Code 对象
@@ -283,4 +285,103 @@ func (e NoProtoMessageError) Error() string {
 	}
 
 	return "v is not proto.Message"
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Errorx is a struct for wrap raw err with message
+type Errorx struct {
+	message string
+	err     error
+}
+
+// Error return the error message
+func (e Errorx) Error() string {
+	return e.message
+}
+
+// Is reports whether any error in err's chain matches target.
+func (e Errorx) Is(target error) bool {
+	if target == nil || e.err == nil {
+		return e.err == target
+	}
+
+	return errors.Is(e.err, target)
+}
+
+// Unwrap returns the result of calling the Unwrap method on err, if err's
+// type contains an Unwrap method returning error.
+// Otherwise, Unwrap returns nil.
+func (e *Errorx) Unwrap() error {
+	u, ok := e.err.(interface {
+		Unwrap() error
+	})
+	if !ok {
+		return e.err
+	}
+
+	return u.Unwrap()
+}
+
+// makeMessage make the message for error wrap
+func makeMessage(err error, layer, function, msg string) string {
+	var message string
+	var e Errorx
+	// func As(err error, target interface{}) bool
+	// 将一个错误值转换为特定的错误类型
+	// err：要检查的错误值。
+	// target：一个指向你想要转换的目标错误类型的指针。
+	if errors.As(err, &e) {
+		message = fmt.Sprintf("[%s:%s] %s => %s", layer, function, msg, err.Error())
+	} else {
+		message = fmt.Sprintf("[%s:%s] %s => [Raw:Error] %v", layer, function, msg, err.Error())
+	}
+
+	return message
+}
+
+// Wrap the error with message
+func Wrap(err error, layer string, function string, message string) error {
+	if err == nil {
+		return nil
+	}
+
+	return Errorx{
+		message: makeMessage(err, layer, function, message),
+		err:     err,
+	}
+}
+
+// Wrapf the error with formatted message, shortcut for
+func Wrapf(err error, layer string, function string, format string, args ...interface{}) error {
+	if err == nil {
+		return nil
+	}
+
+	msg := fmt.Sprintf(format, args...)
+
+	return Errorx{
+		message: makeMessage(err, layer, function, msg),
+		err:     err,
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// WrapFuncWithLayerFunction define the func of wrapError for partial specific layer name and function name
+type WrapFuncWithLayerFunction func(err error, message string) error
+
+// WrapfFuncWithLayerFunction define the func of wrapfError for partial specific layer name and function name
+type WrapfFuncWithLayerFunction func(err error, format string, args ...interface{}) error
+
+// NewLayerFunctionErrorWrap 偏函数  create the wrapError func with specific layer and func
+func NewLayerFunctionErrorWrap(layer string, function string) WrapFuncWithLayerFunction {
+	return func(err error, message string) error {
+		return Wrap(err, layer, function, message)
+	}
+}
+
+// NewLayerFunctionErrorWrapf 偏函数 create the wrapfError func with specific layer and func
+func NewLayerFunctionErrorWrapf(layer string, function string) WrapfFuncWithLayerFunction {
+	return func(err error, format string, args ...interface{}) error {
+		return Wrapf(err, layer, function, format, args...)
+	}
 }
