@@ -12,3 +12,7 @@ func Head(str, sep string) (head string, tail string) {
 	}
 	return str[:idx], str[idx+len(sep):]
 }
+
+func SplitString(r rune) bool {
+	return r == ';' || r == ',' || r == '\n'
+}

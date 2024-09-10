@@ -2,6 +2,7 @@ package stringutils
 
 import (
 	"sort"
+	"strings"
 )
 
 // StringInSlice 判断字符串是否在切片中.
@@ -23,6 +24,31 @@ func In(target string, src []string) bool {
 		return true
 	}
 	return false
+}
+
+// StringsMatch 如果 key 是空字符串，则认为它匹配任何内容
+// 如果 key 是空字符串，则认为它匹配任何内容。
+func StringsMatch(key string, matchList ...string) bool {
+	if key == "" {
+		return true
+	}
+	return strings.Contains(strings.Join(matchList, "#"), key)
+}
+
+// StringsMatchObscure 检查 key 是否包含在由 matchList 中的字符串拼接而成的字符串中，且在比较时不区分大小写。
+// 如果 key 是空字符串，则认为它匹配任何内容
+func StringsMatchObscure(key string, matchList ...string) bool {
+	var (
+		t string
+	)
+	if key == "" {
+		return true
+	}
+
+	for _, v := range matchList {
+		t += strings.ToLower(v)
+	}
+	return strings.Contains(t, strings.ToLower(key))
 }
 
 // SublimeContains 判断是否包含子串

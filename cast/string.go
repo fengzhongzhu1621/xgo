@@ -1,6 +1,7 @@
 package cast
 
 import (
+	"bytes"
 	"fmt"
 	"html/template"
 	"reflect"
@@ -416,4 +417,17 @@ func ToStringMapInt64E(i interface{}) (map[string]int64, error) {
 		mVal.SetMapIndex(keyVal, reflect.ValueOf(val))
 	}
 	return m, nil
+}
+
+// ArrayInt64ToString 将 A 中的每个元素转换为字符串，并用 delim 分隔，最后返回一个拼接后的字符串。
+func ArrayInt64ToString(A []int64, delim string) string {
+	var buffer bytes.Buffer
+	for i := 0; i < len(A); i++ {
+		buffer.WriteString(strconv.FormatInt(A[i], 10))
+		if i != len(A)-1 {
+			buffer.WriteString(delim)
+		}
+	}
+
+	return buffer.String()
 }
