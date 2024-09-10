@@ -8,7 +8,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/fengzhongzhu1621/xgo/crypto/zipfile"
+	"github.com/fengzhongzhu1621/xgo/crypto/compress/zipfile"
 	"github.com/fengzhongzhu1621/xgo/file"
 )
 
