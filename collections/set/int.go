@@ -1,4 +1,4 @@
-package collections
+package set
 
 type Int64Set struct {
 	Data map[int64]struct{}
