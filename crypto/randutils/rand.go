@@ -1,11 +1,17 @@
 package randutils
 
 import (
+	crand "crypto/rand"
+	"fmt"
 	"math/rand"
 	"sync"
+	"time"
 )
 
-var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+var (
+	letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+	sources     = []byte("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+)
 
 // Int returns a non-negative pseudo-random int.
 func Int() int { return pseudo.Int() }
@@ -60,4 +66,27 @@ func RandomString(length int) string {
 		b[i] = letterRunes[rand.Intn(len(letterRunes))]
 	}
 	return string(b)
+}
+
+func RandString2(length int64) string {
+	var (
+		result []byte
+	)
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	var i int64 = 0
+	for ; i < length; i++ {
+		result = append(result, sources[r.Intn(len(sources))])
+	}
+
+	return string(result)
+}
+
+func RandAuthToken() string {
+	buf := make([]byte, 32)
+	_, err := crand.Read(buf)
+	if err != nil {
+		return RandString2(64)
+	}
+
+	return fmt.Sprintf("%x", buf)
 }
