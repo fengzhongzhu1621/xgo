@@ -431,3 +431,16 @@ func ArrayInt64ToString(A []int64, delim string) string {
 
 	return buffer.String()
 }
+
+func MapValueInterfaceToString(input map[string]any) (map[string]string, error) {
+	data := make(map[string]string, len(input))
+	for key, value := range input {
+		valueStr, ok := value.(string)
+		if !ok {
+			return nil, fmt.Errorf("parse interface to string fail, the value of key=%s is not string", key)
+		}
+
+		data[key] = valueStr
+	}
+	return data, nil
+}
