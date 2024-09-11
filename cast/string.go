@@ -1,7 +1,6 @@
 package cast
 
 import (
-	"bytes"
 	"fmt"
 	"html/template"
 	"reflect"
@@ -419,19 +418,6 @@ func ToStringMapInt64E(i interface{}) (map[string]int64, error) {
 	return m, nil
 }
 
-// ArrayInt64ToString 将 A 中的每个元素转换为字符串，并用 delim 分隔，最后返回一个拼接后的字符串。
-func ArrayInt64ToString(A []int64, delim string) string {
-	var buffer bytes.Buffer
-	for i := 0; i < len(A); i++ {
-		buffer.WriteString(strconv.FormatInt(A[i], 10))
-		if i != len(A)-1 {
-			buffer.WriteString(delim)
-		}
-	}
-
-	return buffer.String()
-}
-
 func MapValueInterfaceToString(input map[string]any) (map[string]string, error) {
 	data := make(map[string]string, len(input))
 	for key, value := range input {
@@ -443,4 +429,23 @@ func MapValueInterfaceToString(input map[string]any) (map[string]string, error) 
 		data[key] = valueStr
 	}
 	return data, nil
+}
+
+// StringToInt64Slice 根据分隔符将字符串转换为整型数组
+// 1,2,3 -> []int64{1, 2, 3}
+func StringToInt64Slice(s, sep string) ([]int64, error) {
+	if s == "" {
+		return []int64{}, nil
+	}
+	parts := strings.Split(s, sep)
+
+	int64Slice := make([]int64, 0, len(parts))
+	for _, d := range parts {
+		i, err := strconv.ParseInt(d, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		int64Slice = append(int64Slice, i)
+	}
+	return int64Slice, nil
 }

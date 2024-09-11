@@ -1,10 +1,12 @@
 package cast
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"reflect"
 	"strconv"
+	"strings"
 )
 
 // 负数格式转换异常.
@@ -815,4 +817,23 @@ func ToUint8E(i interface{}) (uint8, error) {
 	default:
 		return 0, fmt.Errorf("unable to cast %#v of type %T to uint8", i, i)
 	}
+}
+
+// Int64SliceToString 整型数组转换为字符串
+// []int64{1, 2, 3} -> 1,2,3
+func Int64SliceToString(s []int64, sep string) string {
+	return strings.Trim(strings.Join(strings.Fields(fmt.Sprint(s)), sep), "[]")
+}
+
+// ArrayInt64ToString 将 A 中的每个元素转换为字符串，并用 delim 分隔，最后返回一个拼接后的字符串。
+func ArrayInt64ToString(A []int64, delim string) string {
+	var buffer bytes.Buffer
+	for i := 0; i < len(A); i++ {
+		buffer.WriteString(strconv.FormatInt(A[i], 10))
+		if i != len(A)-1 {
+			buffer.WriteString(delim)
+		}
+	}
+
+	return buffer.String()
 }
