@@ -68,3 +68,19 @@ func ToBoolE(i interface{}) (bool, error) {
 		return false, fmt.Errorf("unable to cast %#v of type %T to bool", i, i)
 	}
 }
+
+// BoolToInt bool类型转换 int64
+func BoolToInt(b bool) int64 {
+	if b {
+		return 1
+	}
+	return 0
+}
+
+// IntToBool int64 转 bool
+func IntToBool(i int64) bool {
+	if i > 0 {
+		return true
+	}
+	return false
+}
