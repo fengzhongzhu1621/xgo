@@ -837,3 +837,8 @@ func ArrayInt64ToString(A []int64, delim string) string {
 
 	return buffer.String()
 }
+
+// IntPtr 返回整数的指针.
+func IntPtr(i int) *int {
+	return &i
+}

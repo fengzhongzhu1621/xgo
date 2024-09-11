@@ -13,10 +13,7 @@ var (
 	EmptyArgs   []reflect.Value
 )
 
-// H is a shortcut for map[string]interface{}.
-type H map[string]interface{}
-
-// 从命令行获得服务器的IP和端口.
+// ResolveAddress 从命令行获得服务器的IP和端口.
 func ResolveAddress(addr []string) string {
 	switch len(addr) {
 	case 0:
@@ -31,11 +28,6 @@ func ResolveAddress(addr []string) string {
 	default:
 		panic("too many parameters")
 	}
-}
-
-// 返回整数的指针.
-func IntPtr(i int) *int {
-	return &i
 }
 
 func Assert1(guard bool, text string) {

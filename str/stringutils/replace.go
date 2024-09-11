@@ -22,3 +22,11 @@ func PurifyStrings(ori string) string {
 
 	return purifyStr
 }
+
+// RemoteTabCharacters 清理包含制表符和水平制表符的字符串
+func RemoteTabCharacters(data string) string {
+	data = strings.Replace(data, "\x09", "", -1)
+	data = strings.Replace(data, "\t", "", -1)
+
+	return data
+}
