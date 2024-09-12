@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/fengzhongzhu1621/xgo/cast"
 	json "github.com/fengzhongzhu1621/xgo/crypto/encoding/json"
-	bytesconv "github.com/fengzhongzhu1621/xgo/str/bytesconv"
 )
 
 var ErrUnknownType = errors.New("unknown type")
@@ -158,9 +158,9 @@ func SetWithProperType(val string, value reflect.Value, field reflect.StructFiel
 		case time.Time:
 			return SetTimeField(val, field, value)
 		}
-		return json.Unmarshal(bytesconv.StringToBytes(val), value.Addr().Interface())
+		return json.Unmarshal(cast.StringToBytes(val), value.Addr().Interface())
 	case reflect.Map:
-		return json.Unmarshal(bytesconv.StringToBytes(val), value.Addr().Interface())
+		return json.Unmarshal(cast.StringToBytes(val), value.Addr().Interface())
 	default:
 		return ErrUnknownType
 	}

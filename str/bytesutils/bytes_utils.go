@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/fengzhongzhu1621/xgo/str/bytesconv"
+	"github.com/fengzhongzhu1621/xgo/cast"
 )
 
 // HasPrefixAndSuffix 判断前缀和后缀是否全部匹配.
@@ -32,7 +32,7 @@ func AppendArg(b []byte, v interface{}) []byte {
 	case nil:
 		return append(b, "<nil>"...)
 	case string:
-		return AppendUTF8String(b, bytesconv.Bytes(v))
+		return AppendUTF8String(b, cast.Bytes(v))
 	case []byte:
 		return AppendUTF8String(b, v)
 	case int:

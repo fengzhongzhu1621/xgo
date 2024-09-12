@@ -6,6 +6,7 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"unsafe"
 
 	"github.com/fengzhongzhu1621/xgo/crypto/encoding/json"
 )
@@ -431,6 +432,7 @@ func MapValueInterfaceToString(input map[string]any) (map[string]string, error) 
 	return data, nil
 }
 
+// //////////////////////////////////////////////////////////////////////////////////////
 // StringToInt64Slice 根据分隔符将字符串转换为整型数组
 // 1,2,3 -> []int64{1, 2, 3}
 func StringToInt64Slice(s, sep string) ([]int64, error) {
@@ -467,4 +469,33 @@ func StringToIntSlice(s, sep string) ([]int, error) {
 		intSlice = append(intSlice, i)
 	}
 	return intSlice, nil
+}
+
+// //////////////////////////////////////////////////////////////////////////////////////
+// 字符串转换为[]bytes
+// StringToBytes converts string to byte slice without a memory allocation.
+// 效率更高.
+func StringToBytes(s string) (b []byte) {
+	sh := *(*reflect.StringHeader)(unsafe.Pointer(&s))
+	bh := (*reflect.SliceHeader)(unsafe.Pointer(&b))
+	bh.Data, bh.Len, bh.Cap = sh.Data, sh.Len, sh.Len
+	return b
+}
+
+// Bytes converts stringutils to byte slice.
+func Bytes(s string) []byte {
+	return *(*[]byte)(unsafe.Pointer(
+		&struct {
+			string
+			Cap int
+		}{s, len(s)},
+	))
+}
+
+func rawStrToBytes(s string) []byte {
+	return []byte(s)
+}
+
+func SafeBytes(s string) []byte {
+	return []byte(s)
 }

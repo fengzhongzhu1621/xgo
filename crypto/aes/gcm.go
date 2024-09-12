@@ -5,7 +5,7 @@ import (
 	"crypto/cipher"
 	"errors"
 
-	"github.com/fengzhongzhu1621/xgo/str/bytesconv"
+	"github.com/fengzhongzhu1621/xgo/cast"
 )
 
 // reference: https://golang.org/src/crypto/cipher/example_test.go
@@ -77,11 +77,11 @@ func (a *AESGcm) Decrypt(encryptedText []byte) ([]byte, error) {
 // EncryptToString encrypts plaintext to string
 func (a *AESGcm) EncryptToString(plaintext []byte) string {
 	encryptedText := a.aead.Seal(plaintext[:0], a.nonce, plaintext, nil)
-	return bytesconv.BytesToString(encryptedText)
+	return cast.BytesToString(encryptedText)
 }
 
 // DecryptString decrypts ciphertext string
 func (a *AESGcm) DecryptString(encryptedText string) ([]byte, error) {
-	plaintext, err := a.aead.Open(nil, a.nonce, bytesconv.StringToBytes(encryptedText), nil)
+	plaintext, err := a.aead.Open(nil, a.nonce, cast.StringToBytes(encryptedText), nil)
 	return plaintext, err
 }

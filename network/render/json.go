@@ -10,8 +10,8 @@ import (
 	"html/template"
 	"net/http"
 
+	"github.com/fengzhongzhu1621/xgo/cast"
 	json "github.com/fengzhongzhu1621/xgo/crypto/encoding/json"
-	bytesconv "github.com/fengzhongzhu1621/xgo/str/bytesconv"
 	bytes_utils "github.com/fengzhongzhu1621/xgo/str/bytesutils"
 )
 
@@ -99,8 +99,8 @@ func (r SecureJSON) Render(w http.ResponseWriter) error {
 		return err
 	}
 	// if the jsonBytes is array values
-	if bytes_utils.HasPrefixAndSuffix(jsonBytes, bytesconv.StringToBytes("["), bytesconv.StringToBytes("]")) {
-		_, err = w.Write(bytesconv.StringToBytes(r.Prefix))
+	if bytes_utils.HasPrefixAndSuffix(jsonBytes, cast.StringToBytes("["), cast.StringToBytes("]")) {
+		_, err = w.Write(cast.StringToBytes(r.Prefix))
 		if err != nil {
 			return err
 		}
@@ -129,11 +129,11 @@ func (r JsonpJSON) Render(w http.ResponseWriter) (err error) {
 
 	// javascript字符串转义
 	callback := template.JSEscapeString(r.Callback)
-	_, err = w.Write(bytesconv.StringToBytes(callback))
+	_, err = w.Write(cast.StringToBytes(callback))
 	if err != nil {
 		return err
 	}
-	_, err = w.Write(bytesconv.StringToBytes("("))
+	_, err = w.Write(cast.StringToBytes("("))
 	if err != nil {
 		return err
 	}
@@ -141,7 +141,7 @@ func (r JsonpJSON) Render(w http.ResponseWriter) (err error) {
 	if err != nil {
 		return err
 	}
-	_, err = w.Write(bytesconv.StringToBytes(");"))
+	_, err = w.Write(cast.StringToBytes(");"))
 	if err != nil {
 		return err
 	}
@@ -163,7 +163,7 @@ func (r AsciiJSON) Render(w http.ResponseWriter) (err error) {
 	}
 
 	var buffer bytes.Buffer
-	for _, r := range bytesconv.BytesToString(ret) {
+	for _, r := range cast.BytesToString(ret) {
 		cvt := string(r)
 		if r >= 128 {
 			cvt = fmt.Sprintf("\\u%04x", int64(r))

@@ -4,7 +4,7 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"github.com/fengzhongzhu1621/xgo/str/bytesconv"
+	"github.com/fengzhongzhu1621/xgo/cast"
 )
 
 // ToLower 字符串转换为小写，在转化前先判断是否包含大写字符，比strings.ToLower性能高.
@@ -22,7 +22,7 @@ func ToLower(s string) string {
 		b[i] = c
 	}
 	// []bytes转换为字符串
-	return bytesconv.BytesToString(b)
+	return cast.BytesToString(b)
 }
 
 // UnicodeTitle 首字母大写.

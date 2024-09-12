@@ -1,11 +1,6 @@
-// Copyright 2020 Gin Core Team. All rights reserved.
-// Use of this source code is governed by a MIT style
-// license that can be found in the LICENSE file.
-
-package bytesconv
+package cast
 
 import (
-	"bytes"
 	"math/rand"
 	"testing"
 )
@@ -25,15 +20,6 @@ func TestBytesToString(t *testing.T) {
 	}
 }
 
-func TestStringToBytes(t *testing.T) {
-	for i := 0; i < 100; i++ {
-		s := RandStringBytesMaskImprSrcSB(64)
-		if !bytes.Equal(rawStrToBytes(s), StringToBytes(s)) {
-			t.Fatal("don't match")
-		}
-	}
-}
-
 // go test -v -run=none -bench=^BenchmarkBytesConv -benchmem=true
 
 func BenchmarkBytesConvBytesToStrRaw(b *testing.B) {
@@ -45,17 +31,5 @@ func BenchmarkBytesConvBytesToStrRaw(b *testing.B) {
 func BenchmarkBytesConvBytesToStr(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		BytesToString(testBytes)
-	}
-}
-
-func BenchmarkBytesConvStrToBytesRaw(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		rawStrToBytes(testString)
-	}
-}
-
-func BenchmarkBytesConvStrToBytes(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		StringToBytes(testString)
 	}
 }

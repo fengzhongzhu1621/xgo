@@ -75,13 +75,14 @@ func Uint32toIP(ip uint32) string {
 }
 
 /*
- ConvertEndian 整型大小端互转.
-    3    2     1    0
-   XX   @@     ##   $$
-          ||
-          \/
-    3    2     1    0
-   $$   ##     @@   XX
+ConvertEndian 整型大小端互转.
+
+	 3    2     1    0
+	XX   @@     ##   $$
+	       ||
+	       \/
+	 3    2     1    0
+	$$   ##     @@   XX
 */
 func ConvertEndian(num uint32) uint32 {
 	return ((num >> 24) & 0xff) |
@@ -152,4 +153,13 @@ func ExpandIP(host string) string {
 	expected := 7
 	existing := strings.Count(host, ":") - 1
 	return strings.Replace(host, "::", strings.Repeat(":0", expected-existing)+":", 1)
+}
+
+// GetFirstIp 获得第一个 ip
+func GetFirstIp(s string, sep string) string {
+	if strings.Contains(s, ",") {
+		return strings.Split(s, sep)[0]
+	}
+
+	return s
 }

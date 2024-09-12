@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/fengzhongzhu1621/xgo/str/bytesconv"
+	"github.com/fengzhongzhu1621/xgo/cast"
 )
 
 type writer interface {
@@ -132,7 +132,7 @@ func (w *Writer) bytes(b []byte) error {
 }
 
 func (w *Writer) string(s string) error {
-	return w.bytes(bytesconv.StringToBytes(s))
+	return w.bytes(cast.StringToBytes(s))
 }
 
 func (w *Writer) uint(n uint64) error {

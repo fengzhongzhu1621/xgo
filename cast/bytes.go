@@ -1,12 +1,7 @@
-// Copyright 2020 Gin Core Team. All rights reserved.
-// Use of this source code is governed by a MIT style
-// license that can be found in the LICENSE file.
-
-package bytesconv
+package cast
 
 import (
 	"math/rand"
-	"reflect"
 	"strconv"
 	"strings"
 	"time"
@@ -39,34 +34,6 @@ func RandStringBytesMaskImprSrcSB(n int) string {
 	}
 
 	return sb.String()
-}
-
-// 字符串转换为[]bytes
-// StringToBytes converts string to byte slice without a memory allocation.
-// 效率更高.
-func StringToBytes(s string) (b []byte) {
-	sh := *(*reflect.StringHeader)(unsafe.Pointer(&s))
-	bh := (*reflect.SliceHeader)(unsafe.Pointer(&b))
-	bh.Data, bh.Len, bh.Cap = sh.Data, sh.Len, sh.Len
-	return b
-}
-
-// Bytes converts stringutils to byte slice.
-func Bytes(s string) []byte {
-	return *(*[]byte)(unsafe.Pointer(
-		&struct {
-			string
-			Cap int
-		}{s, len(s)},
-	))
-}
-
-func rawStrToBytes(s string) []byte {
-	return []byte(s)
-}
-
-func SafeBytes(s string) []byte {
-	return []byte(s)
 }
 
 // []bytes转换为字符串

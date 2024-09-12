@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/fengzhongzhu1621/xgo/str/bytesconv"
+	"github.com/fengzhongzhu1621/xgo/cast"
 )
 
 // Scan parses bytes `b` to `v` with appropriate type.
@@ -18,7 +18,7 @@ func Scan(b []byte, v interface{}) error {
 		return fmt.Errorf("scan(nil)")
 	case *string:
 		// v是字符串指针，则[]bytes转换为字符串
-		*v = bytesconv.BytesToString(b)
+		*v = cast.BytesToString(b)
 		return nil
 	case *[]byte:
 		// v是字节数组指针
@@ -27,11 +27,11 @@ func Scan(b []byte, v interface{}) error {
 	case *int:
 		// v是整型指针，将字节数组转换为int类型
 		var err error
-		*v, err = bytesconv.Atoi(b)
+		*v, err = cast.Atoi(b)
 		return err
 	case *int8:
 		// v是整型指针，将字节数组转换为int8类型
-		n, err := bytesconv.ParseInt(b, 10, 8)
+		n, err := cast.ParseInt(b, 10, 8)
 		if err != nil {
 			return err
 		}
@@ -39,7 +39,7 @@ func Scan(b []byte, v interface{}) error {
 		return nil
 	case *int16:
 		// v是整型指针，将字节数组转换为int16类型
-		n, err := bytesconv.ParseInt(b, 10, 16)
+		n, err := cast.ParseInt(b, 10, 16)
 		if err != nil {
 			return err
 		}
@@ -47,7 +47,7 @@ func Scan(b []byte, v interface{}) error {
 		return nil
 	case *int32:
 		// v是整型指针，将字节数组转换为int32类型
-		n, err := bytesconv.ParseInt(b, 10, 32)
+		n, err := cast.ParseInt(b, 10, 32)
 		if err != nil {
 			return err
 		}
@@ -55,49 +55,49 @@ func Scan(b []byte, v interface{}) error {
 		return nil
 	case *int64:
 		// v是整型指针，将字节数组转换为int64类型
-		n, err := bytesconv.ParseInt(b, 10, 64)
+		n, err := cast.ParseInt(b, 10, 64)
 		if err != nil {
 			return err
 		}
 		*v = n
 		return nil
 	case *uint:
-		n, err := bytesconv.ParseUint(b, 10, 64)
+		n, err := cast.ParseUint(b, 10, 64)
 		if err != nil {
 			return err
 		}
 		*v = uint(n)
 		return nil
 	case *uint8:
-		n, err := bytesconv.ParseUint(b, 10, 8)
+		n, err := cast.ParseUint(b, 10, 8)
 		if err != nil {
 			return err
 		}
 		*v = uint8(n)
 		return nil
 	case *uint16:
-		n, err := bytesconv.ParseUint(b, 10, 16)
+		n, err := cast.ParseUint(b, 10, 16)
 		if err != nil {
 			return err
 		}
 		*v = uint16(n)
 		return nil
 	case *uint32:
-		n, err := bytesconv.ParseUint(b, 10, 32)
+		n, err := cast.ParseUint(b, 10, 32)
 		if err != nil {
 			return err
 		}
 		*v = uint32(n)
 		return nil
 	case *uint64:
-		n, err := bytesconv.ParseUint(b, 10, 64)
+		n, err := cast.ParseUint(b, 10, 64)
 		if err != nil {
 			return err
 		}
 		*v = n
 		return nil
 	case *float32:
-		n, err := bytesconv.ParseFloat(b, 32)
+		n, err := cast.ParseFloat(b, 32)
 		if err != nil {
 			return err
 		}
@@ -105,7 +105,7 @@ func Scan(b []byte, v interface{}) error {
 		return err
 	case *float64:
 		var err error
-		*v, err = bytesconv.ParseFloat(b, 64)
+		*v, err = cast.ParseFloat(b, 64)
 		return err
 	case *bool:
 		// v是bool指针，判断字节数组第一个元素是否为1
@@ -114,7 +114,7 @@ func Scan(b []byte, v interface{}) error {
 	case *time.Time:
 		// v是时间对象指针，b的格式必须是time.RFC3339Nano
 		var err error
-		*v, err = time.Parse(time.RFC3339Nano, bytesconv.BytesToString(b))
+		*v, err = time.Parse(time.RFC3339Nano, cast.BytesToString(b))
 		return err
 	case encoding.BinaryUnmarshaler:
 		// v是解码器对象
@@ -161,7 +161,8 @@ func ScanSlice(data []string, slice interface{}) error {
 }
 
 // 返回一个迭代器，迭代器执行时返回切片的下一个元素，如果元素是一个指针，则返回指针的值
-// 	v：是一个切片对象，例如[]*testScanSliceStruct，或[]testScanSliceStruct
+//
+//	v：是一个切片对象，例如[]*testScanSliceStruct，或[]testScanSliceStruct
 func makeSliceNextElemFunc(v reflect.Value) func() reflect.Value {
 	// 获得切片的类型
 	// v.Type()是[]proto.testScanSliceStruct 或 []proto.testScanSliceStruct

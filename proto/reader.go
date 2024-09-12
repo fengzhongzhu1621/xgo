@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/fengzhongzhu1621/xgo/str/bytesconv"
+	"github.com/fengzhongzhu1621/xgo/cast"
 )
 
 // redis resp protocol data type.
@@ -119,7 +119,7 @@ func (r *Reader) ReadReply(m MultiBulkParse) (interface{}, error) {
 		return string(line[1:]), nil
 	case IntReply:
 		// 如果返回的是响应的长度，例如 ":1\r\n"
-		return bytesconv.ParseInt(line[1:], 10, 64)
+		return cast.ParseInt(line[1:], 10, 64)
 	case StringReply:
 		// 如果返回的是响应的长度，需要根据长度继续读取后面的响应内容，例如 "$5\r\nhello\r\n"
 		return r.readStringReply(line)
@@ -153,7 +153,7 @@ func (r *Reader) ReadIntReply() (int64, error) {
 		return 0, ParseErrorReply(line)
 	case IntReply:
 		// 如果返回的是响应的长度，例如 ":1\r\n"
-		return bytesconv.ParseInt(line[1:], 10, 64)
+		return cast.ParseInt(line[1:], 10, 64)
 	default:
 		return 0, fmt.Errorf("redis: can't parse int reply: %.100q", line)
 	}
@@ -190,7 +190,7 @@ func (r *Reader) readStringReply(line []byte) (string, error) {
 		return "", Nil
 	}
 	// 将字节数组转换为int类型
-	replyLen, err := bytesconv.Atoi(line[1:])
+	replyLen, err := cast.Atoi(line[1:])
 	if err != nil {
 		return "", err
 	}
@@ -201,7 +201,7 @@ func (r *Reader) readStringReply(line []byte) (string, error) {
 		return "", err
 	}
 
-	return bytesconv.BytesToString(b[:replyLen]), nil
+	return cast.BytesToString(b[:replyLen]), nil
 }
 
 // 读取数组类型的指令响应的内容.
@@ -286,7 +286,7 @@ func (r *Reader) ReadInt() (int64, error) {
 	if err != nil {
 		return 0, err
 	}
-	return bytesconv.ParseInt(b, 10, 64)
+	return cast.ParseInt(b, 10, 64)
 }
 
 func (r *Reader) ReadUint() (uint64, error) {
@@ -294,7 +294,7 @@ func (r *Reader) ReadUint() (uint64, error) {
 	if err != nil {
 		return 0, err
 	}
-	return bytesconv.ParseUint(b, 10, 64)
+	return cast.ParseUint(b, 10, 64)
 }
 
 func (r *Reader) ReadFloatReply() (float64, error) {
@@ -302,7 +302,7 @@ func (r *Reader) ReadFloatReply() (float64, error) {
 	if err != nil {
 		return 0, err
 	}
-	return bytesconv.ParseFloat(b, 64)
+	return cast.ParseFloat(b, 64)
 }
 
 // 读取数组中每个元素的内容，例如"$5\r\nhello\r\n，返回hello.
@@ -331,7 +331,7 @@ func (r *Reader) _readTmpBytesReply(line []byte) ([]byte, error) {
 		return nil, Nil
 	}
 	// 将字节数组转换为int类型
-	replyLen, err := bytesconv.Atoi(line[1:])
+	replyLen, err := cast.Atoi(line[1:])
 	if err != nil {
 		return nil, err
 	}
@@ -371,5 +371,5 @@ func parseArrayLen(line []byte) (int64, error) {
 	if isNilReply(line) {
 		return 0, Nil
 	}
-	return bytesconv.ParseInt(line[1:], 10, 64)
+	return cast.ParseInt(line[1:], 10, 64)
 }
