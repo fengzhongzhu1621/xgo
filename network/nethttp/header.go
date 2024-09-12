@@ -5,6 +5,9 @@ import (
 	"net/http"
 	"net/textproto"
 	"strings"
+
+	"github.com/fengzhongzhu1621/xgo"
+	"github.com/gin-gonic/gin"
 )
 
 var HeaderNewlineToSpace = strings.NewReplacer("\n", " ", "\r", " ") // 换行字符替换器
@@ -53,4 +56,45 @@ func PushHeaders(h http.Header, hdrs []string) {
 	for _, hstr := range hdrs {
 		h.Add(SplitMimeHeader(hstr))
 	}
+}
+
+// GetBluekingLanguageFromHeader 从请求头获取语言
+func GetBluekingLanguageFromHeader(c *gin.Context) (string, error) {
+	header := c.Request.Header.Get("X-BkApi-Blueking-Language")
+	if len(header) == 0 {
+		return "", xgo.JwtTokenNoneErr
+	}
+	strs := strings.Split(header, " ")
+
+	return strs[0], nil
+}
+
+// GetEnvFromHeader 从请求投获取 env 的值，如果找不到则从 Get 请求参数中获取
+func GetEnvFromHeader(c *gin.Context) string {
+	env := c.Request.Header.Get("env")
+	if env == "" {
+		env = c.Query("env")
+	}
+
+	return env
+}
+
+// GetUsernameFromHeader ...
+func GetUsernameFromHeader(c *gin.Context) string {
+	username := c.Request.Header.Get("username")
+	if username == "" {
+		username = c.Query("username")
+	}
+
+	return username
+}
+
+// GetTokenFromHeader ...
+func GetTokenFromHeader(c *gin.Context) string {
+	token := c.Request.Header.Get("token")
+	if token == "" {
+		token = c.Query("token")
+	}
+
+	return token
 }
