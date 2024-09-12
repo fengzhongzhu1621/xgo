@@ -1,6 +1,6 @@
 module github.com/fengzhongzhu1621/xgo
 
-go 1.22.6
+go 1.23.1
 
 require (
 	github.com/dustin/go-broadcast v0.0.0-20211018055107-71439988bd91
@@ -49,11 +49,9 @@ require (
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/cloudwego/base64x v0.1.4 // indirect
 	github.com/cloudwego/iasm v0.2.0 // indirect
-	github.com/deckarep/golang-set v1.8.0 // indirect
 	github.com/felixge/httpsnoop v1.0.3 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
-	github.com/getsentry/sentry-go v0.29.0 // indirect
-	github.com/go-playground/validator v9.31.0+incompatible // indirect
+	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/s2a-go v0.1.7 // indirect
@@ -65,26 +63,20 @@ require (
 	github.com/klauspost/cpuid/v2 v2.2.7 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
-	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.37.0 // indirect
 	github.com/prometheus/procfs v0.8.0 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
-	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/smartystreets/goconvey v1.8.1 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/tidwall/tinyqueue v0.1.1 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	golang.org/x/arch v0.8.0 // indirect
 	golang.org/x/exp v0.0.0-20240613232115-7f521ea00fb8 // indirect
-	golang.org/x/sync v0.8.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20231106174013-bbf56f31fb17 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20231120223509-83a465c0220f // indirect
 	howett.net/plist v1.0.1 // indirect
-	logur.dev/adapter/logrus v0.5.0 // indirect
-	logur.dev/adapter/zap v0.5.0 // indirect
-	logur.dev/logur v0.17.0 // indirect
 )
 
 require (
@@ -123,7 +115,7 @@ require (
 	go.opencensus.io v0.24.0 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
-	go.uber.org/zap v1.17.0 // indirect
+	go.uber.org/zap v1.17.0
 	golang.org/x/crypto v0.26.0 // indirect
 	golang.org/x/net v0.28.0 // indirect
 	golang.org/x/oauth2 v0.15.0 // indirect
@@ -146,9 +138,10 @@ require (
 	github.com/codeskyblue/dockerignore v0.0.0-20151214070507-de82dee623d9
 	github.com/codeskyblue/go-accesslog v0.0.0-20171215023101-6188d3bd9371
 	github.com/codeskyblue/openid-go v0.0.0-20160923065855-0d30842b2fb4
+	github.com/deckarep/golang-set v1.8.0
 	github.com/duke-git/lancet/v2 v2.3.2
 	github.com/fork2fix/go-plist v0.0.0-20181126021357-36960be5e636
-	github.com/go-playground/assert/v2 v2.2.0
+	github.com/getsentry/sentry-go v0.29.0
 	github.com/go-sql-driver/mysql v1.8.1
 	github.com/go-yaml/yaml v2.1.0+incompatible
 	github.com/goji/httpauth v0.0.0-20160601135302-2da839ab0f4d
@@ -163,8 +156,10 @@ require (
 	github.com/kyokomi/emoji/v2 v2.2.13
 	github.com/lithammer/shortuuid/v3 v3.0.7
 	github.com/oklog/ulid v1.3.1
+	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/prometheus/client_golang v1.13.0
 	github.com/shogo82148/androidbinary v0.0.0-20180627093851-01c4bfa8b3b5
+	github.com/sirupsen/logrus v1.9.3
 	github.com/tidwall/assert v0.1.0
 	github.com/tidwall/btree v1.6.0
 	github.com/tidwall/gjson v1.14.4
@@ -173,6 +168,10 @@ require (
 	github.com/tidwall/match v1.1.1
 	github.com/tidwall/rtred v0.1.2
 	go.uber.org/mock v0.4.0
+	golang.org/x/sync v0.8.0
 	gorm.io/driver/mysql v1.5.7
 	gorm.io/gorm v1.25.11
+	logur.dev/adapter/logrus v0.5.0
+	logur.dev/adapter/zap v0.5.0
+	logur.dev/logur v0.17.0
 )
