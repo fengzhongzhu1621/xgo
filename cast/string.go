@@ -1,15 +1,19 @@
 package cast
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"reflect"
 	"strconv"
 	"strings"
 	"unsafe"
-
-	"github.com/fengzhongzhu1621/xgo/crypto/encoding/json"
 )
+
+func jsonStringToObject(s string, v any) error {
+	data := []byte(s)
+	return json.Unmarshal(data, v)
+}
 
 // ToString casts an interface to a string type.
 func ToString(i interface{}) string {
@@ -222,7 +226,7 @@ func ToStringMapStringE(i interface{}) (map[string]string, error) {
 		}
 		return m, nil
 	case string:
-		err := json.JsonStringToObject(v, &m)
+		err := jsonStringToObject(v, &m)
 		return m, err
 	default:
 		return m, fmt.Errorf("unable to cast %#v of type %T to map[string]string", i, i)
@@ -285,7 +289,7 @@ func ToStringMapStringSliceE(i interface{}) (map[string][]string, error) {
 			m[key] = value
 		}
 	case string:
-		err := json.JsonStringToObject(v, &m)
+		err := jsonStringToObject(v, &m)
 		return m, err
 	default:
 		return m, fmt.Errorf("unable to cast %#v of type %T to map[string][]string", i, i)
@@ -311,7 +315,7 @@ func ToStringMapBoolE(i interface{}) (map[string]bool, error) {
 	case map[string]bool:
 		return v, nil
 	case string:
-		err := json.JsonStringToObject(v, &m)
+		err := jsonStringToObject(v, &m)
 		return m, err
 	default:
 		return m, fmt.Errorf("unable to cast %#v of type %T to map[string]bool", i, i)
@@ -331,7 +335,7 @@ func ToStringMapE(i interface{}) (map[string]interface{}, error) {
 	case map[string]interface{}:
 		return v, nil
 	case string:
-		err := json.JsonStringToObject(v, &m)
+		err := jsonStringToObject(v, &m)
 		return m, err
 	default:
 		return m, fmt.Errorf("unable to cast %#v of type %T to map[string]interface{}", i, i)
@@ -359,7 +363,7 @@ func ToStringMapIntE(i interface{}) (map[string]int, error) {
 	case map[string]int:
 		return v, nil
 	case string:
-		err := json.JsonStringToObject(v, &m)
+		err := jsonStringToObject(v, &m)
 		return m, err
 	}
 
@@ -400,7 +404,7 @@ func ToStringMapInt64E(i interface{}) (map[string]int64, error) {
 	case map[string]int64:
 		return v, nil
 	case string:
-		err := json.JsonStringToObject(v, &m)
+		err := jsonStringToObject(v, &m)
 		return m, err
 	}
 
