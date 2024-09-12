@@ -27,7 +27,7 @@ func TestVersionList(t *testing.T) {
 
 func TestGetLatestVersion(t *testing.T) {
 	type args struct {
-		filelist []string
+		fileList []string
 	}
 	tests := []struct {
 		name string
@@ -36,18 +36,18 @@ func TestGetLatestVersion(t *testing.T) {
 	}{
 		{
 			name: "正确匹配",
-			args: args{filelist: []string{"1.2.3", "1.2.4", "1.1.3", "2.1.3"}},
+			args: args{fileList: []string{"1.2.3", "1.2.4", "1.1.3", "2.1.3"}},
 			want: "V2.1.3",
 		},
 		{
 			name: "错误匹配",
-			args: args{filelist: []string{"bad version"}},
+			args: args{fileList: []string{"bad version"}},
 			want: "",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := GetLatestVersion(tt.args.filelist); got != tt.want {
+			if got := GetLatestVersion(tt.args.fileList); got != tt.want {
 				t.Errorf("getLatestVersion() = %v, want %v", got, tt.want)
 			}
 		})
