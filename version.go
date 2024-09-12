@@ -8,8 +8,6 @@ import (
 	"sort"
 	"strconv"
 	"strings"
-
-	"github.com/fengzhongzhu1621/xgo/file"
 )
 
 // Version is the current package version.
@@ -105,6 +103,18 @@ func GetLatestVersion(vers []string) string {
 	return defaultVersion
 }
 
+// ReadFileContent 读取文件的内容
+func readFileContent(filepath string) (string, error) {
+	// 用于读取指定文件的全部内容，并将其作为一个字节切片返回。如果读取过程中发生错误，函数会返回一个非空的错误值。
+	// os.ReadFile 函数会一次性读取整个文件内容到内存中，因此对于非常大的文件，可能会导致内存不足的问题。
+	// 在这种情况下，建议使用 os.Open 和 io.Reader 接口逐块读取文件内容。
+	content, err := os.ReadFile(filepath)
+	if err != nil {
+		return "", err
+	}
+	return string(content), nil
+}
+
 func ListChangelogs(rootDir string, language string, version string) (string, []*VersionLog, error) {
 	var (
 		err                error
@@ -157,7 +167,7 @@ func ListChangelogs(rootDir string, language string, version string) (string, []
 
 		// 读取 md 文件
 		if version != "" && strings.Contains(filename, version) && strings.Contains(filename, language) {
-			content, err = file.ReadFileContent(rootDir + filename)
+			content, err = readFileContent(rootDir + filename)
 			if err != nil {
 				continue
 			}
