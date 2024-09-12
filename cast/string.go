@@ -449,3 +449,22 @@ func StringToInt64Slice(s, sep string) ([]int64, error) {
 	}
 	return int64Slice, nil
 }
+
+// StringToIntSlice 根据分隔符将字符串转换为整型数组
+// 1,2,3 -> []int64{1, 2, 3}
+func StringToIntSlice(s, sep string) ([]int, error) {
+	if s == "" {
+		return []int{}, nil
+	}
+	parts := strings.Split(s, sep)
+
+	intSlice := make([]int, 0, len(parts))
+	for _, d := range parts {
+		i, err := strconv.Atoi(d)
+		if err != nil {
+			return nil, err
+		}
+		intSlice = append(intSlice, i)
+	}
+	return intSlice, nil
+}
