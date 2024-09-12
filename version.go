@@ -12,7 +12,10 @@ import (
 
 // Version is the current package version.
 const (
-	version = "0.0.1"
+	Version   = "0.0.1"
+	Commit    = "none"
+	BuildTime = "unknown"
+	GoVersion = "1.23.1"
 )
 
 var (
@@ -26,7 +29,7 @@ func ShowVersion() {
 
 // GetVersion get version message string.
 func GetVersion() string {
-	version := fmt.Sprintf("Version  :%s\n", version)
+	version := fmt.Sprintf("Version  :%s\n", Version)
 	return version
 }
 
