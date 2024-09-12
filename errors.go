@@ -147,6 +147,20 @@ func WrapError(err error) *Error {
 }
 
 // /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+const (
+	NoError                = 0
+	ParamError             = 1901002
+	BadRequestError        = 1901400
+	UnauthorizedError      = 1901401
+	ForbiddenError         = 1901403
+	NotFoundError          = 1901404
+	ConflictError          = 1901409
+	SystemError            = 1901500
+	TooManyRequests        = 1901429
+	StaffUnauthorizedError = 2901403
+	IAMNoPermission        = 9900403
+)
+
 type Code struct {
 	ErrCode int    `json:"Code" form:"Code"`
 	Message string `json:"Message" form:"Message"`

@@ -5,6 +5,8 @@ import (
 	"errors"
 	"io"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 var (
@@ -34,4 +36,8 @@ func ReadRequestBody(r *http.Request) ([]byte, error) {
 	r.Body = io.NopCloser(bytes.NewReader(body))
 
 	return body, err
+}
+
+func GetRequestID(c *gin.Context) string {
+	return c.GetString(RequestIDKey)
 }
