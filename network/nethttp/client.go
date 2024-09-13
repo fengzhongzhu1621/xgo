@@ -9,8 +9,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/fengzhongzhu1621/xgo/network/nethttp/ssl"
+	"github.com/fengzhongzhu1621/xgo/network/ssl"
 )
+
 type HttpRespone struct {
 	Reply      []byte // 响应内容
 	StatusCode int
@@ -43,7 +44,7 @@ func (client *HttpClient) NewTransPort() *http.Transport {
 	return &http.Transport{
 		TLSHandshakeTimeout: 5 * time.Second, // TLS 握手超时时间设置为 5 秒
 		Dial: (&net.Dialer{
-			Timeout:   5 * time.Second, // 连接超时时间为 5 秒
+			Timeout:   5 * time.Second,  // 连接超时时间为 5 秒
 			KeepAlive: 30 * time.Second, // 保持连接活跃时间为 30 秒
 		}).Dial,
 		ResponseHeaderTimeout: 30 * time.Second, // 响应头超时时间设置为 30 秒
@@ -91,7 +92,6 @@ func (client *HttpClient) SetTlsVerity(caFile, certFile, keyFile, passwd string)
 
 	return nil
 }
-
 
 // SetTlsVerityConfig 创建并设置一个 http.Transport 对象
 func (client *HttpClient) SetTlsVerityConfig(tlsConf *tls.Config) {

@@ -5,7 +5,9 @@ import (
 	"net/http"
 
 	"github.com/fengzhongzhu1621/xgo/config"
+	"github.com/fengzhongzhu1621/xgo/db/mysql"
 	"github.com/fengzhongzhu1621/xgo/db/mysql/sqlxx"
+	"github.com/fengzhongzhu1621/xgo/db/redisx"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,7 +15,7 @@ func NewHealthzHandleFunc(cfg *config.Config) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 1. check database
 		defaultDBConfig := cfg.DatabaseMap["default"]
-		dbConfigs := []config.Database{defaultDBConfig}
+		dbConfigs := []mysql.Database{defaultDBConfig}
 		for _, dbConfig := range dbConfigs {
 			dbConfig := dbConfig
 			// reset the options for check
@@ -32,8 +34,26 @@ func NewHealthzHandleFunc(cfg *config.Config) gin.HandlerFunc {
 		}
 
 		// 2. check redis
+		var err error
+		var addr string
+		redisConfig, ok := cfg.RedisMap[redisx.ModeStandalone]
+		if ok {
+			addr = redisConfig.Addr
+			err = redisx.TestConnection(&redisConfig)
+		}
 
-		// 4. return ok
+		redisConfig, ok = cfg.RedisMap[redisx.ModeSentinel]
+		if ok {
+			addr = redisConfig.SentinelAddr
+			err = redisx.TestConnection(&redisConfig)
+		}
+
+		if err != nil {
+			message := fmt.Sprintf("redis(mode=%s) connect fail: %s [addr=%s]", redisConfig.ID, err.Error(), addr)
+			c.String(http.StatusInternalServerError, message)
+			return
+		}
+
 		c.String(http.StatusOK, "ok")
 	}
 }

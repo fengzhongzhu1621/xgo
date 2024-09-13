@@ -41,8 +41,8 @@ func ClientTslConfVerity(caFile, certFile, keyFile, passwd string) (*tls.Config,
 
 	// 配置 TLS 客户端
 	tlsConfig := &tls.Config{
-		InsecureSkipVerify: true, // 跳过服务器证书的验证
-		RootCAs:            certPool, // CA 证书池，用于验证服务器证书
+		InsecureSkipVerify: true,                     // 跳过服务器证书的验证
+		RootCAs:            certPool,                 // CA 证书池，用于验证服务器证书
 		Certificates:       []tls.Certificate{*cert}, // 客户端证书和私钥
 	}
 
@@ -88,8 +88,8 @@ func ServerTslConfVerityClient(caFile, certFile, keyFile, passwd string) (*tls.C
 	}
 
 	tlsConfig := &tls.Config{
-		ClientCAs:    caPool, // CA 证书池，用于验证客户端证书
-		Certificates: []tls.Certificate{*cert}, // 服务器证书和私钥
+		ClientCAs:    caPool,                         // CA 证书池，用于验证客户端证书
+		Certificates: []tls.Certificate{*cert},       // 服务器证书和私钥
 		ClientAuth:   tls.RequireAndVerifyClientCert, // 要求客户端提供证书并验证其有效性
 	}
 

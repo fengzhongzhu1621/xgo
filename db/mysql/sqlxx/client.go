@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/fengzhongzhu1621/xgo/config"
+	"github.com/fengzhongzhu1621/xgo/db/mysql"
 	"github.com/jmoiron/sqlx"
 	log "github.com/sirupsen/logrus"
 )
@@ -67,7 +67,7 @@ func (db *DBClient) Close() {
 }
 
 // NewDBClient 根据db 配置创建数据库连接对象
-func NewDBClient(cfg *config.Database) *DBClient {
+func NewDBClient(cfg *mysql.Database) *DBClient {
 	dataSource := fmt.Sprintf("%s:%s@(%s:%d)/%s?charset=%s&parseTime=True&interpolateParams=true&loc=%s",
 		cfg.User,
 		cfg.Password,
@@ -117,7 +117,7 @@ func NewDBClient(cfg *config.Database) *DBClient {
 }
 
 // TestConnection 根据 db 配置测试数据库连接是否正常
-func TestConnection(dbConfig *config.Database) error {
+func TestConnection(dbConfig *mysql.Database) error {
 	c := NewDBClient(dbConfig)
 	return c.TestConnection()
 }
