@@ -64,10 +64,12 @@ require (
 	github.com/klauspost/cpuid/v2 v2.2.7 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
+	github.com/pborman/uuid v1.2.1 // indirect
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.37.0 // indirect
 	github.com/prometheus/procfs v0.8.0 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
+	github.com/rogpeppe/fastuuid v1.2.0 // indirect
 	github.com/smartystreets/goconvey v1.8.1 // indirect
 	github.com/steinfletcher/apitest v1.5.17 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
