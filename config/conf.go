@@ -4,9 +4,13 @@ import (
 	"github.com/fengzhongzhu1621/xgo/db/kafkax"
 	"github.com/fengzhongzhu1621/xgo/db/mysql"
 	"github.com/fengzhongzhu1621/xgo/db/redisx"
+	"github.com/gin-gonic/gin"
 )
 
 type Config struct {
+	// 调试开关
+	Debug bool
+
 	// 数据库配置
 	Databases   []mysql.Database
 	DatabaseMap map[string]mysql.Database
@@ -18,4 +22,7 @@ type Config struct {
 	// kafka 配置
 	Kafka    []kafkax.Kafka
 	KafkaMap map[string]kafkax.Kafka
+
+	// pprof
+	PprofAccounts gin.Accounts // 认证用户
 }
