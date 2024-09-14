@@ -1,4 +1,4 @@
-package default_go
+package default_log
 
 import (
 	"context"

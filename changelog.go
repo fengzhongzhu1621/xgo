@@ -7,8 +7,11 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+
+	"go.uber.org/zap"
 )
 
+// //////////////////////////////////////////////////////////////////////////////////////////////
 type VersionLog struct {
 	Version     string `json:"version"`
 	ReleaseDate string `json:"release_at"`
@@ -138,3 +141,16 @@ func ListChangelogs(rootDir string, language string, version string) (string, []
 
 	return latestVer, versionLogs, nil
 }
+
+// //////////////////////////////////////////////////////////////////////////////////////////////
+type VersionsConfigService struct {
+	webLogger *zap.Logger
+}
+
+// func NewVersionsConfigService(cfg *config.Config) VersionsConfigService {
+// 	obj := VersionsConfigService{
+// 		webLogger: logging.GetWebLogger(),
+// 	}
+
+// 	return &obj
+// }

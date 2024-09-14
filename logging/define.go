@@ -14,6 +14,7 @@ type LogurLogger = logur.LoggerFacade
 // 定义了一个默认的日志记录器名称 DefaultLoggerName
 const DefaultLoggerName = ""
 
+// 日志记录器的插件仓库
 var loggerAlias, loggers *sync.Map
 
 // tryGetLogger 尝试从 loggers 映射中加载对应的日志记录器实例。

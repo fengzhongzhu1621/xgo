@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/fengzhongzhu1621/xgo"
-
 	"github.com/fengzhongzhu1621/xgo/channel"
 	"github.com/fengzhongzhu1621/xgo/pool"
 )

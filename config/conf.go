@@ -7,6 +7,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type LogConfig struct {
+	Level    string
+	Writer   string
+	Settings map[string]string // 日志详细配置
+}
+
+type Logger struct {
+	System    LogConfig // 系统日志记录器配置
+	API       LogConfig
+	SQL       LogConfig
+	Web       LogConfig // web server 日志记录器配置
+	Component LogConfig
+	Kafka     LogConfig
+}
+
 type Config struct {
 	// 调试开关
 	Debug bool
@@ -25,4 +40,7 @@ type Config struct {
 
 	// pprof
 	PprofAccounts gin.Accounts // 认证用户
+
+	// 日志
+	Logger Logger
 }
