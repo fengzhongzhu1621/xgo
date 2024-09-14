@@ -8,7 +8,6 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/fengzhongzhu1621/xgo"
 	"github.com/fengzhongzhu1621/xgo/channel"
 	"github.com/fengzhongzhu1621/xgo/pool"
 )
@@ -247,7 +246,7 @@ func (logrusLogger *LogrusLogger) Panic(args ...interface{}) {
 }
 
 func (logrusLogger *LogrusLogger) Exit(code int) {
-	xgo.RunHandlers()
+	channel.RunHandlers()
 	if logrusLogger.ExitFunc == nil {
 		logrusLogger.ExitFunc = os.Exit
 	}

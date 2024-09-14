@@ -1,4 +1,4 @@
-package xgo
+package version
 
 import (
 	"fmt"
@@ -7,16 +7,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
-
-	"go.uber.org/zap"
 )
-
-// //////////////////////////////////////////////////////////////////////////////////////////////
-type VersionLog struct {
-	Version     string `json:"version"`
-	ReleaseDate string `json:"release_at"`
-	Content     string `json:"content"`
-}
 
 // GetLatestVersion 获得多个版本字符串中的最新版本
 func GetLatestVersion(vers []string) string {
@@ -74,6 +65,7 @@ func readFileContent(filepath string) (string, error) {
 	return string(content), nil
 }
 
+// ListChangelogs 获得指定目录下指定版本和语言的版本日志
 func ListChangelogs(rootDir string, language string, version string) (string, []*VersionLog, error) {
 	var (
 		err                error
@@ -133,24 +125,11 @@ func ListChangelogs(rootDir string, language string, version string) (string, []
 		}
 
 		versionLogs = append(versionLogs, &VersionLog{
-			Version:     filename_arr[0],
-			ReleaseDate: filename_arr[1],
-			Content:     content,
+			Version:   filename_arr[0],
+			ReleaseAt: filename_arr[1],
+			Content:   content,
 		})
 	}
 
 	return latestVer, versionLogs, nil
 }
-
-// //////////////////////////////////////////////////////////////////////////////////////////////
-type VersionsConfigService struct {
-	webLogger *zap.Logger
-}
-
-// func NewVersionsConfigService(cfg *config.Config) VersionsConfigService {
-// 	obj := VersionsConfigService{
-// 		webLogger: logging.GetWebLogger(),
-// 	}
-
-// 	return &obj
-// }

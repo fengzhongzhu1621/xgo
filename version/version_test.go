@@ -1,4 +1,4 @@
-package xgo
+package version
 
 import (
 	"reflect"

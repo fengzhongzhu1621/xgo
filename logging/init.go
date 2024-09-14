@@ -54,3 +54,9 @@ func initSystemLogger(cfg *config.LogConfig) {
 	}
 	logrus.SetLevel(l)
 }
+
+func init() {
+	var globalConfig = config.GetGlobalConfig()
+	var logger = globalConfig.Logger
+	InitLogger(&logger)
+}

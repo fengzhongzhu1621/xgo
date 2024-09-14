@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/fengzhongzhu1621/xgo"
+	"github.com/fengzhongzhu1621/xgo/version"
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,10 +19,10 @@ func Version(c *gin.Context) {
 	runEnv := os.Getenv("RUN_ENV")
 	now := time.Now()
 	c.JSON(http.StatusOK, gin.H{
-		"version":   xgo.Version,
-		"commit":    xgo.Commit,
-		"buildTime": xgo.BuildTime,
-		"goVersion": xgo.GoVersion,
+		"version":   version.Version,
+		"commit":    version.Commit,
+		"buildTime": version.BuildTime,
+		"goVersion": version.GoVersion,
 		"env":       runEnv,
 		"timestamp": now.Unix(),
 		"date":      now,

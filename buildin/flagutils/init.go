@@ -4,7 +4,7 @@ import (
 	"flag"
 	"os"
 
-	"github.com/fengzhongzhu1621/xgo"
+	"github.com/fengzhongzhu1621/xgo/version"
 	"github.com/spf13/pflag"
 )
 
@@ -32,7 +32,7 @@ func InitFlags() {
 	}
 
 	if *ver {
-		xgo.ShowVersion()
+		version.ShowVersion()
 		os.Exit(0)
 	}
 }

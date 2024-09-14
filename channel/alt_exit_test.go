@@ -1,4 +1,4 @@
-package xgo
+package channel
 
 import (
 	"io/ioutil"

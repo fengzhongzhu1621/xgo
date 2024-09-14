@@ -5,6 +5,7 @@ import (
 	"github.com/fengzhongzhu1621/xgo/db/mysql"
 	"github.com/fengzhongzhu1621/xgo/db/redisx"
 	"github.com/gin-gonic/gin"
+	"github.com/spf13/viper"
 )
 
 type LogConfig struct {
@@ -43,4 +44,17 @@ type Config struct {
 
 	// 日志
 	Logger Logger
+
+	// 版本
+	RootDir string
+}
+
+func Load(v *viper.Viper) (*Config, error) {
+	var cfg Config
+
+	if err := v.Unmarshal(&cfg); err != nil {
+		return nil, err
+	}
+
+	return &cfg, nil
 }
