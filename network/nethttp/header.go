@@ -79,17 +79,17 @@ func GetEnvFromHeader(c *gin.Context) string {
 	return env
 }
 
-// GetUsernameFromHeader ...
+// GetUsernameFromHeader 从 header 中获取用户名
 func GetUsernameFromHeader(c *gin.Context) string {
-	username := c.Request.Header.Get("username")
+	username := c.Request.Header.Get("bk_username")
 	if username == "" {
-		username = c.Query("username")
+		username = c.Query("bk_username")
 	}
 
 	return username
 }
 
-// GetTokenFromHeader ...
+// GetTokenFromHeader 从 header 中获取 token
 func GetTokenFromHeader(c *gin.Context) string {
 	token := c.Request.Header.Get("token")
 	if token == "" {

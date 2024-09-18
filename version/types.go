@@ -1,25 +1,10 @@
 package version
 
 type VersionLog struct {
-	Version   string `json:"version"`
+	// 版本号
+	Version string `json:"version"`
+	// 发布时间
 	ReleaseAt string `json:"release_at"`
-	Content   string `json:"content"`
-}
-
-type ListVersionsResponse struct {
-	ShowVersion bool         `json:"show_version"`
-	VersionLogs []VersionLog `json:"version_logs"`
-	LastVersion string       `json:"last_version"`
-}
-
-type GetVersionContentRequestParam struct {
-	Language string `json:"language" form:"language"`
-	Version  string `json:"version" form:"version" binding:"required"`
-	Operator string `json:"operator" form:"operator" binding:"required"`
-}
-
-type IVersionsConfigService interface {
-	GetVersionContent(getVersionContentParam *GetVersionContentRequestParam) (string, error)
-
-	ListVersions(language string) (*ListVersionsResponse, error)
+	// 版本内容
+	Content string `json:"content"`
 }

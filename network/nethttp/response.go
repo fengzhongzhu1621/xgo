@@ -62,14 +62,15 @@ func SuccessRawJsonResponse(c *gin.Context, data interface{}) {
 	c.JSON(http.StatusOK, data)
 }
 
-func SuccessJSONResponse(c *gin.Context, message string, data interface{}) {
+func SuccessJSONResponse(c *gin.Context, data interface{}) {
+	message := ""
 	JSONResponse(c, http.StatusOK, xgo.NoError, message, data)
 }
 
-func SuccessJSONResponseWithDebug(c *gin.Context, message string, data interface{}, debug interface{}) {
-	if reflectutils.IsNil(debug) {
+func SuccessJSONResponseWithDebug(c *gin.Context, message string, data interface{}, debug bool) {
+	if !debug {
 		// 非 debug 模式
-		SuccessJSONResponse(c, message, data)
+		SuccessJSONResponse(c, data)
 		return
 	}
 
@@ -90,7 +91,7 @@ func SuccessJSONResponseWithDebug(c *gin.Context, message string, data interface
 // NewResponse 创建响应对象，并转换为 []byte
 func NewResponse(code int, message string, data interface{}) ([]byte, error) {
 	result := false
-	if 0 == code {
+	if code == 0 {
 		result = true
 	} else {
 		appName := os.Args[0]
@@ -133,6 +134,8 @@ var (
 )
 
 func SetError(c *gin.Context, err error) {
+	// c.Set方法用于在上下文（context）中设置一个键值对。这个方法允许你在处理请求的过程中存储和检索自定义数据。这些数据可以在同一个请求的不同处理函数之间共享。
+	// c.Set方法设置的键值对仅在当前请求的上下文中有效。
 	c.Set(ErrorIDKey, err)
 }
 

@@ -2,7 +2,7 @@ package router
 
 import (
 	"github.com/fengzhongzhu1621/xgo/config"
-	"github.com/fengzhongzhu1621/xgo/network/ginx/handler"
+	"github.com/fengzhongzhu1621/xgo/ginx/handler"
 	"github.com/gin-gonic/gin"
 )
 

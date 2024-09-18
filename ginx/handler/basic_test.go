@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/fengzhongzhu1621/xgo/network/ginx"
+	"github.com/fengzhongzhu1621/xgo/ginx"
 	"github.com/steinfletcher/apitest"
 	"github.com/stretchr/testify/assert"
 )

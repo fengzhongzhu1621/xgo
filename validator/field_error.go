@@ -49,6 +49,7 @@ func ValidationErrorMessage(err error) string {
 		return "EOF, json decode fail"
 	}
 
+	// 判断是否是 validator 第三方库的校验错误
 	validationErrs, ok := err.(validator.ValidationErrors)
 	if !ok {
 		// 错误可能是 JSON 解码失败或其他非验证错误。

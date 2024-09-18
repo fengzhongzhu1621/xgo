@@ -38,6 +38,7 @@ func ReadRequestBody(r *http.Request) ([]byte, error) {
 	return body, err
 }
 
+// GetRequestID 获得请求唯一 ID
 func GetRequestID(c *gin.Context) string {
 	return c.GetString(RequestIDKey)
 }
