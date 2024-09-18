@@ -1,3 +1,6 @@
+//go:build linux
+// +build linux
+
 package taskset
 
 import (
@@ -14,12 +17,12 @@ func TestTaskSet(t *testing.T) {
 	pid := os.Getpid()
 
 	// 获得进程 CPU 亲和性掩码
-	cmd:= exec.Command("taskset", "-p", fmt.Sprintf("%d", pid))
+	cmd := exec.Command("taskset", "-p", fmt.Sprintf("%d", pid))
 	out, err := cmd.Output()
 	if err != nil {
 		fmt.Println(err)
 	}
-	
+
 	// 运行时设置 CPU 亲和性掩码
 	cmd = exec.Command("taskset", "-p", "0,1", fmt.Sprintf("%d", pid))
 	out, err = cmd.Output()
