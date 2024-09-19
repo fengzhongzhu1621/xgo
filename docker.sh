@@ -7,10 +7,6 @@ VERSION=$(date +%Y%m%d%H%M)
 CLOUD_DOMAIN=mirrors.tencent.com
 DOCKER_NAMESPACE=xgo
 
-echo_red() {
-    echo -e "\033[31m $1 \033[0m"
-}
-
 rm_image() {
     if [ -z $1 ]; then
         echo "docker rmi failed, module name not defined"
