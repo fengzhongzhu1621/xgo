@@ -69,7 +69,7 @@ func GetBluekingLanguageFromHeader(c *gin.Context) (string, error) {
 	return strs[0], nil
 }
 
-// GetEnvFromHeader 从请求投获取 env 的值，如果找不到则从 Get 请求参数中获取
+// GetEnvFromHeader 从请求头获取 env 的值，如果找不到则从 Get 请求参数中获取
 func GetEnvFromHeader(c *gin.Context) string {
 	env := c.Request.Header.Get("env")
 	if env == "" {
