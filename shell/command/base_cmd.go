@@ -26,7 +26,7 @@ type Cmder interface {
 	Err() error
 }
 
-// 将命令串转换为字符串表示，仅用于显示.
+// cmdString 将命令串转换为字符串表示，仅用于显示.
 func cmdString(cmd Cmder, val interface{}) string {
 	b := make([]byte, 0, 64)
 

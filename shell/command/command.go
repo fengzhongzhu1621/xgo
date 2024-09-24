@@ -8,7 +8,7 @@ import (
 	"os/exec"
 )
 
-// 阻塞运行 linux bash 命令.
+// RunBashCommand 阻塞运行 linux bash 命令.
 func RunBashCommand(command string) (string, string, error) {
 	// 返回一个*Cmd，用于使用给出的参数执行name指定的程序
 	cmd := exec.Command("/bin/bash", "-c", command)
@@ -22,7 +22,7 @@ func RunBashCommand(command string) (string, string, error) {
 	return stdout.String(), stderr.String(), err
 }
 
-// 后台运行linux bash命令.
+// RunBashCommandBackground 后台运行linux bash命令.
 func RunBashCommandBackground(commandName string) *exec.Cmd {
 	cmd := exec.Command("/bin/bash", "-c", commandName)
 
@@ -36,7 +36,7 @@ func RunBashCommandBackground(commandName string) *exec.Cmd {
 	return cmd
 }
 
-// 直接在当前目录使用并返回结果.
+// CmdInDir 直接在当前目录使用并返回结果.
 func CmdInDir(commandName string, params []string) (string, error) {
 	cmd := exec.Command(commandName, params...)
 	// 显示运行的命令
@@ -56,7 +56,7 @@ func CmdInDir(commandName string, params []string) (string, error) {
 	return out.String(), err
 }
 
-// 在命令位置使用并返回结果.
+// CmdAndChangeDir 在命令位置使用并返回结果.
 func CmdAndChangeDir(dir string, commandName string, params []string) (string, error) {
 	cmd := exec.Command(commandName, params...)
 	// fmt.Println("CmdAndChangeDir", dir, cmd.Args)
@@ -75,7 +75,7 @@ func CmdAndChangeDir(dir string, commandName string, params []string) (string, e
 	return out.String(), err
 }
 
-// 在命令位置使用并实时输出每行结果.
+// CmdAndChangeDirToShow 在命令位置使用并实时输出每行结果.
 func CmdAndChangeDirToShow(dir string, commandName string, params []string) error {
 	cmd := exec.Command(commandName, params...)
 	// fmt.Println("CmdAndChangeDirToFile", dir, cmd.Args)
@@ -109,7 +109,7 @@ func CmdAndChangeDirToShow(dir string, commandName string, params []string) erro
 	return err
 }
 
-// 命令加载进程类.
+// LaunchedProcess 命令加载进程类.
 type LaunchedProcess struct {
 	Cmd    *exec.Cmd
 	Stdin  io.WriteCloser
@@ -117,7 +117,7 @@ type LaunchedProcess struct {
 	Stderr io.ReadCloser
 }
 
-// 加载一个命令.
+// LaunchCmd 加载一个命令.
 func LaunchCmd(commandName string, commandArgs []string, env []string) (*LaunchedProcess, error) {
 	cmd := exec.Command(commandName, commandArgs...)
 	cmd.Env = env
@@ -145,7 +145,7 @@ func LaunchCmd(commandName string, commandArgs []string, env []string) (*Launche
 	return &LaunchedProcess{cmd, stdin, stdout, stderr}, err
 }
 
-// 将多个参数添加到参数数组中.
+// AppendArgs 将多个参数添加到参数数组中.
 func AppendArgs(dst, src []interface{}) []interface{} {
 	if len(src) == 1 {
 		return AppendArg(dst, src[0])
@@ -155,7 +155,7 @@ func AppendArgs(dst, src []interface{}) []interface{} {
 	return dst
 }
 
-// 将单个参数 arg 添加到参数数组 dst 中.
+// AppendArg 将单个参数 arg 添加到参数数组 dst 中.
 func AppendArg(dst []interface{}, arg interface{}) []interface{} {
 	switch arg := arg.(type) {
 	case []string:

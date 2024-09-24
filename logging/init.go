@@ -12,6 +12,7 @@ import (
 var loggerInitOnce sync.Once
 
 var webLogger *zap.Logger
+var apiLogger *zap.Logger
 
 // GetWebLogger 获得 web 应用的日志记录器
 func GetWebLogger() *zap.Logger {
@@ -21,6 +22,16 @@ func GetWebLogger() *zap.Logger {
 		defer webLogger.Sync()
 	}
 	return webLogger
+}
+
+// GetApiLogger 获得 web 应用的日志记录器
+func GetApiLogger() *zap.Logger {
+	if webLogger == nil {
+		// 创建一个新的zap.Logger实例
+		apiLogger, _ = zap.NewProduction()
+		defer apiLogger.Sync()
+	}
+	return apiLogger
 }
 
 // InitLogger 初始化日志记录器，只能执行一次
