@@ -15,7 +15,11 @@ var rootCmd = &cobra.Command{
 	Long: `A longer description that spans multiple lines and likely contains
    examples and usage of using your application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// 这里放置rootCmd的执行逻辑
+		// 这里放置rootCmd的执行逻辑，当用户在终端输入相应的命令并按下回车键时，Cobra会调用这个函数
+		// 如果Run函数中发生错误，应该适当处理并可能向用户返回错误信息。
+		//
+		// * cmd参数提供了对当前命令对象的访问，包括其标志（flags）、名称等信息。
+		// * args参数是一个字符串切片，包含了命令行中紧跟在命令名后面的所有参数。
 		fmt.Println("Executing root command...")
 	},
 }
@@ -30,14 +34,31 @@ var serveCmd = &cobra.Command{
 	},
 }
 
+var cfgFile string
 var verbose bool
 
 func TestCobra(t *testing.T) {
 	// 定义全局标志，这些标志对所有子命令都可用
+	// PersistentFlags用于为命令及其所有子命令定义全局标志。这意味着一旦定义了持久标志，它将在整个命令树中可用，无论用户是在根命令还是任何子命令上调用它。
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "Enable verbose output")
 
 	rootCmd.AddCommand(serveCmd)
 
+	serveCmd.Flags().StringVarP(&cfgFile, "config", "c", "", "config file (default is config.yml;required)")
+
+	serveCmd.PersistentFlags().Bool("viper", true, "Use Viper for configuration")
+	serveCmd.MarkFlagRequired("config")
+
+	// 设置命令行参数
+	rootCmd.SetArgs([]string{"--help"})
+	// 执行命令并捕获输出
+	if err := rootCmd.Execute(); err != nil {
+		fmt.Println(err)
+	}
+
+	// 设置命令行参数
+	rootCmd.SetArgs([]string{"serve", "--help"})
+	// 执行命令并捕获输出
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 	}

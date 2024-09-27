@@ -10,6 +10,7 @@ import (
 	"unsafe"
 )
 
+// jsonStringToObject 字符串转换为 json 对象
 func jsonStringToObject(s string, v any) error {
 	data := []byte(s)
 	return json.Unmarshal(data, v)
@@ -496,10 +497,12 @@ func Bytes(s string) []byte {
 	))
 }
 
+// rawStrToBytes 字符串转换为字节数组
 func rawStrToBytes(s string) []byte {
 	return []byte(s)
 }
 
+// SafeBytes 字符串转换为字节数组
 func SafeBytes(s string) []byte {
 	return []byte(s)
 }

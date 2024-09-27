@@ -2,6 +2,8 @@ package json
 
 import (
 	"bytes"
+	"encoding/json"
+	"fmt"
 	"reflect"
 	"testing"
 
@@ -149,6 +151,44 @@ func TestEncJSONWriter(t *testing.T) {
 }
 
 func TestInit(t *testing.T) {
-	actual := reflect.TypeOf(map[string]interface{}(nil))
+	actual := reflect.TypeOf(map[string]any(nil))
 	assert.Equal(t, defaultJsonHandle.MapType, actual)
+}
+
+func TestJsonMarshal(t *testing.T) {
+	bk_biz_ids := []int64{1, 2, 3}
+	actual, _ := json.Marshal([]map[string]any{{"field": "bk_biz_id",
+		"operator": "in",
+		"value":    bk_biz_ids}})
+	expect := []byte(`[{"field":"bk_biz_id","operator":"in","value":[1,2,3]}]`)
+	assert.Equal(t, expect, actual)
+}
+
+func TestJsonRawMessage(t *testing.T) {
+	type Data struct {
+		Name  string          `json:"name"`
+		Value json.RawMessage `json:"value"`
+	}
+
+	jsonData := `{"name": "example", "value": {"key": "value"}}`
+
+	var data Data
+	err := json.Unmarshal([]byte(jsonData), &data)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+
+	fmt.Println("Name:", data.Name)                  // Name: example
+	fmt.Printf("Value (raw JSON): %s\n", data.Value) // Value (raw JSON): {"key": "value"}
+
+	// 如果你知道 value 的结构，可以在这里解析它
+	var value map[string]string
+	err = json.Unmarshal(data.Value, &value)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+
+	fmt.Println("Value (parsed):", value) // Value (parsed): map[key:value]
 }

@@ -36,24 +36,26 @@ func RandStringBytesMaskImprSrcSB(n int) string {
 	return sb.String()
 }
 
-// []bytes转换为字符串
+// BytesToString []bytes转换为字符串
 // BytesToString converts byte slice to string without a memory allocation.
 // 效率更高.
 func BytesToString(b []byte) string {
 	return *(*string)(unsafe.Pointer(&b))
 }
 
-// []bytes转换为字符串
+// String []bytes转换为字符串
 // BytesToString converts byte slice to string without a memory allocation.
 // 效率更高.
 func String(b []byte) string {
 	return *(*string)(unsafe.Pointer(&b))
 }
 
+// rawBytesToStr []bytes 转换为字符串
 func rawBytesToStr(b []byte) string {
 	return string(b)
 }
 
+// SafeString []bytes 转换为字符串
 func SafeString(b []byte) string {
 	return string(b)
 }

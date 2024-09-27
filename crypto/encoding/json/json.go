@@ -10,7 +10,7 @@ package json
 import "encoding/json"
 
 var (
-	// Marshal is exported by gin/json package.
+	// Marshal is exported by gin/json package. 将对象转换为json字符串
 	Marshal = json.Marshal
 	// Unmarshal is exported by gin/json package.
 	Unmarshal = json.Unmarshal
