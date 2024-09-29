@@ -9,6 +9,8 @@ import (
 
 func TestGoMock(t *testing.T) {
 	// 创建 gomock 控制器，用来记录后续操作信息
+	// t: 一个实现了 TestReporter 接口的对象。通常情况下，你可以使用 testing.T 或 testing.B 作为参数
+	// returns: 返回一个新的 *Controller 对象，用于管理模拟对象的生命周期。
 	mockCtl := gomock.NewController(t)
 	// 创建一个 MyInterForMock 接口的 mock 实例
 	mockInter := NewMockMyInterForMock(mockCtl)
