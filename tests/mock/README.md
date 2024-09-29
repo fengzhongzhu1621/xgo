@@ -13,6 +13,15 @@ mockgen -source=./foo.go -destination=./mock_foo.go -package=gomock
 
 ## 生成多个 mock 文件
 
+```go
+//go:generate mockgen -self_package github.com/lovoo/goka -package goka -destination mockstorage.go github.com/lovoo/goka/storage Storage
+//go:generate mockgen -self_package github.com/lovoo/goka -package goka -destination mocks.go github.com/lovoo/goka TopicManager,Producer,Broker
+//go:generate mockgen -self_package github.com/lovoo/goka -package goka -destination mockssarama.go github.com/IBM/sarama Client,ClusterAdmin
+//go:generate mockgen -destination=mocks/logger.go -package=gocronmocks . Logger
+//go:generate mockgen -destination=../mocks/app/mock_app.go -package=mock_app github.com/rudderlabs/rudder-server/app App
+//go:generate mockgen -source=./internal/abs/abstraction.go -destination=./internal/mock/mock.go -package mock -mock_names IQueue=MockQueue,IDelegator=MockDelegator,IWorkerPool=MockWorkerPool
+```
+
 **修改 interface 方法**
 ```go
 //go:generate mockgen -source=my_interface.go -destination=mocks/mock_my_interface.go -package=mocks
@@ -76,6 +85,11 @@ m.EXPECT().Get(gomock.Any()).DoAndReturn(func(key string) (int, error) {
 * MaxTimes() 最大次数。
 * MinTimes() 最小次数。
 * AnyTimes() 任意次数（包括 0 次）。
+  
+```go
+mockRepo.EXPECT().Create(gomock.Any(), gomock.Any()).Return(nil).Times(1)
+mockRepo.EXPECT().Create(gomock.Any(), gomock.Any()).Return(nil).AnyTimes()
+```
 
 ```go
 func TestGetFromDB(t *testing.T) {
@@ -92,6 +106,11 @@ func TestGetFromDB(t *testing.T) {
 ### 调用顺序(InOrder)
 
 ```go
+firstCall := mockSpider.EXPECT().Foo1()
+mockRepo.EXPECT().Foo2().After(firstCall)
+```
+
+```go
 func TestGetFromDB(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish() // 断言 DB.Get() 方法是否被调用
@@ -105,3 +124,18 @@ func TestGetFromDB(t *testing.T) {
 }
 
 ```
+
+## 常用方法
+
+|方法|作用|
+|:----|:----|
+|func (c Call) After(preReq Call)|*Call 指定执行顺序|
+|func (c Call) AnyTimes() Call|允许调用次数为 0 次或更多次|
+|func (c Call) Do(f interface{}) Call|指定匹配时执行的操作|
+|func (c Call) DoAndReturn(f interface{}) Call|指定匹配是执行的操作，并且模拟返回值|
+|func (c Call) MaxTimes(n int) Call|指定最大的调用次数为 n 次|
+|func (c Call) MinTimes(n int) Call|指定最小的调用次数为 n 次|
+|func (c Call) Return(rets …interface{}) Call|模拟返回值|
+|func (c Call) SetArg(n int, value interface{}) Call|设置第n个参数的值为value|
+|func (c *Call) String() string|返回其字符串形式|
+|func (c Call) Times(n int) Call|指定调用次数为 n 次|
