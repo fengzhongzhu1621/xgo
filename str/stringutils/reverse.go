@@ -1,6 +1,9 @@
 package stringutils
 
-import "reflect"
+import (
+	"reflect"
+	"strings"
+)
 
 // Deprecated: 翻转切片 panic if s is not a slice.
 func ReflectReverseSlice(s interface{}) {
@@ -28,4 +31,17 @@ func ReverseSlice(a []string) {
 	for left, right := 0, len(a)-1; left < right; left, right = left+1, right-1 {
 		a[left], a[right] = a[right], a[left]
 	}
+}
+
+// ReverseString 字符串反转
+func ReverseString(s string) string {
+	if s == "" {
+		return ""
+	}
+
+	var newString []string
+	for i := len(s) - 1; i >= 0; i-- {
+		newString = append(newString, string(s[i]))
+	}
+	return strings.Join(newString, "")
 }
