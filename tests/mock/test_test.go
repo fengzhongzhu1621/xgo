@@ -47,3 +47,31 @@ func TestGetFromDB(t *testing.T) {
 		t.Fatal("expected -1, but got", v)
 	}
 }
+
+func TestGetFromDB2(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	m := NewMockDB(ctrl)
+	m.EXPECT().Get(gomock.Not("Sam")).Return(0, nil).Times(2)
+	GetFromDB(m, "ABC")
+	GetFromDB(m, "DEF")
+	// 第三次失败 has already been called the max number of times
+	// GetFromDB(m, "EFG")
+}
+
+func TestGetFromDB3(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	m := NewMockDB(ctrl)
+	o1 := m.EXPECT().Get(gomock.Eq("Tom")).Return(0, errors.New("not exist"))
+	o2 := m.EXPECT().Get(gomock.Eq("Sam")).Return(630, nil)
+
+	// 用于指定模拟对象方法调用顺序的一个函数。
+	// 这个函数确保在测试中，o1 和 o2 表示的方法调用会按照指定的顺序发生。
+	gomock.InOrder(o1, o2)
+
+	GetFromDB(m, "Tom")
+	GetFromDB(m, "Sam")
+}
