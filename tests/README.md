@@ -13,6 +13,24 @@ go test ./...
 go test -v
 ```
 
+## -cover
+测试覆盖率
+
+```bash
+go test -cover ./user
+```
+
+生成测试覆盖率的 profile 文件
+```
+go test ./... -coverprofile=cover.out
+```
+
+利用 profile 文件生成可视化界面
+```
+go tool cover -html=cover.out
+```
+
+
 ## 运行其中的一个用例
 
 ```

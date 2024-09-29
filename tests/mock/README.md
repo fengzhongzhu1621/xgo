@@ -1,5 +1,40 @@
-# gomock
+# mockgen
 
+## 生成 mock 文件
+
+```
+mockgen -source=./person/male.go -destination=./mock/male_mock.go -package=mock
+mockgen -source=./foo.go -destination=./mock_foo.go -package=gomock
+```
+
+- source：设置需要模拟（mock）的接口文件
+- destination：设置 mock 文件输出的地方，若不设置则打印到标准输出中
+- package：设置 mock 文件的包名，若不设置则为 mock_ 前缀加上文件名（如本文的包名会为 mock_person）
+
+## 生成多个 mock 文件
+
+**修改 interface 方法**
+```go
+//go:generate mockgen -source=my_interface.go -destination=mocks/mock_my_interface.go -package=mocks
+
+package mypackage
+
+type MyInterface interface {
+    DoSomething() error
+}
+```
+
+- source 参数指定了包含接口定义的源文件
+- destination 参数指定了生成的 mock 文件的位置和名称
+- package 参数指定了生成的 mock 文件所在的包名。
+
+**重新生成 mock 文件**
+```bash
+go generate [-run regexp] [-n] [-v] [-x] [build flags] [file.go... | packages]
+go generate ./...
+```
+
+# gomock
 
 ## 打桩(stubs)
 
