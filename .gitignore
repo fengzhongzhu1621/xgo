@@ -61,3 +61,4 @@ run_gohttpserver
 bindata_assetfs.go
 assets_vfsdata.go
 
+*.log

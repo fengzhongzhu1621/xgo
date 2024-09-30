@@ -6,6 +6,8 @@ import (
 	"log"
 	"os"
 	"testing"
+
+	"github.com/sirupsen/logrus"
 )
 
 type AppHook struct {
@@ -45,4 +47,27 @@ func TestLogrusInfo(t *testing.T) {
 	h := &AppHook{AppName: "awesome-web"}
 	LogrusAddHook(h)
 	LogrusInfo("info msg")
+}
+
+func TestWithFields(t *testing.T) {
+	// 创建一个新的 logrus 实例
+	logger := logrus.New()
+
+	// 设置日志级别
+	logger.SetLevel(logrus.DebugLevel)
+
+	// 记录不同级别的日志
+	logger.Debug("This is a debug message")
+	logger.Info("This is an info message")
+	logger.Warn("This is a warning message")
+	logger.Error("This is an error message")
+
+	// 使用 WithFields 记录结构化日志
+	logger.WithFields(logrus.Fields{
+		"animal": "walrus",
+		"size":   10,
+	}).Info("A group of walrus emerges from the ocean")
+
+	// 使用 WithField 记录带有单个字段的结构化日志
+	logger.WithField("omg", true).Warn("The ice breaks!")
 }
