@@ -123,7 +123,7 @@ func initIni() *Watcher {
 	return v
 }
 
-// make directories for testing
+// initDirs make directories for testing
 func initDirs(t *testing.T) (string, string, func()) {
 	var (
 		testDirs = []string{`a a`, `b`, `C_`}
@@ -134,7 +134,7 @@ func initDirs(t *testing.T) (string, string, func()) {
 		testDirs = append(testDirs, `d\d`)
 	}
 
-	root, err := ioutil.TempDir("", "")
+	root, err := os.MkdirTemp("", "")
 	require.NoError(t, err, "Failed to create temporary directory")
 
 	cleanup := true
