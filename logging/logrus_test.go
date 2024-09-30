@@ -2,6 +2,7 @@ package logging
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -56,6 +57,10 @@ func TestWithFields(t *testing.T) {
 	// 设置日志级别
 	logger.SetLevel(logrus.DebugLevel)
 
+	logrus.SetFormatter(&logrus.TextFormatter{
+		DisableColors: true,
+	})
+
 	// 记录不同级别的日志
 	logger.Debug("This is a debug message")
 	logger.Info("This is an info message")
@@ -70,4 +75,22 @@ func TestWithFields(t *testing.T) {
 
 	// 使用 WithField 记录带有单个字段的结构化日志
 	logger.WithField("omg", true).Warn("The ice breaks!")
+}
+
+func TestParseLevel(t *testing.T) {
+	// 解析字符串为日志级别
+	level, err := logrus.ParseLevel("debug")
+	if err != nil {
+		fmt.Println("Error parsing level:", err)
+		return
+	}
+
+	// 设置日志级别
+	logrus.SetLevel(level)
+
+	// 记录不同级别的日志
+	logrus.Debug("This is a debug message")
+	logrus.Info("This is an info message")
+	logrus.Warn("This is a warning message")
+	logrus.Error("This is an error message")
 }
