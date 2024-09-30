@@ -2,6 +2,7 @@ package viper
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/spf13/viper"
@@ -57,4 +58,31 @@ func TestSetEnvPrefix(t *testing.T) {
 
 	// App Name: MyCustomApp
 	// App Version: 2.0.0
+}
+
+func TestSetEnvKeyReplacer(t *testing.T) {
+	// 创建了一个字符串替换器，. -> _
+	replacer := strings.NewReplacer(".", "_")
+	// 设置环境变量键的替换器，在调用 viper.Get() 函数时，会用 _ 替换.和-
+	viper.SetEnvKeyReplacer(replacer)
+
+	// 启用自动环境变量支持
+	viper.AutomaticEnv()
+
+	// 设置默认值
+	viper.SetDefault("app.name", "MyApp")
+	viper.SetDefault("app.version", "1.0.0")
+
+	t.Setenv("APP_NAME", "MyApp2")
+
+	// 从环境变量中读取配置
+	appName1 := viper.GetString("app.name")
+	appName2 := viper.GetString("app_name")
+	appVersion1 := viper.GetString("app.version")
+	appVersion2 := viper.GetString("app_version")
+
+	assert.Equal(t, "MyApp2", appName1)
+	assert.Equal(t, "MyApp2", appName2)
+	assert.Equal(t, "1.0.0", appVersion1)
+	assert.Equal(t, "", appVersion2)
 }
