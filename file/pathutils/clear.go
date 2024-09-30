@@ -2,7 +2,7 @@ package pathutils
 
 import "path/filepath"
 
-// Convert path to normal paths
+// SlashAndCleanPath Convert path to normal paths
 func SlashAndCleanPath(path string) string {
 	return filepath.ToSlash(filepath.Clean(path))
 }
@@ -129,4 +129,3 @@ func CleanPath(p string) string {
 	}
 	return string(buf[:w])
 }
-

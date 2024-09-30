@@ -1,4 +1,4 @@
-package file
+package process
 
 import (
 	"fmt"
@@ -6,7 +6,6 @@ import (
 )
 
 const currentProcessFd = "/proc/self/fd"
-
 
 // 获得当前进程的所有文件描述符名称.
 func GetCurrentProcessAllFdName() ([]string, error) {

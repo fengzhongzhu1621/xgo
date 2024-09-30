@@ -1,4 +1,4 @@
-package pathutils
+package homedir
 
 import (
 	"os"
@@ -7,6 +7,7 @@ import (
 	"github.com/mitchellh/go-homedir"
 )
 
+// UserHomeDir 获得登录用户根目录
 func UserHomeDir() string {
 	if runtime.GOOS == "windows" {
 		home := os.Getenv("HOMEDRIVE") + os.Getenv("HOMEPATH")

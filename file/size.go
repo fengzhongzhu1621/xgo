@@ -15,8 +15,8 @@ func safeMul(a, b uint) uint {
 	return c
 }
 
-// 将 KB, MB, GB 转换为字节数
 // parseSizeInBytes converts strings like 1GB or 12 mb into an unsigned integer number of bytes.
+// 将 KB, MB, GB 转换为字节数
 func ParseSizeInBytes(sizeStr string) uint {
 	// 去掉空白字符
 	sizeStr = strings.TrimSpace(sizeStr)

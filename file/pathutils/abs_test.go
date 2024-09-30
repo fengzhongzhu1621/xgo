@@ -6,13 +6,14 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/fengzhongzhu1621/xgo/file/homedir"
 	"github.com/fengzhongzhu1621/xgo/tests"
 )
 
 func TestAbsPathify(t *testing.T) {
 	tests.SkipWindows(t)
 
-	home := UserHomeDir()
+	home := homedir.UserHomeDir()
 	homer := filepath.Join(home, "homer")
 	wd, _ := os.Getwd()
 

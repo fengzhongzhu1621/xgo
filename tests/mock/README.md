@@ -1,5 +1,9 @@
 # mockgen
 
+```go
+go install github.com/golang/mock/mockgen@latest
+```
+
 ## 生成 mock 文件
 
 ```
@@ -13,7 +17,11 @@ mockgen -source=./foo.go -destination=./mock_foo.go -package=gomock
 
 ## 生成多个 mock 文件
 
-```go
+```bash
+//go:generate mockgen -source=$GOFILE -destination=./mock/$GOFILE -package=mock
+```
+
+```bash
 //go:generate mockgen -self_package github.com/lovoo/goka -package goka -destination mockstorage.go github.com/lovoo/goka/storage Storage
 //go:generate mockgen -self_package github.com/lovoo/goka -package goka -destination mocks.go github.com/lovoo/goka TopicManager,Producer,Broker
 //go:generate mockgen -self_package github.com/lovoo/goka -package goka -destination mockssarama.go github.com/IBM/sarama Client,ClusterAdmin
