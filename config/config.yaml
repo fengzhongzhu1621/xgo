@@ -1,4 +1,13 @@
 app:
   name: "MyApp"
   version: "1.0.0"
-  
+
+logger:
+  system:
+    level: info
+    writer: os
+    settings: { name: stdout }
+  web:
+    level: info
+    writer: os
+    settings: { name: stdout }

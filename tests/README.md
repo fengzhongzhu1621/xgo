@@ -18,6 +18,7 @@ go test -v
 
 ```bash
 go test -cover ./user
+go test . -cover -v
 ```
 
 生成测试覆盖率的 profile 文件

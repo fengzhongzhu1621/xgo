@@ -24,4 +24,7 @@ func TestLogger(t *testing.T) {
 
 	// 使用 log 包记录日志
 	log.Println("This is a test log message.")
+
+	// 2024/09/30 18:24:58 This is a test log message.
+	// 2024/10/03 10:21:17 This is a test log message.
 }

@@ -8,6 +8,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/fengzhongzhu1621/xgo/config"
 	"github.com/sirupsen/logrus"
 )
 
@@ -66,15 +67,21 @@ func TestWithFields(t *testing.T) {
 	logger.Info("This is an info message")
 	logger.Warn("This is a warning message")
 	logger.Error("This is an error message")
+	// time="2024-10-03T10:42:55+08:00" level=debug msg="This is a debug message"
+	// time="2024-10-03T10:42:55+08:00" level=info msg="This is an info message"
+	// time="2024-10-03T10:42:55+08:00" level=warning msg="This is a warning message"
+	// time="2024-10-03T10:42:55+08:00" level=error msg="This is an error message"
 
 	// 使用 WithFields 记录结构化日志
 	logger.WithFields(logrus.Fields{
 		"animal": "walrus",
 		"size":   10,
 	}).Info("A group of walrus emerges from the ocean")
+	// time="2024-10-03T10:42:55+08:00" level=info msg="A group of walrus emerges from the ocean" animal=walrus size=10
 
 	// 使用 WithField 记录带有单个字段的结构化日志
 	logger.WithField("omg", true).Warn("The ice breaks!")
+	// time="2024-10-03T10:42:55+08:00" level=warning msg="The ice breaks!" omg=true
 }
 
 func TestParseLevel(t *testing.T) {
@@ -93,4 +100,20 @@ func TestParseLevel(t *testing.T) {
 	logrus.Info("This is an info message")
 	logrus.Warn("This is a warning message")
 	logrus.Error("This is an error message")
+	// time="2024-10-03T10:22:06+08:00" level=debug msg="This is a debug message"
+	// time="2024-10-03T10:22:06+08:00" level=info msg="This is an info message"
+	// time="2024-10-03T10:22:06+08:00" level=warning msg="This is a warning message"
+	// time="2024-10-03T10:22:06+08:00" level=error msg="This is an error message"
+}
+
+func TestNewJSONLogger(t *testing.T) {
+	cfg := config.LogConfig{
+		Level:    "info",
+		Writer:   "os",
+		Settings: map[string]string{"name": "stdout"},
+	}
+	logger := NewJSONLogger(&cfg)
+
+	logger.Info("This is an info message")
+	// {"time":"2024-10-03T11:00:12+08:00","msg":"This is an info message","level":"info"}
 }

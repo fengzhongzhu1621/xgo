@@ -37,7 +37,7 @@ func GetOSWriter(settings map[string]string) (io.Writer, error) {
 
 // GetFileWriter 获得文件输出 Writer
 func GetFileWriter(settings map[string]string) (io.Writer, error) {
-	// 判断日志写目录
+	// 获得日志写目录
 	path, ok := settings["path"]
 	if ok {
 		if _, err := os.Stat(path); os.IsNotExist(err) {
@@ -89,13 +89,18 @@ func GetFileWriter(settings map[string]string) (io.Writer, error) {
 		logPath = filepath.Join(rawPath, filename)
 	}
 
+	// 支持日志滚动和压缩功能
 	writer := &lumberjack.Logger{
+		// 日志文件的位置
 		Filename: logPath,
-		// megabytes
-		MaxSize:    size,
+		// 每个日志文件的大小限制（以MB为单位）
+		MaxSize: size,
+		// 保留的最大日志文件数量
 		MaxBackups: backups,
-		// days
-		MaxAge:    age,
+		// 保留的最大日志文件天数
+		MaxAge: age,
+		// true 日志文件名将使用本地时间
+		// false（默认值）时，日志文件名将使用 UTC 时间
 		LocalTime: true,
 	}
 

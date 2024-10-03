@@ -15,12 +15,9 @@ type LogConfig struct {
 }
 
 type Logger struct {
-	System    LogConfig // 系统日志记录器配置
-	API       LogConfig
-	SQL       LogConfig
-	Web       LogConfig // web server 日志记录器配置
-	Component LogConfig
-	Kafka     LogConfig
+	System LogConfig
+	API    LogConfig
+	Web    LogConfig
 }
 
 type Config struct {
@@ -49,9 +46,11 @@ type Config struct {
 	RootDir string
 }
 
+// Load 将配置文件转换为全局结构体对象
 func Load(v *viper.Viper) (*Config, error) {
 	var cfg Config
 
+	// 配置文件转换为全局结构体对象
 	if err := v.Unmarshal(&cfg); err != nil {
 		return nil, err
 	}

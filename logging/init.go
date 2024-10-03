@@ -1,7 +1,6 @@
 package logging
 
 import (
-	"fmt"
 	"sync"
 
 	"github.com/fengzhongzhu1621/xgo/config"
@@ -14,11 +13,17 @@ var loggerInitOnce sync.Once
 var webLogger *zap.Logger
 var apiLogger *zap.Logger
 
+// GetSystemLogger 获得预定义的日志记录器实例
+func GetSystemLogger() *logrus.Logger {
+	// 一个全局标准日志记录器，可以直接使用它来记录日志，而无需自己创建一个新的日志记录器实例。
+	return logrus.StandardLogger()
+}
+
 // GetWebLogger 获得 web 应用的日志记录器
 func GetWebLogger() *zap.Logger {
 	if webLogger == nil {
-		// 创建一个新的zap.Logger实例
 		webLogger, _ = zap.NewProduction()
+		// 刷新所有缓冲的日志条目
 		defer webLogger.Sync()
 	}
 	return webLogger
@@ -26,9 +31,9 @@ func GetWebLogger() *zap.Logger {
 
 // GetApiLogger 获得 web 应用的日志记录器
 func GetApiLogger() *zap.Logger {
-	if webLogger == nil {
-		// 创建一个新的zap.Logger实例
+	if apiLogger == nil {
 		apiLogger, _ = zap.NewProduction()
+		// 刷新所有缓冲的日志条目
 		defer apiLogger.Sync()
 	}
 	return apiLogger
@@ -40,6 +45,8 @@ func InitLogger(logger *config.Logger) {
 	initSystemLogger(&logger.System)
 
 	loggerInitOnce.Do(func() {
+		// 设置 api 服务器日志记录器
+		// apiLogger = NewZapJSONLogger(&logger.API)
 		// 设置 web 服务器日志记录器
 		webLogger = NewZapJSONLogger(&logger.Web)
 	})
@@ -60,7 +67,6 @@ func initSystemLogger(cfg *config.LogConfig) {
 	// 设置日志级别
 	l, err := logrus.ParseLevel(cfg.Level)
 	if err != nil {
-		fmt.Println("system logger settings level invalid, will use level: info")
 		l = logrus.InfoLevel
 	}
 	logrus.SetLevel(l)

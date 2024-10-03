@@ -2,14 +2,19 @@ package logging
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"os"
+	"runtime"
 	"sync"
 	"sync/atomic"
 	"time"
 
 	"github.com/fengzhongzhu1621/xgo/channel"
+	"github.com/fengzhongzhu1621/xgo/config"
 	"github.com/fengzhongzhu1621/xgo/pool"
+	jsoniter "github.com/json-iterator/go"
+	"github.com/sirupsen/logrus"
 )
 
 type exitFunc func(int)
@@ -278,4 +283,102 @@ func (logrusLogger *LogrusLogger) AddHook(hook Hook) {
 	logrusLogger.mu.Lock()
 	defer logrusLogger.mu.Unlock()
 	logrusLogger.Hooks.Add(hook)
+}
+
+func NewJSONLogger(cfg *config.LogConfig) *logrus.Logger {
+	jsonLogger := logrus.New()
+
+	writer, err := GetWriter(cfg.Writer, cfg.Settings)
+	if err != nil {
+		panic(err)
+	}
+	jsonLogger.SetOutput(writer)
+
+	// 设置日志格式
+	jsonLogger.SetFormatter(&JsoniterJSONFormatter{})
+
+	// 解析字符串为日志级别
+	l, err := logrus.ParseLevel(cfg.Level)
+	if err != nil {
+		l = logrus.InfoLevel
+	}
+	// 设置日志级别
+	jsonLogger.SetLevel(l)
+
+	return jsonLogger
+}
+
+// JSONFormatter formats logs into parsable json
+type JsoniterJSONFormatter struct {
+	TimestampFormat  string
+	DisableTimestamp bool
+	DataKey          string
+	FieldMap         FieldMap
+	CallerPrettyfier func(*runtime.Frame) (function string, file string)
+	PrettyPrint      bool
+}
+
+// Format renders a single log entry
+func (f *JsoniterJSONFormatter) Format(entry *logrus.Entry) ([]byte, error) {
+	// 将entry中的error转换为字符串，放到字典data中；指定字典的容量
+	data := make(logrus.Fields, len(entry.Data)+4)
+	for k, v := range entry.Data {
+		switch v := v.(type) {
+		case error:
+			// Otherwise errors are ignored by `encoding/json`
+			// https://github.com/sirupsen/logrus/issues/137
+			data[k] = v.Error()
+		default:
+			data[k] = v
+		}
+	}
+
+	// 将data放到一个指定key的字典中
+	if f.DataKey != "" {
+		newData := make(logrus.Fields, 4)
+		newData[f.DataKey] = data
+		data = newData
+	}
+
+	// 给指定字段加上前缀，防止和预留字段冲突
+	originPrefixFieldClashes(data, f.FieldMap, entry.HasCaller())
+
+	// 选择时间格式
+	timestampFormat := f.TimestampFormat
+	if timestampFormat == "" {
+		timestampFormat = defaultTimestampFormat
+	}
+
+	// 设置日志时间，时间默认是日志的创建时间
+	if !f.DisableTimestamp {
+		data[f.FieldMap.resolve(FieldKeyTime)] = entry.Time.Format(timestampFormat)
+	}
+	// 设置日志内容
+	data[f.FieldMap.resolve(FieldKeyMsg)] = entry.Message
+	// 设置日志级别
+	data[f.FieldMap.resolve(FieldKeyLevel)] = entry.Level.String()
+
+	// 设置调用堆栈信息，例如函数名和行数
+	if entry.HasCaller() {
+		funcVal := entry.Caller.Function
+		fileVal := fmt.Sprintf("%s:%d", entry.Caller.File, entry.Caller.Line)
+		if f.CallerPrettyfier != nil {
+			funcVal, fileVal = f.CallerPrettyfier(entry.Caller)
+		}
+		if funcVal != "" {
+			data[f.FieldMap.resolve(FieldKeyFunc)] = funcVal
+		}
+		if fileVal != "" {
+			data[f.FieldMap.resolve(FieldKeyFile)] = fileVal
+		}
+	}
+
+	// 转换为日志字符串，使用jsoniter性能优化
+	buf, err := jsoniter.Marshal(data)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal fields to JSON, %v", err)
+	}
+	buf = append(buf, '\n')
+
+	return buf, nil
 }
