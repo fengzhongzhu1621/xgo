@@ -24,6 +24,8 @@ type Config struct {
 	// 调试开关
 	Debug bool
 
+	Sentry Sentry
+
 	// 数据库配置
 	Databases   []mysql.Database
 	DatabaseMap map[string]mysql.Database
@@ -44,6 +46,11 @@ type Config struct {
 
 	// 版本
 	RootDir string
+}
+
+type Sentry struct {
+	Enable bool
+	DSN    string
 }
 
 // Load 将配置文件转换为全局结构体对象

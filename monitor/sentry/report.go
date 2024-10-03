@@ -1,4 +1,4 @@
-package report
+package sentry
 
 import (
 	"time"
@@ -8,13 +8,21 @@ import (
 
 var sentryOn bool
 
-// InitErrorReport init the sentryEnabled var
-func InitErrorReport(sentryEnabled bool) {
-	sentryOn = sentryEnabled
+// SetSentryCaptureSwitch init the sentryEnabled var
+func SetSentryCapture(sentryOn bool) {
+	sentryOn = sentryOn
 }
 
-// ReportToSentry is a shortcut to build and send an event to sentry
-func ReportToSentry(message string, extra map[string]interface{}) {
+func EnableSentry() {
+	sentryOn = true
+}
+
+func DisableSentry() {
+	sentryOn = false
+}
+
+// CaptureEvent is a shortcut to build and send an event to sentry
+func CaptureEvent(message string, extra map[string]interface{}) {
 	event := sentry.NewEvent()
 	event.Message = message
 	event.Level = "error"
