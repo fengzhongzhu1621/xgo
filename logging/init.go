@@ -60,7 +60,10 @@ func initSystemLogger(cfg *config.LogConfig) {
 }
 
 // InitLogger 初始化日志记录器，只能执行一次
-func InitLogger(logger *config.Logger) {
+func InitLogger() {
+	globalConfig := config.GetGlobalConfig()
+	logger := globalConfig.Logger
+
 	// 设置系统日志记录器
 	initSystemLogger(&logger.System)
 
@@ -73,7 +76,5 @@ func InitLogger(logger *config.Logger) {
 }
 
 func init() {
-	var globalConfig = config.GetGlobalConfig()
-	var logger = globalConfig.Logger
-	InitLogger(&logger)
+	InitLogger()
 }

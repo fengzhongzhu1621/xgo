@@ -42,3 +42,7 @@ func InitRedis() {
 
 	log.Info("init Redis success")
 }
+
+func init() {
+	InitRedis()
+}
