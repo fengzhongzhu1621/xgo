@@ -3,7 +3,7 @@ package backend
 import (
 	"time"
 
-	"github.com/fengzhongzhu1621/xgo/cache"
+	cache "github.com/fengzhongzhu1621/xgo/cache/common"
 	gocache "github.com/patrickmn/go-cache"
 )
 

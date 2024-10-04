@@ -21,8 +21,8 @@ func DisableSentry() {
 	sentryOn = false
 }
 
-// CaptureEvent is a shortcut to build and send an event to sentry
-func CaptureEvent(message string, extra map[string]interface{}) {
+// ReportToSentry is a shortcut to build and send an event to sentry
+func ReportToSentry(message string, extra map[string]interface{}) {
 	event := sentry.NewEvent()
 	event.Message = message
 	event.Level = "error"

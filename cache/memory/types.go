@@ -4,12 +4,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/fengzhongzhu1621/xgo/cache"
+	cache "github.com/fengzhongzhu1621/xgo/cache/common"
 )
-
-// RetrieveFunc is the type of the retrieve function.
-// it retrieves the value from database, redis, apis, etc.
-type RetrieveFunc func(ctx context.Context, key cache.Key) (interface{}, error)
 
 // Cache is the interface for the cache.
 type Cache interface {
