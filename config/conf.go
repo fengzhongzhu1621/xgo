@@ -23,6 +23,8 @@ type Config struct {
 	// 调试开关
 	Debug bool
 
+	Server Server
+
 	Sentry Sentry
 
 	// 数据库配置
@@ -45,6 +47,25 @@ type Config struct {
 
 	// 版本
 	RootDir string
+}
+
+type Server struct {
+	Host string
+	Port int
+
+	GraceTimeout int64
+
+	// 服务器在读取请求体时的最大持续时间。如果超过这个时间，服务器将中断读取并返回错误。
+	ReadTimeout int
+	// 服务器在写入响应体时的最大持续时间。如果超过这个时间，服务器将中断写入并返回错误。
+	WriteTimeout int
+	// 服务器在关闭连接之前等待下一个请求的最大时间。这对于管理服务器资源很有用，特别是在高并发场景下。
+	IdleTimeout int
+
+	// 如果是 https，必须设置 TlsCertFile 和 TlsKeyFile
+	Mode        string
+	TlsCertFile string
+	TlsKeyFile  string
 }
 
 type Sentry struct {
