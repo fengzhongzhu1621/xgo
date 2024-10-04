@@ -3,12 +3,14 @@ package common
 // MultiTag 用于管理多标签的缓存，提供了一个基本的缓存管理机制，可以用于存储和检索与标签相关的多个值
 type MultiTag struct {
 	// 嵌入了一个名为 Cache 的接口或类型（代码中没有给出 Cache 的定义，可能是其他地方定义的）
-	Cache
+	ICache
 	// 一个字符串字段，存储了 MultiTag 的值。
 	value string
 	// 一个映射，键是字符串，值是字符串切片，用于存储缓存数据
 	cache map[string][]string
 }
+
+var _ ICache = (*MultiTag)(nil)
 
 // NewMultiTag 创建并返回一个新的 MultiTag 实例，初始化 value 字段
 func NewMultiTag(value string) MultiTag {

@@ -15,8 +15,6 @@ import (
 	"golang.org/x/sync/singleflight"
 )
 
-type RetrieveFunc func(key gopkgcache.Key) (interface{}, error)
-
 const (
 	// while the go-redis/cache upgrade maybe not compatible with the previous version.
 	// e.g. the object set by v7 can't read by v8
@@ -122,7 +120,7 @@ func (c *Cache) Exists(key gopkgcache.Key) bool {
 // key: 要查询的缓存键
 // obj: 目标对象，数据将被反序列化到这个对象中
 // retrieveFunc: 用于在缓存未命中时从数据源获取数据
-func (c *Cache) GetInto(key gopkgcache.Key, obj interface{}, retrieveFunc RetrieveFunc) (err error) {
+func (c *Cache) GetInto(key gopkgcache.Key, obj interface{}, retrieveFunc gopkgcache.RetrieveFunc) (err error) {
 	// 1. get from cache, hit, return
 	// 尝试从缓存中获取数据:
 	err = c.Get(key, obj)
@@ -136,7 +134,8 @@ func (c *Cache) GetInto(key gopkgcache.Key, obj interface{}, retrieveFunc Retrie
 	// 如果缓存未命中，调用 retrieveFunc 从数据源获取数据
 	// 确保在多个并发请求同时尝试获取同一个不存在的键时，只会执行一次数据获取操作。
 	data, err, _ := c.G.Do(key.Key(), func() (interface{}, error) {
-		return retrieveFunc(key)
+		ctx := context.TODO()
+		return retrieveFunc(ctx, key)
 	})
 	// 2.3 do retrieve fail, make guard and return
 	if err != nil {

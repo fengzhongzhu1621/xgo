@@ -364,9 +364,10 @@ func WithEmptyCache(timeout time.Duration) Option {
 	}
 }
 
-func NewBaseCache(retrieveFunc cache.RetrieveFunc, backend backend.Backend, options ...Option) Cache {
+func NewBaseCache(disabled bool, retrieveFunc cache.RetrieveFunc, backend backend.Backend, options ...Option) Cache {
 	c := &BaseCache{
 		backend:      backend,
+		disabled:     disabled,
 		retrieveFunc: retrieveFunc,
 	}
 	// 自定义参数

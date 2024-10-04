@@ -11,5 +11,5 @@ import (
 func NewMockCache(retrieveFunc cache.RetrieveFunc) Cache {
 	cacheBackend := backend.NewMemoryBackend("mockCache", 5*time.Minute, nil)
 
-	return NewBaseCache(retrieveFunc, cacheBackend)
+	return NewBaseCache(false, retrieveFunc, cacheBackend)
 }

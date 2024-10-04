@@ -9,11 +9,12 @@ import (
 
 func NewCache(
 	name string,
+	disabled bool,
 	retrieveFunc cache.RetrieveFunc,
 	expiration time.Duration,
 	randomExtraExpirationFunc cache.RandomExtraExpirationDurationFunc,
 	options ...Option,
 ) Cache {
 	cacheBackend := backend.NewMemoryBackend(name, expiration, randomExtraExpirationFunc)
-	return NewBaseCache(retrieveFunc, cacheBackend, options...)
+	return NewBaseCache(disabled, retrieveFunc, cacheBackend, options...)
 }

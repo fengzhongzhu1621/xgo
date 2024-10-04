@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type Cache interface {
+type ICache interface {
 	// 初始化缓存
 	Parse() error
 	// 初始缓存数据
