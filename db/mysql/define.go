@@ -18,3 +18,6 @@ type Database struct {
 	// 是否打印sql 语句
 	DebugMode bool
 }
+
+// CommonQueryConditionMap 通用查询条件
+type CommonQueryConditionMap map[string]interface{}
