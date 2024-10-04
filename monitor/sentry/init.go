@@ -25,3 +25,7 @@ func InitSentry() {
 
 	SetSentryCapture(enable)
 }
+
+func init() {
+	InitSentry()
+}

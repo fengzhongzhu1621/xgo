@@ -4,8 +4,10 @@ import (
 	"sync"
 
 	"github.com/dlmiddlecote/sqlstats"
+	"github.com/fengzhongzhu1621/xgo/config"
 	"github.com/fengzhongzhu1621/xgo/db/mysql"
 	"github.com/prometheus/client_golang/prometheus"
+	log "github.com/sirupsen/logrus"
 )
 
 var (
@@ -33,4 +35,20 @@ func InitXormDBClient(dbConfig *mysql.Database) {
 // GetDefaultXormDBClient 获取默认的DB实例
 func GetDefaultXormDBClient() *XormDBClient {
 	return DefaultXormDBClient
+}
+
+func InitDatabase() {
+	globalConfig := config.GetGlobalConfig()
+	defaultDBConfig, ok := globalConfig.DatabaseMap["default"]
+	if !ok {
+		panic("database default should be configured")
+	}
+
+	InitXormDBClient(&defaultDBConfig)
+
+	log.Info("init Database success")
+}
+
+func init() {
+	InitDatabase()
 }

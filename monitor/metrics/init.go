@@ -37,3 +37,7 @@ func InitMetrics() {
 		prometheus.MustRegister(RequestDuration)
 	})
 }
+
+func init() {
+	InitMetrics()
+}

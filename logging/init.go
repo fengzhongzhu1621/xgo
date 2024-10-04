@@ -39,19 +39,6 @@ func GetApiLogger() *zap.Logger {
 	return apiLogger
 }
 
-// InitLogger 初始化日志记录器，只能执行一次
-func InitLogger(logger *config.Logger) {
-	// 设置系统日志记录器
-	initSystemLogger(&logger.System)
-
-	loggerInitOnce.Do(func() {
-		// 设置 api 服务器日志记录器
-		// apiLogger = NewZapJSONLogger(&logger.API)
-		// 设置 web 服务器日志记录器
-		webLogger = NewZapJSONLogger(&logger.Web)
-	})
-}
-
 func initSystemLogger(cfg *config.LogConfig) {
 	writer, err := GetWriter(cfg.Writer, cfg.Settings)
 	if err != nil {
@@ -70,6 +57,19 @@ func initSystemLogger(cfg *config.LogConfig) {
 		l = logrus.InfoLevel
 	}
 	logrus.SetLevel(l)
+}
+
+// InitLogger 初始化日志记录器，只能执行一次
+func InitLogger(logger *config.Logger) {
+	// 设置系统日志记录器
+	initSystemLogger(&logger.System)
+
+	loggerInitOnce.Do(func() {
+		// 设置 api 服务器日志记录器
+		// apiLogger = NewZapJSONLogger(&logger.API)
+		// 设置 web 服务器日志记录器
+		webLogger = NewZapJSONLogger(&logger.Web)
+	})
 }
 
 func init() {
