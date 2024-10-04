@@ -7,6 +7,7 @@ import (
 	"github.com/fengzhongzhu1621/xgo/ginx/serializer"
 	"github.com/fengzhongzhu1621/xgo/ginx/service"
 	"github.com/fengzhongzhu1621/xgo/ginx/service/types"
+	"github.com/fengzhongzhu1621/xgo/ginx/utils"
 	"github.com/fengzhongzhu1621/xgo/network/nethttp"
 	"github.com/fengzhongzhu1621/xgo/validator"
 	"github.com/gin-gonic/gin"
@@ -48,7 +49,7 @@ func GetVersionContent(cfg *config.Config) gin.HandlerFunc {
 		// 调用服务获得版本日志内容
 		versionContent, err := svc.GetVersionContent(getVersionContentRequestData)
 		if err != nil {
-			nethttp.SystemErrorJSONResponse(c, err)
+			utils.SystemErrorJSONResponse(c, err)
 			return
 		}
 
@@ -76,7 +77,7 @@ func ListVersions(cfg *config.Config) gin.HandlerFunc {
 
 		listVersionsResp, err = svc.ListVersions(strings.ToLower(language))
 		if err != nil {
-			nethttp.SystemErrorJSONResponse(c, err)
+			utils.SystemErrorJSONResponse(c, err)
 			return
 		}
 
