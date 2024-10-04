@@ -1,4 +1,4 @@
-package redisx
+package client
 
 import (
 	"context"
@@ -11,7 +11,7 @@ import (
 // TestConnection 测试 redis 连接
 func TestConnection(redisConfig *Redis) error {
 	var rds *redis.Client
-	switch redisConfig.ID {
+	switch redisConfig.Type {
 	case ModeStandalone:
 		opt := &redis.Options{
 			Addr:     redisConfig.Addr,
@@ -45,5 +45,6 @@ func TestConnection(redisConfig *Redis) error {
 
 	// 测试连接
 	_, err := rds.Ping(context.Background()).Result()
+
 	return err
 }

@@ -1,7 +1,7 @@
-package redisx
+package client
 
 type Redis struct {
-	ID           string // redis 的集群类型
+	Type         string // redis 的集群类型
 	Addr         string
 	Password     string
 	DB           int
@@ -17,4 +17,11 @@ type Redis struct {
 	SentinelAddr     string
 	MasterName       string
 	SentinelPassword string
+
+	debugMode bool
 }
+
+const (
+	NameCache = "cache"
+	NameMQ    = "mq"
+)

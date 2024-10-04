@@ -3,7 +3,7 @@ package config
 import (
 	"github.com/fengzhongzhu1621/xgo/db/kafkax"
 	"github.com/fengzhongzhu1621/xgo/db/mysql"
-	"github.com/fengzhongzhu1621/xgo/db/redisx"
+	redis "github.com/fengzhongzhu1621/xgo/db/redisx/client"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 )
@@ -31,8 +31,8 @@ type Config struct {
 	DatabaseMap map[string]mysql.Database
 
 	// redis 配置
-	Redis    []redisx.Redis
-	RedisMap map[string]redisx.Redis
+	Redis    []redis.Redis
+	RedisMap map[string]redis.Redis
 
 	// kafka 配置
 	Kafka    []kafkax.Kafka

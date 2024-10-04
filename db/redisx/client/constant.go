@@ -1,4 +1,4 @@
-package redisx
+package client
 
 const (
 	ModeStandalone = "standalone"
