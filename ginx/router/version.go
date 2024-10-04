@@ -8,7 +8,7 @@ import (
 
 func RegisterVersion(cfg *config.Config, r *gin.RouterGroup) {
 
-	// /api/v1/web/versions/*
+	// /api/v1/versions/*
 	versionRouter := r.Group("versions")
 	{
 		versionRouter.GET("/", handler.ListVersions(cfg))
