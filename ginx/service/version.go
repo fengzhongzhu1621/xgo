@@ -40,7 +40,7 @@ func (s *versionsConfigService) GetVersionContent(param *types.GetVersionContent
 
 	// 获得指定目录下指定版本和语言的版本日志
 	if _, versionlogs, err = getVersionLogs(s.rootDir, param.Language, param.Version); err != nil {
-		s.logger.Error("GetVersionContentConfig ListBkSamChangelogs error", zap.Any("errmsg", err))
+		s.logger.Error("getVersionLogs error", zap.Any("errmsg", err))
 		return "", err
 	}
 
@@ -69,7 +69,7 @@ func (s *versionsConfigService) ListVersions(language string) (*types.ListVersio
 
 	// 格式化语言并获得指定目录下指定版本和语言的版本日志
 	if latestVer, versionlogs, err = getVersionLogs(s.rootDir, language, ""); err != nil {
-		s.logger.Error("ListVersions ListBkSamChangelogs error", zap.Any("errmsg", err))
+		s.logger.Error("getVersionLogs error", zap.Any("errmsg", err))
 		return nil, err
 	}
 
