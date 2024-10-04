@@ -4,7 +4,6 @@ import (
 	"github.com/fengzhongzhu1621/xgo/db/kafkax"
 	"github.com/fengzhongzhu1621/xgo/db/mysql"
 	redis "github.com/fengzhongzhu1621/xgo/db/redisx/client"
-	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 )
 
@@ -39,7 +38,7 @@ type Config struct {
 	KafkaMap map[string]kafkax.Kafka
 
 	// pprof
-	PprofAccounts gin.Accounts // 认证用户
+	PProf PProf `yaml:"pprof"`
 
 	// 日志
 	Logger Logger
@@ -51,6 +50,11 @@ type Config struct {
 type Sentry struct {
 	Enable bool
 	DSN    string
+}
+
+type PProf struct {
+	// 认证用户
+	Account map[string]string
 }
 
 // Load 将配置文件转换为全局结构体对象

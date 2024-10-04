@@ -11,7 +11,7 @@ import (
 func RegisterPprof(cfg *config.Config, router *gin.Engine) {
 	pprofRouter := router.Group("/debug/pprof")
 	if !cfg.Debug {
-		pprofRouter.Use(gin.BasicAuth(cfg.PprofAccounts))
+		pprofRouter.Use(gin.BasicAuth(cfg.PProf.Account))
 	}
 
 	pprofRouter.GET("/", gin.WrapF(pprof.Index))
