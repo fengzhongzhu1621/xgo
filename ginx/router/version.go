@@ -12,6 +12,7 @@ func RegisterVersion(cfg *config.Config, r *gin.RouterGroup) {
 	// /api/v1/versions/*
 	versionRouter := r.Group("versions")
 	versionRouter.Use(middleware.Metrics())
+	versionRouter.Use(middleware.AppLogger())
 	{
 		versionRouter.GET("/", handler.ListVersions(cfg))
 
