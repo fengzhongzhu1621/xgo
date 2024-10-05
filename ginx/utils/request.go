@@ -10,7 +10,6 @@ func GetRequestID(c *gin.Context) string {
 	return c.GetString(constant.RequestIDKey)
 }
 
-// SetRequestID ...
 func SetRequestID(c *gin.Context, requestID string) {
 	c.Set(constant.RequestIDKey, requestID)
 }
@@ -21,4 +20,20 @@ func GetClientID(c *gin.Context) string {
 
 func GetError(c *gin.Context) (interface{}, bool) {
 	return c.Get(constant.ErrorIDKey)
+}
+
+func SetClientID(c *gin.Context, clientID string) {
+	c.Set(constant.ClientIDKey, clientID)
+}
+
+func SetClientUsername(c *gin.Context, username string) {
+	c.Set(constant.ClientUsernameKey, username)
+}
+
+func GetClientUsername(c *gin.Context) string {
+	if name := c.GetString(constant.ClientUsernameKey); name != "" {
+		return name
+	} else {
+		return constant.DEFAULT_BACKEND_OPERATOR
+	}
 }

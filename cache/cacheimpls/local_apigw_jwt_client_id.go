@@ -33,12 +33,12 @@ func retrieveAPIGatewayJWTClientID(ctx context.Context, key cache.Key) (interfac
 	return "", nil
 }
 
+// getJwtTokenVal 从缓存中获取用户信息
 func getJwtTokenVal(jwtToken string) (value interface{}, ok bool) {
 	key := APIGatewayJWTClientIDCacheKey{
 		JWTToken: jwtToken,
 	}
 	ctx := context.TODO()
-	// 从缓存中获取用户信息
 	return LocalAPIGatewayJWTClientIDCache.DirectGet(ctx, key)
 }
 
@@ -72,6 +72,7 @@ func SetJWTTokenClientID(jwtToken string, clientID string) {
 // GetJWTTokenClientIDAndUsername
 // GetJWTTokenUsername will retrieve the clientID of a jwtTOken
 func GetJWTTokenClientIDAndUsername(jwtToken string) (clientID, userName string, err error) {
+	// 从缓存中获取用户信息
 	value, ok := getJwtTokenVal(jwtToken)
 	if !ok {
 		err = ErrAPIGatewayJWTCacheNotFound

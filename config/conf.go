@@ -47,6 +47,8 @@ type Config struct {
 
 	// 版本
 	RootDir string
+
+	Cryptos map[string]*Crypto
 }
 
 type Server struct {
@@ -76,6 +78,11 @@ type Sentry struct {
 type PProf struct {
 	// 认证用户
 	Account map[string]string
+}
+
+type Crypto struct {
+	ID  string
+	Key string
 }
 
 // Load 将配置文件转换为全局结构体对象
