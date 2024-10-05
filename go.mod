@@ -58,6 +58,7 @@ require (
 	github.com/chigopher/pathlib v0.19.1 // indirect
 	github.com/cloudwego/base64x v0.1.4 // indirect
 	github.com/cloudwego/iasm v0.2.0 // indirect
+	github.com/dablelv/cyan v0.0.54 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/dlmiddlecote/sqlstats v1.0.2 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
