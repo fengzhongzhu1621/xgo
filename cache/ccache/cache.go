@@ -11,6 +11,7 @@ import (
 var (
 	once           sync.Once
 	localCertCache *ccache.Cache
+	defaultCache   *ccache.Cache
 )
 
 func InitLocalCache(conf *config.Config) {
@@ -28,9 +29,14 @@ func InitLocalCache(conf *config.Config) {
 		// 这有助于确保即使在缓存接近其最大容量时，也能保持一定的性能和可用性。
 		// 虽然ItemsToPrune设置了最小移除数量，但具体的清理时机和策略还是由ccache库内部决定的。
 		localCertCache = ccache.New(ccache.Configure().MaxSize(409600).ItemsToPrune(4096))
+		defaultCache = ccache.New(ccache.Configure().MaxSize(409600).ItemsToPrune(4096))
 	})
 }
 
 func GetLocalCertCache() *ccache.Cache {
 	return localCertCache
+}
+
+func GetDefaultCache() *ccache.Cache {
+	return defaultCache
 }
