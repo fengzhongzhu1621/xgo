@@ -10,8 +10,8 @@ func TestGetSystemLogger(t *testing.T) {
 	// time="2024-10-03T11:16:10+08:00" level=info msg="这是一条信息级别的日志"
 }
 
-func TestGetWebLogger(t *testing.T) {
-	webLogger := GetWebLogger()
+func TestGetAppLogger(t *testing.T) {
+	webLogger := GetAppLogger()
 	webLogger.Info("这是一条信息级别的日志")
 
 	webLogger.Sync()

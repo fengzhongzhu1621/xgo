@@ -14,3 +14,11 @@ func GetRequestID(c *gin.Context) string {
 func SetRequestID(c *gin.Context, requestID string) {
 	c.Set(constant.RequestIDKey, requestID)
 }
+
+func GetClientID(c *gin.Context) string {
+	return c.GetString(constant.ClientIDKey)
+}
+
+func GetError(c *gin.Context) (interface{}, bool) {
+	return c.Get(constant.ErrorIDKey)
+}

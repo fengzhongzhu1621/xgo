@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/fengzhongzhu1621/xgo/config"
@@ -84,12 +85,21 @@ func (s *Server) Run(ctx context.Context) {
 	}()
 
 	// 启动服务
-	go func() {
-		err := s.server.ListenAndServe()
-		if err != nil {
-			log.Info(err.Error())
-		}
-	}()
+	if strings.ToLower(s.config.Server.Mode) == "https" {
+		go func() {
+			err := s.server.ListenAndServeTLS(s.config.Server.TlsCertFile, s.config.Server.TlsKeyFile)
+			if err != nil {
+				log.Info(err.Error())
+			}
+		}()
+	} else {
+		go func() {
+			err := s.server.ListenAndServe()
+			if err != nil {
+				log.Info(err.Error())
+			}
+		}()
+	}
 
 	// 等待服务关闭，阻塞当前协程，直到服务器停止
 	s.Wait()
@@ -118,8 +128,7 @@ func (s *Server) Stop() {
 	}
 
 	// 刷新缓存的日志
-	logging.GetApiLogger().Sync()
-	logging.GetWebLogger().Sync()
+	logging.GetAppLogger().Sync()
 
 	// 发送信号，表示服务器已经停止
 	s.stopChan <- struct{}{}

@@ -90,7 +90,7 @@ func (s *versionsConfigService) ListVersions(language string) (*types.ListVersio
 func NewVersionsConfigService(cfg *config.Config) *versionsConfigService {
 	obj := versionsConfigService{
 		rootDir: cfg.RootDir,
-		logger:  logging.GetWebLogger(),
+		logger:  logging.GetAppLogger(),
 	}
 
 	return &obj

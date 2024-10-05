@@ -10,8 +10,7 @@ import (
 
 var loggerInitOnce sync.Once
 
-var webLogger *zap.Logger
-var apiLogger *zap.Logger
+var appLogger *zap.Logger
 
 // GetSystemLogger 获得预定义的日志记录器实例
 func GetSystemLogger() *logrus.Logger {
@@ -19,24 +18,14 @@ func GetSystemLogger() *logrus.Logger {
 	return logrus.StandardLogger()
 }
 
-// GetWebLogger 获得 web 应用的日志记录器
-func GetWebLogger() *zap.Logger {
-	if webLogger == nil {
-		webLogger, _ = zap.NewProduction()
+// GetAppLogger 获得 web 应用的日志记录器
+func GetAppLogger() *zap.Logger {
+	if appLogger == nil {
+		appLogger, _ = zap.NewProduction()
 		// 刷新所有缓冲的日志条目
-		defer webLogger.Sync()
+		defer appLogger.Sync()
 	}
-	return webLogger
-}
-
-// GetApiLogger 获得 web 应用的日志记录器
-func GetApiLogger() *zap.Logger {
-	if apiLogger == nil {
-		apiLogger, _ = zap.NewProduction()
-		// 刷新所有缓冲的日志条目
-		defer apiLogger.Sync()
-	}
-	return apiLogger
+	return appLogger
 }
 
 func initSystemLogger(cfg *config.LogConfig) {
@@ -71,7 +60,7 @@ func InitLogger() {
 		// 设置 api 服务器日志记录器
 		// apiLogger = NewZapJSONLogger(&logger.API)
 		// 设置 web 服务器日志记录器
-		webLogger = NewZapJSONLogger(&logger.Web)
+		appLogger = NewZapJSONLogger(&logger.Web)
 	})
 }
 
