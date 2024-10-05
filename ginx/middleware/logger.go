@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/TencentBlueKing/gopkg/stringx"
 	"github.com/fengzhongzhu1621/xgo/ginx/utils"
 	"github.com/fengzhongzhu1621/xgo/logging"
 	"github.com/fengzhongzhu1621/xgo/monitor/sentry"
 	"github.com/fengzhongzhu1621/xgo/network/nethttp"
 	"github.com/fengzhongzhu1621/xgo/str/slice"
+	"github.com/fengzhongzhu1621/xgo/str/stringutils"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
@@ -66,7 +66,7 @@ func logContextFields(c *gin.Context) []zap.Field {
 	}
 
 	// 获得输入参数（需要截断）
-	params := stringx.Truncate(c.Request.URL.RawQuery, 1024)
+	params := stringutils.Truncate(c.Request.URL.RawQuery, 1024)
 
 	// 构造日志字段
 	fields := []zap.Field{
@@ -84,7 +84,7 @@ func logContextFields(c *gin.Context) []zap.Field {
 	if hasError {
 		fields = append(fields, zap.String("response_body", newWriter.body.String()))
 	} else {
-		fields = append(fields, zap.String("response_body", stringx.Truncate(newWriter.body.String(), 1024)))
+		fields = append(fields, zap.String("response_body", stringutils.Truncate(newWriter.body.String(), 1024)))
 	}
 
 	// 发送 sentry 报告
