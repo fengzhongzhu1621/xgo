@@ -4,11 +4,19 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"testing"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
 
+type Response struct {
+	Code    int         `json:"code"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
+}
+
+type ResponseAssertFunc func(Response) error
 type JSONAssertFunc func(map[string]interface{}) error
 
 // SetupRouter 创建了一个新的Gin路由引擎实例
@@ -47,5 +55,24 @@ func NewJSONAssertFunc(t assert.TestingT, assertFunc JSONAssertFunc) func(res *h
 		assert.NoError(t, err, "unmarshal string to json fail")
 
 		return assertFunc(data)
+	}
+}
+
+func NewResponseAssertFunc(
+	t *testing.T,
+	responseFunc ResponseAssertFunc,
+) func(res *http.Response, req *http.Request) error {
+	return func(res *http.Response, req *http.Request) error {
+		body, err := io.ReadAll(res.Body)
+		assert.NoError(t, err, "read body from response fail")
+
+		defer res.Body.Close()
+
+		var data Response
+
+		err = json.Unmarshal(body, &data)
+		assert.NoError(t, err, "unmarshal string to response fail")
+
+		return responseFunc(data)
 	}
 }

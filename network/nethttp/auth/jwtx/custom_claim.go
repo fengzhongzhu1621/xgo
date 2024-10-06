@@ -89,7 +89,7 @@ func NewCustomJwtClaims(option *CustomJwtClaimsOption) (*CustomJwtClaims, error)
 	return claims, nil
 }
 
-// GenerateJwtToken 生成 JWT-token 令牌字符串
+// GenerateHS256JwtToken 生成 JWT-token 令牌字符串
 func (c *CustomJwtClaims) GenerateHS256JwtToken() (string, error) {
 	// 创建了一个新的 JWT Token，并指定了签名方法为 HS256
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, c)
