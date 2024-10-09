@@ -34,6 +34,17 @@ func GetClientUsername(c *gin.Context) string {
 	if name := c.GetString(constant.ClientUsernameKey); name != "" {
 		return name
 	} else {
-		return constant.DEFAULT_BACKEND_OPERATOR
+		return constant.DefaultBackendOperator
 	}
+}
+
+func SetBackendUser(c *gin.Context, user string) {
+	c.Set(constant.BackendUserKey, user)
+}
+
+func GetBackendUser(c *gin.Context) string {
+	if name := c.GetString(constant.BackendUserKey); name != "" {
+		return name
+	}
+	return ""
 }

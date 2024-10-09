@@ -87,6 +87,7 @@ type PProf struct {
 
 type Auth struct {
 	BearerToken string
+	JwtToken    string
 }
 
 type Crypto struct {

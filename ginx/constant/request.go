@@ -9,5 +9,6 @@ const (
 )
 
 const (
-	DEFAULT_BACKEND_OPERATOR = "admin"
+	DefaultBackendOperator = "admin"
+	BackendUserKey         = "backend_user"
 )
