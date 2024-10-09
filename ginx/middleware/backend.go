@@ -22,7 +22,7 @@ func BackendAuthMiddleware(cfg *config.Config) gin.HandlerFunc {
 			return
 		}
 
-		// verify jwt token
+		// 解析 jwt token
 		var (
 			option jwtx.CustomJwtClaimsOption
 			claims *jwtx.CustomJwtClaims
