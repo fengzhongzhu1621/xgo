@@ -48,6 +48,9 @@ type Config struct {
 	// 版本
 	RootDir string
 
+	// 认证
+	Auth Auth
+
 	Cryptos map[string]*Crypto
 }
 
@@ -78,6 +81,10 @@ type Sentry struct {
 type PProf struct {
 	// 认证用户
 	Account map[string]string
+}
+
+type Auth struct {
+	BearerToken string
 }
 
 type Crypto struct {

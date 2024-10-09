@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// NewClientAuthMiddleware create the middleware by config, support both raw app_code/app_secret and APIGateway
+// NewClientAuthMiddleware 从配置文件获取网关公钥，并根据公钥从 jwt token 解析用户信息
 func NewClientAuthMiddleware(c *config.Config) gin.HandlerFunc {
 	var apiGatewayPublicKey []byte
 	// 从配置文件获取蓝鲸网关公钥
@@ -23,7 +23,7 @@ func NewClientAuthMiddleware(c *config.Config) gin.HandlerFunc {
 	return ClientAuthMiddleware(apiGatewayPublicKey)
 }
 
-// ClientAuthMiddleware 从 jwt 解析用户信息
+// ClientAuthMiddleware 根据公钥从 jwt token 解析用户信息
 func ClientAuthMiddleware(apiGatewayPublicKey []byte) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var (

@@ -17,7 +17,7 @@ type UserIdJwtClaims struct {
 	jwt.StandardClaims
 }
 
-// 创建Jwt断言信息
+// NewJwtClaims 创建Jwt断言信息
 func NewJwtClaims(token_expired time.Time, uid, data, salt string) *UserIdJwtClaims {
 	return &UserIdJwtClaims{
 		UserId: uid,

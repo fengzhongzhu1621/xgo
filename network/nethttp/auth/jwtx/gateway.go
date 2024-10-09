@@ -10,7 +10,7 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 )
 
-// GetJwtTokenFromHeader 从请求头获取 jwt 的值
+// GetJwtTokenFromHeader 从请求头获取 jwt token 的值
 func GetJwtTokenFromHeader(c *gin.Context) (string, error) {
 	// 找不到认证头部
 	header := c.Request.Header.Get("Authorization")

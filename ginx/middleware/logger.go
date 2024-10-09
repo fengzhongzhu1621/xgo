@@ -26,7 +26,7 @@ func (w bodyLogWriter) Write(b []byte) (int, error) {
 	return w.ResponseWriter.Write(b)
 }
 
-// AppLogger ...
+// AppLogger 日志中间件，记录请求和响应内容
 func AppLogger() gin.HandlerFunc {
 	logger := logging.GetAppLogger()
 
@@ -52,6 +52,7 @@ func logContextFields(c *gin.Context) []zap.Field {
 	newWriter := &bodyLogWriter{body: bytes.NewBufferString(""), ResponseWriter: c.Writer}
 	c.Writer = newWriter
 
+	// 将相应结果写入到 newWriter 的 body 中
 	c.Next()
 
 	// 获得响应耗时
