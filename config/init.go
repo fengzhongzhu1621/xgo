@@ -6,12 +6,14 @@ import (
 	"path/filepath"
 	"runtime"
 
+	"github.com/fengzhongzhu1621/xgo/collections/set"
 	"github.com/spf13/viper"
 )
 
 var (
-	cfgFile      string
-	globalConfig *Config
+	cfgFile         string
+	globalConfig    *Config
+	SuperAppCodeSet *set.StringSet2
 )
 
 func GetGlobalConfig() *Config {
@@ -31,6 +33,14 @@ func GetCfgFile() string {
 	return cfgFile
 }
 
+// InitSuperAppCode 初始化超级 app
+func InitSuperAppCode() {
+	SuperAppCodeSet := set.NewStringSet()
+	for _, app_code := range globalConfig.SuperAppCode {
+		SuperAppCodeSet.Add(app_code)
+	}
+}
+
 func init() {
 	var err error
 
@@ -48,4 +58,9 @@ func init() {
 	if err != nil {
 		panic(fmt.Sprintf("Could not load configurations from file, error: %v", err))
 	}
+
+	// -------------------- 初始化组件 --------------------
+
+	// 初始化超级 app
+	InitSuperAppCode()
 }

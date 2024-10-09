@@ -52,6 +52,8 @@ type Config struct {
 	Auth Auth
 
 	Cryptos map[string]*Crypto
+
+	SuperAppCode []string
 }
 
 type Server struct {
