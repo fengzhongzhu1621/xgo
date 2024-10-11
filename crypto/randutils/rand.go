@@ -13,6 +13,8 @@ var (
 	sources     = []byte("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 )
 
+var tmpMu sync.Mutex
+
 // Int returns a non-negative pseudo-random int.
 func Int() int { return pseudo.Int() }
 
