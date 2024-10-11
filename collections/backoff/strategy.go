@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// 自定义锁重试策略的接口
+// 获取下一次重试的等待时间的接口
 type IRetryStrategy interface {
 	// NextBackoff returns the next backoff duration 获取下一次重试的等待时间
 	NextBackoff() time.Duration
