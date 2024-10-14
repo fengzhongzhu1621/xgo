@@ -1,11 +1,11 @@
-package option
+package redislock
 
 import (
 	"github.com/fengzhongzhu1621/xgo/collections/backoff"
 )
 
-// Options 用于配置分布式锁的选项
-type Options struct {
+// IOptions 用于配置分布式锁的选项
+type IOptions struct {
 	// 获取下一次重试的等待时间的接口
 	RetryStrategy backoff.IRetryStrategy
 
@@ -14,7 +14,7 @@ type Options struct {
 }
 
 // GetMetadata 用于获取 Options 结构体中的 Metadata 字段的值
-func (o *Options) GetMetadata() string {
+func (o *IOptions) GetMetadata() string {
 	if o != nil {
 		return o.Metadata
 	}
@@ -22,7 +22,7 @@ func (o *Options) GetMetadata() string {
 }
 
 // GetRetryStrategy 获取下一次重试的等待时间策略
-func (o *Options) GetRetryStrategy() backoff.IRetryStrategy {
+func (o *IOptions) GetRetryStrategy() backoff.IRetryStrategy {
 	if o != nil && o.RetryStrategy != nil {
 		return o.RetryStrategy
 	}
