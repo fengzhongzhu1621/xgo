@@ -9,7 +9,7 @@ import (
 
 var generator *fastuuid.Generator
 
-func initID() (err error) {
+func initUUID() (err error) {
 	generator, err = fastuuid.NewGenerator()
 	return
 }
