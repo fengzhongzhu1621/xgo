@@ -102,7 +102,7 @@ func AddressToIpUint32(addr string) uint32 {
 
 // CheckIpCidr 判断 ip 是否在 ip 段列表中
 func CheckIpInCidrList(srcIp string, cidrList []string) bool {
-	// 活的 ip 地址中的 ip 部分
+	// 获得 ip 地址中的 ip 部分
 	var ip string
 	if strings.Contains(srcIp, ":") {
 		host, _, err := net.SplitHostPort(srcIp)

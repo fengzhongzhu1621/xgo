@@ -65,7 +65,7 @@ const (
 	ErrInvalidTag
 )
 
-// String 将错误码转换为错误信息.
+// String 将错误码转换为错误信息，设计缺陷会导致每个错误码忘记添加错误信息
 func (e ErrType) String() string {
 	switch e {
 	case ErrUnknown:
