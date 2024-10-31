@@ -91,6 +91,7 @@ require (
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.37.0 // indirect
 	github.com/prometheus/procfs v0.8.0 // indirect
+	github.com/remeh/sizedwaitgroup v1.0.0 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/robfig/cron/v3 v3.0.1 // indirect
 	github.com/smartystreets/goconvey v1.8.1 // indirect

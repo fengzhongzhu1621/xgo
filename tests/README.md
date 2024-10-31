@@ -24,11 +24,16 @@ go test . -cover -v
 生成测试覆盖率的 profile 文件
 ```
 go test ./... -coverprofile=cover.out
+go test -covermode=count -coverprofile=coverage.out ./...
 ```
 
 利用 profile 文件生成可视化界面
 ```
+# 生成并查看 HTML 报告
+go tool cover -html=coverage.out -o coverage.html 
 go tool cover -html=cover.out
+# 生成并查看文本报告
+go tool cover -func=coverage.out
 ```
 
 

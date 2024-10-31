@@ -1,6 +1,7 @@
 package maps
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 
@@ -398,6 +399,7 @@ func TestIsPathShadowedInFlatMap(t *testing.T) {
 	})
 }
 
+// TestExistsKey 判断 key 是否存在
 func TestExistsKey(t *testing.T) {
 	obj := map[string]interface{}{
 		"key_1": "val_1",
@@ -406,4 +408,20 @@ func TestExistsKey(t *testing.T) {
 	assert.True(t, ExistsKey(obj, "key_1"))
 	assert.False(t, ExistsKey(obj, "key_2"))
 	assert.True(t, ExistsKey(obj, "key_3"))
+}
+
+// TestRangeKey 遍历字典的 key
+func TestRangeKey(t *testing.T) {
+	// 创建一个 map
+	myMap := map[string]int{
+		"apple":  5,
+		"banana": 7,
+		"orange": 3,
+	}
+
+	// 遍历 map 的 key
+	for key := range myMap {
+		fmt.Println("Key:", key)
+	}
+
 }
