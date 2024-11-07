@@ -105,3 +105,27 @@ func TestField(t *testing.T) {
 
 	printFields(p)
 }
+
+type Calculator struct{}
+
+func (c Calculator) Add(a, b int) int { return a + b }
+
+func TestMethodByName(t *testing.T) {
+	// 转换为 reflect.Value
+	c := Calculator{}
+	v := reflect.ValueOf(c)
+
+	// 获取对象的方法
+	method := v.MethodByName("Add")
+
+	// 构造函数执行参数
+	args := []reflect.Value{
+		reflect.ValueOf(1),
+		reflect.ValueOf(2),
+	}
+	// 调用方法
+	result := method.Call(args)
+
+	// 结果: 3
+	fmt.Println("结果:", result[0].Int())
+}
