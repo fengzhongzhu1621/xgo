@@ -43,9 +43,34 @@ type Person struct {
 	Age  int    `json:"age"`
 }
 
+type User struct {
+	Name string
+	Age  int
+}
+
+func TestNumField(t *testing.T) {
+	u := User{"张三", 20}
+
+	t1 := reflect.TypeOf(u)
+	v := reflect.ValueOf(u)
+
+	// 类型: reflectutils.User
+	fmt.Printf("类型: %v\n", t1)
+	// 值: {张三 20}
+	fmt.Printf("值: %v\n", v)
+
+	// 遍历结构体字段
+	// Name: 张三
+	// Age: 20
+	for i := 0; i < t1.NumField(); i++ {
+		field := t1.Field(i)
+		value := v.Field(i)
+		fmt.Printf("%s: %1v\n", field.Name, value)
+	}
+}
+
 func TestField(t *testing.T) {
 	p := Person{Name: "bob", Age: 10}
-
 	t1 := reflect.TypeOf(p)
 	fmt.Println("Type: ", t1) // Type:  reflectutils.Person
 
