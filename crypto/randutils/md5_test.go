@@ -7,6 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+
 func TestGetMD5Hash(t *testing.T) {
 	text := "xxx"
 	expected := "f561aaf6ef0bf14d4208bb46a4ccb3ad"
