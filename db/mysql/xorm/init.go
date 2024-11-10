@@ -38,12 +38,21 @@ func GetDefaultXormDBClient() *XormDBClient {
 }
 
 func InitDatabase() {
-	globalConfig := config.GetGlobalConfig()
-	defaultDBConfig, ok := globalConfig.DatabaseMap["default"]
+	// 格式化配置
+	cfg := config.GetGlobalConfig()
+	cfg.DatabaseMap = make(map[string]mysql.Database)
+	for _, db := range cfg.Databases {
+		cfg.DatabaseMap[db.ID] = db
+	}
+	if len(cfg.DatabaseMap) == 0 {
+		panic("database cannot be empty")
+	}
+
+	// 初始化 DB 连接
+	defaultDBConfig, ok := cfg.DatabaseMap["default"]
 	if !ok {
 		panic("database default should be configured")
 	}
-
 	InitXormDBClient(&defaultDBConfig)
 
 	log.Info("init Database success")

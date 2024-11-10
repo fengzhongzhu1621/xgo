@@ -23,3 +23,15 @@ sentry:
 
 auth:
   bearerToken: "xxx"
+
+databases:
+  - id: "default"
+    host: "localhost"
+    port: 3306
+    user: "root"
+    password: ""
+    name: "xgo"
+    maxOpenConns: 200
+    maxIdleConns: 50
+    connMaxLifetimeSecond: 600
+    debugMode: false
