@@ -6,6 +6,9 @@ import (
 	"xorm.io/xorm"
 )
 
+// 使用链式调用构建查询
+// engine.Table("user").Where("age > ?", 18).OrderBy("name").Limit(10).Find(&users)
+
 // ColumnsSearch ... 用于多个字段的模糊查询匹配
 func ColumnsSearch(session *xorm.Session, keyword string, args ...string) *xorm.Session {
 	if keyword == "" {
