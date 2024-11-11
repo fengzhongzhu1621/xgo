@@ -12,7 +12,7 @@ type BaseTimeModel struct {
 	UpdatedBy string    `xorm:"not null VARCHAR(32)"`
 }
 
-type BaseTimeModelWithoutSoftdelete struct {
+type BaseTimeModelWithoutSoftDelete struct {
 	CreatedAt time.Time `xorm:"created not null DATETIME(6)"`
 	CreatedBy string    `xorm:"not null VARCHAR(32)"`
 	UpdatedAt time.Time `xorm:"updated not null DATETIME(6)"`

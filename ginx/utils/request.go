@@ -48,3 +48,13 @@ func GetBackendUser(c *gin.Context) string {
 	}
 	return ""
 }
+
+// GetUserID ...
+func GetUserID(c *gin.Context) string {
+	return c.GetString(constant.UserIDKey)
+}
+
+// SetUserID ...
+func SetUserID(c *gin.Context, userID string) {
+	c.Set(constant.UserIDKey, userID)
+}
