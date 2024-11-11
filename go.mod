@@ -66,13 +66,14 @@ require (
 	github.com/go-openapi/jsonreference v0.19.6 // indirect
 	github.com/go-openapi/spec v0.20.4 // indirect
 	github.com/go-openapi/swag v0.19.15 // indirect
-	github.com/go-resty/resty/v2 v2.15.3 // indirect
-	github.com/go-xorm/xorm v0.7.9 // indirect
+	github.com/go-task/slim-sprig/v3 v3.0.0 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
+	github.com/google/pprof v0.0.0-20241029153458-d1b30febd7db // indirect
 	github.com/google/s2a-go v0.1.8 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.4 // indirect
+	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
 	github.com/gorilla/securecookie v1.1.2 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
@@ -80,21 +81,20 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
+	github.com/jtolds/gls v4.20.0+incompatible // indirect
 	github.com/klauspost/compress v1.17.7 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.7 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
-	github.com/matoous/go-nanoid/v2 v2.1.0 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
 	github.com/nats-io/nats.go v1.37.0 // indirect
 	github.com/nats-io/nkeys v0.4.7 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
-	github.com/onsi/ginkgo/v2 v2.21.0 // indirect
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.37.0 // indirect
 	github.com/prometheus/procfs v0.8.0 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
-	github.com/smartystreets/goconvey v1.8.1 // indirect
+	github.com/smarty/assertions v1.15.0 // indirect
 	github.com/swaggo/swag v1.8.12 // indirect
 	github.com/syndtr/goleveldb v1.0.0 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
@@ -109,8 +109,7 @@ require (
 	go.opentelemetry.io/otel/metric v1.29.0 // indirect
 	go.opentelemetry.io/otel/sdk v1.28.0 // indirect
 	go.opentelemetry.io/otel/trace v1.29.0 // indirect
-	golang.org/x/arch v0.8.0 // indirect
-	golang.org/x/exp v0.0.0-20240613232115-7f521ea00fb8 // indirect
+	golang.org/x/arch v0.11.0 // indirect
 	golang.org/x/time v0.6.0 // indirect
 	golang.org/x/tools v0.26.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20240827150818-7e3bb234dfed // indirect
@@ -171,6 +170,7 @@ require (
 	github.com/alicebob/miniredis/v2 v2.33.0
 	github.com/araujo88/lambda-go v0.0.0-20240731183007-b33464d3e215
 	github.com/bndr/gotabulate v1.1.2
+	github.com/bytedance/mockey v1.2.13
 	github.com/cenkalti/backoff/v3 v3.2.2
 	github.com/cheggaaa/pb/v3 v3.1.5
 	github.com/codeskyblue/dockerignore v0.0.0-20151214070507-de82dee623d9
@@ -185,6 +185,7 @@ require (
 	github.com/getsentry/sentry-go v0.29.0
 	github.com/go-redis/cache/v8 v8.4.4
 	github.com/go-redis/redis/v8 v8.11.5
+	github.com/go-resty/resty/v2 v2.15.3
 	github.com/go-sql-driver/mysql v1.8.1
 	github.com/go-yaml/yaml v2.1.0+incompatible
 	github.com/gofrs/uuid v4.4.0+incompatible
@@ -205,6 +206,7 @@ require (
 	github.com/lithammer/shortuuid/v3 v3.0.7
 	github.com/microcosm-cc/bluemonday v1.0.27
 	github.com/oklog/ulid v1.3.1
+	github.com/onsi/ginkgo/v2 v2.21.0
 	github.com/panjf2000/ants/v2 v2.10.0
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/pborman/uuid v1.2.1
@@ -215,6 +217,7 @@ require (
 	github.com/russross/blackfriday v1.6.0
 	github.com/shogo82148/androidbinary v0.0.0-20180627093851-01c4bfa8b3b5
 	github.com/sirupsen/logrus v1.9.3
+	github.com/smartystreets/goconvey v1.8.1
 	github.com/spf13/cobra v1.8.1
 	github.com/steinfletcher/apitest v1.5.17
 	github.com/swaggo/files v1.0.1
@@ -227,6 +230,7 @@ require (
 	github.com/tidwall/match v1.1.1
 	github.com/tidwall/rtred v0.1.2
 	github.com/vmihailenco/msgpack/v5 v5.4.1
+	golang.org/x/exp v0.0.0-20240613232115-7f521ea00fb8
 	golang.org/x/sync v0.8.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	gorm.io/driver/mysql v1.5.7
