@@ -18,6 +18,19 @@ export CGO_ENABLED ?= 0
 export GOOS = $(shell go env GOOS)
 
 ###############################################################################
+# 设置版本
+ifdef VERSION
+    VERSION=${VERSION}
+else
+    VERSION=$(shell git describe --always 2>/dev/null || echo "--")
+endif
+GITCOMMIT=$(shell git rev-parse HEAD 2>/dev/null || echo "--")
+BUILDTIME=${shell date +%Y-%m-%dT%H:%M:%S%z}
+LDFLAGS="-X github.com/fengzhongzhu1621/xgo/version.AppVersion=${VERSION} \
+	-X github.com/fengzhongzhu1621/xgo/version.GitCommit=${GITCOMMIT} \
+	-X github.com/fengzhongzhu1621/xgo/version.BuildTime=${BUILDTIME}"
+
+###############################################################################
 # Build variables
 BUILD_DIR ?= build
 
@@ -37,6 +50,10 @@ TEST_PKGS ?= ./...
 # golangci-lint
 GOTESTSUM_VERSION = 1.12.0
 GOLANGCI_VERSION = 1.62.0
+LOCALBIN ?= $(shell pwd)/bin
+$(LOCALBIN):
+	mkdir -p $(LOCALBIN)
+.PHONY: golines swag gofumpt
 
 bin/gotestsum-${GOTESTSUM_VERSION}:
 	@mkdir -p bin
@@ -52,6 +69,22 @@ bin/golangci-lint-${GOLANGCI_VERSION}:
 
 bin/golangci-lint: bin/golangci-lint-${GOLANGCI_VERSION}
 	@ln -sf golangci-lint-${GOLANGCI_VERSION} bin/golangci-lint
+
+SWAG ?= $(LOCALBIN)/swag
+GOLINES ?= $(LOCALBIN)/golines
+GOFUMPT ?= $(LOCALBIN)/gofumpt
+
+swag: $(SWAG) ## install swagger
+$(SWAG): $(LOCALBIN)
+	GOBIN=$(LOCALBIN) go install github.com/swaggo/swag/cmd/swag@v1.16.3
+
+golines: $(GOLINES) ## install golines
+$(GOLINES): $(LOCALBIN)
+	GOBIN=$(LOCALBIN) go install github.com/segmentio/golines@v0.12.2
+
+gofumpt: $(GOFUMPT) ## install gofumpt
+$(GOFUMPT): $(LOCALBIN)
+	GOBIN=$(LOCALBIN) go install mvdan.cc/gofumpt@v0.6.0
 
 ###############################################################################
 # 自定义命令
@@ -69,11 +102,13 @@ build:
 test: TEST_FORMAT ?= short
 test: SHELL = /bin/bash
 test: export CGO_ENABLED=1
+test: go mod tidy
 test: bin/gotestsum ## Run tests
 	@mkdir -p ${BUILD_DIR}
 	bin/gotestsum --no-summary=skipped --junitfile ${BUILD_DIR}/coverage.xml --format ${TEST_FORMAT} -- -coverprofile=${BUILD_DIR}/coverage.txt -covermode=atomic $(filter-out -v,${GOARGS}) $(if ${TEST_PKGS},${TEST_PKGS},./...)
 
 # test:
+#   go mod tidy
 #	go test -v ./... -cover
 
 # test:
@@ -117,9 +152,11 @@ vet:
 list: ## List all make targets
 	@${MAKE} -pRrn : -f $(MAKEFILE_LIST) 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | egrep -v -e '^[^[:alnum:]]' -e '^$@$$' | sort
 
-fmt: ## format source code
+fmt: golines gofumpt ## format source code
 	go fmt ./...
 	goimports -l -w .
+	$(GOLINES) ./ -m 119 -w --base-formatter gofmt --no-reformat-tags
+	$(GOFUMPT) -l -w .
 
 help:
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
@@ -143,3 +180,6 @@ validate_examples:
 godoc: ## show doc
 	echo "http://127.0.0.1:6060"
 	godoc -http=127.0.0.1:6060 -goroot="."
+
+docker-build: ## build docker image
+	docker build -f ./Dockerfile -t xgo:${VERSION} .

@@ -3,14 +3,19 @@ package version
 import (
 	"fmt"
 	"regexp"
+	"runtime"
 )
 
 // Version is the current package version.
-const (
-	Version   = "0.0.1"
-	Commit    = "none"
-	BuildTime = "unknown"
-	GoVersion = "1.23.1"
+var (
+	// AppVersion 版本号
+	AppVersion = "--"
+	// GitCommit CommitID
+	GitCommit = "--"
+	// BuildTime 二进制构建时间
+	BuildTime   = "--"
+	TmplVersion = "0.0.1"
+	GoVersion   = runtime.Version()
 )
 
 var (
@@ -24,7 +29,7 @@ func ShowVersion() {
 
 // GetVersion get version message string.
 func GetVersion() string {
-	version := fmt.Sprintf("Version  :%s\n", Version)
+	version := fmt.Sprintf("Version  :%s\n", AppVersion)
 	return version
 }
 
