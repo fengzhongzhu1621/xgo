@@ -86,6 +86,10 @@ gofumpt: $(GOFUMPT) ## install gofumpt
 $(GOFUMPT): $(LOCALBIN)
 	GOBIN=$(LOCALBIN) go install mvdan.cc/gofumpt@v0.6.0
 
+gowatch:
+	go install github.com/silenceper/gowatch@latest
+
+
 ###############################################################################
 # 自定义命令
 .PHONY: build test bench vet coverage check test-race test-cover-html help clear lint fix fmt tidy

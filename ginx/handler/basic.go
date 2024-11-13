@@ -19,8 +19,8 @@ func Version(c *gin.Context) {
 	runEnv := os.Getenv("RUN_ENV")
 	now := time.Now()
 	c.JSON(http.StatusOK, gin.H{
-		"version":   version.Version,
-		"commit":    version.Commit,
+		"version":   version.AppVersion,
+		"commit":    version.GitCommit,
 		"buildTime": version.BuildTime,
 		"goVersion": version.GoVersion,
 		"env":       runEnv,

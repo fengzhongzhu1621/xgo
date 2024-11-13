@@ -62,3 +62,5 @@ bindata_assetfs.go
 assets_vfsdata.go
 
 *.log
+xgo
+main.go
