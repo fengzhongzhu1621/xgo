@@ -192,3 +192,44 @@ func TestJsonRawMessage(t *testing.T) {
 
 	fmt.Println("Value (parsed):", value) // Value (parsed): map[key:value]
 }
+
+type Person struct {
+	Name string `json:"name"`
+	Age  int    `json:"age"`
+	// 如果你想要在序列化时忽略某个字段，但在反序列化时仍然能够处理它，你可以使用 json.RawMessage 类型。
+	Password json.RawMessage `json:"password,omitempty"` // 如果 Password 为空，则不会序列化
+}
+
+type Person2 struct {
+	Name string `json:"name"`
+	// 如果你将结构体中的字段定义为指针类型，并且在序列化时该字段为 nil，那么在 JSON 序列化时，该字段也会被忽略（前提是你没有使用 omitempty 以外的选项）。
+	Age      *int    `json:"age,omitempty"`      // 如果 Age 为 nil，则不会序列化
+	Password *string `json:"password,omitempty"` // 如果 Password 为 nil，则不会序列化
+}
+
+func TestOmitEmpty(t *testing.T) {
+	p := Person{
+		Name: "Alice",
+		Age:  30,
+		// Password 字段为空，因此在序列化时会被忽略
+	}
+
+	jsonBytes, err := json.Marshal(p)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(string(jsonBytes)) // 输出: {"name":"Alice","age":30}
+
+	p2 := Person2{
+		Name: "Alice",
+		// Age 和 Password 字段为 nil，因此在序列化时会被忽略
+	}
+
+	jsonBytes2, err := json.Marshal(p2)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(string(jsonBytes2)) // 输出: {"name":"Alice"}
+}
