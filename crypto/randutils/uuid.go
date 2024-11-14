@@ -5,12 +5,17 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/lithammer/shortuuid/v3"
 	"github.com/oklog/ulid"
 )
+
+func New() string {
+	return strings.ReplaceAll(uuid.New().String(), "-", "")
+}
 
 // NewUUID returns a new UUID Version 4.
 func NewUUID() string {
