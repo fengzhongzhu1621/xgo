@@ -13,9 +13,10 @@ var (
 	// GitCommit CommitID
 	GitCommit = "--"
 	// BuildTime 二进制构建时间
-	BuildTime   = "--"
-	TmplVersion = "0.0.1"
-	GoVersion   = runtime.Version()
+	BuildTime = "--"
+	// 模板的版本号
+	TemplateVersion = "0.0.1"
+	GoVersion       = runtime.Version()
 )
 
 var (
@@ -31,6 +32,14 @@ func ShowVersion() {
 func GetVersion() string {
 	version := fmt.Sprintf("Version  :%s\n", AppVersion)
 	return version
+}
+
+// /////////////////////////////////////////////////////////////////////////
+func Version() string {
+	return fmt.Sprintf(
+		"\nVersion  : %s\nGitCommit: %s\nBuildTime: %s\nTemplateVersion: %s\nGoVersion: %s\n",
+		AppVersion, GitCommit, BuildTime, TemplateVersion, GoVersion,
+	)
 }
 
 // /////////////////////////////////////////////////////////////////////////
