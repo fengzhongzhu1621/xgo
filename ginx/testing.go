@@ -1,9 +1,11 @@
 package ginx
 
 import (
+	"bytes"
 	"encoding/json"
 	"io"
 	"net/http"
+	"net/http/httptest"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -75,4 +77,11 @@ func NewResponseAssertFunc(
 
 		return responseFunc(data)
 	}
+}
+
+// CreateTestContextWithDefaultRequest ...
+func CreateTestContextWithDefaultRequest(w *httptest.ResponseRecorder) *gin.Context {
+	ctx, _ := gin.CreateTestContext(w)
+	ctx.Request, _ = http.NewRequest("POST", "/", new(bytes.Buffer))
+	return ctx
 }
