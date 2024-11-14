@@ -32,10 +32,16 @@ func SetError(c *gin.Context, err error) {
 
 // JSONResponse 转换为标准的响应格式
 func JSONResponse(c *gin.Context, status int, code int, message string, data interface{}) {
+	if status == http.StatusNoContent {
+		c.Status(status)
+		return
+	}
+
 	body := nethttp.Response{
-		Code:    code,
-		Message: message,
-		Data:    data,
+		Code:      code,
+		Message:   message,
+		Data:      data,
+		RequestID: GetRequestID(c),
 	}
 	if code == xgo.NoError {
 		body.Result = true
@@ -47,7 +53,7 @@ func JSONResponse(c *gin.Context, status int, code int, message string, data int
 
 // ErrorJSONResponse 返回错误响应（data 为空，http 状态码为 200）
 func ErrorJSONResponse(c *gin.Context, code int, message string) {
-	JSONResponse(c, http.StatusOK, code, message, gin.H{})
+	JSONResponse(c, http.StatusOK, code, message, nil)
 }
 
 // StatusForbiddenJSONResponse 返回无权限响应
@@ -93,4 +99,8 @@ func NewErrorJSONResponseFunc(errorCode int, defaultMessage string) func(c *gin.
 		}
 		ErrorJSONResponse(c, errorCode, msg)
 	}
+}
+
+func NewPaginatedRespData(count int64, results any) nethttp.PaginatedResp {
+	return nethttp.PaginatedResp{Count: count, Results: results}
 }
