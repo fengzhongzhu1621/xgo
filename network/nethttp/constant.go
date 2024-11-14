@@ -1,7 +1,6 @@
 package nethttp
 
 const (
-	ErrorIDKey            = "err"
 	LocalSesionLockPrefix = "localsess"
 )
 

@@ -26,7 +26,7 @@ func GetVersionContent(cfg *config.Config) gin.HandlerFunc {
 		// 从请求参数中获得版本号
 		// 将请求的查询参数绑定到一个结构体实例上。这个方法会自动处理查询参数的类型转换，并将结果存储在结构体的相应字段中。
 		if err = c.ShouldBindQuery(&listObj); err != nil {
-			nethttp.BadRequestErrorJSONResponse(c, validator.ValidationErrorMessage(err))
+			utils.BadRequestErrorJSONResponse(c, validator.ValidationErrorMessage(err))
 			return
 		}
 
@@ -53,7 +53,7 @@ func GetVersionContent(cfg *config.Config) gin.HandlerFunc {
 			return
 		}
 
-		nethttp.SuccessJSONResponse(c, versionContent)
+		utils.SuccessJSONResponse(c, versionContent)
 	}
 }
 
@@ -81,6 +81,6 @@ func ListVersions(cfg *config.Config) gin.HandlerFunc {
 			return
 		}
 
-		nethttp.SuccessJSONResponse(c, *listVersionsResp)
+		utils.SuccessJSONResponse(c, *listVersionsResp)
 	}
 }

@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"github.com/fengzhongzhu1621/xgo/config"
-	"github.com/fengzhongzhu1621/xgo/network/nethttp"
+	"github.com/fengzhongzhu1621/xgo/ginx/utils"
 	"github.com/fengzhongzhu1621/xgo/network/nethttp/auth/jwtx"
 	"github.com/gin-gonic/gin"
 )
@@ -14,7 +14,7 @@ func BearerAuthMiddleware(cfg *config.Config) gin.HandlerFunc {
 		bearerToken, err := jwtx.GetJwtTokenFromHeader(c)
 
 		if err != nil {
-			nethttp.UnauthorizedJSONResponse(
+			utils.UnauthorizedJSONResponse(
 				c,
 				err.Error())
 			c.Abort()
@@ -23,7 +23,7 @@ func BearerAuthMiddleware(cfg *config.Config) gin.HandlerFunc {
 
 		// 与配置文件中的 token 进行验证
 		if bearerToken != "" && bearerToken != cfg.Auth.BearerToken {
-			nethttp.UnauthorizedJSONResponse(
+			utils.UnauthorizedJSONResponse(
 				c,
 				"bearer token mismatch illegal")
 			c.Abort()

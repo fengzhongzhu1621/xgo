@@ -2,13 +2,10 @@ package nethttp
 
 import (
 	"encoding/json"
-	"fmt"
-	"net/http"
 	"os"
 	"strings"
 
 	"github.com/fengzhongzhu1621/xgo"
-	"github.com/gin-gonic/gin"
 )
 
 type Response struct {
@@ -35,58 +32,6 @@ func (r Response) IsSuccess() bool {
 	return r.Code == xgo.NoError
 }
 
-func JSONResponse(c *gin.Context, status int, code int, message string, data interface{}) {
-	body := Response{
-		Code:    code,
-		Message: message,
-		Data:    data,
-	}
-	if code == xgo.NoError {
-		body.Result = true
-	} else {
-		body.Result = false
-	}
-	c.JSON(status, body)
-}
-
-func ErrorJSONResponse(c *gin.Context, code int, message string) {
-	JSONResponse(c, http.StatusOK, code, message, gin.H{})
-}
-
-func StatusForbiddenJSONResponse(c *gin.Context, message string, data interface{}) {
-	JSONResponse(c, http.StatusForbidden, xgo.IAMNoPermission, message, data)
-}
-
-func SuccessRawJsonResponse(c *gin.Context, data interface{}) {
-	c.JSON(http.StatusOK, data)
-}
-
-func SuccessJSONResponse(c *gin.Context, data interface{}) {
-	message := ""
-	JSONResponse(c, http.StatusOK, xgo.NoError, message, data)
-}
-
-func SuccessJSONResponseWithDebug(c *gin.Context, message string, data interface{}, debug bool) {
-	if !debug {
-		// 非 debug 模式
-		SuccessJSONResponse(c, data)
-		return
-	}
-
-	// debug 模式
-	body := DebugResponse{
-		Response: Response{
-			Code:    xgo.NoError,
-			Message: message,
-			Data:    data,
-			Result:  true,
-		},
-		Debug: debug,
-	}
-
-	c.JSON(http.StatusOK, body)
-}
-
 // NewResponse 创建响应对象，并转换为 []byte
 func NewResponse(code int, message string, data interface{}) ([]byte, error) {
 	result := false
@@ -109,25 +54,3 @@ func NewResponse(code int, message string, data interface{}) ([]byte, error) {
 
 	return b, nil
 }
-
-func NewErrorJSONResponseFunc(errorCode int, defaultMessage string) func(c *gin.Context, message string) {
-	return func(c *gin.Context, message string) {
-		msg := defaultMessage
-		if message != "" {
-			msg = fmt.Sprintf("%s:%s", msg, message)
-		}
-		ErrorJSONResponse(c, errorCode, msg)
-	}
-}
-
-var (
-	BadRequestErrorJSONResponse   = NewErrorJSONResponseFunc(xgo.BadRequestError, "bad request")
-	ParamErrorJSONResponse        = NewErrorJSONResponseFunc(xgo.ParamError, "param error")
-	ForbiddenJSONResponse         = NewErrorJSONResponseFunc(xgo.ForbiddenError, "no permission")
-	UnauthorizedJSONResponse      = NewErrorJSONResponseFunc(xgo.UnauthorizedError, "unauthorized")
-	NotFoundJSONResponse          = NewErrorJSONResponseFunc(xgo.NotFoundError, "not found")
-	ConflictJSONResponse          = NewErrorJSONResponseFunc(xgo.ConflictError, "conflict")
-	TooManyRequestsJSONResponse   = NewErrorJSONResponseFunc(xgo.TooManyRequests, "too many requests")
-	SamForbiddenJSONResponse      = NewErrorJSONResponseFunc(xgo.IAMNoPermission, "no permission")
-	StaffUnauthorizedJSONResponse = NewErrorJSONResponseFunc(xgo.StaffUnauthorizedError, "unauthorized")
-)

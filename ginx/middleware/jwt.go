@@ -5,7 +5,6 @@ import (
 
 	"github.com/fengzhongzhu1621/xgo/config"
 	"github.com/fengzhongzhu1621/xgo/ginx/utils"
-	"github.com/fengzhongzhu1621/xgo/network/nethttp"
 	"github.com/fengzhongzhu1621/xgo/network/nethttp/auth/jwtx"
 	"github.com/gin-gonic/gin"
 )
@@ -33,12 +32,12 @@ func ClientAuthMiddleware(apiGatewayPublicKey []byte) gin.HandlerFunc {
 		// 1. 获得 jwt
 		jwtToken := c.GetHeader("X-Bkapi-JWT")
 		if jwtToken == "" {
-			nethttp.UnauthorizedJSONResponse(c, "request from apigateway jwt token should not be empty!")
+			utils.UnauthorizedJSONResponse(c, "request from apigateway jwt token should not be empty!")
 			c.Abort()
 			return
 		}
 		if len(apiGatewayPublicKey) == 0 {
-			nethttp.UnauthorizedJSONResponse(
+			utils.UnauthorizedJSONResponse(
 				c,
 				"apigateway public key is not configured, not support request from apigateway",
 			)
@@ -51,7 +50,7 @@ func ClientAuthMiddleware(apiGatewayPublicKey []byte) gin.HandlerFunc {
 		clientID, clientUsername, err = jwtx.GetClientIDFromJWTToken(jwtToken, apiGatewayPublicKey)
 		if err != nil {
 			message := fmt.Sprintf("request from apigateway jwt token invalid! err=%s", err.Error())
-			nethttp.UnauthorizedJSONResponse(c, message)
+			utils.UnauthorizedJSONResponse(c, message)
 			c.Abort()
 			return
 		}

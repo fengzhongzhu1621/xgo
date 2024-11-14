@@ -3,7 +3,6 @@ package middleware
 import (
 	"github.com/fengzhongzhu1621/xgo/config"
 	"github.com/fengzhongzhu1621/xgo/ginx/utils"
-	"github.com/fengzhongzhu1621/xgo/network/nethttp"
 	"github.com/fengzhongzhu1621/xgo/network/nethttp/auth/jwtx"
 	"github.com/gin-gonic/gin"
 )
@@ -15,7 +14,7 @@ func BackendAuthMiddleware(cfg *config.Config) gin.HandlerFunc {
 		jwt_token, err := jwtx.GetJwtTokenFromHeader(c)
 
 		if err != nil {
-			nethttp.UnauthorizedJSONResponse(
+			utils.UnauthorizedJSONResponse(
 				c,
 				err.Error())
 			c.Abort()
@@ -33,7 +32,7 @@ func BackendAuthMiddleware(cfg *config.Config) gin.HandlerFunc {
 		jwtclaims, err := claims.ParseHS256JwtToken(jwt_token)
 
 		if err != nil {
-			nethttp.UnauthorizedJSONResponse(
+			utils.UnauthorizedJSONResponse(
 				c,
 				err.Error())
 			c.Abort()
