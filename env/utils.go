@@ -5,11 +5,11 @@ import (
 	"os"
 )
 
-func Get(key, fallback string) string {
+func Get(key, defaultValue string) string {
 	if value, ok := os.LookupEnv(key); ok {
 		return value
 	}
-	return fallback
+	return defaultValue
 }
 
 func MustGet(key string) string {
