@@ -11,6 +11,21 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+const (
+	// 尝试连接超时 单位：s
+	dialTimeout = 2
+	// 读超时 单位：s
+	readTimeout = 1
+	// 写超时 单位：s
+	writeTimeout = 1
+	// 闲置超时 单位: s
+	idleTimeout = 3 * 60
+	// 连接池大小 / 核
+	poolSizeMultiple = 20
+	// 最小空闲连接数 / 核
+	minIdleConnectionMultiple = 10
+)
+
 var (
 	rds *redis.Client
 	mq  *redis.Client
@@ -29,12 +44,12 @@ func newStandaloneClient(redisConfig *Redis) *redis.Client {
 	}
 
 	// set default options
-	opt.DialTimeout = time.Duration(2) * time.Second
-	opt.ReadTimeout = time.Duration(1) * time.Second
-	opt.WriteTimeout = time.Duration(1) * time.Second
-	opt.PoolSize = 20 * runtime.NumCPU()
-	opt.MinIdleConns = 10 * runtime.NumCPU()
-	opt.IdleTimeout = time.Duration(3) * time.Minute
+	opt.DialTimeout = time.Duration(dialTimeout) * time.Second
+	opt.ReadTimeout = time.Duration(readTimeout) * time.Second
+	opt.WriteTimeout = time.Duration(writeTimeout) * time.Second
+	opt.PoolSize = poolSizeMultiple * runtime.NumCPU()
+	opt.MinIdleConns = minIdleConnectionMultiple * runtime.NumCPU()
+	opt.IdleTimeout = time.Duration(idleTimeout) * time.Second
 
 	// set custom options, from config.yaml
 	if redisConfig.DialTimeout > 0 {

@@ -1,5 +1,7 @@
 package client
 
+import "fmt"
+
 type Redis struct {
 	Type         string // redis 的集群类型
 	Addr         string
@@ -19,6 +21,18 @@ type Redis struct {
 	SentinelPassword string
 
 	debugMode bool
+}
+
+type RedisConfig struct {
+	Username string
+	Host     string
+	Port     int
+	Password string
+	DB       int
+}
+
+func (cfg *RedisConfig) DSN() string {
+	return fmt.Sprintf("redis://%s:%s@%s:%d/%d", cfg.Username, cfg.Password, cfg.Host, cfg.Port, cfg.DB)
 }
 
 const (
