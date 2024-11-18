@@ -32,12 +32,12 @@ func InitRedis() {
 			panic("redis id=sentinel, the `masterName` required")
 		}
 		log.Info("init Redis mode=`sentinel`")
-		client.InitRedisClient(globalConfig.Debug, &sentinelConfig)
+		client.InitRedisClient(&sentinelConfig)
 	}
 
 	if isStandalone {
 		log.Info("init Redis mode=`standalone`")
-		client.InitRedisClient(globalConfig.Debug, &standaloneConfig)
+		client.InitRedisClient(&standaloneConfig)
 	}
 
 	log.Info("init Redis success")

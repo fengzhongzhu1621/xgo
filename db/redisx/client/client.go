@@ -112,7 +112,7 @@ func newSentinelClient(redisConfig *Redis) *redis.Client {
 	return redis.NewFailoverClient(opt)
 }
 
-func initRedisClient(debugMode bool, redisConfig *Redis) (cli *redis.Client) {
+func initRedisClient(redisConfig *Redis) (cli *redis.Client) {
 	switch redisConfig.Type {
 	case ModeStandalone:
 		cli = newStandaloneClient(redisConfig)
@@ -125,28 +125,25 @@ func initRedisClient(debugMode bool, redisConfig *Redis) (cli *redis.Client) {
 	_, err := cli.Ping(context.TODO()).Result()
 	if err != nil {
 		log.WithError(err).Error("connect to redis fail")
-		// redis is important
-		if !debugMode {
-			panic(err)
-		}
+		panic(err)
 	}
 	return cli
 }
 
 // InitRedisClient ...
-func InitRedisClient(debugMode bool, redisConfig *Redis) {
+func InitRedisClient(redisConfig *Redis) {
 	if rds == nil {
 		redisClientInitOnce.Do(func() {
-			rds = initRedisClient(debugMode, redisConfig)
+			rds = initRedisClient(redisConfig)
 		})
 	}
 }
 
 // InitMQRedisClient ...
-func InitMQRedisClient(debugMode bool, redisConfig *Redis) {
+func InitMQRedisClient(redisConfig *Redis) {
 	if mq == nil {
 		mqRedisClientInitOnce.Do(func() {
-			mq = initRedisClient(debugMode, redisConfig)
+			mq = initRedisClient(redisConfig)
 		})
 	}
 }
