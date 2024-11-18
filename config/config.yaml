@@ -1,37 +1,46 @@
 debug: true
 
 pprof:
-  account: { admin: "admin" }
+    account: { admin: "admin" }
 
 app:
-  name: "MyApp"
-  version: "1.0.0"
+    name: "MyApp"
+    version: "1.0.0"
 
 logger:
-  system:
-    level: info
-    writer: os
-    settings: { name: stdout }
-  web:
-    level: info
-    writer: os
-    settings: { name: stdout }
+    system:
+        level: info
+        writer: os
+        settings: { name: stdout }
+    web:
+        level: info
+        writer: os
+        settings: { name: stdout }
 
 sentry:
-  enable: false
-  dsn: ""
+    enable: false
+    dsn: ""
 
 auth:
-  bearerToken: "xxx"
+    bearerToken: "xxx"
 
 databases:
-  - id: "default"
-    host: "localhost"
-    port: 3306
-    user: "root"
-    password: ""
-    name: "xgo"
-    maxOpenConns: 200
-    maxIdleConns: 50
-    connMaxLifetimeSecond: 600
-    debugMode: false
+    - id: "default"
+      host: "localhost"
+      port: 3306
+      user: "root"
+      password: ""
+      name: "xgo"
+      maxOpenConns: 200
+      maxIdleConns: 50
+      connMaxLifetimeSecond: 600
+      debugMode: false
+
+service:
+    server:
+        port: 8080
+        graceTimeout: 30
+        ginRunMode: debug
+    log:
+        level: info
+        ForceToStdout: true

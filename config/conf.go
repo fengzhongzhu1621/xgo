@@ -19,6 +19,12 @@ type Logger struct {
 	Web    LogConfig
 }
 
+type ServiceLogConfig struct {
+	Level         string
+	Dir           string
+	ForceToStdout bool
+}
+
 type Config struct {
 	// 调试开关
 	Debug bool

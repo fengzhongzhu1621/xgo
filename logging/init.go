@@ -56,12 +56,15 @@ func InitLogger() {
 	// 设置系统日志记录器
 	initSystemLogger(&logger.System)
 
+	// TOOD InitSLogger
+
 	loggerInitOnce.Do(func() {
 		// 设置 api 服务器日志记录器
 		// apiLogger = NewZapJSONLogger(&logger.API)
 		// 设置 web 服务器日志记录器
 		appLogger = NewZapJSONLogger(&logger.Web)
 	})
+
 }
 
 func init() {

@@ -12,6 +12,19 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
+func NewSlogWriter(writerType string, settings map[string]string) (io.Writer, error) {
+	switch writerType {
+	case "stdout":
+		return os.Stdout, nil
+	case "stderr":
+		return os.Stderr, nil
+	case "file":
+		return GetFileWriter(settings)
+	}
+
+	return nil, fmt.Errorf("[%s] writer not supported", writerType)
+}
+
 func GetWriter(writerType string, settings map[string]string) (io.Writer, error) {
 	switch WriteType(writerType) {
 	case WriterTypeOs:
@@ -102,6 +115,10 @@ func GetFileWriter(settings map[string]string) (io.Writer, error) {
 		// true 日志文件名将使用本地时间
 		// false（默认值）时，日志文件名将使用 UTC 时间
 		LocalTime: true,
+		// 当日志文件滚动（即创建新的日志文件，并且旧的日志文件需要被归档或删除）时，旧的日志文件将被自动压缩。
+		// 压缩通常使用常见的压缩算法，如gzip、bzip2等。lumberjack包默认使用gzip进行压缩。
+		// 压缩后的文件通常会有一个.gz扩展名，例如app.log.1.gz。
+		Compress: true,
 	}
 
 	return writer, nil
