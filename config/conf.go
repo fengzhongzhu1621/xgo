@@ -20,9 +20,8 @@ type Logger struct {
 }
 
 type ServiceLogConfig struct {
-	Level         string
-	Dir           string
-	ForceToStdout bool
+	Level string
+	Dir   string
 }
 
 type Config struct {
