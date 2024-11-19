@@ -121,30 +121,23 @@ func (c *Cache) Exists(key gopkgcache.Key) bool {
 // obj: 目标对象，数据将被反序列化到这个对象中
 // retrieveFunc: 用于在缓存未命中时从数据源获取数据
 func (c *Cache) GetInto(key gopkgcache.Key, obj interface{}, retrieveFunc gopkgcache.RetrieveFunc) (err error) {
-	// 1. get from cache, hit, return
 	// 尝试从缓存中获取数据:
 	err = c.Get(key, obj)
 	if err == nil {
+		// 返回正常
 		return nil
 	}
 
-	// 2. if missing
-	// 2.1 check the guard
-	// 2.2 do retrieve
 	// 如果缓存未命中，调用 retrieveFunc 从数据源获取数据
 	// 确保在多个并发请求同时尝试获取同一个不存在的键时，只会执行一次数据获取操作。
 	data, err, _ := c.G.Do(key.Key(), func() (interface{}, error) {
 		ctx := context.TODO()
 		return retrieveFunc(ctx, key)
 	})
-	// 2.3 do retrieve fail, make guard and return
 	if err != nil {
-		// if retrieve fail, should wait for few seconds for the missing-retrieve
-		// c.makeGuard(key)
 		return
 	}
 
-	// 3. set to cache
 	// 将获取到的数据存入缓存
 	errNotImportant := c.Set(key, data, 0)
 	if errNotImportant != nil {
@@ -156,7 +149,6 @@ func (c *Cache) GetInto(key gopkgcache.Key, obj interface{}, retrieveFunc gopkgc
 	return c.copyTo(data, obj)
 }
 
-// Delete execute `del`
 func (c *Cache) Delete(key gopkgcache.Key) (err error) {
 	k := c.genKey(key.Key())
 
@@ -166,7 +158,6 @@ func (c *Cache) Delete(key gopkgcache.Key) (err error) {
 	return err
 }
 
-// Expire execute `expire`
 func (c *Cache) Expire(key gopkgcache.Key, duration time.Duration) error {
 	if duration == time.Duration(0) {
 		duration = c.defaultExpiration
@@ -177,7 +168,7 @@ func (c *Cache) Expire(key gopkgcache.Key, duration time.Duration) error {
 	return err
 }
 
-// BatchDelete execute `del` with pipeline 批量删除缓存中的多个键
+// BatchDelete 批量删除缓存中的多个键
 func (c *Cache) BatchDelete(keys []gopkgcache.Key) error {
 	// 生成完整的缓存键列表
 	newKeys := make([]string, 0, len(keys))
@@ -203,7 +194,6 @@ func (c *Cache) BatchDelete(keys []gopkgcache.Key) error {
 	return err
 }
 
-// BatchExpireWithTx execute `expire` with tx pipeline
 func (c *Cache) BatchExpireWithTx(keys []gopkgcache.Key, expiration time.Duration) error {
 	pipe := c.cli.TxPipeline()
 	ctx := context.TODO()
@@ -223,7 +213,7 @@ type KV struct {
 	Value string
 }
 
-// BatchGet execute `get` with pipeline 批量获取多个键的值
+// BatchGet 批量获取多个键的值
 func (c *Cache) BatchGet(keys []gopkgcache.Key) (map[gopkgcache.Key]string, error) {
 	pipe := c.cli.Pipeline()
 

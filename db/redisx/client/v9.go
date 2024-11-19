@@ -44,8 +44,7 @@ func InitRedisV9Client(ctx context.Context, cfg *RedisConfig) {
 			log.Fatalf("redis connect error: %s", err.Error())
 		} else {
 			log.Infof(
-				"redis connected "+
-					"%s [db=%d, dialTimeout=%s, readTimeout=%s, writeTimeout=%s, poolSize=%d, minIdleConns=%d, idleTimeout=%s]",
+				"redis connected %s [db=%d, dialTimeout=%s, readTimeout=%s, writeTimeout=%s, poolSize=%d, minIdleConns=%d, idleTimeout=%d]",
 				cfg.Host,
 				cfg.DB,
 				opts.DialTimeout,
