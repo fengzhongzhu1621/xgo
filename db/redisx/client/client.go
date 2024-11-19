@@ -20,9 +20,9 @@ const (
 	writeTimeout = 1
 	// 闲置超时 单位: s
 	idleTimeout = 3 * 60
-	// 连接池大小 / 核
+	// 连接池大小 * 核
 	poolSizeMultiple = 20
-	// 最小空闲连接数 / 核
+	// 最小空闲连接数 * 核
 	minIdleConnectionMultiple = 10
 )
 
