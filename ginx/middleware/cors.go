@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// CORS 处理跨域请求
+// CORS 处理跨域请求，如果不匹配规则则返回 403
 func CORS(allowedOrigins []string) gin.HandlerFunc {
 	return cors.New(cors.Config{
 		AllowOrigins:     allowedOrigins,
