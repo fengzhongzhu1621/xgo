@@ -7,6 +7,7 @@ const (
 	ClientIDKey        = "app_code"
 	ClientUsernameKey  = "username"
 	UserIDKey          = "bk_uid"
+	UserTokenKey       = "ticket"
 )
 
 const (
