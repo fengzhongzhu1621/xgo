@@ -6,9 +6,12 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/csrf"
 	adapter "github.com/gwatts/gin-adapter"
+	log "github.com/sirupsen/logrus"
 )
 
 func CSRF(secret string) gin.HandlerFunc {
+	log.Debug("Middleware: CSRF")
+
 	// 使用adapter.Wrap方法将csrf.Protect包装起来，以便在Gin框架中使用
 	return adapter.Wrap(
 		// csrf.Secure(false): 设置CSRF保护为非安全模式，这意味着即使是在HTTPS连接中，CSRF令牌也可以通过非加密的HTTP连接传输。在生产环境中，你应该将其设置为true
@@ -19,6 +22,8 @@ func CSRF(secret string) gin.HandlerFunc {
 }
 
 func CSRFToken(domain string) gin.HandlerFunc {
+	log.Debug("Middleware: CSRFToken")
+
 	return func(c *gin.Context) {
 		// 设置Cookie的SameSite属性为Lax，这意味着Cookie只会在从同一站点发送的（并且是GET类型的）请求中被发送。
 		c.SetSameSite(http.SameSiteLaxMode)
@@ -28,5 +33,7 @@ func CSRFToken(domain string) gin.HandlerFunc {
 		// * domain：设置Cookie的域名。
 		// * false, false：设置Cookie为非安全和非HttpOnly模式。
 		c.SetCookie("xgo-csrf-token", csrf.Token(c.Request), 0, "/", domain, false, false)
+
+		c.Next()
 	}
 }
