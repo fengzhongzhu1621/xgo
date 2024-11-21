@@ -131,6 +131,8 @@ github.com/codeskyblue/go-accesslog v0.0.0-20171215023101-6188d3bd9371 h1:dEBIva
 github.com/codeskyblue/go-accesslog v0.0.0-20171215023101-6188d3bd9371/go.mod h1:sgXnVxxZ1u72GAzc9s1SzpuPMxBDKfTg6F2PvDrPSJU=
 github.com/codeskyblue/openid-go v0.0.0-20160923065855-0d30842b2fb4 h1:66lzN78lwccK+BPztRgBiWCYzhlerQEVOh2oeBksu5I=
 github.com/codeskyblue/openid-go v0.0.0-20160923065855-0d30842b2fb4/go.mod h1:K/hSCtAHvnE9aM+LsYgVmgzPNFuWFdx6i9t6/3jNrZQ=
+github.com/coocood/freecache v1.2.4 h1:UdR6Yz/X1HW4fZOuH0Z94KwG851GWOSknua5VUbb/5M=
+github.com/coocood/freecache v1.2.4/go.mod h1:RBUWa/Cy+OHdfTGFEhEuE1pMCMX51Ncizj7rthiQ3vk=
 github.com/coreos/go-semver v0.3.0 h1:wkHLiw0WNATZnSG7epLsujiMCgPAc9xhjJ4tgnAxmfM=
 github.com/coreos/go-semver v0.3.0/go.mod h1:nnelYz7RCh+5ahJtPPxZlU+153eP4D4r3EedlOD2RNk=
 github.com/coreos/go-systemd/v22 v22.3.3-0.20220203105225-a9a7ef127534 h1:rtAn27wIbmOGUs7RIbVgPEjb31ehTVniDwPGXyMxm5U=
