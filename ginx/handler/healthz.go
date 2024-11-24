@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"github.com/fengzhongzhu1621/xgo/ginx/serializer"
 	"net/http"
 
 	"github.com/fengzhongzhu1621/xgo/config"
@@ -13,7 +14,7 @@ import (
 
 func NewHealthzHandleFunc(cfg *config.Config) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// 1. check database
+		// check database
 		defaultDBConfig := cfg.DatabaseMap["default"]
 		dbConfigs := []mysql.Database{defaultDBConfig}
 		for _, dbConfig := range dbConfigs {
@@ -33,7 +34,7 @@ func NewHealthzHandleFunc(cfg *config.Config) gin.HandlerFunc {
 			}
 		}
 
-		// 2. check redis
+		// check redis
 		var err error
 		var addr string
 		redisConfig, ok := cfg.RedisMap[redis.ModeStandalone]
@@ -54,6 +55,6 @@ func NewHealthzHandleFunc(cfg *config.Config) gin.HandlerFunc {
 			return
 		}
 
-		c.String(http.StatusOK, "ok")
+		c.JSON(http.StatusOK, serializer.HealthResponse{Healthy: true})
 	}
 }

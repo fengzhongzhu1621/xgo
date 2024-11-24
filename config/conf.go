@@ -28,6 +28,8 @@ type Config struct {
 	// 调试开关
 	Debug bool
 
+	EnableSwagger bool
+
 	Server Server
 
 	Sentry Sentry

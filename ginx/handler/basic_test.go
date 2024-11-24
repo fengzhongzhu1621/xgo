@@ -1,11 +1,10 @@
-package handler_test
+package handler
 
 import (
 	"net/http"
 	"testing"
 
 	"github.com/fengzhongzhu1621/xgo/ginx"
-	"github.com/fengzhongzhu1621/xgo/ginx/handler"
 	"github.com/steinfletcher/apitest"
 	"github.com/stretchr/testify/assert"
 )
@@ -15,14 +14,14 @@ func TestPing(t *testing.T) {
 
 	// 注册路由
 	r := ginx.SetupRouter()
-	r.GET("/ping", handler.Ping)
+	r.GET("/ping", Ping)
 
 	// 模拟调用
 	apitest.New().
 		Handler(r).
 		Get("/ping").
 		Expect(t).
-		Body(`{"message":"pong"}`).
+		Body(`pong`).
 		Status(http.StatusOK).
 		End()
 }
@@ -31,7 +30,7 @@ func TestVersion(t *testing.T) {
 	t.Parallel()
 
 	r := ginx.SetupRouter()
-	r.GET("/version", handler.Version)
+	r.GET("/version", Version)
 
 	apitest.New().
 		Handler(r).

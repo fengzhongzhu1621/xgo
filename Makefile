@@ -186,4 +186,5 @@ godoc: ## show doc
 	godoc -http=127.0.0.1:6060 -goroot="."
 
 docker-build: ## build docker image
-	docker build -f ./Dockerfile -t xgo:${VERSION} .
+#	docker build -f ./Dockerfile -t xgo:${VERSION} .
+	docker build -f ./Dockerfile -t xgo:latest .

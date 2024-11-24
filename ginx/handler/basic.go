@@ -10,9 +10,7 @@ import (
 )
 
 func Ping(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"message": "pong",
-	})
+	c.String(http.StatusOK, "pong")
 }
 
 func Version(c *gin.Context) {

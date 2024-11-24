@@ -56,12 +56,9 @@ require (
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/cloudwego/base64x v0.1.4 // indirect
 	github.com/cloudwego/iasm v0.2.0 // indirect
-	github.com/coocood/freecache v1.2.4 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
-	github.com/gin-contrib/cors v1.7.2 // indirect
-	github.com/gin-contrib/sessions v1.0.1 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
@@ -69,7 +66,6 @@ require (
 	github.com/go-openapi/jsonreference v0.19.6 // indirect
 	github.com/go-openapi/spec v0.20.4 // indirect
 	github.com/go-openapi/swag v0.19.15 // indirect
-	github.com/go-redis/cache/v9 v9.0.0 // indirect
 	github.com/go-task/slim-sprig/v3 v3.0.0 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
@@ -79,10 +75,8 @@ require (
 	github.com/googleapis/enterprise-certificate-proxy v0.3.4 // indirect
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/gorilla/context v1.1.2 // indirect
-	github.com/gorilla/csrf v1.7.2 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
 	github.com/gorilla/securecookie v1.1.2 // indirect
-	github.com/gwatts/gin-adapter v1.0.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
@@ -101,7 +95,6 @@ require (
 	github.com/prometheus/common v0.37.0 // indirect
 	github.com/prometheus/procfs v0.8.0 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
-	github.com/samber/lo v1.47.0 // indirect
 	github.com/smarty/assertions v1.15.0 // indirect
 	github.com/swaggo/swag v1.8.12 // indirect
 	github.com/syndtr/goleveldb v1.0.0 // indirect
@@ -184,6 +177,7 @@ require (
 	github.com/codeskyblue/dockerignore v0.0.0-20151214070507-de82dee623d9
 	github.com/codeskyblue/go-accesslog v0.0.0-20171215023101-6188d3bd9371
 	github.com/codeskyblue/openid-go v0.0.0-20160923065855-0d30842b2fb4
+	github.com/coocood/freecache v1.2.4
 	github.com/dablelv/cyan v0.0.54
 	github.com/deckarep/golang-set v1.8.0
 	github.com/dgrijalva/jwt-go/v4 v4.0.0-preview1
@@ -191,7 +185,10 @@ require (
 	github.com/duke-git/lancet/v2 v2.3.2
 	github.com/fork2fix/go-plist v0.0.0-20181126021357-36960be5e636
 	github.com/getsentry/sentry-go v0.29.0
+	github.com/gin-contrib/cors v1.7.2
+	github.com/gin-contrib/sessions v1.0.1
 	github.com/go-redis/cache/v8 v8.4.4
+	github.com/go-redis/cache/v9 v9.0.0
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/go-resty/resty/v2 v2.15.3
 	github.com/go-sql-driver/mysql v1.8.1
@@ -201,9 +198,11 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/golang/mock v1.6.0
 	github.com/google/uuid v1.6.0
+	github.com/gorilla/csrf v1.7.2
 	github.com/gorilla/handlers v1.5.2
 	github.com/gorilla/mux v1.8.1
 	github.com/gorilla/sessions v1.3.0
+	github.com/gwatts/gin-adapter v1.0.0
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/hashicorp/go-version v1.6.0
 	github.com/jinzhu/copier v0.4.0
@@ -225,6 +224,7 @@ require (
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/rogpeppe/fastuuid v1.2.0
 	github.com/russross/blackfriday v1.6.0
+	github.com/samber/lo v1.47.0
 	github.com/shogo82148/androidbinary v0.0.0-20180627093851-01c4bfa8b3b5
 	github.com/sirupsen/logrus v1.9.3
 	github.com/smartystreets/goconvey v1.8.1

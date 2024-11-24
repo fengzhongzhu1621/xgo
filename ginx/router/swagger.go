@@ -9,7 +9,7 @@ import (
 
 // RegisterSwagger 注册文档
 func RegisterSwagger(cfg *config.Config, router *gin.Engine) {
-	if cfg.Debug {
+	if cfg.EnableSwagger {
 		url := ginSwagger.URL("/swagger/doc.json")
 		router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 	}
