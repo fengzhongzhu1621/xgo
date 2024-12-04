@@ -10,6 +10,20 @@ import (
 	"github.com/magiconair/properties/assert"
 )
 
+// longRunningOperation 子协程，接收到截止信号后，停止运行。
+func longRunningOperation(ctx context.Context) error {
+	for {
+		select {
+		case <-ctx.Done():
+			// 返回错误信息
+			return ctx.Err()
+		default:
+
+		}
+	}
+
+}
+
 func TestWithCancel(t *testing.T) {
 	// 创建可取消的Context
 	ctx, cancel := context.WithCancel(context.Background())
@@ -28,7 +42,7 @@ func TestWithCancel(t *testing.T) {
 	}()
 
 	time.Sleep(3 * time.Second)
-	// // 取消goroutine，子协成会接收到取消通知
+	// 取消goroutine，子协成会接收到取消通知
 	cancel()
 	time.Sleep(2 * time.Second) // 等待 子goroutine 退出
 }
@@ -71,6 +85,7 @@ func TestWithTimeout(t *testing.T) {
 		}
 	}()
 
+	// 超时控制
 	time.Sleep(6 * time.Second) // 等待超过超时时间
 }
 
@@ -145,4 +160,23 @@ func TestWaitGroup(t *testing.T) {
 
 	// 执行多个任务
 	WorkerPool(ctx, tasks)
+}
+
+func TestGetPriority(t *testing.T) {
+	ctx := WithPriority(context.Background(), 2)
+
+	priority, ok := GetPriority(ctx)
+	if !ok {
+		priority = 0 // 默认优先级
+	}
+
+	// 根据优先级执行不同操作
+	switch priority {
+	case 1:
+		fmt.Println("高优先级")
+	case 2:
+		fmt.Println("中优先级")
+	default:
+		fmt.Println("低优先级")
+	}
 }
