@@ -1,9 +1,9 @@
 package bind
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+	"net/http"
+	"testing"
 )
 
 // 定义需要绑定请求参数的结构体
@@ -12,7 +12,7 @@ type User struct {
 	Password string `form:"password" json:"password" binding:"required"`
 }
 
-func TestShouldBind() {
+func TestShouldBind(t *testing.T) {
 	router := gin.Default()
 
 	// 使用ShouldBind方法自动绑定请求参数到结构体，并进行校验

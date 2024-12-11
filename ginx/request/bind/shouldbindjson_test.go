@@ -1,9 +1,9 @@
 package bind
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+	"net/http"
+	"testing"
 )
 
 type RequestData struct {
@@ -11,7 +11,7 @@ type RequestData struct {
 	Email string `json:"email" binding:"required,email"`
 }
 
-func TestShouldBindJSON() {
+func TestShouldBindJSON(t *testing.T) {
 	r := gin.Default()
 
 	r.POST("/submit", func(c *gin.Context) {
