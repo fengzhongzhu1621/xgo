@@ -1,3 +1,6 @@
+# 简介
+用于在 API 边界和进程之间传递截止时间、取消信号以及请求范围的值。
+
 ```go
 type Context interface {
     Deadline() (deadline time.Time, ok bool)
