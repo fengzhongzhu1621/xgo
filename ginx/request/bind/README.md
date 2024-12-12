@@ -9,6 +9,13 @@ type User struct {
     Name  string `json:"name" binding:"required"`
     Email string `json:"email" binding:"required,email"`
 }
+
+binding:"required"：表示该字段为必填项
+binding:"-"：忽略该字段，不进行绑定
+validate:"max=10"：表示该字段的值不能超过10
+validate:"min=1"：表示该字段的值不能小于1
+validate:"email"：表示该字段必须是合法的邮箱格式
+
 ```
 
 # validate 标签

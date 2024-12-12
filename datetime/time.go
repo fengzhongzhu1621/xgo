@@ -31,3 +31,11 @@ func TodayStartTimestamp() int64 {
 	start := time.Date(year, month, day, 0, 0, 0, 0, now.Location())
 	return start.Unix()
 }
+
+// TimeStampToLocalString 时间戳转换为本地时间字符串格式
+func TimeStampToLocalString(timestamp int64, format string) string {
+	t := time.Unix(timestamp, 0)
+	localTime := t.Local()
+
+	return localTime.Format(format)
+}
