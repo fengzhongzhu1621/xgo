@@ -34,6 +34,9 @@ func TodayStartTimestamp() int64 {
 
 // TimeStampToLocalString 时间戳转换为本地时间字符串格式
 func TimeStampToLocalString(timestamp int64, format string) string {
+	if timestamp == 0 {
+		return ""
+	}
 	t := time.Unix(timestamp, 0)
 	localTime := t.Local()
 
