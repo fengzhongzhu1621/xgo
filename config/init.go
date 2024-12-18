@@ -28,7 +28,7 @@ func SetCfgFile() {
 	viper.SetConfigFile(cfgFile)
 }
 
-// GetcfgFile 获取配置文件
+// GetCfgFile 获取配置文件
 func GetCfgFile() string {
 	return cfgFile
 }
