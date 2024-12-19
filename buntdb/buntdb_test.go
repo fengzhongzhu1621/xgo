@@ -1555,10 +1555,10 @@ func TestIndexCompare(t *testing.T) {
 	if !compare.CompareInt("-1", "2") {
 		t.Fatalf("expected true, got false")
 	}
-	if !compare.IndexUint("10", "25") {
+	if !compare.CompareUint("10", "25") {
 		t.Fatalf("expected true, got false")
 	}
-	if !compare.IndexBinary("Hello", "hello") {
+	if !compare.CompareBinary("Hello", "hello") {
 		t.Fatalf("expected true, got false")
 	}
 	if compare.CompareString("hello", "hello") {
