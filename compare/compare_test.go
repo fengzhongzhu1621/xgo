@@ -1,4 +1,4 @@
-package stringutils
+package compare
 
 import (
 	"reflect"
@@ -91,4 +91,20 @@ func TestCompareStringSliceReflect(t *testing.T) {
 
 	// 其他类型的值（numbers, bools, strings, channels）如果满足go的==操作符，则是深度相等的
 	// 要注意不是所有的值都深度相等于自己，例如函数，以及嵌套包含这些值的结构体，数组等
+}
+
+func BenchmarkCompareStringSliceReflect(b *testing.B) {
+	sliceA := []string{"a", "b", "c", "d", "e"}
+	sliceB := []string{"e", "d", "c", "b", "a"}
+	for n := 0; n < b.N; n++ {
+		CompareStringSliceReflect(sliceA, sliceB)
+	}
+}
+
+func BenchmarkCompareStringSlice(b *testing.B) {
+	sliceA := []string{"a", "b", "c", "d", "e"}
+	sliceB := []string{"e", "d", "c", "b", "a"}
+	for n := 0; n < b.N; n++ {
+		CompareStringSlice(sliceA, sliceB)
+	}
 }

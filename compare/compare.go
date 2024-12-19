@@ -1,4 +1,4 @@
-package stringutils
+package compare
 
 import (
 	"reflect"
@@ -7,11 +7,11 @@ import (
 	"github.com/tidwall/gjson"
 )
 
-// IndexString is a helper function that return true if 'a' is less than 'b'.
+// CompareString is a helper function that return true if 'a' is less than 'b'.
 // This is a case-insensitive comparison. Use the IndexBinary() for comparing
 // case-sensitive strings.
 // 区分大小写
-func IndexString(a, b string) bool {
+func CompareString(a, b string) bool {
 	for i := 0; i < len(a) && i < len(b); i++ {
 		if a[i] >= 'A' && a[i] <= 'Z' {
 			if b[i] >= 'A' && b[i] <= 'Z' {
@@ -58,8 +58,8 @@ func IndexBinary(a, b string) bool {
 	return a < b
 }
 
-// IndexInt is a helper function that returns true if 'a' is less than 'b'.
-func IndexInt(a, b string) bool {
+// CompareInt is a helper function that returns true if 'a' is less than 'b'.
+func CompareInt(a, b string) bool {
 	ia, _ := strconv.ParseInt(a, 10, 64)
 	ib, _ := strconv.ParseInt(b, 10, 64)
 	return ia < ib
@@ -74,10 +74,10 @@ func IndexUint(a, b string) bool {
 	return ia < ib
 }
 
-// IndexFloat is a helper function that returns true if 'a' is less than 'b'.
+// CompareFloat is a helper function that returns true if 'a' is less than 'b'.
 // This compares float64s that are added to the database using the
 // Float() conversion function.
-func IndexFloat(a, b string) bool {
+func CompareFloat(a, b string) bool {
 	ia, _ := strconv.ParseFloat(a, 64)
 	ib, _ := strconv.ParseFloat(b, 64)
 	return ia < ib
@@ -86,17 +86,17 @@ func IndexFloat(a, b string) bool {
 // IndexJSON provides for the ability to create an index on any JSON field.
 // When the field is a string, the comparison will be case-insensitive.
 // It returns a helper function used by CreateIndex.
-func IndexJSON(path string) func(a, b string) bool {
+func CompareJSON(path string) func(a, b string) bool {
 	return func(a, b string) bool {
 		return gjson.Get(a, path).Less(gjson.Get(b, path), false)
 	}
 }
 
-// IndexJSONCaseSensitive provides for the ability to create an index on
+// CompareJSONCaseSensitive provides for the ability to create an index on
 // any JSON field.
 // When the field is a string, the comparison will be case-sensitive.
 // It returns a helper function used by CreateIndex.
-func IndexJSONCaseSensitive(path string) func(a, b string) bool {
+func CompareJSONCaseSensitive(path string) func(a, b string) bool {
 	return func(a, b string) bool {
 		return gjson.Get(a, path).Less(gjson.Get(b, path), true)
 	}

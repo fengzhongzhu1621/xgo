@@ -14,8 +14,8 @@ import (
 	"time"
 
 	"github.com/fengzhongzhu1621/xgo"
+	"github.com/fengzhongzhu1621/xgo/compare"
 	"github.com/fengzhongzhu1621/xgo/datetime"
-	stringutils "github.com/fengzhongzhu1621/xgo/str/stringutils"
 	"github.com/tidwall/assert"
 	"github.com/tidwall/lotsa"
 )
@@ -155,7 +155,7 @@ func TestMutatingIterator(t *testing.T) {
 	db := testOpen(t)
 	defer testClose(db)
 	count := 1000
-	if err := db.CreateIndex("ages", "user:*:age", stringutils.IndexInt); err != nil {
+	if err := db.CreateIndex("ages", "user:*:age", compare.CompareInt); err != nil {
 		t.Fatal(err)
 	}
 
@@ -199,7 +199,7 @@ func TestCaseInsensitiveIndex(t *testing.T) {
 		opts := &IndexOptions{
 			CaseInsensitiveKeyMatching: true,
 		}
-		return tx.CreateIndexOptions("ages", "User:*:age", opts, stringutils.IndexInt)
+		return tx.CreateIndexOptions("ages", "User:*:age", opts, compare.CompareInt)
 	}); err != nil {
 		t.Fatal(err)
 	}
@@ -270,7 +270,7 @@ func TestIndexTransaction(t *testing.T) {
 		tx.Set("1", "3", nil)
 		tx.Set("2", "2", nil)
 		tx.Set("3", "1", nil)
-		if err := tx.CreateIndex("idx1", "*", stringutils.IndexInt); err != nil {
+		if err := tx.CreateIndex("idx1", "*", compare.CompareInt); err != nil {
 			return err
 		}
 		if err := ascendEqual(tx, "idx1", []string{"3", "1", "2", "2", "1", "3"}); err != nil {
@@ -333,7 +333,7 @@ func TestIndexTransaction(t *testing.T) {
 		// add item 1 and 2, add index 2 and 3, test index 2 and 3
 		return db.Update(func(tx *Tx) error {
 			tx.Delete("3")
-			tx.CreateIndex("idx2", "*", stringutils.IndexInt)
+			tx.CreateIndex("idx2", "*", compare.CompareInt)
 			tx.Set("4", "0", nil)
 			if err := ascendEqual(tx, "idx1", []string{"4", "0", "2", "2", "1", "3"}); err != nil {
 				return fmt.Errorf("err: %v", err)
@@ -350,8 +350,8 @@ func TestIndexTransaction(t *testing.T) {
 			}
 			tx.Set("1", "3", nil)
 			tx.Set("2", "2", nil)
-			tx.CreateIndex("idx1", "*", stringutils.IndexInt)
-			tx.CreateIndex("idx2", "*", stringutils.IndexInt)
+			tx.CreateIndex("idx1", "*", compare.CompareInt)
+			tx.CreateIndex("idx2", "*", compare.CompareInt)
 			if err := ascendEqual(tx, "idx1", []string{"2", "2", "1", "3"}); err != nil {
 				return fmt.Errorf("err: %v", err)
 			}
@@ -407,7 +407,7 @@ func TestDeleteAll(t *testing.T) {
 		tx.Set("hello3", "planet3", nil)
 		return nil
 	})
-	db.CreateIndex("all", "*", stringutils.IndexString)
+	db.CreateIndex("all", "*", compare.CompareString)
 	db.Update(func(tx *Tx) error {
 		tx.Set("hello1", "planet1.1", nil)
 		tx.DeleteAll()
@@ -440,7 +440,7 @@ func TestDeleteAll(t *testing.T) {
 	defer testClose(db)
 	res = ""
 	res2 = ""
-	db.CreateIndex("all", "*", stringutils.IndexString)
+	db.CreateIndex("all", "*", compare.CompareString)
 	db.View(func(tx *Tx) error {
 		tx.Ascend("", func(key, val string) bool {
 			res += key + ":" + val + "\n"
@@ -515,7 +515,7 @@ func TestAscendEqual(t *testing.T) {
 				return err
 			}
 		}
-		return tx.CreateIndex("num", "*", stringutils.IndexInt)
+		return tx.CreateIndex("num", "*", compare.CompareInt)
 	}); err != nil {
 		t.Fatal(err)
 	}
@@ -567,7 +567,7 @@ func TestDescendEqual(t *testing.T) {
 				return err
 			}
 		}
-		return tx.CreateIndex("num", "*", stringutils.IndexInt)
+		return tx.CreateIndex("num", "*", compare.CompareInt)
 	}); err != nil {
 		t.Fatal(err)
 	}
@@ -801,7 +801,7 @@ func TestVariousTx(t *testing.T) {
 	if err := db.CreateIndex("blank", "*", nil); err != nil {
 		t.Fatal(err)
 	}
-	if err := db.CreateIndex("real", "*", stringutils.IndexInt); err != nil {
+	if err := db.CreateIndex("real", "*", compare.CompareInt); err != nil {
 		t.Fatal(err)
 	}
 	// test scanning
@@ -1069,7 +1069,7 @@ func TestNearby(t *testing.T) {
 
 func Example_descKeys() {
 	db, _ := Open(":memory:")
-	db.CreateIndex("name", "*", stringutils.IndexString)
+	db.CreateIndex("name", "*", compare.CompareString)
 	db.Update(func(tx *Tx) error {
 		tx.Set("user:100:first", "Tom", nil)
 		tx.Set("user:100:last", "Johnson", nil)
@@ -1131,7 +1131,7 @@ func Example_descKeys() {
 
 func ExampleDesc() {
 	db, _ := Open(":memory:")
-	db.CreateIndex("last_name_age", "*", stringutils.IndexJSON("name.last"), stringutils.Desc(stringutils.IndexJSON("age")))
+	db.CreateIndex("last_name_age", "*", compare.CompareJSON("name.last"), compare.Desc(compare.CompareJSON("age")))
 	db.Update(func(tx *Tx) error {
 		tx.Set("1", `{"name":{"first":"Tom","last":"Johnson"},"age":38}`, nil)
 		tx.Set("2", `{"name":{"first":"Janet","last":"Prichard"},"age":47}`, nil)
@@ -1160,8 +1160,8 @@ func ExampleDesc() {
 
 func ExampleDB_CreateIndex_jSON() {
 	db, _ := Open(":memory:")
-	db.CreateIndex("last_name", "*", stringutils.IndexJSON("name.last"))
-	db.CreateIndex("age", "*", stringutils.IndexJSON("age"))
+	db.CreateIndex("last_name", "*", compare.CompareJSON("name.last"))
+	db.CreateIndex("age", "*", compare.CompareJSON("age"))
 	db.Update(func(tx *Tx) error {
 		tx.Set("1", `{"name":{"first":"Tom","last":"Johnson"},"age":38}`, nil)
 		tx.Set("2", `{"name":{"first":"Janet","last":"Prichard"},"age":47}`, nil)
@@ -1206,7 +1206,7 @@ func ExampleDB_CreateIndex_jSON() {
 
 func ExampleDB_CreateIndex_strings() {
 	db, _ := Open(":memory:")
-	db.CreateIndex("name", "*", stringutils.IndexString)
+	db.CreateIndex("name", "*", compare.CompareString)
 	db.Update(func(tx *Tx) error {
 		tx.Set("1", "Tom", nil)
 		tx.Set("2", "Janet", nil)
@@ -1235,7 +1235,7 @@ func ExampleDB_CreateIndex_strings() {
 
 func ExampleDB_CreateIndex_ints() {
 	db, _ := Open(":memory:")
-	db.CreateIndex("age", "*", stringutils.IndexInt)
+	db.CreateIndex("age", "*", compare.CompareInt)
 	db.Update(func(tx *Tx) error {
 		tx.Set("1", "30", nil)
 		tx.Set("2", "51", nil)
@@ -1263,7 +1263,7 @@ func ExampleDB_CreateIndex_ints() {
 }
 func ExampleDB_CreateIndex_multipleFields() {
 	db, _ := Open(":memory:")
-	db.CreateIndex("last_name_age", "*", stringutils.IndexJSON("name.last"), stringutils.IndexJSON("age"))
+	db.CreateIndex("last_name_age", "*", compare.CompareJSON("name.last"), compare.CompareJSON("age"))
 	db.Update(func(tx *Tx) error {
 		tx.Set("1", `{"name":{"first":"Tom","last":"Johnson"},"age":38}`, nil)
 		tx.Set("2", `{"name":{"first":"Janet","last":"Prichard"},"age":47}`, nil)
@@ -1453,7 +1453,7 @@ func TestDatabaseFormat(t *testing.T) {
 func TestInsertsAndDeleted(t *testing.T) {
 	db := testOpen(t)
 	defer testClose(db)
-	if err := db.CreateIndex("any", "*", stringutils.IndexString); err != nil {
+	if err := db.CreateIndex("any", "*", compare.CompareString); err != nil {
 		t.Fatal(err)
 	}
 	if err := db.CreateSpatialIndex("rect", "*", IndexRect); err != nil {
@@ -1549,31 +1549,31 @@ func TestDeleteDoesNotMisuseIndex(t *testing.T) {
 
 // test index compare functions
 func TestIndexCompare(t *testing.T) {
-	if !stringutils.IndexFloat("1.5", "1.6") {
+	if !compare.CompareFloat("1.5", "1.6") {
 		t.Fatalf("expected true, got false")
 	}
-	if !stringutils.IndexInt("-1", "2") {
+	if !compare.CompareInt("-1", "2") {
 		t.Fatalf("expected true, got false")
 	}
-	if !stringutils.IndexUint("10", "25") {
+	if !compare.IndexUint("10", "25") {
 		t.Fatalf("expected true, got false")
 	}
-	if !stringutils.IndexBinary("Hello", "hello") {
+	if !compare.IndexBinary("Hello", "hello") {
 		t.Fatalf("expected true, got false")
 	}
-	if stringutils.IndexString("hello", "hello") {
+	if compare.CompareString("hello", "hello") {
 		t.Fatalf("expected false, got true")
 	}
-	if stringutils.IndexString("Hello", "hello") {
+	if compare.CompareString("Hello", "hello") {
 		t.Fatalf("expected false, got true")
 	}
-	if stringutils.IndexString("hello", "Hello") {
+	if compare.CompareString("hello", "Hello") {
 		t.Fatalf("expected false, got true")
 	}
-	if !stringutils.IndexString("gello", "Hello") {
+	if !compare.CompareString("gello", "Hello") {
 		t.Fatalf("expected true, got false")
 	}
-	if stringutils.IndexString("Hello", "gello") {
+	if compare.CompareString("Hello", "gello") {
 		t.Fatalf("expected false, got true")
 	}
 	if Rect(IndexRect("[1 2 3 4],[5 6 7 8]")) != "[1 2 3 4],[5 6 7 8]" {
@@ -1811,7 +1811,7 @@ func TestVariousIndexOperations(t *testing.T) {
 		t.Fatal(err)
 	}
 	// test creating an index after adding items. use pattern matching. have some items in the match and some not.
-	if err := db.CreateIndex("string", "user:*", stringutils.IndexString); err != nil {
+	if err := db.CreateIndex("string", "user:*", compare.CompareString); err != nil {
 		t.Fatal(err)
 	}
 	// test creating a spatial index after adding items. use pattern matching. have some items in the match and some not.
@@ -1867,7 +1867,7 @@ func TestBasic(t *testing.T) {
 	defer testClose(db)
 
 	// create a simple index
-	if err := db.CreateIndex("users", "fun:user:*", stringutils.IndexString); err != nil {
+	if err := db.CreateIndex("users", "fun:user:*", compare.CompareString); err != nil {
 		t.Fatal(err)
 	}
 
@@ -2031,7 +2031,7 @@ func TestIndexAscend(t *testing.T) {
 	defer testClose(db)
 
 	// create a simple index
-	if err := db.CreateIndex("usr", "usr:*", stringutils.IndexInt); err != nil {
+	if err := db.CreateIndex("usr", "usr:*", compare.CompareInt); err != nil {
 		t.Fatal(err)
 	}
 	if err := db.Update(func(tx *Tx) error {
@@ -2502,10 +2502,10 @@ func Benchmark_Descend_10000(t *testing.B) {
 }
 
 /*
-func Benchmark_Spatial_2D(t *testing.B) {
-	N := 100000
-	db, _, _ := benchOpenFillData(t, N, true, true, false, true, 100)
-	defer benchClose(t, false, db)
+	func Benchmark_Spatial_2D(t *testing.B) {
+		N := 100000
+		db, _, _ := benchOpenFillData(t, N, true, true, false, true, 100)
+		defer benchClose(t, false, db)
 
 }
 */
@@ -2617,10 +2617,10 @@ func TestJSONIndex(t *testing.T) {
 	db := testOpen(t)
 	defer testClose(db)
 
-	_ = db.CreateIndex("last_name", "*", stringutils.IndexJSON("name.last"))
-	_ = db.CreateIndex("last_name_cs", "*", stringutils.IndexJSONCaseSensitive("name.last"))
-	_ = db.CreateIndex("age", "*", stringutils.IndexJSON("age"))
-	_ = db.CreateIndex("student", "*", stringutils.IndexJSON("student"))
+	_ = db.CreateIndex("last_name", "*", compare.CompareJSON("name.last"))
+	_ = db.CreateIndex("last_name_cs", "*", compare.CompareJSONCaseSensitive("name.last"))
+	_ = db.CreateIndex("age", "*", compare.CompareJSON("age"))
+	_ = db.CreateIndex("student", "*", compare.CompareJSON("student"))
 	_ = db.Update(func(tx *Tx) error {
 		_, _, _ = tx.Set("1", `{"name":{"first":"Tom","last":"Johnson"},"age":38,"student":false}`, nil)
 		_, _, _ = tx.Set("2", `{"name":{"first":"Janet","last":"Prichard"},"age":47,"student":true}`, nil)
