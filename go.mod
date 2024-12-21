@@ -68,7 +68,6 @@ require (
 	github.com/go-openapi/swag v0.19.15 // indirect
 	github.com/go-task/slim-sprig/v3 v3.0.0 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
-	github.com/golang-cz/devslog v0.0.11 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/pprof v0.0.0-20241029153458-d1b30febd7db // indirect
@@ -196,6 +195,7 @@ require (
 	github.com/go-yaml/yaml v2.1.0+incompatible
 	github.com/gofrs/uuid v4.4.0+incompatible
 	github.com/goji/httpauth v0.0.0-20160601135302-2da839ab0f4d
+	github.com/golang-cz/devslog v0.0.11
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/golang/mock v1.6.0
 	github.com/google/uuid v1.6.0

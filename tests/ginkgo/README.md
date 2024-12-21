@@ -14,6 +14,11 @@ ginkgo generate book
 # Describe
 Describe块用于组织Specs，将一个或多个测试例归类
 
+Ordered: 测试套件中的测试用例将按照它们在代码中出现的顺序执行
+```go
+var _ = Describe("Account", Ordered, func() {
+```
+
 ## BeforeEach
 会在每个测试用例（It 语句）执行之前运行。它通常用于设置测试环境，例如初始化变量、创建对象等。如果有多个 BeforeEach 函数，它们会按照声明的顺序依次执行
 
@@ -64,7 +69,7 @@ ginkgo
 
 # 运行其它目录中的测试
 ginkgo /path/to/package /path/to/other/package ...
- 
+
 # 递归运行所有子目录中的测试
 ginkgo -r ...
 
