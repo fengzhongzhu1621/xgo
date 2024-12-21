@@ -29,12 +29,18 @@ func TestScopes(t *testing.T) {
 
 	createStudent(db, &stu)
 
-	// 查询一条数据
-	var id = stu.Id
-	row := getStudent2(db, id)
+	// 查询一条数据，支持分页
+	var id2 = stu.Id
+	row := getStudent2(db, id2)
+	assert.Equal(t, row.Name, "bob")
+
+	// 查询一条数据，支持分页
+	var id3 = stu.Id
+	row = getStudent3(db, id3)
 	assert.Equal(t, row.Name, "bob")
 }
 
+// getStudent2 使用 Scopes 支持分页
 func getStudent2(db *gorm.DB, id int) *Student {
 	var student Student
 	// 根据主键查询
@@ -44,5 +50,17 @@ func getStudent2(db *gorm.DB, id int) *Student {
 	if result.Error != nil {
 		log.Fatal(result.Error)
 	}
+	return &student
+}
+
+func getStudent3(db *gorm.DB, id int) *Student {
+	var student Student
+
+	pagination := Pagination{
+		page:     0,
+		pageSize: 20,
+	}
+	db.Clauses(&pagination).Find(&student, "id = ?", id)
+
 	return &student
 }

@@ -34,3 +34,24 @@ func TestReverseString(t *testing.T) {
 		})
 	}
 }
+
+func BenchmarkReverseReflectSlice(b *testing.B) {
+	names := []string{"a", "b", "c", "d", "e", "f", "g"}
+	for i := 0; i < b.N; i++ {
+		ReflectReverseSlice(names)
+	}
+}
+
+func BenchmarkReverseSlice(b *testing.B) {
+	names := []string{"a", "b", "c", "d", "e", "f", "g"}
+	for i := 0; i < b.N; i++ {
+		ReverseSlice(names)
+	}
+}
+
+func BenchmarkReverseSliceNew(b *testing.B) {
+	names := []string{"a", "b", "c", "d", "e", "f", "g"}
+	for i := 0; i < b.N; i++ {
+		ReverseSliceGetNew(names)
+	}
+}
