@@ -29,6 +29,7 @@ func GetSLogger(name string) *slog.Logger {
 	return slog.Default()
 }
 
+// toSlogLevel 将字符串转换为 slog 的日志级别
 func toSlogLevel(level string) (slog.Level, error) {
 	switch strings.ToUpper(level) {
 	case "DEBUG":

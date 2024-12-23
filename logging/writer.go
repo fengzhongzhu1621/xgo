@@ -12,6 +12,7 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
+// NewSlogWriter 返回日志的输出
 func NewSlogWriter(writerType string, settings map[string]string) (io.Writer, error) {
 	switch writerType {
 	case "stdout":
