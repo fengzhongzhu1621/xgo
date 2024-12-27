@@ -9,7 +9,7 @@ import (
 	"golang.org/x/exp/rand"
 )
 
-func TestCols(t *testing.T) {
+func TestFind(t *testing.T) {
 	var (
 		err        error
 		findResult = make([]XormCardM, 0)
