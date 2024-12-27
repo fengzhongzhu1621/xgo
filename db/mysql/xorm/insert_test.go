@@ -2,9 +2,8 @@ package xorm
 
 import (
 	"fmt"
-	"testing"
-
 	"golang.org/x/exp/rand"
+	"testing"
 )
 
 func TestInsertOne(t *testing.T) {
@@ -13,6 +12,7 @@ func TestInsertOne(t *testing.T) {
 	)
 	dbClient := GetDefaultXormDBClient()
 	xormEngine := dbClient.DB
+	defer xormEngine.Close()
 
 	cardS := &XormCardS{}
 	cardM := &XormCardM{}
@@ -54,4 +54,29 @@ func TestInsertOne(t *testing.T) {
 	if affected != 1 || err != nil {
 		panic(fmt.Sprintf("Failed to insert cardS, got (%d) row affected and/or error (%s)", affected, err))
 	}
+}
+
+func TestInsert(t *testing.T) {
+	dbClient := GetDefaultXormDBClient()
+	engine := dbClient.DB
+	defer engine.Close()
+
+	_ = engine.Sync2(new(XormUser4))
+
+	// 插入单个用户
+	newUser := &XormUser4{
+		Name:  "username_a",
+		Age:   30,
+		Email: "a@example.com",
+	}
+	affected, _ := engine.Insert(newUser)
+	fmt.Printf("插入了 %d 条记录，新用户的 ID 是 %d\n", affected, newUser.Id)
+
+	// 插入多个用户
+	users := []XormUser4{
+		{Name: "username_b", Age: 25, Email: "a@example.com"},
+		{Name: "username_c", Age: 28, Email: "b@example.com"},
+	}
+	affected, _ = engine.Insert(&users)
+	fmt.Printf("批量插入了 %d 条记录\n", affected)
 }

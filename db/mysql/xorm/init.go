@@ -16,7 +16,7 @@ var (
 
 var defaultXormDBClientOnce sync.Once
 
-// InitXormDBClients 初始化 db 连接，只能初始化一次
+// InitXormDBClient 初始化 db 连接，只能初始化一次
 func InitXormDBClient(dbConfig *mysql.Database) {
 	if DefaultXormDBClient == nil {
 		defaultXormDBClientOnce.Do(func() {
