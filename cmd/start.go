@@ -2,14 +2,16 @@ package cmd
 
 import (
 	"context"
+
 	"github.com/fengzhongzhu1621/xgo/ginx"
 
 	"github.com/fengzhongzhu1621/xgo/config"
+	"github.com/fengzhongzhu1621/xgo/config/run"
 	"github.com/fengzhongzhu1621/xgo/ginx/server"
 )
 
 func Init() {
-
+	run.InitDatabase()
 }
 
 func Start() {

@@ -11,6 +11,7 @@ var rootCmd = &cobra.Command{
 	Short: "xgo demo",
 	Run: func(cmd *cobra.Command, args []string) {
 		log.Info("welcome to use xgo, use `xgo -h` for help")
+		Start()
 	},
 }
 

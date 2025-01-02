@@ -1,19 +1,19 @@
 # go test
 
-## go test
+## 1. go test
 执行 package 下所有的测试用例
 
 ```
 go test ./...
 ```
 
-## -v
+## 2. -v
 显示每个用例的测试结果
 ```
 go test -v
 ```
 
-## -cover
+## 3. -cover
 测试覆盖率
 
 ```bash
@@ -37,14 +37,14 @@ go tool cover -func=coverage.out
 ```
 
 
-## 运行其中的一个用例
+## 4. 运行其中的一个用例
 
 ```
 go test -run TestAdd -v 运行其中的一个用例
 go test -timeout 30s -run ^TestAdd$ github.com/fengzhongzhu1621/xgo/tests -v
 ```
 
-## 子测试(Subtests)
+## 5. 子测试(Subtests)
 
 ```
 go test -run TestMul/pos -v
@@ -52,7 +52,7 @@ go test -timeout 30s -run ^TestMul$/^pos$ github.com/fengzhongzhu1621/xgo/tests 
 ```
 
 
-## helper 函数
+## 6. helper 函数
 ```
 t.Helper()
 ```
@@ -61,7 +61,7 @@ Go 语言在 1.9 版本中引入了 t.Helper()，用于标注该函数是帮助�
 * 不要返回错误， 帮助函数内部直接使用 t.Error 或 t.Fatal 即可，在用例主逻辑中不会因为太多的错误处理代码，影响可读性。
 * 调用 t.Helper() 让报错信息更准确，有助于定位。
 
-## 基准测试
+## 7. 基准测试
 
 ```
 go test -benchmem -bench .

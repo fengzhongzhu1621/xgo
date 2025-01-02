@@ -2,13 +2,13 @@ package handler
 
 import (
 	"fmt"
-	"github.com/fengzhongzhu1621/xgo/ginx/serializer"
 	"net/http"
 
 	"github.com/fengzhongzhu1621/xgo/config"
 	"github.com/fengzhongzhu1621/xgo/db/mysql"
 	"github.com/fengzhongzhu1621/xgo/db/mysql/sqlxx"
 	redis "github.com/fengzhongzhu1621/xgo/db/redisx/client"
+	"github.com/fengzhongzhu1621/xgo/ginx/serializer"
 	"github.com/gin-gonic/gin"
 )
 

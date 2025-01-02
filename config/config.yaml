@@ -38,6 +38,8 @@ databases:
     debugMode: false
 
 server:
+  host: localhost
+  port: 8000
   service:
     - name: default
       port: 8080
@@ -45,14 +47,14 @@ server:
       ginRunMode: debug
 
       log:
-          level: info
-          ForceToStdout: true
+        level: info
+        ForceToStdout: true
 
       # 用户访问限制
       allowedUsers: []
       # 健康检查
       healthz:
-          token: <masked>
+        token: <masked>
       # 指标上报
       metric:
-          token: <masked>
+        token: <masked>

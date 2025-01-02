@@ -17,6 +17,7 @@ type personPool struct {
 	pool sync.Pool
 }
 
+// Get Get 之后需要进行断言和一些初始化操作，Get 之后的数据状态是不确定的。
 func (pp *personPool) Get(name string, age int) (p *Person, err error) {
 	// 从池中获取一个对象
 	p, ok := pp.pool.Get().(*Person)
@@ -31,6 +32,7 @@ func (pp *personPool) Get(name string, age int) (p *Person, err error) {
 	return p, nil
 }
 
+// Put 在 Put 前要对临时对象做一些清理工作，以免影响下一次复用。
 func (pp *personPool) Put(p *Person) {
 	//归还前需要清理状态
 	p.Name = ""

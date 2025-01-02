@@ -26,5 +26,4 @@ func RegisterPprof(cfg *config.Config, router *gin.Engine) {
 	pprofRouter.GET("/heap", gin.WrapF(pprof.Handler("heap").ServeHTTP))
 	pprofRouter.GET("/mutex", gin.WrapF(pprof.Handler("mutex").ServeHTTP))
 	pprofRouter.GET("/threadcreate", gin.WrapF(pprof.Handler("threadcreate").ServeHTTP))
-
 }

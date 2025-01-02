@@ -188,3 +188,6 @@ godoc: ## show doc
 docker-build: ## build docker image
 #	docker build -f ./Dockerfile -t xgo:${VERSION} .
 	docker build -f ./Dockerfile -t xgo:latest .
+
+gin_server:
+	go run main/main.go
