@@ -4,6 +4,7 @@ import (
 	"testing"
 )
 
+// TestStringsMatch 判断 key 是否在 matchList 中
 func TestStringsMatch(t *testing.T) {
 	// Test case 1: key is empty
 	if !StringsMatch("", "hello", "world") {

@@ -1,6 +1,11 @@
 package stringutils
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/duke-git/lancet/v2/strutil"
+	"github.com/stretchr/testify/assert"
+)
 
 func TestReverseString(t *testing.T) {
 	type args struct {
@@ -31,8 +36,32 @@ func TestReverseString(t *testing.T) {
 			if got := ReverseString(tt.args.s); got != tt.want {
 				t.Errorf("ReverseString() = %v, want %v", got, tt.want)
 			}
+			if got := strutil.Reverse(tt.args.s); got != tt.want {
+				t.Errorf("strutil.Reverse() = %v, want %v", got, tt.want)
+			}
 		})
 	}
+}
+
+func TestReflectReverseSlice(t *testing.T) {
+	names := []string{"a", "b", "c", "d", "e", "f", "g"}
+	ReflectReverseSlice(names)
+	expected := []string{"g", "f", "e", "d", "c", "b", "a"}
+	assert.Equal(t, expected, names)
+}
+
+func TestReverseSliceGetNew(t *testing.T) {
+	names := []string{"a", "b", "c", "d", "e", "f", "g"}
+	newNames := ReverseSliceGetNew(names)
+	expected := []string{"g", "f", "e", "d", "c", "b", "a"}
+	assert.Equal(t, expected, newNames)
+}
+
+func TestReverseSlice(t *testing.T) {
+	names := []string{"a", "b", "c", "d", "e", "f", "g"}
+	ReverseSlice(names)
+	expected := []string{"g", "f", "e", "d", "c", "b", "a"}
+	assert.Equal(t, expected, names)
 }
 
 func BenchmarkReverseReflectSlice(b *testing.B) {

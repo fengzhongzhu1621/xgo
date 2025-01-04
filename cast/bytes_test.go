@@ -3,6 +3,9 @@ package cast
 import (
 	"math/rand"
 	"testing"
+
+	"github.com/duke-git/lancet/v2/strutil"
+	"github.com/stretchr/testify/assert"
 )
 
 var testString = "Albert Einstein: Logic will get you from A to B. Imagination will take you everywhere."
@@ -18,6 +21,14 @@ func TestBytesToString(t *testing.T) {
 			t.Fatal("don't match")
 		}
 	}
+}
+
+// TestLancetBytesToString 将字节切片转换为字符串而无需进行内存分配。
+// func BytesToString(bytes []byte) string
+func TestLancetBytesToString(t *testing.T) {
+	bytes := []byte{'a', 'b', 'c'}
+	result := strutil.BytesToString(bytes)
+	assert.Equal(t, "abc", result)
 }
 
 // go test -v -run=none -bench=^BenchmarkBytesConv -benchmem=true

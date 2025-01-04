@@ -1,13 +1,14 @@
 package randutils
 
 import (
+	"strconv"
 	"sync"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func testuUniqness(t *testing.T, genFunc func() string) {
+func testUniqness(t *testing.T, genFunc func() string) {
 	producers := 100
 	uuidsPerProducer := 10000
 
@@ -44,17 +45,31 @@ func testuUniqness(t *testing.T, genFunc func() string) {
 }
 
 func TestUUID(t *testing.T) {
-	testuUniqness(t, NewUUID)
+	testUniqness(t, NewUUID)
 }
 
 func TestShortUUID(t *testing.T) {
-	testuUniqness(t, NewShortUUID)
+	testUniqness(t, NewShortUUID)
 }
 
 func TestULID(t *testing.T) {
-	testuUniqness(t, NewULID)
+	testUniqness(t, NewULID)
 }
 
 func TestMD5Hash(t *testing.T) {
 	assert.Equal(t, "098f6bcd4621d373cade4e832627b4f6", MD5Hash("test"))
+}
+
+func TestMd5(t *testing.T) {
+	src := "123456789"
+	actual := Md5(src)
+	expect := "25f9e794323b453885f5181f1b624d0b"
+	assert.Equal(t, expect, actual)
+}
+
+func TestGenerateId(t *testing.T) {
+	actual := GenerateID()
+	s, err := strconv.ParseUint(actual, 10, 64)
+	assert.Equal(t, err, nil)
+	assert.Equal(t, s > 0, true)
 }

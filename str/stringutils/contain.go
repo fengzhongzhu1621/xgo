@@ -26,7 +26,8 @@ func In(target string, src []string) bool {
 	return false
 }
 
-// StringsMatch 如果 key 是空字符串，则认为它匹配任何内容
+// StringsMatch 判断 key 是否在 matchList 中
+// 如果 key 是空字符串，则认为它匹配任何内容
 // 如果 key 是空字符串，则认为它匹配任何内容。
 func StringsMatch(key string, matchList ...string) bool {
 	if key == "" {
