@@ -82,6 +82,15 @@ type XormUser3 struct {
 	Updated time.Time `xorm:"updated"`
 }
 
+type XormUser4 struct {
+	Id        int64  `xorm:"pk autoincr"`
+	Name      string `xorm:"varchar(50) notnull"`
+	Age       int    `xorm:"int notnull"`
+	Email     string `xorm:"unique varchar(100) notnull"`
+	CreatedAt string `xorm:"created"`
+	UpdatedAt string `xorm:"updated"`
+}
+
 // CREATE TABLE `xorm_link` (
 //
 //	`id` int NOT NULL AUTO_INCREMENT,
