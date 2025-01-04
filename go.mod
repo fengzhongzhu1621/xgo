@@ -182,7 +182,7 @@ require (
 	github.com/deckarep/golang-set v1.8.0
 	github.com/dgrijalva/jwt-go/v4 v4.0.0-preview1
 	github.com/dlmiddlecote/sqlstats v1.0.2
-	github.com/duke-git/lancet/v2 v2.3.2
+	github.com/duke-git/lancet/v2 v2.3.4
 	github.com/fork2fix/go-plist v0.0.0-20181126021357-36960be5e636
 	github.com/getsentry/sentry-go v0.30.0
 	github.com/gin-contrib/cors v1.7.2

@@ -75,3 +75,21 @@ func TestPadStart(t *testing.T) {
 	assert.Equal(t, "barbafoo", result8)
 	assert.Equal(t, "barbarfoo", result9)
 }
+
+// TestHideString 使用参数 replaceChar 隐藏源字符串中的某些字符。替换范围是 origin[start : end]。[start, end)。
+// func HideString(origin string, start, end int, replaceChar string) string
+func TestHideString(t *testing.T) {
+	str := "13242658976"
+
+	result1 := strutil.HideString(str, 3, 3, "*")
+	result2 := strutil.HideString(str, 3, 4, "*")
+	result3 := strutil.HideString(str, 3, 7, "*")
+	result4 := strutil.HideString(str, 7, 11, "*")
+	result5 := strutil.HideString(str, 7, 100, "*")
+
+	assert.Equal(t, "13242658976", result1)
+	assert.Equal(t, "132*2658976", result2)
+	assert.Equal(t, "132****8976", result3)
+	assert.Equal(t, "1324265****", result4)
+	assert.Equal(t, "1324265****", result5)
+}
