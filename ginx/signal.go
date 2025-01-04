@@ -10,7 +10,7 @@ import (
 
 // Interrupt 监听操作系统发送的信号，并在接收到特定信号时执行传入的回调函数 onSignal
 func Interrupt(onSignal func()) {
-	// 注册信号通知
+	// 创建一个信号通道，用于接收操作系统的信号
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
 
