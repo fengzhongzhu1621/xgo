@@ -7,6 +7,8 @@ import (
 	"github.com/duke-git/lancet/v2/compare"
 )
 
+// TestEqual 检查两个值是否相等（同时检查类型和值）。
+// func Equal(left, right any) bool
 func TestEqual(t *testing.T) {
 	result1 := compare.Equal(1, 1)
 	result2 := compare.Equal("1", "1")
