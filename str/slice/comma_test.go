@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// 用逗号每隔3位分割数字/字符串，支持前缀添加符号。参数 value 必须是数字或者可以转为数字的字符串, 否则返回空字符串。
+// TestComma 用逗号每隔3位分割数字/字符串，支持前缀添加符号。参数 value 必须是数字或者可以转为数字的字符串, 否则返回空字符串。
 func TestComma(t *testing.T) {
 	result1 := formatter.Comma("123", "")
 	result2 := formatter.Comma("12345", "$")
