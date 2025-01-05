@@ -30,5 +30,5 @@ func TestDefine(t *testing.T) {
 	// user = User2{"name", 10, struct{}{}} // 编译错误
 	user2 := User2{}
 	user2 = User2{Name: "name", Age: 30}
-	assert.Equal(t, user2.Age, 20)
+	assert.Equal(t, user2.Age, 30)
 }
