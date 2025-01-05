@@ -1,6 +1,7 @@
 package stringutils
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/duke-git/lancet/v2/strutil"
@@ -52,21 +53,26 @@ func TestSublimeContains(t *testing.T) {
 		text   string
 		substr string
 		pass   bool
+		pass1  bool
 	}{
-		{"hello", "lo", true},
-		{"abcdefg", "cf", true},
-		{"abcdefg", "a", true},
-		{"abcdefg", "b", true},
-		{"abcdefg", "cfa", false},
-		{"abcdefg", "aa", false},
-		{"世界", "a", false},
-		{"Hello 世界", "界", true},
-		{"Hello 世界", "elo", true},
+		{"hello", "lo", true, true},
+		{"abcdefg", "cf", true, false},
+		{"abcdefg", "a", true, true},
+		{"abcdefg", "b", true, true},
+		{"abcdefg", "cfa", false, false},
+		{"abcdefg", "aa", false, false},
+		{"世界", "a", false, false},
+		{"Hello 世界", "界", true, true},
+		{"Hello 世界", "elo", true, false},
 	}
 	for _, v := range tests {
 		res := SublimeContains(v.text, v.substr)
 		if res != v.pass {
-			t.Fatalf("Failed: %v - res:%v", v, res)
+			t.Fatalf("SublimeContains Failed: %v - res:%v", v, res)
+		}
+		res1 := strings.Contains(v.text, v.substr)
+		if res1 != v.pass1 {
+			t.Fatalf("Contains Failed: %v - res:%v", v, res1)
 		}
 	}
 }

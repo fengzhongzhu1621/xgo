@@ -5,6 +5,8 @@ import (
 	"net"
 	"net/http"
 	"strings"
+
+	"github.com/fengzhongzhu1621/xgo/validator"
 )
 
 func GetIpFromRequest(r *http.Request) (string, error) {
@@ -55,7 +57,7 @@ func Parse(xffString string, numProxies int) string {
 	}
 	for idx := len(ipList) - 1; idx >= 0; idx-- {
 		ipStr := strings.TrimSpace(ipList[idx])
-		if ip := net.ParseIP(ipStr); ip != nil && IsPublicIP(ip) {
+		if ip := net.ParseIP(ipStr); ip != nil && validator.IsPublicIP(ip) {
 			if numProxies <= 0 || idx == 0 {
 				return ipStr
 			}

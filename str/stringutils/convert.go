@@ -5,12 +5,13 @@ import (
 	"unicode/utf8"
 
 	"github.com/fengzhongzhu1621/xgo/cast"
+	"github.com/fengzhongzhu1621/xgo/validator"
 )
 
 // ToLower 字符串转换为小写，在转化前先判断是否包含大写字符，比strings.ToLower性能高.
 func ToLower(s string) string {
 	// 判断字符串是否包含小写字母
-	if IsLower(s) {
+	if validator.IsLower(s) {
 		return s
 	}
 	b := make([]byte, len(s))

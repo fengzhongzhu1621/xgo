@@ -1,4 +1,4 @@
-package ip
+package validator
 
 import (
 	"errors"

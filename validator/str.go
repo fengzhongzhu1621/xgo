@@ -1,4 +1,4 @@
-package stringutils
+package validator
 
 // IsLower 判断字符串是否包含小写字母.
 func IsLower(s string) bool {
