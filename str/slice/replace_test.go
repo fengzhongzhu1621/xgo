@@ -34,3 +34,19 @@ func TestReplaceAll(t *testing.T) {
 
 	assert.Equal(t, []string{"x", "b", "c", "x"}, result)
 }
+
+// TestUpdateAt Update the slice element at index. if param index < 0 or index <= len(slice), will return error.
+// func UpdateAt[T any](slice []T, index int, value T) []T
+func TestUpdateAt(t *testing.T) {
+	result1 := slice.UpdateAt([]string{"a", "b", "c"}, -1, "1")
+	result2 := slice.UpdateAt([]string{"a", "b", "c"}, 0, "1")
+	result3 := slice.UpdateAt([]string{"a", "b", "c"}, 1, "1")
+	result4 := slice.UpdateAt([]string{"a", "b", "c"}, 2, "1")
+	result5 := slice.UpdateAt([]string{"a", "b", "c"}, 3, "1")
+
+	assert.Equal(t, []string{"a", "b", "c"}, result1)
+	assert.Equal(t, []string{"1", "b", "c"}, result2)
+	assert.Equal(t, []string{"a", "1", "c"}, result3)
+	assert.Equal(t, []string{"a", "b", "1"}, result4)
+	assert.Equal(t, []string{"a", "b", "c"}, result5)
+}

@@ -234,6 +234,7 @@ type XormApp struct {
 	Traffics   []XormTraffic   `xorm:"- extends"`
 }
 
+// XormOperation gdoc
 // CREATE TABLE `xorm_operation` (
 //
 //	`id` int unsigned NOT NULL,

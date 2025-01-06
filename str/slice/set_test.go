@@ -7,6 +7,41 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// TestIntersection Creates a slice of unique values that included by all slices.
+// func Intersection[T comparable](slices ...[]T) []T
+func TestIntersection(t *testing.T) {
+	nums1 := []int{1, 2, 3}
+	nums2 := []int{2, 3, 4}
+
+	result := slice.Intersection(nums1, nums2)
+
+	assert.Equal(t, []int{2, 3}, result)
+}
+
+// TestUnion Creates a slice of unique values, in order, from all given slices. using == for equality comparisons.
+// func Union[T comparable](slices ...[]T) []T
+func TestUnion(t *testing.T) {
+	nums1 := []int{1, 3, 4, 6}
+	nums2 := []int{1, 2, 5, 6}
+
+	result := slice.Union(nums1, nums2)
+
+	assert.Equal(t, []int{1, 3, 4, 6, 2, 5}, result)
+}
+
+// TestUnionBy UnionBy is like Union, what's more it accepts iteratee which is invoked for each element of each slice.
+// func UnionBy[T any, V comparable](predicate func(item T) V, slices ...[]T) []T
+func TestUnionBy(t *testing.T) {
+	nums := []int{1, 2, 3, 4}
+
+	divideTwo := func(n int) int {
+		return n / 2
+	}
+	result := slice.UnionBy(divideTwo, nums)
+
+	assert.Equal(t, []int{1, 2, 4}, result)
+}
+
 // TestDifference Creates an slice of whose element not included in the other given slice.
 // func Difference[T comparable](slice, comparedSlice []T) []T
 func TestDifference(t *testing.T) {
@@ -45,4 +80,15 @@ func TestDifferenceWith(t *testing.T) {
 	result := slice.DifferenceWith(s1, s2, isDouble)
 
 	assert.Equal(t, []int{1, 5}, result)
+}
+
+// TestSymmetricDifference Create a slice whose element is in given slices, but not in both slices.
+// func SymmetricDifference[T comparable](slices ...[]T) []T
+func TestSymmetricDifference(t *testing.T) {
+	nums1 := []int{1, 2, 3}
+	nums2 := []int{1, 2, 4}
+
+	result := slice.SymmetricDifference(nums1, nums2)
+
+	assert.Equal(t, []int{3, 4}, result)
 }

@@ -24,6 +24,18 @@ func TestLancetConcat(t *testing.T) {
 	assert.Equal(t, []string{"a", "b", "c", "d"}, result2)
 }
 
+// TestJoin Join the slice item with specify separator.
+// func Join[T any](s []T, separator string) string
+func TestJoin(t *testing.T) {
+	nums := []int{1, 2, 3, 4, 5}
+
+	result1 := slice.Join(nums, ",")
+	result2 := slice.Join(nums, "-")
+
+	assert.Equal(t, "1,2,3,4,5", result1)
+	assert.Equal(t, "1-2-3-4-5", result2)
+}
+
 // TestAppendIfAbsent If slice doesn't contain the item, append it to the slice.
 // func AppendIfAbsent[T comparable](slice []T, item T) []T
 func TestAppendIfAbsent(t *testing.T) {

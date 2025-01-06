@@ -38,6 +38,15 @@ func TestMapConcurrent(t *testing.T) {
 	assert.Equal(t, []int{1, 4, 9, 16, 25, 36}, result)
 }
 
+// TestKeyBy Converts a slice to a map based on a callback function.
+// func KeyBy[T any, U comparable](slice []T, iteratee func(item T) U) map[U]T
+func TestKeyBy(t *testing.T) {
+	result := slice.KeyBy([]string{"a", "ab", "abc"}, func(str string) int {
+		return len(str)
+	})
+	assert.Equal(t, map[int]string{1: "a", 2: "ab", 3: "abc"}, result)
+}
+
 // TestFilterMap Returns a slice which apply both filtering and mapping to the given slice. iteratee callback function should returntwo values: 1, mapping result. 2, whether the result element should be included or not.
 // func FilterMap[T any, U any](slice []T, iteratee func(index int, item T) (U, bool)) []U
 func TestFilterMap(t *testing.T) {
