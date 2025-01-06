@@ -1,6 +1,7 @@
 package slice
 
 import (
+	"math"
 	"testing"
 
 	"github.com/duke-git/lancet/v2/slice"
@@ -25,4 +26,89 @@ func TestChunk(t *testing.T) {
 	assert.Equal(t, [][]string{{"a", "b", "c", "d"}, {"e"}}, result4)
 	assert.Equal(t, [][]string{{"a", "b", "c", "d", "e"}}, result5)
 	assert.Equal(t, [][]string{{"a", "b", "c", "d", "e"}}, result6)
+}
+
+// TestPartition Partition all slice elements with the evaluation of the given predicate functions.
+// func Partition[T any](slice []T, predicates ...func(item T) bool) [][]T
+func TestPartition(t *testing.T) {
+	nums := []int{1, 2, 3, 4, 5}
+
+	result1 := slice.Partition(nums)
+	result2 := slice.Partition(nums,
+		func(n int) bool { return n%2 == 0 },
+	)
+	result3 := slice.Partition(nums,
+		func(n int) bool {
+			return n == 1 || n == 2
+		},
+		func(n int) bool {
+			return n == 2 || n == 3 || n == 4
+		},
+	)
+
+	assert.Equal(t, [][]int{{1, 2, 3, 4, 5}}, result1)
+	assert.Equal(t, [][]int{{2, 4}, {1, 3, 5}}, result2)
+	assert.Equal(t, [][]int{{1, 2}, {3, 4}, {5}}, result3)
+}
+
+// TestGroupBy Iterates over elements of the slice, each element will be group by criteria, returns two slices.
+// func GroupBy[T any](slice []T, groupFn func(index int, item T) bool) ([]T, []T)
+func TestGroupBy(t *testing.T) {
+	nums := []int{1, 2, 3, 4, 5}
+
+	isEven := func(i, num int) bool {
+		return num%2 == 0
+	}
+
+	even, odd := slice.GroupBy(nums, isEven)
+
+	assert.Equal(t, []int{2, 4}, even)
+	assert.Equal(t, []int{1, 3, 5}, odd)
+}
+
+// TestGroupWith Return a map composed of keys generated from the results of running each element of slice thru iteratee.
+// func GroupWith[T any, U comparable](slice []T, iteratee func(T) U) map[U][]T
+func TestGroupWith(t *testing.T) {
+	nums := []float64{6.1, 4.2, 6.3}
+
+	floor := func(num float64) float64 {
+		return math.Floor(num)
+	}
+
+	result := slice.GroupWith(nums, floor) //map[float64][]float64
+
+	assert.Equal(t, map[float64][]float64{
+		4.0: {4.2},
+		6.0: {6.1, 6.3},
+	}, result)
+}
+
+// TestFrequency Counts the frequency of each element in the slice.
+// func Frequency[T comparable](slice []T) map[T]int
+func TestFrequency(t *testing.T) {
+	strs := []string{"a", "b", "b", "c", "c", "c"}
+	result := slice.Frequency(strs)
+
+	assert.Equal(t, map[string]int{
+		"a": 1,
+		"b": 2,
+		"c": 3,
+	}, result)
+}
+
+// TestBreak  a slice into two based on a predicate function.
+// It starts appending to the second slice after the first element that matches the predicate.
+// All elements after the first match are included in the second slice,
+// regardless of whether they match the predicate or not.
+// 根据谓词函数将一个切片分割为两个。从匹配谓词的第一个元素之后开始将元素追加到第二个切片。
+// 第一个匹配元素之后的所有元素（无论是否匹配谓词）都包含在第二个切片中。
+// func Break[T any](values []T, predicate func(T) bool) ([]T, []T)
+func TestBreak(t *testing.T) {
+	nums := []int{1, 2, 3, 4, 5}
+	even := func(n int) bool { return n%2 == 0 }
+
+	resultEven, resultAfterFirstEven := slice.Break(nums, even)
+
+	assert.Equal(t, []int{1}, resultEven)
+	assert.Equal(t, []int{2, 3, 4, 5}, resultAfterFirstEven)
 }

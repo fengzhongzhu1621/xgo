@@ -50,3 +50,14 @@ func TestUpdateAt(t *testing.T) {
 	assert.Equal(t, []string{"a", "b", "1"}, result4)
 	assert.Equal(t, []string{"a", "b", "c"}, result5)
 }
+
+// TestSetToDefaultIf Sets elements to their default value if they match the given predicate. It retains the positions of the elements in the slice. It returns slice of T and the count of modified slice items
+// 将匹配的值设置为默认值
+// func SetToDefaultIf[T any](slice []T, predicate func(T) bool) ([]T, int)
+func TestSetToDefaultIf(t *testing.T) {
+	strs := []string{"a", "b", "a", "c", "d", "a"}
+	modifiedStrs, count := slice.SetToDefaultIf(strs, func(s string) bool { return "a" == s })
+
+	assert.Equal(t, []string{"", "b", "", "c", "d", ""}, modifiedStrs)
+	assert.Equal(t, 3, count)
+}

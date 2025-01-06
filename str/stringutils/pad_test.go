@@ -18,6 +18,7 @@ func TestPad(t *testing.T) {
 	result7 := strutil.Pad("foo", 7, "bar")
 	result8 := strutil.Pad("foo", 8, "bar")
 	result9 := strutil.Pad("foo", 9, "bar")
+	result10 := strutil.Pad("foo", 7, "*")
 
 	assert.Equal(t, "foo", result1)
 	assert.Equal(t, "foo", result2)
@@ -28,6 +29,7 @@ func TestPad(t *testing.T) {
 	assert.Equal(t, "bafooba", result7)
 	assert.Equal(t, "bafoobar", result8)
 	assert.Equal(t, "barfoobar", result9)
+	assert.Equal(t, "**foo**", result10)
 }
 
 // TestPadEnd 如果字符串的长度小于指定的尺寸，就在右侧填充字符串。
