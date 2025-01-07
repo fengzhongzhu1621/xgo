@@ -1,10 +1,12 @@
 package randutils
 
 import (
+	"fmt"
 	"strconv"
 	"sync"
 	"testing"
 
+	"github.com/duke-git/lancet/v2/random"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -72,4 +74,14 @@ func TestGenerateId(t *testing.T) {
 	s, err := strconv.ParseUint(actual, 10, 64)
 	assert.Equal(t, err, nil)
 	assert.Equal(t, s > 0, true)
+}
+
+// TestUUIdV4 Generate a random UUID of version 4 according to RFC 4122.
+// func UUIdV4() (string, error)
+func TestUUIdV4(t *testing.T) {
+	uuid, err := random.UUIdV4()
+	if err != nil {
+		return
+	}
+	fmt.Println(uuid) // c746705a-860f-46cf-a117-ef996fc4defe
 }
