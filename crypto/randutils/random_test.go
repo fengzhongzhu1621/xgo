@@ -8,6 +8,20 @@ import (
 	"github.com/duke-git/lancet/v2/slice"
 )
 
+// TestRandBool Generate a random boolean value (true or false).
+// func RandBool() bool
+func TestRandBool(t *testing.T) {
+	result := random.RandBool()
+	fmt.Println(result) // true or false (random)
+}
+
+// TestRandBoolSlice Generates a random boolean slice of specified length.
+// func RandBoolSlice(length int) []bool
+func TestRandBoolSlice(t *testing.T) {
+	result := random.RandBoolSlice(2)
+	fmt.Println(result) // [true false] (random)
+}
+
 // 生成随机int, 范围[min, max)
 // Generate random int between min and max, may contain min, not max.
 // func RandInt(min, max int) int
@@ -30,6 +44,13 @@ func TestRandUniqueIntSlice(t *testing.T) {
 	fmt.Println(result) //[0 4 7 1 5] (random)
 }
 
+// TestRandNumberOfLength Generates a random int number of specified length.
+// func RandNumberOfLength(len int) int
+func TestRandNumberOfLength(t *testing.T) {
+	i := random.RandNumberOfLength(2)
+	fmt.Println(i) // 21 (random number of length 2)
+}
+
 // TestRandFloat Generate a random float64 number between [min, max) with specific precision.
 // func RandFloat(min, max float64, precision int) float64
 func TestRandFloat(t *testing.T) {
@@ -48,7 +69,19 @@ func TestRandFloats(t *testing.T) {
 // func RandString(length int) string
 func TestRandomRandString(t *testing.T) {
 	randStr := random.RandString(6)
-	fmt.Println(randStr)
+	fmt.Println(randStr) // ACMbJt
+}
+
+// TestRandStringSlice Generate a slice of random string of length strLen based on charset.
+// chartset should be one of the following:
+// random.Numeral, random.LowwerLetters, random.UpperLetters random.Letters, random.SymbolChars, random.AllChars. or a combination of them.
+// func RandStringSlice(charset string, sliceLen, strLen int) []string
+func TestRandStringSlice(t *testing.T) {
+	strs := random.RandStringSlice(random.Letters, 4, 6)
+	fmt.Println(strs)
+
+	// output random string slice like below:
+	//[CooSMq RUFjDz FAeMPf heRyGv]
 }
 
 // TestRandString Generate a random upper case string
