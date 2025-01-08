@@ -11,6 +11,7 @@ var (
 	ErrNilRequestBody = errors.New("request Body is nil")
 )
 
+// RequestWithBody 创建一个新的HTTP请求
 func RequestWithBody(method, path, body string) (req *http.Request) {
 	// http.NewRequest 创建一个新的HTTP请求
 	// method：HTTP请求方法，如"GET"、"POST"、"PUT"、"DELETE"等。

@@ -1,8 +1,11 @@
 package validator
 
 import (
+	"fmt"
+	"net"
 	"testing"
 
+	"github.com/duke-git/lancet/v2/netutil"
 	"github.com/duke-git/lancet/v2/validator"
 	"github.com/stretchr/testify/assert"
 )
@@ -67,4 +70,49 @@ func TestIsIpV6(t *testing.T) {
 
 	assert.Equal(t, false, result1, "result1")
 	assert.Equal(t, true, result2, "result2")
+}
+
+// TestTestIsPublicIP Checks if an ip is public or not.
+// func IsPublicIP(IP net.IP) bool
+func TestIsPublicIP(t *testing.T) {
+	ip1 := netutil.IsPublicIP(net.ParseIP("127.0.0.1"))
+	ip2 := netutil.IsPublicIP(net.ParseIP("192.168.0.1"))
+	ip3 := netutil.IsPublicIP(net.ParseIP("36.112.24.10"))
+
+	assert.Equal(t, false, ip1, "ip1")
+	assert.Equal(t, false, ip2, "ip2")
+	assert.Equal(t, true, ip3, "ip3")
+}
+
+// TestIsInternalIP Checks if an ip is intranet or not.
+// func IsInternalIP(IP net.IP) bool
+func TestIsInternalIP(t *testing.T) {
+	ip1 := netutil.IsPublicIP(net.ParseIP("127.0.0.1"))
+	ip2 := netutil.IsPublicIP(net.ParseIP("192.168.0.1"))
+	ip3 := netutil.IsPublicIP(net.ParseIP("36.112.24.10"))
+
+	assert.Equal(t, true, ip1, "ip1")
+	assert.Equal(t, true, ip2, "ip2")
+	assert.Equal(t, false, ip3, "ip3")
+}
+
+// TestIsPingConnected checks if can ping the specified host or not.
+// func IsPingConnected(host string) bool
+func TestIsPingConnected(t *testing.T) {
+	result1 := netutil.IsPingConnected("www.baidu.com")
+	result2 := netutil.IsPingConnected("www.!@#&&&.com")
+
+	// panic: test timed out after 30s
+	fmt.Println(result1)
+	fmt.Println(result2)
+}
+
+// TestIsTelnetConnected Checks if can telnet the specified host or not.
+// func IsTelnetConnected(host string, port string) bool
+func TestIsTelnetConnected(t *testing.T) {
+	result1 := netutil.IsTelnetConnected("www.baidu.com", "80")
+	result2 := netutil.IsTelnetConnected("www.baidu.com", "123")
+
+	fmt.Println(result1) // true
+	fmt.Println(result2) // true
 }
