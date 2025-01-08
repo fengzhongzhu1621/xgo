@@ -38,3 +38,16 @@ func setItems(obj map[string]interface{}, paths []string, val interface{}) error
 	}
 	return nil
 }
+
+// SetDeepMapValue 根据key设置DeepMap的值.
+func SetDeepMapValue(m map[string]interface{}, key string, value interface{}, keyDelim string) {
+	key = strings.ToLower(key)
+	value = ToCaseInsensitiveValue(value)
+
+	path := strings.Split(key, keyDelim)
+	lastKey := strings.ToLower(path[len(path)-1])
+	deepestMap := DeepSearch(m, path[0:len(path)-1])
+
+	// set innermost value
+	deepestMap[lastKey] = value
+}

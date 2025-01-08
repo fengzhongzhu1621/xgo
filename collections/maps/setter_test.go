@@ -2,6 +2,7 @@ package maps
 
 import (
 	"errors"
+	"reflect"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -61,4 +62,49 @@ func TestSetItemsFailCase(t *testing.T) {
 
 	err = SetItems(deploySpec, 123, 1)
 	assert.NotNil(t, err)
+}
+
+func TestSetDeepMapValue(t *testing.T) {
+	t.Parallel()
+
+	t.Run("KeyNotExists", func(t *testing.T) {
+		var src = map[string]interface{}{
+			"A": 1,
+			"b": 2,
+		}
+		keyDelim := "_"
+		key := "A"
+		value := 11
+		SetDeepMapValue(src, key, value, keyDelim)
+		expect := map[string]interface{}{
+			"A": 1,
+			"a": 11,
+			"b": 2,
+		}
+		if !reflect.DeepEqual(src, expect) {
+			t.Fatalf("SetDeepMapValue error actual is %v, expect is %v", src, expect)
+		}
+	})
+
+	t.Run("KeyExists", func(t *testing.T) {
+		var src = map[string]interface{}{
+			"a": map[string]interface{}{
+				"b": map[string]interface{}{},
+			},
+		}
+		keyDelim := "_"
+		key := "a_b_c"
+		value := 3
+		SetDeepMapValue(src, key, value, keyDelim)
+		expect := map[string]interface{}{
+			"a": map[string]interface{}{
+				"b": map[string]interface{}{
+					"c": 3,
+				},
+			},
+		}
+		if !reflect.DeepEqual(src, expect) {
+			t.Fatalf("SetDeepMapValue error actual is %v, expect is %v", src, expect)
+		}
+	})
 }
