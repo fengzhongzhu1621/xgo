@@ -2,13 +2,14 @@ package maps
 
 import (
 	"fmt"
+	"testing"
 
 	"github.com/duke-git/lancet/v2/maputil"
 )
 
 // TestMapTo Rry to map any interface to struct or base type.
 // func MapTo(src any, dst any) error
-func TestMapTo() {
+func TestMapTo(t *testing.T) {
 	type (
 		Address struct {
 			Street string `json:"street"`
@@ -42,4 +43,28 @@ func TestMapTo() {
 	// Output:
 	// <nil>
 	// {Nothin 28 123456789 {test 1}}
+}
+
+// TestMapToStruct Converts map to struct
+// func MapToStruct(m map[string]any, structObj any) error
+func TestMapToStruct(t *testing.T) {
+	personReqMap := map[string]any{
+		"name":     "Nothin",
+		"max_age":  35,
+		"page":     1,
+		"pageSize": 10,
+	}
+
+	type PersonReq struct {
+		Name     string `json:"name"`
+		MaxAge   int    `json:"max_age"`
+		Page     int    `json:"page"`
+		PageSize int    `json:"pageSize"`
+	}
+	var personReq PersonReq
+	_ = maputil.MapToStruct(personReqMap, &personReq)
+	fmt.Println(personReq)
+
+	// Output:
+	// {Nothin 35 1 10}
 }

@@ -36,6 +36,8 @@ func TestRangeKey(t *testing.T) {
 	}
 }
 
+// TestKeys Returns a slice of the map's keys.
+// func Keys[K comparable, V any](m map[K]V) []K
 func TestKeys(t *testing.T) {
 	m := map[int]string{
 		1: "a",
@@ -49,6 +51,27 @@ func TestKeys(t *testing.T) {
 	sort.Ints(keys)
 
 	assert.Equal(t, keys, []int{1, 2, 3, 4, 5})
+}
+
+// TestKeysBy Creates a slice whose element is the result of function mapper invoked by every map's key.
+// func KeysBy[K comparable, V any, T any](m map[K]V, mapper func(item K) T) []T
+func TestKeysBy(t *testing.T) {
+	m := map[int]string{
+		1: "a",
+		2: "a",
+		3: "b",
+	}
+
+	keys := maputil.KeysBy(m, func(n int) int {
+		return n + 1
+	})
+
+	sort.Ints(keys)
+
+	fmt.Println(keys)
+
+	// Output:
+	// [2 3 4]
 }
 
 // TestToCaseInsensitiveValue 将字典的key转换为小写，返回新的字典
@@ -90,4 +113,41 @@ func TestToCaseInsensitiveValue(t *testing.T) {
 	if _, ok := m["ABc"]; !ok {
 		t.Fatal("Input map changed")
 	}
+}
+
+// TestHasKey Checks if map has key or not. This function is used to replace the following boilerplate code
+// func HasKey[K comparable, V any](m map[K]V, key K) bool
+func TestHasKey(t *testing.T) {
+	m := map[string]int{
+		"a": 1,
+		"b": 2,
+	}
+
+	result1 := maputil.HasKey(m, "a")
+	result2 := maputil.HasKey(m, "c")
+
+	fmt.Println(result1)
+	fmt.Println(result2)
+
+	// Output:
+	// true
+	// false
+}
+
+// TestMapGetOrSet Returns value of the given key or set the given value value if not present.
+// func GetOrSet[K comparable, V any](m map[K]V, key K, value V) V
+func TestMapGetOrSet(t *testing.T) {
+	m := map[int]string{
+		1: "a",
+	}
+
+	result1 := maputil.GetOrSet(m, 1, "1")
+	result2 := maputil.GetOrSet(m, 2, "b")
+
+	fmt.Println(result1)
+	fmt.Println(result2)
+
+	// Output:
+	// a
+	// b
 }

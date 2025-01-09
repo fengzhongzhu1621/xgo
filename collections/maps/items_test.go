@@ -2,6 +2,8 @@ package maps
 
 import (
 	"fmt"
+	"sort"
+	"strconv"
 	"testing"
 
 	"github.com/duke-git/lancet/v2/maputil"
@@ -146,4 +148,88 @@ func TestOmitByValues(t *testing.T) {
 
 	// Output:
 	// map[a:1 b:2 c:3]
+}
+
+// TestMapKeys Transforms a map to other type map by manipulating it's keys.
+// func MapKeys[K comparable, V any, T comparable](m map[K]V, iteratee func(key K, value V) T) map[T]V
+func TestMapKeys(t *testing.T) {
+	m := map[int]string{
+		1: "a",
+		2: "b",
+		3: "c",
+	}
+
+	result := maputil.MapKeys(m, func(k int, _ string) string {
+		return strconv.Itoa(k)
+	})
+
+	fmt.Println(result)
+
+	// Output:
+	// map[1:a 2:b 3:c]
+}
+
+// TestMapValues Transforms a map to other type map by manipulating it's values.
+// func MapValues[K comparable, V any, T any](m map[K]V, iteratee func(key K, value V) T) map[K]T
+func TestMapValues(t *testing.T) {
+	m := map[int]string{
+		1: "a",
+		2: "b",
+		3: "c",
+	}
+
+	result := maputil.MapValues(m, func(k int, v string) string {
+		return v + strconv.Itoa(k)
+	})
+
+	fmt.Println(result)
+
+	// Output:
+	// map[1:a1 2:b2 3:c3]
+}
+
+// TestTransform Transform a map to another type map.
+// func Transform[K1 comparable, V1 any, K2 comparable, V2 any](m map[K1]V1, iteratee func(key K1, value V1) (K2, V2)) map[K2]V2
+func TestTransform(t *testing.T) {
+	m := map[string]int{
+		"a": 1,
+		"b": 2,
+		"c": 3,
+	}
+
+	result := maputil.Transform(m, func(k string, v int) (string, string) {
+		return k, strconv.Itoa(v)
+	})
+
+	fmt.Println(result)
+
+	// Output:
+	// map[a:1 b:2 c:3]
+}
+
+// TestEntry Transforms a map into array of key/value pairs.
+//
+//	type Entry[K comparable, V any] struct {
+//	    Key   K
+//	    Value V
+//	}
+//
+// func Entries[K comparable, V any](m map[K]V) []Entry[K, V]
+func TesEntries(t *testing.T) {
+	m := map[string]int{
+		"a": 1,
+		"b": 2,
+		"c": 3,
+	}
+
+	result := maputil.Entries(m)
+
+	sort.Slice(result, func(i, j int) bool {
+		return result[i].Value < result[j].Value
+	})
+
+	fmt.Println(result)
+
+	// Output:
+	// [{a 1} {b 2} {c 3}]
 }

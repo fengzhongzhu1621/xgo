@@ -9,6 +9,7 @@ import (
 )
 
 // TestMerge 合并多个 maps 相同的 key 会被后来的 key 覆盖
+// func Merge[K comparable, V any](maps ...map[K]V) map[K]V
 func TestMerge(t *testing.T) {
 	m1 := map[int]string{
 		1: "a",
