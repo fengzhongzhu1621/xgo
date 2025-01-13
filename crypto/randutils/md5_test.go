@@ -2,11 +2,13 @@ package randutils
 
 import (
 	"errors"
+	"fmt"
 	"testing"
+
+	"github.com/duke-git/lancet/v2/cryptor"
 
 	"github.com/stretchr/testify/assert"
 )
-
 
 func TestGetMD5Hash(t *testing.T) {
 	text := "xxx"
@@ -49,4 +51,73 @@ func TestGetSliceMD5Hash(t *testing.T) {
 	_, err = GetSliceMD5Hash(invalidSlice)
 	assert.Error(t, err)
 	assert.Equal(t, errors.New("illegal type").Error(), err.Error())
+}
+
+// func HmacMd5(str, key string) string
+func TestHmacMd5(t *testing.T) {
+	str := "hello"
+	key := "12345"
+
+	hms := cryptor.HmacMd5(str, key)
+	fmt.Println(hms)
+
+	// Output:
+	// e834306eab892d872525d4918a7a639a
+}
+
+// Get the md5 hmac hash of base64 string.
+// func HmacMd5WithBase64(str, key string) string
+func TestHmacMd5WithBase64(t *testing.T) {
+	str := "hello"
+	key := "12345"
+
+	hms := cryptor.HmacMd5WithBase64(str, key)
+	fmt.Println(hms)
+
+	// Output:
+	// 6DQwbquJLYclJdSRinpjmg==
+}
+
+// func Md5String(s string) string
+func TestMd5String(t *testing.T) {
+	str := "hello"
+
+	md5Str := cryptor.Md5String(str)
+	fmt.Println(md5Str)
+
+	// Output:
+	// 5d41402abc4b2a76b9719d911017c592
+}
+
+// func Md5StringWithBase64(s string) string
+func TestMd5StringWithBase64(t *testing.T) {
+	md5Str := cryptor.Md5StringWithBase64("hello")
+	fmt.Println(md5Str)
+
+	// Output:
+	// XUFAKrxLKna5cZ2REBfFkg==
+}
+
+// func Md5Byte(data []byte) string
+func TestMd5Byte(t *testing.T) {
+	md5Str := cryptor.Md5Byte([]byte{'a'})
+	fmt.Println(md5Str)
+
+	// Output:
+	// 0cc175b9c0f1b6a831c399e269772661
+}
+
+// func Md5ByteWithBase64(data []byte) string
+func TestMd5ByteWithBase64(t *testing.T) {
+	md5Str := cryptor.Md5ByteWithBase64([]byte("hello"))
+	fmt.Println(md5Str)
+
+	// Output:
+	// XUFAKrxLKna5cZ2REBfFkg==
+}
+
+// func Md5File(filepath string) (string, error)
+func TestMd5File(t *testing.T) {
+	s, _ := cryptor.Md5File("./main.go")
+	fmt.Println(s)
 }

@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/duke-git/lancet/v2/cryptor"
+
 	"github.com/duke-git/lancet/v2/convertor"
 
 	"github.com/stretchr/testify/assert"
@@ -41,6 +43,23 @@ func TestBase64(t *testing.T) {
 	assert.Equal(t, "SGVsbG8gd29ybGTvvIEgVVJMIHNhZmUg57yW56CB77yM55u45b2T5LqO5pu_5o2i5o6J5a2X56ym5Liy5Lit55qE54m55q6K5a2X56ym77yMKyDlkowgLw", encoded)
 	decoded, _ = base64.RawURLEncoding.DecodeString(encoded)
 	assert.Equal(t, msg, decoded)
+}
+
+// Encode string with base64 encoding.
+// func Base64StdEncode(s string) string
+// func Base64StdDecode(s string) string
+func TestBase64StdEncode(t *testing.T) {
+	base64Str := cryptor.Base64StdEncode("hello")
+	fmt.Println(base64Str)
+
+	// Output:
+	// aGVsbG8=
+
+	str := cryptor.Base64StdDecode("aGVsbG8=")
+	fmt.Println(str)
+
+	// Output:
+	// hello
 }
 
 // func ToStdBase64(value any) string
