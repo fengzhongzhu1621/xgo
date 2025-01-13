@@ -1,4 +1,4 @@
-package file
+package numpy
 
 import (
 	"strings"
@@ -7,15 +7,7 @@ import (
 	"github.com/fengzhongzhu1621/xgo/cast"
 )
 
-func safeMul(a, b uint) uint {
-	c := a * b
-	if a > 1 && b > 1 && c/b != a {
-		return 0
-	}
-	return c
-}
-
-// parseSizeInBytes converts strings like 1GB or 12 mb into an unsigned integer number of bytes.
+// ParseSizeInBytes converts strings like 1GB or 12 mb into an unsigned integer number of bytes.
 // 将 KB, MB, GB 转换为字节数
 func ParseSizeInBytes(sizeStr string) uint {
 	// 去掉空白字符
@@ -52,5 +44,5 @@ func ParseSizeInBytes(sizeStr string) uint {
 		size = 0
 	}
 
-	return safeMul(uint(size), multiplier)
+	return SafeMul(uint(size), multiplier)
 }

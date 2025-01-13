@@ -13,6 +13,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/fengzhongzhu1621/xgo/numpy"
+
 	"github.com/fengzhongzhu1621/xgo/cast"
 	"github.com/fengzhongzhu1621/xgo/collections/maps"
 	"github.com/fengzhongzhu1621/xgo/crypto/encoding"
@@ -827,7 +829,7 @@ func (v *Watcher) GetStringMapStringSlice(key string) map[string][]string {
 // in bytes.
 func (v *Watcher) GetSizeInBytes(key string) uint {
 	sizeStr := cast.ToString(v.Get(key))
-	return ParseSizeInBytes(sizeStr)
+	return numpy.ParseSizeInBytes(sizeStr)
 }
 
 // IsSet checks to see if the key has been set in any of the data locations.

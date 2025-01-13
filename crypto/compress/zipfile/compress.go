@@ -9,7 +9,7 @@ import (
 
 const YAMLCONF = ".ghs.yml"
 
-// 压缩目录，写入到 http 响应中，返回给前端压缩后的.zip文件
+// CompressToZip 压缩目录，写入到 http 响应中，返回给前端压缩后的.zip文件
 func CompressToZip(w http.ResponseWriter, rootDir string) {
 	// 用于清理目录路径，它将路径表示为规范形式，并消除任何多余的斜杠和.、..元素。
 	rootDir = filepath.Clean(rootDir)

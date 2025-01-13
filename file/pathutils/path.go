@@ -1,27 +1,16 @@
 package pathutils
 
-import (
-	"os"
-)
-
 type PathInfo struct {
 	Name  string // 路径名称
 	IsDir bool   // 是否是目录
 }
 
-
-// 获得最后一个字符.
+// LastChar 获得最后一个字符.
 func LastChar(str string) uint8 {
 	if str == "" {
 		panic("The length of the string can't be 0")
 	}
 	return str[len(str)-1]
-}
-
-// GetWd 获得应用程序当前路径.
-func GetWd() string {
-	wd, _ := os.Getwd()
-	return wd
 }
 
 // bufApp 将字符串 s[:w]拷贝到缓存 buf 中，重新计算缓存的大小刚好能容纳字符串的长度

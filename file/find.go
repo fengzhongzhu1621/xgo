@@ -3,10 +3,14 @@ package file
 import (
 	"fmt"
 	"os"
+	"path"
 	"path/filepath"
+	"strings"
+
+	"github.com/fengzhongzhu1621/xgo/validator"
 )
 
-// 从指定的多个目录中查询文件（查询深度为 1），返回查找到的文件的绝对路径
+// LocateFile 从指定的多个目录中查询文件（查询深度为 1），返回查找到的文件的绝对路径
 // - 如果文件没有找到，返回err
 // - 如果查找到多个文件，返回err.
 func LocateFile(filename string, dirs []string) (string, error) {
@@ -19,7 +23,7 @@ func LocateFile(filename string, dirs []string) (string, error) {
 	filepaths := []string{}
 	for _, dir := range dirs {
 		filepath := filepath.Join(dir, filename)
-		if IsFileType(filepath) {
+		if validator.IsFileType(filepath) {
 			filepaths = append(filepaths, filepath)
 		}
 	}
@@ -55,4 +59,29 @@ func DeepPath(basedir, name string, maxDepth int) string {
 		}
 	}
 	return name
+}
+
+// Which 实现 unix whtich 命令功能
+func Which(cmd string) (filepath string, err error) {
+	// 获得当前PATH环境变量
+	envPath := os.Getenv("PATH")
+	// 分割为多个路径
+	path_list := strings.Split(envPath, string(os.PathListSeparator))
+	for _, dirpath := range path_list {
+		// 判断环境变量路径是否是目录
+		dirInfo, err := os.Stat(dirpath)
+		if err != nil {
+			return "", err
+		}
+		if !dirInfo.IsDir() {
+			continue
+		}
+		// 判断命令所在的路径是否存在
+		filepath := path.Join(dirpath, cmd)
+		_, err = os.Stat(filepath)
+		if err == nil || os.IsExist(err) {
+			return filepath, err
+		}
+	}
+	return "", err
 }

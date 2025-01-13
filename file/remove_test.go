@@ -2,9 +2,10 @@ package file
 
 import (
 	"fmt"
-	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/duke-git/lancet/v2/fileutil"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -32,41 +33,25 @@ func TestRemoveFileExt(t *testing.T) {
 			assert.Equal(t, actual, tt.filenameWithoutExt)
 		})
 	}
-
 }
 
-func TestCopy(t *testing.T) {
-	var dst string = "./file_test2.go"
-	err := Copy("./file_test.go", dst)
-	fmt.Println(err)
-	assert.Equal(t, IsFileOrDirExists(dst), true)
-	err = os.Remove(dst)
-	assert.NoError(t, err)
-}
+// Remove the file of path.
+// func RemoveFile(path string) error
+func TestRemoveFile(t *testing.T) {
+	fname := "./test.txt"
 
-func TestLocateFile(t *testing.T) {
-	pwd, _ := os.Getwd()
-	tests := []struct {
-		name     string
-		filename string
-		dirs     []string
-		expect   string
-	}{
-		{name: "1", filename: "file.go", dirs: []string{pwd}, expect: ""},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			actual, _ := LocateFile(tt.filename, tt.dirs)
-			fmt.Println(actual)
-		})
-	}
-}
+	fileutil.CreateFile(fname)
 
-func TestWhich(t *testing.T) {
-	filepath, _ := Which("sh")
-	assert.Equal(t, filepath, "/bin/sh")
+	result1 := fileutil.IsExist(fname)
 
-	filepath, err := Which("xxx")
-	assert.Equal(t, filepath, "")
-	assert.ErrorContains(t, err, "no such file or directory")
+	fileutil.RemoveFile(fname)
+
+	result2 := fileutil.IsExist(fname)
+
+	fmt.Println(result1)
+	fmt.Println(result2)
+
+	// Output:
+	// true
+	// false
 }

@@ -5,8 +5,9 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/fengzhongzhu1621/xgo/validator"
+
 	"github.com/fengzhongzhu1621/xgo/crypto/compress/zipfile"
-	"github.com/fengzhongzhu1621/xgo/file"
 	"github.com/fengzhongzhu1621/xgo/network/nethttp/staticserver"
 	"gopkg.in/yaml.v2"
 )
@@ -34,7 +35,7 @@ func (s *HTTPStaticServer) readAccessConf(realPath string) (ac staticserver.Acce
 		// 向上遍历获取祖先目录下的配置文件，先将根据目录下的配置转换为结构体，然后在将子目录下的配置文件转换为结构体并覆盖父配置
 		ac = s.readAccessConf(parentPath)
 	}
-	if file.IsFile(realPath) {
+	if validator.IsFile(realPath) {
 		realPath = filepath.Dir(realPath)
 	}
 
