@@ -11,7 +11,7 @@ import (
 )
 
 // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 创建了一个名为defaultJsonHandle的变量，该变量的类型是codec.JsonHandle。
+// Codec 创建了一个名为defaultJsonHandle的变量，该变量的类型是codec.JsonHandle。
 type Codec struct{}
 
 // Encode 将字典转换为字符串
@@ -38,32 +38,32 @@ func init() {
 	defaultJsonHandle.MapType = reflect.TypeOf(map[string]interface{}(nil))
 }
 
-// DecJSON 将字符串转换为结构体或字典
+// DecodeJSON 将字符串转换为结构体或字典
 func DecodeJSON(s []byte, v any) error {
 	dec := codec.NewDecoderBytes(s, &defaultJsonHandle)
 	return dec.Decode(v)
 }
 
-// DecJSONReader 将 io.Reader 转换为结构体或字典
+// DecodeJSONReader 将 io.Reader 转换为结构体或字典
 func DecodeJSONReader(s io.Reader, v any) error {
 	dec := codec.NewDecoder(s, &defaultJsonHandle)
 	return dec.Decode(v)
 }
 
-// EncJSON 将结构体或字典转换为字符串
+// EncodeJSON 将结构体或字典转换为字符串
 func EncodeJSON(v any, s *[]byte) error {
 	enc := codec.NewEncoderBytes(s, &defaultJsonHandle)
 	return enc.Encode(v)
 }
 
-// EncJSONWriter 将结构体或字典转换为字符串并写入到 io.Writer
+// EncodeJSONWriter 将结构体或字典转换为字符串并写入到 io.Writer
 func EncodeJSONWriter(v any, s io.Writer) error {
 	enc := codec.NewEncoder(s, &defaultJsonHandle)
 	return enc.Encode(v)
 }
 
 // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 创建了一个名为defaultJsonHandle的变量，该变量的类型是codec.JsonHandle。
+// JsonStringToObject 创建了一个名为defaultJsonHandle的变量，该变量的类型是codec.JsonHandle。
 // 将字符串 s 转换为 json 对象 v
 // jsonStringToObject attempts to unmarshall a string as JSON into
 // the object passed as pointer.
@@ -72,7 +72,7 @@ func JsonStringToObject(s string, v any) error {
 	return json.Unmarshal(data, v)
 }
 
-// Truncate 将对象转换为json 字符串，并指定长度截断
+// TruncateJson 将对象转换为json 字符串，并指定长度截断
 func TruncateJson(args any, length int) string {
 	s, err := jsoniter.MarshalToString(args)
 	if err != nil {

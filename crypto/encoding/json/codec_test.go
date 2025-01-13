@@ -7,6 +7,8 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/duke-git/lancet/v2/convertor"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -232,4 +234,43 @@ func TestOmitEmpty(t *testing.T) {
 	}
 
 	fmt.Println(string(jsonBytes2)) // 输出: {"name":"Alice"}
+}
+
+// TestToJson 字典转换为字符串
+// func ToJson(value any) (string, error)
+func TestToJson(t *testing.T) {
+	aMap := map[string]int{"a": 1, "b": 2, "c": 3}
+	result, err := convertor.ToJson(aMap)
+
+	if err != nil {
+		fmt.Printf("%v", err)
+	}
+
+	fmt.Println(result)
+
+	// Output:
+	// {"a":1,"b":2,"c":3}
+}
+
+// TestToMap 结构体转换为 MAP
+// Convert a slice of structs to a map based on iteratee function.
+// func ToMap[T any, K comparable, V any](array []T, iteratee func(T) (K, V)) map[K]V
+func TestToMap(t *testing.T) {
+	type Message struct {
+		name string
+		code int
+	}
+	messages := []Message{
+		{name: "Hello", code: 100},
+		{name: "Hi", code: 101},
+	}
+
+	result := convertor.ToMap(messages, func(msg Message) (int, string) {
+		return msg.code, msg.name
+	})
+
+	fmt.Println(result)
+
+	// Output:
+	// map[100:Hello 101:Hi]
 }

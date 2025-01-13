@@ -1,9 +1,10 @@
-package structutils
+package cast
 
 import (
 	"fmt"
 	"testing"
 
+	"github.com/duke-git/lancet/v2/convertor"
 	"github.com/duke-git/lancet/v2/structs"
 )
 
@@ -23,4 +24,22 @@ func TestToMap(t *testing.T) {
 	// use static function
 	m2, _ := structs.ToMap(p1)
 	fmt.Println(m2)
+}
+
+// func StructToMap(value any) (map[string]any, error)
+func TestStructToMap(t *testing.T) {
+	type People struct {
+		Name string `json:"name"`
+		age  int
+	}
+	p := People{
+		"test",
+		100,
+	}
+	pm, _ := convertor.StructToMap(p)
+
+	fmt.Println(pm)
+
+	// Output:
+	// map[name:test]
 }

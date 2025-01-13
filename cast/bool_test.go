@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/duke-git/lancet/v2/convertor"
+
 	"github.com/duke-git/lancet/v2/condition"
 )
 
@@ -102,4 +104,38 @@ func TestTernary(t *testing.T) {
 	// Output:
 	// 0
 	// 1
+}
+
+// func ToBool(s string) (bool, error)
+func TestToBool(t *testing.T) {
+	cases := []string{"1", "true", "True", "false", "False", "0", "123", "0.0", "abc"}
+
+	for i := 0; i < len(cases); i++ {
+		result, _ := convertor.ToBool(cases[i])
+		fmt.Println(result)
+	}
+
+	// Output:
+	// true
+	// true
+	// true
+	// false
+	// false
+	// false
+	// false
+	// false
+	// false
+}
+
+// func ToBytes(data any) ([]byte, error)
+func TestToBytes(t *testing.T) {
+	bytesData, err := convertor.ToBytes("abc")
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println(bytesData)
+
+	// Output:
+	// [97 98 99]
 }

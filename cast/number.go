@@ -12,8 +12,52 @@ import (
 // 负数格式转换异常.
 var errNegativeNotAllowed = errors.New("unable to cast negative value")
 
-// 转换为float64类型
-// ToFloat64E casts an interface to a float64 type.
+// BoolToInt bool类型转换 int64
+func BoolToInt(b bool) int64 {
+	if b {
+		return 1
+	}
+	return 0
+}
+
+// Itoa Cheap integer to fixed-width decimal ASCII. Give a negative width to avoid zero-padding.
+func Itoa(buf *[]byte, i int, wid int) {
+	// Assemble decimal in reverse order.
+	var b [20]byte
+	bp := len(b) - 1
+	for i >= 10 || wid > 1 {
+		wid--
+		q := i / 10
+		b[bp] = byte('0' + i - q*10)
+		bp--
+		i = q
+	}
+	// i < 10
+	b[bp] = byte('0' + i)
+	*buf = append(*buf, b[bp:]...)
+}
+
+// Atoi 将字节数组转换为int类型.
+func Atoi(b []byte) (int, error) {
+	return strconv.Atoi(BytesToString(b))
+}
+
+// ParseInt 将字节数组转换为int64.
+func ParseInt(b []byte, base int, bitSize int) (int64, error) {
+	return strconv.ParseInt(BytesToString(b), base, bitSize)
+}
+
+// ParseUint 字节数组转换为uint64.
+func ParseUint(b []byte, base int, bitSize int) (uint64, error) {
+	return strconv.ParseUint(BytesToString(b), base, bitSize)
+}
+
+// ParseFloat 将字节数组转换为float64.
+func ParseFloat(b []byte, bitSize int) (float64, error) {
+	return strconv.ParseFloat(BytesToString(b), bitSize)
+}
+
+// ToFloat64E casts an interface to a float64 type. 转换为float64类型
 func ToFloat64E(i interface{}) (float64, error) {
 	i = indirect(i)
 
@@ -330,7 +374,6 @@ func ToInt32E(i interface{}) (int32, error) {
 	}
 }
 
-// 转换为Int16类型
 // ToInt16E casts an interface to an int16 type.
 func ToInt16E(i interface{}) (int16, error) {
 	i = indirect(i)
@@ -378,7 +421,6 @@ func ToInt16E(i interface{}) (int16, error) {
 	}
 }
 
-// 转换为Int8类型
 // ToInt8E casts an interface to an int8 type.
 func ToInt8E(i interface{}) (int8, error) {
 	i = indirect(i)
@@ -426,7 +468,6 @@ func ToInt8E(i interface{}) (int8, error) {
 	}
 }
 
-// 转换为Int类型
 // ToIntE casts an interface to an int type.
 func ToIntE(i interface{}) (int, error) {
 	i = indirect(i)
@@ -474,7 +515,6 @@ func ToIntE(i interface{}) (int, error) {
 	}
 }
 
-// 转换为Uint类型
 // ToUintE casts an interface to a uint type.
 func ToUintE(i interface{}) (uint, error) {
 	i = indirect(i)
@@ -543,7 +583,6 @@ func ToUintE(i interface{}) (uint, error) {
 	}
 }
 
-// 转换为Uint64类型
 // ToUint64E casts an interface to a uint64 type.
 func ToUint64E(i interface{}) (uint64, error) {
 	i = indirect(i)
@@ -612,7 +651,6 @@ func ToUint64E(i interface{}) (uint64, error) {
 	}
 }
 
-// 转换为Uint32类型
 // ToUint32E casts an interface to a uint32 type.
 func ToUint32E(i interface{}) (uint32, error) {
 	i = indirect(i)
@@ -681,7 +719,6 @@ func ToUint32E(i interface{}) (uint32, error) {
 	}
 }
 
-// 转换为Uint16类型
 // ToUint16E casts an interface to a uint16 type.
 func ToUint16E(i interface{}) (uint16, error) {
 	i = indirect(i)
@@ -750,7 +787,6 @@ func ToUint16E(i interface{}) (uint16, error) {
 	}
 }
 
-// 转换为Uint8类型
 // ToUint8E casts an interface to a uint type.
 func ToUint8E(i interface{}) (uint8, error) {
 	i = indirect(i)

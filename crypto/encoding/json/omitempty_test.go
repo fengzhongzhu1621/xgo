@@ -14,7 +14,7 @@ type Example struct {
 	Data *string `json:"data,omitempty"`
 }
 
-func TestOmitemty(t *testing.T) {
+func TestOmitmpty(t *testing.T) {
 	example := Example{}
 
 	// 当Data为nil时，编码后的JSON不包含"data"字段

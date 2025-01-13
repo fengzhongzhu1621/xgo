@@ -47,7 +47,6 @@ func ToBoolSliceE(i interface{}) ([]bool, error) {
 	}
 }
 
-// 转换为bool类型
 // ToBoolE casts an interface to a bool type.
 func ToBoolE(i interface{}) (bool, error) {
 	i = indirect(i)
@@ -67,14 +66,6 @@ func ToBoolE(i interface{}) (bool, error) {
 	default:
 		return false, fmt.Errorf("unable to cast %#v of type %T to bool", i, i)
 	}
-}
-
-// BoolToInt bool类型转换 int64
-func BoolToInt(b bool) int64 {
-	if b {
-		return 1
-	}
-	return 0
 }
 
 // IntToBool int64 转 bool
