@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/duke-git/lancet/v2/structs"
 	"github.com/go-playground/validator/v10"
+	"github.com/stretchr/testify/assert"
 )
 
 // validate:"required,dive,required" 是一个组合标签，它告诉验证器对结构体中的某个字段执行一系列的验证规则。
@@ -38,4 +40,16 @@ func TestUser2(t *testing.T) {
 	} else {
 		fmt.Println("Validation passed")
 	}
+}
+
+// TesIsStruct Check if the struct is valid
+// func (s *Struct) IsStruct() bool
+func TestIsStruct(t *testing.T) {
+	type People struct {
+		Name string `json:"name"`
+	}
+	p1 := &People{Name: "11"}
+	s := structs.New(p1)
+
+	assert.Equal(t, true, s.IsStruct())
 }

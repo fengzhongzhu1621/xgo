@@ -7,7 +7,7 @@ import (
 )
 
 // SaveUploadedFile uploads the form file to specific dst.
-// 保存上传的文件 .
+// 保存上传的文件
 func SaveUploadedFile(file *multipart.FileHeader, dst string) error {
 	// 打开上传的文件
 	src, err := file.Open()

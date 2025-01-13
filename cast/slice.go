@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+	"strconv"
+	"strings"
 )
 
 // ToSlice casts an interface to a []interface{} type.
@@ -33,7 +35,7 @@ func ToSliceE(i interface{}) ([]interface{}, error) {
 
 var ErrNotArray = errors.New("only support array")
 
-// ToSlice conv an array-interface to []interface{}
+// ToSlice2 conv an array-interface to []interface{}
 // will error if the type is not slice
 func ToSlice2(array interface{}) ([]interface{}, error) {
 	v := reflect.ValueOf(array)
@@ -67,4 +69,109 @@ func TransSlice2Interface2(slice []string) ([]interface{}, error) {
 		interfaceSlice[i] = v
 	}
 	return interfaceSlice, nil
+}
+
+// ToStringSlice casts an interface to a []string type.
+func ToStringSlice(i interface{}) []string {
+	v, _ := ToStringSliceE(i)
+	return v
+}
+
+// ToStringSliceE casts an interface to a []string type.
+func ToStringSliceE(i interface{}) ([]string, error) {
+	var a []string
+
+	switch v := i.(type) {
+	case []interface{}:
+		for _, u := range v {
+			a = append(a, ToString(u))
+		}
+		return a, nil
+	case []string:
+		return v, nil
+	case []int8:
+		for _, u := range v {
+			a = append(a, ToString(u))
+		}
+		return a, nil
+	case []int:
+		for _, u := range v {
+			a = append(a, ToString(u))
+		}
+		return a, nil
+	case []int32:
+		for _, u := range v {
+			a = append(a, ToString(u))
+		}
+		return a, nil
+	case []int64:
+		for _, u := range v {
+			a = append(a, ToString(u))
+		}
+		return a, nil
+	case []float32:
+		for _, u := range v {
+			a = append(a, ToString(u))
+		}
+		return a, nil
+	case []float64:
+		for _, u := range v {
+			a = append(a, ToString(u))
+		}
+		return a, nil
+	case string:
+		return strings.Fields(v), nil
+	case []error:
+		for _, err := range i.([]error) {
+			a = append(a, err.Error())
+		}
+		return a, nil
+	case interface{}:
+		str, err := ToStringE(v)
+		if err != nil {
+			return a, fmt.Errorf("unable to cast %#v of type %T to []string", i, i)
+		}
+		return []string{str}, nil
+	default:
+		return a, fmt.Errorf("unable to cast %#v of type %T to []string", i, i)
+	}
+}
+
+// //////////////////////////////////////////////////////////////////////////////////////
+// StringToInt64Slice 根据分隔符将字符串转换为整型数组
+// 1,2,3 -> []int64{1, 2, 3}
+func StringToInt64Slice(s, sep string) ([]int64, error) {
+	if s == "" {
+		return []int64{}, nil
+	}
+	parts := strings.Split(s, sep)
+
+	int64Slice := make([]int64, 0, len(parts))
+	for _, d := range parts {
+		i, err := strconv.ParseInt(d, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		int64Slice = append(int64Slice, i)
+	}
+	return int64Slice, nil
+}
+
+// StringToIntSlice 根据分隔符将字符串转换为整型数组
+// 1,2,3 -> []int64{1, 2, 3}
+func StringToIntSlice(s, sep string) ([]int, error) {
+	if s == "" {
+		return []int{}, nil
+	}
+	parts := strings.Split(s, sep)
+
+	intSlice := make([]int, 0, len(parts))
+	for _, d := range parts {
+		i, err := strconv.Atoi(d)
+		if err != nil {
+			return nil, err
+		}
+		intSlice = append(intSlice, i)
+	}
+	return intSlice, nil
 }

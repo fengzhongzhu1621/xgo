@@ -1,7 +1,6 @@
 package file
 
 import (
-	"errors"
 	"runtime"
 	"strings"
 
@@ -22,14 +21,4 @@ func SanitizedName(filename string) string {
 	filename = strings.TrimLeft(strings.Replace(filename, `\`, "/", -1), `/`)
 
 	return filename
-}
-
-// CheckFilename 判断文件名是否包含特殊字符
-func CheckFilename(name string) error {
-	// 用于检查一个字符串中是否包含指定的任何字符集。
-	if strings.ContainsAny(name, "\\/:*<>|") {
-		// 自定义错误
-		return errors.New("Name should not contains \\/:*<>|")
-	}
-	return nil
 }

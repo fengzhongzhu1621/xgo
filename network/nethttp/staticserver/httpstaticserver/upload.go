@@ -8,8 +8,9 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/fengzhongzhu1621/xgo/validator"
+
 	"github.com/fengzhongzhu1621/xgo/crypto/compress/zipfile"
-	"github.com/fengzhongzhu1621/xgo/file"
 )
 
 func (s *HTTPStaticServer) hUploadOrMkdir(w http.ResponseWriter, req *http.Request) {
@@ -61,7 +62,7 @@ func (s *HTTPStaticServer) hUploadOrMkdir(w http.ResponseWriter, req *http.Reque
 		filename = header.Filename
 	}
 	// 判读文件中是否存在特殊字符
-	if err := file.CheckFilename(filename); err != nil {
+	if err := validator.CheckFilename(filename); err != nil {
 		http.Error(w, err.Error(), http.StatusForbidden)
 		return
 	}

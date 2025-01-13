@@ -1,46 +1,33 @@
 package cast
 
 import (
-	"math/rand"
+	"fmt"
 	"testing"
 
-	"github.com/duke-git/lancet/v2/strutil"
-	"github.com/stretchr/testify/assert"
+	"github.com/duke-git/lancet/v2/convertor"
 )
 
-var testString = "Albert Einstein: Logic will get you from A to B. Imagination will take you everywhere."
-var testBytes = []byte(testString)
+// func EncodeByte(data any) ([]byte, error)
+func TestEncodeByte(t *testing.T) {
+	byteData, _ := convertor.EncodeByte("abc")
+	fmt.Println(byteData)
 
-// go test -v
-
-func TestBytesToString(t *testing.T) {
-	data := make([]byte, 1024)
-	for i := 0; i < 100; i++ {
-		rand.Read(data)
-		if rawBytesToStr(data) != BytesToString(data) {
-			t.Fatal("don't match")
-		}
-	}
+	// Output:
+	// [6 12 0 3 97 98 99]
 }
 
-// TestLancetBytesToString 将字节切片转换为字符串而无需进行内存分配。
-// func BytesToString(bytes []byte) string
-func TestLancetBytesToString(t *testing.T) {
-	bytes := []byte{'a', 'b', 'c'}
-	result := strutil.BytesToString(bytes)
-	assert.Equal(t, "abc", result)
-}
+// func DecodeByte(data []byte, target any) error
+func TestDecodeByte(t *testing.T) {
+	var result string
+	byteData := []byte{6, 12, 0, 3, 97, 98, 99}
 
-// go test -v -run=none -bench=^BenchmarkBytesConv -benchmem=true
-
-func BenchmarkBytesConvBytesToStrRaw(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		rawBytesToStr(testBytes)
+	err := convertor.DecodeByte(byteData, &result)
+	if err != nil {
+		return
 	}
-}
 
-func BenchmarkBytesConvBytesToStr(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		BytesToString(testBytes)
-	}
+	fmt.Println(result)
+
+	// Output:
+	// abc
 }

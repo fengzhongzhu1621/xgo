@@ -12,6 +12,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/fengzhongzhu1621/xgo/numpy"
+
 	"github.com/mitchellh/mapstructure"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
@@ -308,7 +310,7 @@ func TestSizeInBytes(t *testing.T) {
 	}
 
 	for str, expected := range input {
-		assert.Equal(t, expected, ParseSizeInBytes(str), str)
+		assert.Equal(t, expected, numpy.ParseSizeInBytes(str), str)
 	}
 }
 

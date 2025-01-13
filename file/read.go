@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-// 判断文件类型并返回一个 io.ReadCloser，用于后续读取文件内容
+// StatFile 判断文件类型并返回一个 io.ReadCloser，用于后续读取文件内容
 func StatFile(filename string) (info os.FileInfo, reader io.ReadCloser, err error) {
 	// 用于获取文件或目录的元信息（metadata），但不会跟随符号链接
 	info, err = os.Lstat(filename)

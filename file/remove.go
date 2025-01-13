@@ -1,11 +1,12 @@
 package file
 
 import (
+	"os"
 	"path/filepath"
 	"strings"
 )
 
-// 根据路径获得文件名，并去掉文件名的后缀.
+// RemoveFileExt 根据路径获得文件名，并去掉文件名的后缀.
 func RemoveFileExt(filePath string) string {
 	// 根据路径获得文件名
 	filename := filepath.Base(filePath)
@@ -15,4 +16,25 @@ func RemoveFileExt(filePath string) string {
 		return filename
 	}
 	return filename[:idx]
+}
+
+// RemoveContents 删除所有的子目录.
+func RemoveContents(dir string) error {
+	// 获得目录下所有的文件名
+	d, err := os.Open(dir)
+	if err != nil {
+		return err
+	}
+	defer d.Close()
+	names, err := d.Readdirnames(-1)
+	if err != nil {
+		return err
+	}
+	for _, name := range names {
+		err = os.RemoveAll(filepath.Join(dir, name))
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

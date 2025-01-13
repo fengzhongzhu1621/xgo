@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/fengzhongzhu1621/xgo/file"
 	"github.com/fengzhongzhu1621/xgo/tpl"
+	"github.com/fengzhongzhu1621/xgo/validator"
 	"github.com/gorilla/mux"
 )
 
@@ -92,7 +92,7 @@ func (s *HTTPStaticServer) hIndex(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if r.FormValue("raw") == "false" || file.IsDir(realPath) {
+	if r.FormValue("raw") == "false" || validator.IsDir(realPath) {
 		// 首页访问
 		if r.Method == "HEAD" {
 			return
