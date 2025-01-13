@@ -5,10 +5,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/fengzhongzhu1621/xgo/validator"
-
 	"github.com/fengzhongzhu1621/xgo/crypto/compress/zipfile"
 	"github.com/fengzhongzhu1621/xgo/network/nethttp/staticserver"
+	"github.com/fengzhongzhu1621/xgo/validator"
 	"gopkg.in/yaml.v2"
 )
 
