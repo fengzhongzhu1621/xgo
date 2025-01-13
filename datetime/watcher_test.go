@@ -1,11 +1,21 @@
-package function
+package datetime
 
 import (
 	"fmt"
 	"testing"
+	"time"
+
+	"github.com/duke-git/lancet/v2/datetime"
 
 	"github.com/duke-git/lancet/v2/function"
 )
+
+func longRunningTask() {
+	var slice []int64
+	for i := 0; i < 10000000; i++ {
+		slice = append(slice, int64(i))
+	}
+}
 
 // 观察者（Watcher）用于记录代码执行时间。可以启动/停止/重置观察计时器（监测计时器）。获取函数执行的已耗时间。
 // Watcher is used for record code execution time. can start/stop/reset the watch timer. get the elapsed time of function execution.
@@ -43,9 +53,15 @@ func TestWatcher(t *testing.T) {
 	w.Reset()
 }
 
-func longRunningTask() {
-	var slice []int64
-	for i := 0; i < 10000000; i++ {
-		slice = append(slice, int64(i))
+// Tracks function execution time.
+// func TrackFuncTime(pre time.Time) func()
+func TestTrackFuncTime(t *testing.T) {
+	defer datetime.TrackFuncTime(time.Now())()
+
+	var n int
+	for i := 0; i < 5000000; i++ {
+		n++
 	}
+
+	fmt.Println(1) // Function main execution time:     1.460287ms
 }
