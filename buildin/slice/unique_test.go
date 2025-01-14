@@ -7,6 +7,7 @@ import (
 
 	"github.com/araujo88/lambda-go/pkg/utils"
 	"github.com/duke-git/lancet/v2/slice"
+	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -85,4 +86,132 @@ func TestUniqueByField(t *testing.T) {
 		{ID: 1, Name: "a"},
 		{ID: 2, Name: "b"},
 	}, result)
+}
+
+func TestFindUniques(t *testing.T) {
+	t.Parallel()
+	is := assert.New(t)
+
+	result1 := lo.FindUniques([]int{1, 2, 3})
+
+	is.Equal(3, len(result1))
+	is.Equal([]int{1, 2, 3}, result1)
+
+	result2 := lo.FindUniques([]int{1, 2, 2, 3, 1, 2})
+
+	is.Equal(1, len(result2))
+	is.Equal([]int{3}, result2)
+
+	result3 := lo.FindUniques([]int{1, 2, 2, 1})
+
+	is.Equal(0, len(result3))
+	is.Equal([]int{}, result3)
+
+	result4 := lo.FindUniques([]int{})
+
+	is.Equal(0, len(result4))
+	is.Equal([]int{}, result4)
+
+	type myStrings []string
+	allStrings := myStrings{"", "foo", "bar"}
+	nonempty := lo.FindUniques(allStrings)
+	is.IsType(nonempty, allStrings, "type preserved")
+}
+
+func TestFindUniquesBy(t *testing.T) {
+	t.Parallel()
+	is := assert.New(t)
+
+	result1 := lo.FindUniquesBy([]int{0, 1, 2}, func(i int) int {
+		return i % 3
+	})
+
+	is.Equal(3, len(result1))
+	is.Equal([]int{0, 1, 2}, result1)
+
+	result2 := lo.FindUniquesBy([]int{0, 1, 2, 3, 4}, func(i int) int {
+		return i % 3
+	})
+
+	is.Equal(1, len(result2))
+	is.Equal([]int{2}, result2)
+
+	result3 := lo.FindUniquesBy([]int{0, 1, 2, 3, 4, 5}, func(i int) int {
+		return i % 3
+	})
+
+	is.Equal(0, len(result3))
+	is.Equal([]int{}, result3)
+
+	result4 := lo.FindUniquesBy([]int{}, func(i int) int {
+		return i % 3
+	})
+
+	is.Equal(0, len(result4))
+	is.Equal([]int{}, result4)
+
+	type myStrings []string
+	allStrings := myStrings{"", "foo", "bar"}
+	nonempty := lo.FindUniquesBy(allStrings, func(i string) string {
+		return i
+	})
+	is.IsType(nonempty, allStrings, "type preserved")
+}
+
+func TestFindDuplicates(t *testing.T) {
+	t.Parallel()
+	is := assert.New(t)
+
+	result1 := lo.FindDuplicates([]int{1, 2, 2, 1, 2, 3})
+
+	is.Equal(2, len(result1))
+	is.Equal([]int{1, 2}, result1)
+
+	result2 := lo.FindDuplicates([]int{1, 2, 3})
+
+	is.Equal(0, len(result2))
+	is.Equal([]int{}, result2)
+
+	result3 := lo.FindDuplicates([]int{})
+
+	is.Equal(0, len(result3))
+	is.Equal([]int{}, result3)
+
+	type myStrings []string
+	allStrings := myStrings{"", "foo", "bar"}
+	nonempty := lo.FindDuplicates(allStrings)
+	is.IsType(nonempty, allStrings, "type preserved")
+}
+
+func TestFindDuplicatesBy(t *testing.T) {
+	t.Parallel()
+	is := assert.New(t)
+
+	result1 := lo.FindDuplicatesBy([]int{3, 4, 5, 6, 7}, func(i int) int {
+		return i % 3
+	})
+
+	is.Equal(2, len(result1))
+	is.Equal([]int{3, 4}, result1)
+
+	result2 := lo.FindDuplicatesBy([]int{0, 1, 2, 3, 4}, func(i int) int {
+		return i % 5
+	})
+
+	is.Equal(0, len(result2))
+	is.Equal([]int{}, result2)
+
+	result3 := lo.FindDuplicatesBy([]int{}, func(i int) int {
+		return i % 3
+	})
+
+	is.Equal(0, len(result3))
+	is.Equal([]int{}, result3)
+
+	type myStrings []string
+	allStrings := myStrings{"", "foo", "bar"}
+	nonempty := lo.FindDuplicatesBy(allStrings, func(i string) string {
+		return i
+	})
+	is.IsType(nonempty, allStrings, "type preserved")
 }

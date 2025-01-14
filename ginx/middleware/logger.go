@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/fengzhongzhu1621/xgo/buildin/slice"
 	"github.com/fengzhongzhu1621/xgo/ginx/utils"
 	"github.com/fengzhongzhu1621/xgo/logging"
 	"github.com/fengzhongzhu1621/xgo/monitor/sentry"
 	"github.com/fengzhongzhu1621/xgo/network/nethttp"
-	"github.com/fengzhongzhu1621/xgo/str/slice"
 	"github.com/fengzhongzhu1621/xgo/str/stringutils"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"

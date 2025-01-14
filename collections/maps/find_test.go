@@ -4,6 +4,7 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -169,4 +170,48 @@ func TestGetList(t *testing.T) {
 func TestGetMap(t *testing.T) {
 	assert.Equal(t, map[string]interface{}{"app": "nginx"}, GetMap(deploySpec, "selector.matchLabels"))
 	assert.Equal(t, map[string]interface{}{}, GetMap(deploySpec, "template.spec.notExistsKey"))
+}
+
+// 根据 value 值查找 key 值
+func TestFindKey(t *testing.T) {
+	t.Parallel()
+	is := assert.New(t)
+
+	result1, ok1 := lo.FindKey(map[string]int{"foo": 1, "bar": 2, "baz": 3}, 2)
+	is.Equal("bar", result1)
+	is.True(ok1)
+
+	result2, ok2 := lo.FindKey(map[string]int{"foo": 1, "bar": 2, "baz": 3}, 42)
+	is.Equal("", result2)
+	is.False(ok2)
+
+	type test struct {
+		foobar string
+	}
+
+	result3, ok3 := lo.FindKey(map[string]test{"foo": {"foo"}, "bar": {"bar"}, "baz": {"baz"}}, test{"foo"})
+	is.Equal("foo", result3)
+	is.True(ok3)
+
+	result4, ok4 := lo.FindKey(map[string]test{"foo": {"foo"}, "bar": {"bar"}, "baz": {"baz"}}, test{"hello world"})
+	is.Equal("", result4)
+	is.False(ok4)
+}
+
+// 根据条件匹配查询 key值
+func TestFindKeyBy(t *testing.T) {
+	t.Parallel()
+	is := assert.New(t)
+
+	result1, ok1 := lo.FindKeyBy(map[string]int{"foo": 1, "bar": 2, "baz": 3}, func(k string, v int) bool {
+		return k == "foo"
+	})
+	is.Equal("foo", result1)
+	is.True(ok1)
+
+	result2, ok2 := lo.FindKeyBy(map[string]int{"foo": 1, "bar": 2, "baz": 3}, func(k string, v int) bool {
+		return false
+	})
+	is.Equal("", result2)
+	is.False(ok2)
 }

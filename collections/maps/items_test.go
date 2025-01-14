@@ -6,21 +6,9 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/duke-git/lancet/v2/convertor"
-
 	"github.com/duke-git/lancet/v2/maputil"
 	"github.com/stretchr/testify/assert"
 )
-
-// func MapToSlice[T any, K comparable, V any](aMap map[K]V, iteratee func(K, V) T) []T
-func TestMapToSlice(t *testing.T) {
-	aMap := map[string]int{"a": 1, "b": 2, "c": 3}
-	result := convertor.MapToSlice(aMap, func(key string, value int) string {
-		return key + ":" + strconv.Itoa(value)
-	})
-
-	fmt.Println(result) //[]string{"a:1", "b:2", "c:3"}
-}
 
 // TestForEach Executes iteratee funcation for every key and value pair in map.
 // func ForEach[K comparable, V any](m map[K]V, iteratee func(key K, value V))

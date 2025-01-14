@@ -1,20 +1,38 @@
 package slice
 
 import (
+	"math/rand"
 	"testing"
+	"time"
 
 	"github.com/duke-git/lancet/v2/slice"
+	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
 )
 
 // TestContain 判断 slice 是否包含指定值
 // func Contain[T comparable](slice []T, target T) bool
 func TestContain(t *testing.T) {
-	result1 := slice.Contain([]string{"a", "b", "c"}, "a")
-	result2 := slice.Contain([]int{1, 2, 3}, 4)
+	t.Parallel()
+	is := assert.New(t)
 
-	assert.Equal(t, true, result1)
-	assert.Equal(t, false, result2)
+	{
+		rand.Seed(time.Now().UnixNano())
+
+		result1 := lo.Sample([]string{"a", "b", "c"})
+		result2 := lo.Sample([]string{})
+
+		is.True(lo.Contains([]string{"a", "b", "c"}, result1))
+		is.Equal(result2, "")
+	}
+
+	{
+		result1 := slice.Contain([]string{"a", "b", "c"}, "a")
+		result2 := slice.Contain([]int{1, 2, 3}, 4)
+
+		assert.Equal(t, true, result1)
+		assert.Equal(t, false, result2)
+	}
 }
 
 // TestContainBy returns true if predicate function return true.
