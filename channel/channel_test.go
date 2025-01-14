@@ -7,6 +7,10 @@ import (
 	"testing"
 	"time"
 
+	"github.com/fengzhongzhu1621/xgo/tests"
+
+	"github.com/samber/lo"
+
 	"github.com/duke-git/lancet/v2/concurrency"
 
 	"github.com/stretchr/testify/assert"
@@ -101,6 +105,20 @@ func TestGenerate(t *testing.T) {
 	// 1
 	// 2
 	// 3
+
+	is := assert.New(t)
+	generator := func(yield func(int)) {
+		yield(0)
+		yield(1)
+		yield(2)
+		yield(3)
+	}
+	i := 0
+	for v := range lo.Generator(2, generator) {
+		is.Equal(i, v)
+		i++
+	}
+	is.Equal(i, 4)
 }
 
 // Create a channel whose values are taken from another channel with limit number.
@@ -128,6 +146,72 @@ func TestTake(t *testing.T) {
 	// 1
 	// 2
 	// 3
+}
+
+// Buffer 创建一个包含 n 个元素的切片，这些元素来自通道。返回切片、切片长度、读取时间和通道状态（打开/关闭）。
+// 第一个参数是通道，第二个参数是切片的长度。
+func TestTake2(t *testing.T) {
+	t.Parallel()
+	tests.TestWithTimeout(t, 10*time.Millisecond)
+	is := assert.New(t)
+
+	ch := lo.SliceToChannel(2, []int{1, 2, 3})
+
+	items1, length1, _, ok1 := lo.Buffer(ch, 2)
+	items2, length2, _, ok2 := lo.Buffer(ch, 2)
+	items3, length3, _, ok3 := lo.Buffer(ch, 2)
+
+	is.Equal([]int{1, 2}, items1)
+	is.Equal(2, length1)
+	is.True(ok1)
+
+	is.Equal([]int{3}, items2)
+	is.Equal(1, length2)
+	is.False(ok2)
+
+	is.Equal([]int{}, items3)
+	is.Equal(0, length3)
+	is.False(ok3)
+}
+
+// BufferWithTimeout 和Buffer函数类似， 但是增加了一个超时参数， 如果超时，返回已经读取的元素。
+func TestTakeWithTimeout(t *testing.T) {
+	t.Parallel()
+	tests.TestWithTimeout(t, 200*time.Millisecond)
+	is := assert.New(t)
+
+	generator := func(yield func(int)) {
+		for i := 0; i < 5; i++ {
+			yield(i)
+			time.Sleep(10 * time.Millisecond)
+		}
+	}
+	ch := lo.Generator(0, generator)
+
+	items1, length1, _, ok1 := lo.BufferWithTimeout(ch, 20, 15*time.Millisecond)
+	is.Equal([]int{0, 1}, items1)
+	is.Equal(2, length1)
+	is.True(ok1)
+
+	items2, length2, _, ok2 := lo.BufferWithTimeout(ch, 20, 2*time.Millisecond)
+	is.Equal([]int{}, items2)
+	is.Equal(0, length2)
+	is.True(ok2)
+
+	items3, length3, _, ok3 := lo.BufferWithTimeout(ch, 1, 30*time.Millisecond)
+	is.Equal([]int{2}, items3)
+	is.Equal(1, length3)
+	is.True(ok3)
+
+	items4, length4, _, ok4 := lo.BufferWithTimeout(ch, 2, 25*time.Millisecond)
+	is.Equal([]int{3, 4}, items4)
+	is.Equal(2, length4)
+	is.True(ok4)
+
+	items5, length5, _, ok5 := lo.BufferWithTimeout(ch, 3, 25*time.Millisecond)
+	is.Equal([]int{}, items5)
+	is.Equal(0, length5)
+	is.False(ok5)
 }
 
 // Create channel, put values into the channel repeatly until cancel the context.
@@ -185,6 +269,7 @@ func TestBridge(t *testing.T) {
 	// 5
 }
 
+// 合并多个输入通道的消息到一个缓冲通道中。输出消息没有优先级。当所有的上游通道到达 EOF 时，下游通道关闭。
 // Merge multiple channels into one channel until cancel the context.
 // func (c *Channel[T]) FanIn(ctx context.Context, channels ...<-chan T) <-chan T
 func TestFanIn(t *testing.T) {
@@ -210,9 +295,76 @@ func TestFanIn(t *testing.T) {
 	// 1
 	// 0
 	// 1
+
+	// 创建 3 个只读管道
+	is := assert.New(t)
+	upstreams := CreateChannels[int](3, 10)
+	roupstreams := ChannelsToReadOnly(upstreams)
+	for i := range roupstreams {
+		go func(i int) {
+			upstreams[i] <- 1
+			upstreams[i] <- 1
+			close(upstreams[i])
+		}(i)
+	}
+	out := lo.FanIn(10, roupstreams...)
+	time.Sleep(10 * time.Millisecond)
+
+	// check input channels
+	is.Equal(0, len(roupstreams[0]))
+	is.Equal(0, len(roupstreams[1]))
+	is.Equal(0, len(roupstreams[2]))
+
+	// check channels allocation
+	is.Equal(6, len(out))
+	is.Equal(10, cap(out))
+
+	// check channels content
+	for i := 0; i < 6; i++ {
+		msg0, ok0 := <-out
+		is.Equal(true, ok0)
+		is.Equal(1, msg0)
+	}
+
+	// 验证当所有的上游通道到达 EOF 时，下游通道关闭。
+	// check it is closed
+	time.Sleep(10 * time.Millisecond)
+	msg0, ok0 := <-out
+	is.Equal(false, ok0)
+	is.Equal(0, msg0)
 }
 
-// Read one or more channels into one channel, will close when any readin channel is closed.
+// 广播所有上游消息到多个下游通道。当上游通道到达 EOF 时，下游通道关闭。如果任何下游通道已满，广播将暂停。
+func TestFanOut(t *testing.T) {
+	t.Parallel()
+	tests.TestWithTimeout(t, 100*time.Millisecond)
+	is := assert.New(t)
+
+	// 广播所有上游消息到多个下游通道
+	upstream := lo.SliceToChannel(10, []int{0, 1, 2, 3, 4, 5})
+	rodownstreams := lo.FanOut(3, 10, upstream)
+	time.Sleep(10 * time.Millisecond)
+
+	// 验证下游通道的数量
+	is.Equal(3, len(rodownstreams))
+
+	// 验证下游通道的容量和长度，并读取下游通道的数据
+	for i := range rodownstreams {
+		is.Equal(6, len(rodownstreams[i]))
+		is.Equal(10, cap(rodownstreams[i]))
+		is.Equal([]int{0, 1, 2, 3, 4, 5}, lo.ChannelToSlice(rodownstreams[i]))
+	}
+
+	// 验证当上游通道到达 EOF 时，下游通道关闭
+	time.Sleep(10 * time.Millisecond)
+	for i := range rodownstreams {
+		msg, ok := <-rodownstreams[i]
+		is.Equal(false, ok)
+		is.Equal(0, msg)
+	}
+}
+
+// Read one or more channels into one channel, will close when any read in channel is closed.
 // func (c *Channel[T]) Or(channels ...<-chan T) <-chan T
 func TestOr(t *testing.T) {
 	sig := func(after time.Duration) <-chan any {
