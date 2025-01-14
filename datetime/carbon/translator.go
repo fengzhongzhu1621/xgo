@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/fengzhongzhu1621/xgo/carbon/lang"
+	"github.com/fengzhongzhu1621/xgo/datetime/carbon/lang"
 )
 
 // Translator helps to translate time based on locale

@@ -418,6 +418,7 @@ func NewLayerFunctionErrorWrapf(layer string, function string) WrapfFuncWithLaye
 // /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Validate is a helper that creates an error when a condition is not met.
+// 根据条件创建错误
 // Play: https://go.dev/play/p/vPyh51XpCBt
 func Validate(ok bool, format string, args ...any) error {
 	if !ok {
@@ -428,12 +429,14 @@ func Validate(ok bool, format string, args ...any) error {
 
 // ErrorsAs is a shortcut for errors.As(err, &&T).
 // Play: https://go.dev/play/p/8wk5rH8UfrE
+// 错误类型转换
 func ErrorsAs[T error](err error) (T, bool) {
 	var t T
 	ok := errors.As(err, &t)
 	return t, ok
 }
 
+// messageFromMsgAndArgs 将对象转换为错误字符串
 func messageFromMsgAndArgs(msgAndArgs ...any) string {
 	if len(msgAndArgs) == 1 {
 		if msgAsStr, ok := msgAndArgs[0].(string); ok {
@@ -455,6 +458,7 @@ func must(err any, messageArgs ...any) {
 
 	switch e := err.(type) {
 	case bool:
+		// false 则 panic 错误信息
 		if !e {
 			message := messageFromMsgAndArgs(messageArgs...)
 			if message == "" {
@@ -463,6 +467,7 @@ func must(err any, messageArgs ...any) {
 
 			panic(message)
 		}
+		// true 则不处理
 
 	case error:
 		message := messageFromMsgAndArgs(messageArgs...)

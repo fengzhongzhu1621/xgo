@@ -29,7 +29,7 @@ func TestWaitGroupTimeout_timeout(t *testing.T) {
 	assert.True(t, timeouted)
 }
 
-func TestSizedwaitgroup(t *testing.T) {
+func TestSizedWaitGroup(t *testing.T) {
 	var wg sync.WaitGroup
 	// 创建一个容量为 3 的 SizedWaitGroup, 最多只能有 3 个协程同时运行
 	swg := sizedwaitgroup.New(3)

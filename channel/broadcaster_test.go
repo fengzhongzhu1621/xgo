@@ -12,6 +12,7 @@ func TestNewChannelBroadcaster(t *testing.T) {
 	var wg sync.WaitGroup
 	wg.Add(2)
 
+	// 创建两个协程，等待接受广播信号
 	b.Go(func() {
 		t.Log("receiver 1 finished")
 		wg.Done()

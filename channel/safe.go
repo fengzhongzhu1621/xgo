@@ -14,6 +14,7 @@ var StackTraceBufferSize = 4 << 10
 
 // ///////////////////////////////////////////////////////////////////////////////////////
 
+// 调用函数 func() error，忽略 panic，返回执行是否成功
 // Try calls the function and return false in case of error.
 func Try(callback func() error) (ok bool) {
 	ok = true
@@ -212,6 +213,7 @@ func TryOr6[A, B, C, D, E, F any](callback func() (A, B, C, D, E, F, error), fal
 }
 
 // TryWithErrorValue has the same behavior as Try, but also returns value passed to panic.
+// 返回 recover 错误和执行状态
 // Play: https://go.dev/play/p/Kc7afQIT2Fs
 func TryWithErrorValue(callback func() error) (errorValue any, ok bool) {
 	ok = true

@@ -10,15 +10,17 @@ func TimeoutCaller(functionCall func(chan error), timeout time.Duration) error {
 	var (
 		err error
 	)
-	// 执行任务
+	// 异步执行任务
 	echan := make(chan error)
 	go functionCall(echan)
 
 	// 等待任务执行完成
 	select {
 	case <-time.After(timeout):
+		// 任务超时
 		return errors.New("Timed out while initiating calling")
 	case err = <-echan:
+		// 任务执行完成
 		return err
 	}
 }
