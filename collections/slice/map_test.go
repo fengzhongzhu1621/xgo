@@ -1,10 +1,13 @@
 package slice
 
 import (
+	"fmt"
+	"strconv"
 	"testing"
 
 	"github.com/araujo88/lambda-go/pkg/core"
 	"github.com/duke-git/lancet/v2/slice"
+	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -18,14 +21,32 @@ func TestMap(t *testing.T) {
 // TestLancetMap Creates an slice of values by running each element in slice thru function.
 // func Map[T any, U any](slice []T, iteratee func(index int, item T) U) []U
 func TestLancetMap(t *testing.T) {
-	nums := []int{1, 2, 3}
+	t.Parallel()
+	is := assert.New(t)
+	{
+		result1 := lo.MapToSlice(map[int]int{1: 5, 2: 6, 3: 7, 4: 8}, func(k int, v int) string {
+			return fmt.Sprintf("%d_%d", k, v)
+		})
+		result2 := lo.MapToSlice(map[int]int{1: 5, 2: 6, 3: 7, 4: 8}, func(k int, _ int) string {
+			return strconv.FormatInt(int64(k), 10)
+		})
 
-	addOne := func(_ int, v int) int {
-		return v + 1
+		is.Equal(len(result1), 4)
+		is.Equal(len(result2), 4)
+		is.ElementsMatch(result1, []string{"1_5", "2_6", "3_7", "4_8"})
+		is.ElementsMatch(result2, []string{"1", "2", "3", "4"})
 	}
 
-	result := slice.Map(nums, addOne)
-	assert.Equal(t, []int{2, 3, 4}, result)
+	{
+		nums := []int{1, 2, 3}
+
+		addOne := func(_ int, v int) int {
+			return v + 1
+		}
+
+		result := slice.Map(nums, addOne)
+		assert.Equal(t, []int{2, 3, 4}, result)
+	}
 }
 
 // TestMapConcurrent Applies the iteratee function to each item in the slice by concrrent.

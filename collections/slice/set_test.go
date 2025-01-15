@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/duke-git/lancet/v2/slice"
+	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -16,6 +17,28 @@ func TestIntersection(t *testing.T) {
 	result := slice.Intersection(nums1, nums2)
 
 	assert.Equal(t, []int{2, 3}, result)
+}
+
+func TestIntersect2(t *testing.T) {
+	t.Parallel()
+	is := assert.New(t)
+
+	result1 := lo.Intersect([]int{0, 1, 2, 3, 4, 5}, []int{0, 2})
+	result2 := lo.Intersect([]int{0, 1, 2, 3, 4, 5}, []int{0, 6})
+	result3 := lo.Intersect([]int{0, 1, 2, 3, 4, 5}, []int{-1, 6})
+	result4 := lo.Intersect([]int{0, 6}, []int{0, 1, 2, 3, 4, 5})
+	result5 := lo.Intersect([]int{0, 6, 0}, []int{0, 1, 2, 3, 4, 5})
+
+	is.Equal(result1, []int{0, 2})
+	is.Equal(result2, []int{0})
+	is.Equal(result3, []int{})
+	is.Equal(result4, []int{0})
+	is.Equal(result5, []int{0})
+
+	type myStrings []string
+	allStrings := myStrings{"", "foo", "bar"}
+	nonempty := lo.Intersect(allStrings, allStrings)
+	is.IsType(nonempty, allStrings, "type preserved")
 }
 
 // TestUnion Creates a slice of unique values, in order, from all given slices. using == for equality comparisons.
@@ -42,6 +65,38 @@ func TestUnionBy(t *testing.T) {
 	assert.Equal(t, []int{1, 2, 4}, result)
 }
 
+func TestUnion2(t *testing.T) {
+	t.Parallel()
+	is := assert.New(t)
+
+	result1 := lo.Union([]int{0, 1, 2, 3, 4, 5}, []int{0, 2, 10})
+	result2 := lo.Union([]int{0, 1, 2, 3, 4, 5}, []int{6, 7})
+	result3 := lo.Union([]int{0, 1, 2, 3, 4, 5}, []int{})
+	result4 := lo.Union([]int{0, 1, 2}, []int{0, 1, 2})
+	result5 := lo.Union([]int{}, []int{})
+	is.Equal(result1, []int{0, 1, 2, 3, 4, 5, 10})
+	is.Equal(result2, []int{0, 1, 2, 3, 4, 5, 6, 7})
+	is.Equal(result3, []int{0, 1, 2, 3, 4, 5})
+	is.Equal(result4, []int{0, 1, 2})
+	is.Equal(result5, []int{})
+
+	result11 := lo.Union([]int{0, 1, 2, 3, 4, 5}, []int{0, 2, 10}, []int{0, 1, 11})
+	result12 := lo.Union([]int{0, 1, 2, 3, 4, 5}, []int{6, 7}, []int{8, 9})
+	result13 := lo.Union([]int{0, 1, 2, 3, 4, 5}, []int{}, []int{})
+	result14 := lo.Union([]int{0, 1, 2}, []int{0, 1, 2}, []int{0, 1, 2})
+	result15 := lo.Union([]int{}, []int{}, []int{})
+	is.Equal(result11, []int{0, 1, 2, 3, 4, 5, 10, 11})
+	is.Equal(result12, []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9})
+	is.Equal(result13, []int{0, 1, 2, 3, 4, 5})
+	is.Equal(result14, []int{0, 1, 2})
+	is.Equal(result15, []int{})
+
+	type myStrings []string
+	allStrings := myStrings{"", "foo", "bar"}
+	nonempty := lo.Union(allStrings, allStrings)
+	is.IsType(nonempty, allStrings, "type preserved")
+}
+
 // TestDifference Creates an slice of whose element not included in the other given slice.
 // func Difference[T comparable](slice, comparedSlice []T) []T
 func TestDifference(t *testing.T) {
@@ -50,6 +105,29 @@ func TestDifference(t *testing.T) {
 
 	result := slice.Difference(s1, s2)
 	assert.Equal(t, []int{1, 2, 3}, result)
+}
+
+func TestDifference2(t *testing.T) {
+	t.Parallel()
+	is := assert.New(t)
+
+	left1, right1 := lo.Difference([]int{0, 1, 2, 3, 4, 5}, []int{0, 2, 6})
+	is.Equal(left1, []int{1, 3, 4, 5})
+	is.Equal(right1, []int{6})
+
+	left2, right2 := lo.Difference([]int{1, 2, 3, 4, 5}, []int{0, 6})
+	is.Equal(left2, []int{1, 2, 3, 4, 5})
+	is.Equal(right2, []int{0, 6})
+
+	left3, right3 := lo.Difference([]int{0, 1, 2, 3, 4, 5}, []int{0, 1, 2, 3, 4, 5})
+	is.Equal(left3, []int{})
+	is.Equal(right3, []int{})
+
+	type myStrings []string
+	allStrings := myStrings{"", "foo", "bar"}
+	a, b := lo.Difference(allStrings, allStrings)
+	is.IsType(a, allStrings, "type preserved")
+	is.IsType(b, allStrings, "type preserved")
 }
 
 // TestDifferenceBy DifferenceBy accepts iteratee func which is invoked for each element of slice and values to generate the criterion by which they're compared.

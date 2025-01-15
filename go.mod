@@ -111,6 +111,7 @@ require (
 	go.opentelemetry.io/otel v1.33.0 // indirect
 	go.opentelemetry.io/otel/metric v1.33.0 // indirect
 	go.opentelemetry.io/otel/trace v1.33.0 // indirect
+	go.uber.org/goleak v1.3.0 // indirect
 	golang.org/x/arch v0.12.0 // indirect
 	golang.org/x/time v0.8.0 // indirect
 	golang.org/x/tools v0.29.0 // indirect

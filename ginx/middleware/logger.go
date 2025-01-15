@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/fengzhongzhu1621/xgo/buildin/slice"
+	"github.com/fengzhongzhu1621/xgo/collections/slice"
 	"github.com/fengzhongzhu1621/xgo/ginx/utils"
 	"github.com/fengzhongzhu1621/xgo/logging"
 	"github.com/fengzhongzhu1621/xgo/monitor/sentry"

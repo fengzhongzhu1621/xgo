@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/fengzhongzhu1621/xgo/carbon"
+	"github.com/fengzhongzhu1621/xgo/datetime/carbon"
 
 	"github.com/stretchr/testify/assert"
 )

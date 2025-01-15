@@ -7,19 +7,9 @@ import (
 	"testing"
 
 	"github.com/duke-git/lancet/v2/maputil"
+	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
 )
-
-// TestExistsKey 判断 key 是否存在
-func TestExistsKey(t *testing.T) {
-	obj := map[string]interface{}{
-		"key_1": "val_1",
-		"key_3": "val_3",
-	}
-	assert.True(t, ExistsKey(obj, "key_1"))
-	assert.False(t, ExistsKey(obj, "key_2"))
-	assert.True(t, ExistsKey(obj, "key_3"))
-}
 
 // TestRangeKey 遍历字典的 key
 func TestRangeKey(t *testing.T) {
@@ -74,6 +64,56 @@ func TestKeysBy(t *testing.T) {
 	// [2 3 4]
 }
 
+func TestKeys2(t *testing.T) {
+	t.Parallel()
+	is := assert.New(t)
+
+	r1 := lo.Keys(map[string]int{"foo": 1, "bar": 2})
+	sort.Strings(r1)
+	is.Equal(r1, []string{"bar", "foo"})
+
+	r2 := lo.Keys(map[string]int{})
+	is.Empty(r2)
+
+	r3 := lo.Keys(map[string]int{"foo": 1, "bar": 2}, map[string]int{"baz": 3})
+	sort.Strings(r3)
+	is.Equal(r3, []string{"bar", "baz", "foo"})
+
+	r4 := lo.Keys[string, int]()
+	is.Equal(r4, []string{})
+
+	r5 := lo.Keys(map[string]int{"foo": 1, "bar": 2}, map[string]int{"bar": 3})
+	sort.Strings(r5)
+	is.Equal(r5, []string{"bar", "bar", "foo"})
+}
+
+func TestUniqKeys(t *testing.T) {
+	t.Parallel()
+	is := assert.New(t)
+
+	r1 := lo.UniqKeys(map[string]int{"foo": 1, "bar": 2})
+	sort.Strings(r1)
+	is.Equal(r1, []string{"bar", "foo"})
+
+	r2 := lo.UniqKeys(map[string]int{})
+	is.Empty(r2)
+
+	r3 := lo.UniqKeys(map[string]int{"foo": 1, "bar": 2}, map[string]int{"baz": 3})
+	sort.Strings(r3)
+	is.Equal(r3, []string{"bar", "baz", "foo"})
+
+	r4 := lo.UniqKeys[string, int]()
+	is.Equal(r4, []string{})
+
+	r5 := lo.UniqKeys(map[string]int{"foo": 1, "bar": 2}, map[string]int{"foo": 1, "bar": 3})
+	sort.Strings(r5)
+	is.Equal(r5, []string{"bar", "foo"})
+
+	// check order
+	r6 := lo.UniqKeys(map[string]int{"foo": 1}, map[string]int{"bar": 3})
+	is.Equal(r6, []string{"foo", "bar"})
+}
+
 // TestToCaseInsensitiveValue 将字典的key转换为小写，返回新的字典
 func TestToCaseInsensitiveValue(t *testing.T) {
 	t.Parallel()
@@ -118,36 +158,74 @@ func TestToCaseInsensitiveValue(t *testing.T) {
 // TestHasKey Checks if map has key or not. This function is used to replace the following boilerplate code
 // func HasKey[K comparable, V any](m map[K]V, key K) bool
 func TestHasKey(t *testing.T) {
-	m := map[string]int{
-		"a": 1,
-		"b": 2,
+	{
+		obj := map[string]interface{}{
+			"key_1": "val_1",
+			"key_3": "val_3",
+		}
+		assert.True(t, ExistsKey(obj, "key_1"))
+		assert.False(t, ExistsKey(obj, "key_2"))
+		assert.True(t, ExistsKey(obj, "key_3"))
 	}
 
-	result1 := maputil.HasKey(m, "a")
-	result2 := maputil.HasKey(m, "c")
+	{
+		m := map[string]int{
+			"a": 1,
+			"b": 2,
+		}
 
-	fmt.Println(result1)
-	fmt.Println(result2)
+		result1 := maputil.HasKey(m, "a")
+		result2 := maputil.HasKey(m, "c")
 
-	// Output:
-	// true
-	// false
+		fmt.Println(result1)
+		fmt.Println(result2)
+
+		// Output:
+		// true
+		// false
+	}
+
+	{
+		t.Parallel()
+		is := assert.New(t)
+
+		r1 := lo.HasKey(map[string]int{"foo": 1}, "bar")
+		is.False(r1)
+
+		r2 := lo.HasKey(map[string]int{"foo": 1}, "foo")
+		is.True(r2)
+	}
+
 }
 
 // TestMapGetOrSet Returns value of the given key or set the given value value if not present.
 // func GetOrSet[K comparable, V any](m map[K]V, key K, value V) V
 func TestMapGetOrSet(t *testing.T) {
-	m := map[int]string{
-		1: "a",
+	t.Parallel()
+	is := assert.New(t)
+
+	{
+
+		r1 := lo.ValueOr(map[string]int{"foo": 1}, "bar", 2)
+		is.Equal(r1, 2)
+
+		r2 := lo.ValueOr(map[string]int{"foo": 1}, "foo", 2)
+		is.Equal(r2, 1)
 	}
 
-	result1 := maputil.GetOrSet(m, 1, "1")
-	result2 := maputil.GetOrSet(m, 2, "b")
+	{
+		m := map[int]string{
+			1: "a",
+		}
 
-	fmt.Println(result1)
-	fmt.Println(result2)
+		result1 := maputil.GetOrSet(m, 1, "1")
+		result2 := maputil.GetOrSet(m, 2, "b")
 
-	// Output:
-	// a
-	// b
+		fmt.Println(result1)
+		fmt.Println(result2)
+
+		// Output:
+		// a
+		// b
+	}
 }

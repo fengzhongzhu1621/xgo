@@ -6,6 +6,8 @@ import (
 	"testing"
 
 	"github.com/duke-git/lancet/v2/maputil"
+	"github.com/samber/lo"
+	"github.com/stretchr/testify/assert"
 )
 
 // TestValues Returns a slice of the map's values.
@@ -55,4 +57,58 @@ func TestValuesBy(t *testing.T) {
 
 	// Output:
 	// [a-1 b-2 c-3]
+}
+
+func TestValues2(t *testing.T) {
+	t.Parallel()
+	is := assert.New(t)
+
+	r1 := lo.Values(map[string]int{"foo": 1, "bar": 2})
+	sort.Ints(r1)
+	is.Equal(r1, []int{1, 2})
+
+	r2 := lo.Values(map[string]int{})
+	is.Empty(r2)
+
+	r3 := lo.Values(map[string]int{"foo": 1, "bar": 2}, map[string]int{"baz": 3})
+	sort.Ints(r3)
+	is.Equal(r3, []int{1, 2, 3})
+
+	r4 := lo.Values[string, int]()
+	is.Equal(r4, []int{})
+
+	r5 := lo.Values(map[string]int{"foo": 1, "bar": 2}, map[string]int{"foo": 1, "bar": 3})
+	sort.Ints(r5)
+	is.Equal(r5, []int{1, 1, 2, 3})
+}
+
+func TestUniqValues(t *testing.T) {
+	t.Parallel()
+	is := assert.New(t)
+
+	r1 := lo.UniqValues(map[string]int{"foo": 1, "bar": 2})
+	sort.Ints(r1)
+	is.Equal(r1, []int{1, 2})
+
+	r2 := lo.UniqValues(map[string]int{})
+	is.Empty(r2)
+
+	r3 := lo.UniqValues(map[string]int{"foo": 1, "bar": 2}, map[string]int{"baz": 3})
+	sort.Ints(r3)
+	is.Equal(r3, []int{1, 2, 3})
+
+	r4 := lo.UniqValues[string, int]()
+	is.Equal(r4, []int{})
+
+	r5 := lo.UniqValues(map[string]int{"foo": 1, "bar": 2}, map[string]int{"foo": 1, "bar": 3})
+	sort.Ints(r5)
+	is.Equal(r5, []int{1, 2, 3})
+
+	r6 := lo.UniqValues(map[string]int{"foo": 1, "bar": 1}, map[string]int{"foo": 1, "bar": 3})
+	sort.Ints(r6)
+	is.Equal(r6, []int{1, 3})
+
+	// check order
+	r7 := lo.UniqValues(map[string]int{"foo": 1}, map[string]int{"bar": 3})
+	is.Equal(r7, []int{1, 3})
 }
