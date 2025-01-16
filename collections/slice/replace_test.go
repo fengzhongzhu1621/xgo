@@ -34,27 +34,82 @@ func TestFill(t *testing.T) {
 // func Replace[T comparable](slice []T, old T, new T, n int) []T
 // n 表示被替换的数量
 func TestReplace(t *testing.T) {
-	strs := []string{"a", "b", "c", "a"}
+	t.Parallel()
+	is := assert.New(t)
 
-	result1 := slice.Replace(strs, "a", "x", 0)
-	result2 := slice.Replace(strs, "a", "x", 1)
-	result3 := slice.Replace(strs, "a", "x", 2)
-	result4 := slice.Replace(strs, "a", "x", 3)
-	result5 := slice.Replace(strs, "a", "x", -1)
+	{
+		in := []int{0, 1, 0, 1, 2, 3, 0}
 
-	assert.Equal(t, []string{"a", "b", "c", "a"}, result1)
-	assert.Equal(t, []string{"x", "b", "c", "a"}, result2)
-	assert.Equal(t, []string{"x", "b", "c", "x"}, result3)
-	assert.Equal(t, []string{"x", "b", "c", "x"}, result4)
-	assert.Equal(t, []string{"x", "b", "c", "x"}, result5)
+		out1 := lo.Replace(in, 0, 42, 2)
+		out2 := lo.Replace(in, 0, 42, 1)
+		out3 := lo.Replace(in, 0, 42, 0)
+		out4 := lo.Replace(in, 0, 42, -1)
+		out5 := lo.Replace(in, 0, 42, -1)
+		out6 := lo.Replace(in, -1, 42, 2)
+		out7 := lo.Replace(in, -1, 42, 1)
+		out8 := lo.Replace(in, -1, 42, 0)
+		out9 := lo.Replace(in, -1, 42, -1)
+		out10 := lo.Replace(in, -1, 42, -1)
+
+		is.Equal([]int{42, 1, 42, 1, 2, 3, 0}, out1)
+		is.Equal([]int{42, 1, 0, 1, 2, 3, 0}, out2)
+		is.Equal([]int{0, 1, 0, 1, 2, 3, 0}, out3)
+		is.Equal([]int{42, 1, 42, 1, 2, 3, 42}, out4)
+		is.Equal([]int{42, 1, 42, 1, 2, 3, 42}, out5)
+		is.Equal([]int{0, 1, 0, 1, 2, 3, 0}, out6)
+		is.Equal([]int{0, 1, 0, 1, 2, 3, 0}, out7)
+		is.Equal([]int{0, 1, 0, 1, 2, 3, 0}, out8)
+		is.Equal([]int{0, 1, 0, 1, 2, 3, 0}, out9)
+		is.Equal([]int{0, 1, 0, 1, 2, 3, 0}, out10)
+
+		type myStrings []string
+		allStrings := myStrings{"", "foo", "bar"}
+		nonempty := lo.Replace(allStrings, "0", "2", 1)
+		is.IsType(nonempty, allStrings, "type preserved")
+	}
+
+	{
+		strs := []string{"a", "b", "c", "a"}
+
+		result1 := slice.Replace(strs, "a", "x", 0)
+		result2 := slice.Replace(strs, "a", "x", 1)
+		result3 := slice.Replace(strs, "a", "x", 2)
+		result4 := slice.Replace(strs, "a", "x", 3)
+		result5 := slice.Replace(strs, "a", "x", -1)
+
+		assert.Equal(t, []string{"a", "b", "c", "a"}, result1)
+		assert.Equal(t, []string{"x", "b", "c", "a"}, result2)
+		assert.Equal(t, []string{"x", "b", "c", "x"}, result3)
+		assert.Equal(t, []string{"x", "b", "c", "x"}, result4)
+		assert.Equal(t, []string{"x", "b", "c", "x"}, result5)
+	}
 }
 
 // TestReplaceAll Returns a copy of the slice with the first n non-overlapping instances of old replaced by new.
 // func ReplaceAll[T comparable](slice []T, old T, new T) []T
 func TestReplaceAll(t *testing.T) {
-	result := slice.ReplaceAll([]string{"a", "b", "c", "a"}, "a", "x")
+	t.Parallel()
+	is := assert.New(t)
 
-	assert.Equal(t, []string{"x", "b", "c", "x"}, result)
+	{
+		in := []int{0, 1, 0, 1, 2, 3, 0}
+
+		out1 := lo.ReplaceAll(in, 0, 42)
+		out2 := lo.ReplaceAll(in, -1, 42)
+
+		is.Equal([]int{42, 1, 42, 1, 2, 3, 42}, out1)
+		is.Equal([]int{0, 1, 0, 1, 2, 3, 0}, out2)
+
+		type myStrings []string
+		allStrings := myStrings{"", "foo", "bar"}
+		nonempty := lo.ReplaceAll(allStrings, "0", "2")
+		is.IsType(nonempty, allStrings, "type preserved")
+	}
+
+	{
+		result := slice.ReplaceAll([]string{"a", "b", "c", "a"}, "a", "x")
+		assert.Equal(t, []string{"x", "b", "c", "x"}, result)
+	}
 }
 
 // TestUpdateAt Update the slice element at index. if param index < 0 or index <= len(slice), will return error.

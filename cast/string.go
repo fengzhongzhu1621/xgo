@@ -155,3 +155,9 @@ func ToStringE(i interface{}) (string, error) {
 		return "", fmt.Errorf("unable to cast %#v of type %T to string", i, i)
 	}
 }
+
+// TruncateBytesToString 截断字节切片，并将字节切片转换为字符串
+func TruncateBytesToString(content []byte, length int) string {
+	s := TruncateBytes(content, length)
+	return string(s)
+}

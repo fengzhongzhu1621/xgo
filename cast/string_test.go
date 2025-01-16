@@ -128,3 +128,9 @@ func BenchmarkBytesConvBytesToStr(b *testing.B) {
 		BytesToString(testBytes)
 	}
 }
+
+func TestTruncateBytesToString(t *testing.T) {
+	content := []byte("Hello, world!")
+	truncatedStr := TruncateBytesToString(content, 5)
+	assert.Equal(t, "Hello", string(truncatedStr))
+}

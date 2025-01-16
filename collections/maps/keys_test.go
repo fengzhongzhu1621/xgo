@@ -46,22 +46,20 @@ func TestKeys(t *testing.T) {
 // TestKeysBy Creates a slice whose element is the result of function mapper invoked by every map's key.
 // func KeysBy[K comparable, V any, T any](m map[K]V, mapper func(item K) T) []T
 func TestKeysBy(t *testing.T) {
+
 	m := map[int]string{
 		1: "a",
 		2: "a",
 		3: "b",
 	}
-
 	keys := maputil.KeysBy(m, func(n int) int {
 		return n + 1
 	})
-
 	sort.Ints(keys)
-
 	fmt.Println(keys)
-
 	// Output:
 	// [2 3 4]
+
 }
 
 func TestKeys2(t *testing.T) {

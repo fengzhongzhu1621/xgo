@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/duke-git/lancet/v2/convertor"
+	"github.com/stretchr/testify/assert"
 )
 
 // func EncodeByte(data any) ([]byte, error)
@@ -30,4 +31,10 @@ func TestDecodeByte(t *testing.T) {
 
 	// Output:
 	// abc
+}
+
+func TestTruncateBytes(t *testing.T) {
+	content := []byte("Hello, world!")
+	truncated := TruncateBytes(content, 5)
+	assert.Equal(t, "Hello", string(truncated))
 }

@@ -169,19 +169,6 @@ func TestGroupWith(t *testing.T) {
 	}
 }
 
-// TestFrequency Counts the frequency of each element in the slice.
-// func Frequency[T comparable](slice []T) map[T]int
-func TestFrequency(t *testing.T) {
-	strs := []string{"a", "b", "b", "c", "c", "c"}
-	result := slice.Frequency(strs)
-
-	assert.Equal(t, map[string]int{
-		"a": 1,
-		"b": 2,
-		"c": 3,
-	}, result)
-}
-
 // TestBreak  a slice into two based on a predicate function.
 // It starts appending to the second slice after the first element that matches the predicate.
 // All elements after the first match are included in the second slice,

@@ -875,7 +875,7 @@ func TestInterface(t *testing.T) {
 	})
 }
 
-func TestSlice(t *testing.T) {
+func TestCopierSlice(t *testing.T) {
 	type ElemOption struct {
 		Value int
 	}

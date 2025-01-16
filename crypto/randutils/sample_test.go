@@ -21,6 +21,7 @@ func TestSample(t *testing.T) {
 
 	is.True(lo.Contains([]string{"a", "b", "c"}, result1))
 	is.Equal(result2, "")
+
 }
 
 func TestSamples(t *testing.T) {

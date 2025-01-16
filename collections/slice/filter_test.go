@@ -1,6 +1,7 @@
 package slice
 
 import (
+	"math"
 	"strconv"
 	"strings"
 	"testing"
@@ -99,4 +100,93 @@ func TestFilterMap(t *testing.T) {
 		result := slice.FilterMap(nums, getEvenNumStr)
 		assert.Equal(t, []string{"2", "4"}, result)
 	}
+}
+
+// TestSubset returns a copy of a slice from `offset` up to `length` elements. Like `slice[start:start+length]`, but does not panic on overflow.
+func TestSubset(t *testing.T) {
+	t.Parallel()
+	is := assert.New(t)
+
+	in := []int{0, 1, 2, 3, 4}
+
+	out1 := lo.Subset(in, 0, 0)
+	out2 := lo.Subset(in, 10, 2)
+	out3 := lo.Subset(in, -10, 2)
+	out4 := lo.Subset(in, 0, 10)
+	out5 := lo.Subset(in, 0, 2)
+	out6 := lo.Subset(in, 2, 2)
+	out7 := lo.Subset(in, 2, 5)
+	out8 := lo.Subset(in, 2, 3)
+	out9 := lo.Subset(in, 2, 4)
+	out10 := lo.Subset(in, -2, 4)
+	out11 := lo.Subset(in, -4, 1)
+	out12 := lo.Subset(in, -4, math.MaxUint)
+
+	is.Equal([]int{}, out1)
+	is.Equal([]int{}, out2)
+	is.Equal([]int{0, 1}, out3)
+	is.Equal([]int{0, 1, 2, 3, 4}, out4)
+	is.Equal([]int{0, 1}, out5)
+	is.Equal([]int{2, 3}, out6)
+	is.Equal([]int{2, 3, 4}, out7)
+	is.Equal([]int{2, 3, 4}, out8)
+	is.Equal([]int{2, 3, 4}, out9)
+	is.Equal([]int{3, 4}, out10)
+	is.Equal([]int{1}, out11)
+	is.Equal([]int{1, 2, 3, 4}, out12)
+
+	type myStrings []string
+	allStrings := myStrings{"", "foo", "bar"}
+	nonempty := lo.Subset(allStrings, 0, 2)
+	is.IsType(nonempty, allStrings, "type preserved")
+}
+
+func TestSlice(t *testing.T) {
+	t.Parallel()
+	is := assert.New(t)
+
+	in := []int{0, 1, 2, 3, 4}
+
+	out1 := lo.Slice(in, 0, 0)
+	out2 := lo.Slice(in, 0, 1)
+	out3 := lo.Slice(in, 0, 5)
+	out4 := lo.Slice(in, 0, 6)
+	out5 := lo.Slice(in, 1, 1)
+	out6 := lo.Slice(in, 1, 5)
+	out7 := lo.Slice(in, 1, 6)
+	out8 := lo.Slice(in, 4, 5)
+	out9 := lo.Slice(in, 5, 5)
+	out10 := lo.Slice(in, 6, 5)
+	out11 := lo.Slice(in, 6, 6)
+	out12 := lo.Slice(in, 1, 0)
+	out13 := lo.Slice(in, 5, 0)
+	out14 := lo.Slice(in, 6, 4)
+	out15 := lo.Slice(in, 6, 7)
+	out16 := lo.Slice(in, -10, 1)
+	out17 := lo.Slice(in, -1, 3)
+	out18 := lo.Slice(in, -10, 7)
+
+	is.Equal([]int{}, out1)
+	is.Equal([]int{0}, out2)
+	is.Equal([]int{0, 1, 2, 3, 4}, out3)
+	is.Equal([]int{0, 1, 2, 3, 4}, out4)
+	is.Equal([]int{}, out5)
+	is.Equal([]int{1, 2, 3, 4}, out6)
+	is.Equal([]int{1, 2, 3, 4}, out7)
+	is.Equal([]int{4}, out8)
+	is.Equal([]int{}, out9)
+	is.Equal([]int{}, out10)
+	is.Equal([]int{}, out11)
+	is.Equal([]int{}, out12)
+	is.Equal([]int{}, out13)
+	is.Equal([]int{}, out14)
+	is.Equal([]int{}, out15)
+	is.Equal([]int{0}, out16)
+	is.Equal([]int{0, 1, 2}, out17)
+	is.Equal([]int{0, 1, 2, 3, 4}, out18)
+
+	type myStrings []string
+	allStrings := myStrings{"", "foo", "bar"}
+	nonempty := lo.Slice(allStrings, 0, 2)
+	is.IsType(nonempty, allStrings, "type preserved")
 }
