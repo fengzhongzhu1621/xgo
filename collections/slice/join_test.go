@@ -1,6 +1,7 @@
 package slice
 
 import (
+	"reflect"
 	"strings"
 	"testing"
 
@@ -17,7 +18,26 @@ func TestConcat(t *testing.T) {
 
 		concatenated := utils.Concat(slice1, slice2)
 		assert.Equal(t, []int{1, 2, 3, 4, 5, 6}, concatenated)
+
+		tests := []struct {
+			name   string
+			slice1 []int
+			slice2 []int
+			want   []int
+		}{
+			{"concat two slices", []int{1, 2, 3}, []int{4, 5}, []int{1, 2, 3, 4, 5}},
+			{"concat empty with non-empty", []int{}, []int{1, 2, 3}, []int{1, 2, 3}},
+		}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				if got := utils.Concat(tt.slice1, tt.slice2); !reflect.DeepEqual(got, tt.want) {
+					t.Errorf("Concat() = %v, want %v", got, tt.want)
+				}
+			})
+		}
 	}
+
 	{
 		result1 := slice.Concat([]int{1, 2}, []int{3, 4})
 		result2 := slice.Concat([]string{"a", "b"}, []string{"c"}, []string{"d"})

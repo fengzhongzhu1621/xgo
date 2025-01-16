@@ -2,6 +2,7 @@ package slice
 
 import (
 	"fmt"
+	"reflect"
 	"strings"
 	"testing"
 
@@ -34,6 +35,24 @@ func TestUnique(t *testing.T) {
 		withDuplicates := []int{1, 2, 2, 3, 3, 3, 4}
 		unique := utils.Unique(withDuplicates)
 		fmt.Println(unique) // Output: [1 2 3 4]
+
+		tests := []struct {
+			name  string
+			slice []int
+			want  []int
+		}{
+			{"unique elements", []int{1, 2, 2, 3, 4, 4, 4, 5}, []int{1, 2, 3, 4, 5}},
+			{"all unique", []int{1, 2, 3, 4, 5}, []int{1, 2, 3, 4, 5}},
+			{"empty slice", []int{}, []int{}},
+		}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				if got := utils.Unique(tt.slice); !reflect.DeepEqual(got, tt.want) {
+					t.Errorf("Unique() = %v, want %v, failed in test case: %s", got, tt.want, tt.name)
+				}
+			})
+		}
 	}
 
 	{

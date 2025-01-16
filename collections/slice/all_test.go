@@ -3,6 +3,7 @@ package slice
 import (
 	"testing"
 
+	"github.com/araujo88/lambda-go/pkg/predicate"
 	"github.com/duke-git/lancet/v2/slice"
 
 	"github.com/samber/lo"
@@ -34,6 +35,27 @@ func TestEvery(t *testing.T) {
 		}
 		result := slice.Every(nums, isEven)
 		assert.Equal(t, false, result)
+	}
+
+	{
+		tests := []struct {
+			name      string
+			slice     []int
+			predicate func(int) bool
+			want      bool
+		}{
+			{"true when all match", []int{2, 4, 6}, func(x int) bool { return x%2 == 0 }, true},
+			{"false when one does not match", []int{2, 3, 6}, func(x int) bool { return x%2 == 0 }, false},
+			{"empty slice returns true", []int{}, func(x int) bool { return x%2 == 0 }, true},
+		}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				if got := predicate.All(tt.slice, tt.predicate); got != tt.want {
+					t.Errorf("All() = %v, want %v", got, tt.want)
+				}
+			})
+		}
 	}
 }
 

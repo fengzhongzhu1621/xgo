@@ -2,9 +2,12 @@ package slice
 
 import (
 	"math"
+	"reflect"
 	"sort"
 	"testing"
 
+	"github.com/araujo88/lambda-go/pkg/predicate"
+	"github.com/araujo88/lambda-go/pkg/sortgroup"
 	"github.com/samber/lo"
 	"github.com/samber/lo/parallel"
 
@@ -113,6 +116,28 @@ func TestPartition(t *testing.T) {
 		assert.Equal(t, [][]int{{2, 4}, {1, 3, 5}}, result2)
 		assert.Equal(t, [][]int{{1, 2}, {3, 4}, {5}}, result3)
 	}
+
+	{
+		tests := []struct {
+			name      string
+			slice     []int
+			predicate func(int) bool
+			wantTrue  []int
+			wantFalse []int
+		}{
+			{"partition based on even", []int{1, 2, 3, 4}, func(x int) bool { return x%2 == 0 }, []int{2, 4}, []int{1, 3}},
+			{"empty slice", []int{}, func(x int) bool { return x%2 == 0 }, []int{}, []int{}},
+		}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				gotTrue, gotFalse := predicate.Partition(tt.slice, tt.predicate)
+				if !equal(gotTrue, tt.wantTrue) || !equal(gotFalse, tt.wantFalse) {
+					t.Errorf("Partition() gotTrue = %v, wantTrue %v; gotFalse = %v, wantFalse %v", gotTrue, tt.wantTrue, gotFalse, tt.wantFalse)
+				}
+			})
+		}
+	}
 }
 
 func TestParallelPartitionBy(t *testing.T) {
@@ -154,15 +179,17 @@ func TestParallelPartitionBy(t *testing.T) {
 // TestGroupBy Iterates over elements of the slice, each element will be group by criteria, returns two slices.
 // func GroupBy[T any](slice []T, groupFn func(index int, item T) bool) ([]T, []T)
 func TestGroupBy(t *testing.T) {
-	nums := []int{1, 2, 3, 4, 5}
-	isEven := func(i, num int) bool {
-		return num%2 == 0
+	{
+		nums := []int{1, 2, 3, 4, 5}
+		isEven := func(i, num int) bool {
+			return num%2 == 0
+		}
+
+		even, odd := slice.GroupBy(nums, isEven)
+
+		assert.Equal(t, []int{2, 4}, even)
+		assert.Equal(t, []int{1, 3, 5}, odd)
 	}
-
-	even, odd := slice.GroupBy(nums, isEven)
-
-	assert.Equal(t, []int{2, 4}, even)
-	assert.Equal(t, []int{1, 3, 5}, odd)
 
 }
 
@@ -233,6 +260,44 @@ func TestGroupWith(t *testing.T) {
 			4.0: {4.2},
 			6.0: {6.1, 6.3},
 		}, result)
+	}
+
+	{
+		tests := []struct {
+			name    string
+			slice   []int
+			keyFunc func(int) string
+			want    map[string][]int
+		}{
+			{
+				name:  "group by parity",
+				slice: []int{1, 2, 3, 4, 5},
+				keyFunc: func(x int) string {
+					if x%2 == 0 {
+						return "even"
+					}
+					return "odd"
+				},
+				want: map[string][]int{
+					"odd":  {1, 3, 5},
+					"even": {2, 4},
+				},
+			},
+			{
+				name:    "empty slice",
+				slice:   []int{},
+				keyFunc: func(x int) string { return "odd" },
+				want:    map[string][]int{},
+			},
+		}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				if got := sortgroup.GroupBy(tt.slice, tt.keyFunc); !reflect.DeepEqual(got, tt.want) {
+					t.Errorf("groupBy() = %v, want %v", got, tt.want)
+				}
+			})
+		}
 	}
 }
 

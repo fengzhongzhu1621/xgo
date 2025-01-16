@@ -14,6 +14,19 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// Helper function to compare slices
+func equal(a, b []int) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i, v := range a {
+		if v != b[i] {
+			return false
+		}
+	}
+	return true
+}
+
 // TestMap 函数对片段中的每个元素应用给定的函数，返回一个包含转换后元素的新片段。
 func TestMap(t *testing.T) {
 	t.Parallel()
@@ -34,6 +47,24 @@ func TestMap(t *testing.T) {
 		numbers := []int{1, 2, 3, 4, 5}
 		doubled := core.Map(numbers, func(x int) int { return x * 2 })
 		assert.Equal(t, doubled, []int{2, 4, 6, 8, 10})
+
+		tests := []struct {
+			name     string
+			slice    []int
+			function func(int) int
+			want     []int
+		}{
+			{"double values", []int{1, 2, 3}, func(x int) int { return x * 2 }, []int{2, 4, 6}},
+			{"empty slice", []int{}, func(x int) int { return x * 2 }, []int{}},
+		}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				if got := core.Map(tt.slice, tt.function); !equal(got, tt.want) {
+					t.Errorf("Map() = %v, want %v", got, tt.want)
+				}
+			})
+		}
 	}
 
 	{

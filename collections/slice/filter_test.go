@@ -2,10 +2,13 @@ package slice
 
 import (
 	"math"
+	"reflect"
 	"strconv"
 	"strings"
 	"testing"
 
+	"github.com/araujo88/lambda-go/pkg/predicate"
+	"github.com/araujo88/lambda-go/pkg/utils"
 	"github.com/samber/lo"
 
 	"github.com/duke-git/lancet/v2/slice"
@@ -44,6 +47,27 @@ func TestFilter(t *testing.T) {
 		}
 		result := slice.Filter(nums, isEven)
 		assert.Equal(t, []int{2, 4}, result)
+	}
+
+	{
+		tests := []struct {
+			name      string
+			slice     []int
+			predicate func(int) bool
+			want      []int
+		}{
+			{"filter out non-matching elements", []int{1, 2, 3}, func(x int) bool { return x > 1 }, []int{2, 3}},
+			{"filter with no matches", []int{1, 2, 3}, func(x int) bool { return x == 5 }, []int{}},
+			{"empty slice", []int{}, func(x int) bool { return true }, []int{}},
+		}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				if got := predicate.Filter(tt.slice, tt.predicate); !equal(got, tt.want) {
+					t.Errorf("Filter() = %v, want %v", got, tt.want)
+				}
+			})
+		}
 	}
 }
 
@@ -104,41 +128,64 @@ func TestFilterMap(t *testing.T) {
 
 // TestSubset returns a copy of a slice from `offset` up to `length` elements. Like `slice[start:start+length]`, but does not panic on overflow.
 func TestSubset(t *testing.T) {
-	t.Parallel()
-	is := assert.New(t)
+	{
+		t.Parallel()
+		is := assert.New(t)
 
-	in := []int{0, 1, 2, 3, 4}
+		in := []int{0, 1, 2, 3, 4}
 
-	out1 := lo.Subset(in, 0, 0)
-	out2 := lo.Subset(in, 10, 2)
-	out3 := lo.Subset(in, -10, 2)
-	out4 := lo.Subset(in, 0, 10)
-	out5 := lo.Subset(in, 0, 2)
-	out6 := lo.Subset(in, 2, 2)
-	out7 := lo.Subset(in, 2, 5)
-	out8 := lo.Subset(in, 2, 3)
-	out9 := lo.Subset(in, 2, 4)
-	out10 := lo.Subset(in, -2, 4)
-	out11 := lo.Subset(in, -4, 1)
-	out12 := lo.Subset(in, -4, math.MaxUint)
+		out1 := lo.Subset(in, 0, 0)
+		out2 := lo.Subset(in, 10, 2)
+		out3 := lo.Subset(in, -10, 2)
+		out4 := lo.Subset(in, 0, 10)
+		out5 := lo.Subset(in, 0, 2)
+		out6 := lo.Subset(in, 2, 2)
+		out7 := lo.Subset(in, 2, 5)
+		out8 := lo.Subset(in, 2, 3)
+		out9 := lo.Subset(in, 2, 4)
+		out10 := lo.Subset(in, -2, 4)
+		out11 := lo.Subset(in, -4, 1)
+		out12 := lo.Subset(in, -4, math.MaxUint)
 
-	is.Equal([]int{}, out1)
-	is.Equal([]int{}, out2)
-	is.Equal([]int{0, 1}, out3)
-	is.Equal([]int{0, 1, 2, 3, 4}, out4)
-	is.Equal([]int{0, 1}, out5)
-	is.Equal([]int{2, 3}, out6)
-	is.Equal([]int{2, 3, 4}, out7)
-	is.Equal([]int{2, 3, 4}, out8)
-	is.Equal([]int{2, 3, 4}, out9)
-	is.Equal([]int{3, 4}, out10)
-	is.Equal([]int{1}, out11)
-	is.Equal([]int{1, 2, 3, 4}, out12)
+		is.Equal([]int{}, out1)
+		is.Equal([]int{}, out2)
+		is.Equal([]int{0, 1}, out3)
+		is.Equal([]int{0, 1, 2, 3, 4}, out4)
+		is.Equal([]int{0, 1}, out5)
+		is.Equal([]int{2, 3}, out6)
+		is.Equal([]int{2, 3, 4}, out7)
+		is.Equal([]int{2, 3, 4}, out8)
+		is.Equal([]int{2, 3, 4}, out9)
+		is.Equal([]int{3, 4}, out10)
+		is.Equal([]int{1}, out11)
+		is.Equal([]int{1, 2, 3, 4}, out12)
 
-	type myStrings []string
-	allStrings := myStrings{"", "foo", "bar"}
-	nonempty := lo.Subset(allStrings, 0, 2)
-	is.IsType(nonempty, allStrings, "type preserved")
+		type myStrings []string
+		allStrings := myStrings{"", "foo", "bar"}
+		nonempty := lo.Subset(allStrings, 0, 2)
+		is.IsType(nonempty, allStrings, "type preserved")
+	}
+
+	{
+		tests := []struct {
+			name  string
+			slice []int
+			n     int
+			want  []int
+		}{
+			{"take more than exists", []int{1, 2, 3}, 5, []int{1, 2, 3}},
+			{"take none", []int{1, 2, 3}, 0, []int{}},
+			{"take exact", []int{1, 2, 3}, 3, []int{1, 2, 3}},
+		}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				if got := utils.Take(tt.slice, tt.n); !reflect.DeepEqual(got, tt.want) {
+					t.Errorf("Take() = %v, want %v", got, tt.want)
+				}
+			})
+		}
+	}
 }
 
 func TestSlice(t *testing.T) {
@@ -189,35 +236,4 @@ func TestSlice(t *testing.T) {
 	allStrings := myStrings{"", "foo", "bar"}
 	nonempty := lo.Slice(allStrings, 0, 2)
 	is.IsType(nonempty, allStrings, "type preserved")
-}
-
-// TestWithout Creates a slice excluding all given items.
-// func Without[T comparable](slice []T, items ...T) []T
-func TestWithout(t *testing.T) {
-	t.Parallel()
-	is := assert.New(t)
-
-	{
-		result := slice.Without([]int{1, 2, 3, 4}, 1, 2)
-		assert.Equal(t, []int{3, 4}, result)
-
-	}
-
-	{
-		result1 := lo.Without([]int{0, 2, 10}, 0, 1, 2, 3, 4, 5)
-		result2 := lo.Without([]int{0, 7}, 0, 1, 2, 3, 4, 5)
-		result3 := lo.Without([]int{}, 0, 1, 2, 3, 4, 5)
-		result4 := lo.Without([]int{0, 1, 2}, 0, 1, 2)
-		result5 := lo.Without([]int{})
-		is.Equal(result1, []int{10})
-		is.Equal(result2, []int{7})
-		is.Equal(result3, []int{})
-		is.Equal(result4, []int{})
-		is.Equal(result5, []int{})
-
-		type myStrings []string
-		allStrings := myStrings{"", "foo", "bar"}
-		nonempty := lo.Without(allStrings, "")
-		is.IsType(nonempty, allStrings, "type preserved")
-	}
 }

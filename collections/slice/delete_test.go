@@ -1,10 +1,12 @@
 package slice
 
 import (
+	"reflect"
 	"strconv"
 	"strings"
 	"testing"
 
+	"github.com/araujo88/lambda-go/pkg/utils"
 	"github.com/samber/lo"
 
 	"github.com/duke-git/lancet/v2/slice"
@@ -141,6 +143,27 @@ func TestDropRight(t *testing.T) {
 		assert.Equal(t, []string{}, result4)
 		assert.Equal(t, []string{"a", "b", "c"}, result5)
 		assert.Equal(t, []string{}, result6)
+	}
+
+	{
+		tests := []struct {
+			name  string
+			slice []int
+			n     int
+			want  []int
+		}{
+			{"drop none", []int{1, 2, 3}, 0, []int{1, 2, 3}},
+			{"drop all", []int{1, 2, 3}, 3, []int{}},
+			{"drop some", []int{1, 2, 3}, 1, []int{2, 3}},
+		}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				if got := utils.Drop(tt.slice, tt.n); !reflect.DeepEqual(got, tt.want) {
+					t.Errorf("Drop() = %v, want %v", got, tt.want)
+				}
+			})
+		}
 	}
 }
 
@@ -330,4 +353,35 @@ func TestFilterReject(t *testing.T) {
 	})
 	is.IsType(a, allStrings, "type preserved")
 	is.IsType(b, allStrings, "type preserved")
+}
+
+// TestWithout Creates a slice excluding all given items.
+// func Without[T comparable](slice []T, items ...T) []T
+func TestWithout(t *testing.T) {
+	t.Parallel()
+	is := assert.New(t)
+
+	{
+		result := slice.Without([]int{1, 2, 3, 4}, 1, 2)
+		assert.Equal(t, []int{3, 4}, result)
+
+	}
+
+	{
+		result1 := lo.Without([]int{0, 2, 10}, 0, 1, 2, 3, 4, 5)
+		result2 := lo.Without([]int{0, 7}, 0, 1, 2, 3, 4, 5)
+		result3 := lo.Without([]int{}, 0, 1, 2, 3, 4, 5)
+		result4 := lo.Without([]int{0, 1, 2}, 0, 1, 2)
+		result5 := lo.Without([]int{})
+		is.Equal(result1, []int{10})
+		is.Equal(result2, []int{7})
+		is.Equal(result3, []int{})
+		is.Equal(result4, []int{})
+		is.Equal(result5, []int{})
+
+		type myStrings []string
+		allStrings := myStrings{"", "foo", "bar"}
+		nonempty := lo.Without(allStrings, "")
+		is.IsType(nonempty, allStrings, "type preserved")
+	}
 }

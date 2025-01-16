@@ -1,11 +1,52 @@
 package slice
 
 import (
+	"reflect"
 	"testing"
 
+	"github.com/araujo88/lambda-go/pkg/utils"
 	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
 )
+
+func TestHead(t *testing.T) {
+	tests := []struct {
+		name  string
+		slice []int
+		want  int
+	}{
+		{"non-empty slice", []int{1, 2, 3}, 1},
+		{"single element", []int{5}, 5},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := utils.Head(tt.slice); got != tt.want {
+				t.Errorf("Head() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestTail(t *testing.T) {
+	tests := []struct {
+		name  string
+		slice []int
+		want  []int
+	}{
+		{"non-empty slice", []int{1, 2, 3}, []int{2, 3}},
+		{"single element", []int{5}, []int{}},
+		{"empty slice", []int{}, []int{}},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := utils.Tail(tt.slice); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Tail() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
 
 func TestFirst(t *testing.T) {
 	t.Parallel()
@@ -18,6 +59,7 @@ func TestFirst(t *testing.T) {
 	is.Equal(ok1, true)
 	is.Equal(result2, 0)
 	is.Equal(ok2, false)
+
 }
 
 func TestFirstOrEmpty(t *testing.T) {
@@ -106,6 +148,7 @@ func TestCoalesce(t *testing.T) {
 	is.True(ok10)
 }
 
+// 尝试获得第一个非零的值，如果没有则返回零值
 func TestCoalesceOrEmpty(t *testing.T) {
 	t.Parallel()
 	is := assert.New(t)

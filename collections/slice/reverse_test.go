@@ -1,6 +1,7 @@
 package slice
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/samber/lo"
@@ -38,8 +39,24 @@ func TestReverse(t *testing.T) {
 
 	{
 		slice1 := []int{1, 2, 3}
-
 		reversed := utils.Reverse(slice1)
 		assert.Equal(t, []int{3, 2, 1}, reversed)
+
+		tests := []struct {
+			name  string
+			slice []int
+			want  []int
+		}{
+			{"reverse non-empty", []int{1, 2, 3}, []int{3, 2, 1}},
+			{"reverse empty", []int{}, []int{}},
+		}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				if got := utils.Reverse(tt.slice); !reflect.DeepEqual(got, tt.want) {
+					t.Errorf("Reverse() = %v, want %v", got, tt.want)
+				}
+			})
+		}
 	}
 }

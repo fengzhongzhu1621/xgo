@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/araujo88/lambda-go/pkg/predicate"
 	"github.com/duke-git/lancet/v2/slice"
 	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
@@ -48,14 +49,13 @@ func TestFindBy(t *testing.T) {
 			index++
 			return item == "b"
 		})
+		is.Equal(ok1, true)
+		is.Equal(result1, "b")
 
 		result2, ok2 := lo.Find([]string{"foobar"}, func(item string) bool {
 			is.Equal("foobar", item)
 			return item == "b"
 		})
-
-		is.Equal(ok1, true)
-		is.Equal(result1, "b")
 		is.Equal(ok2, false)
 		is.Equal(result2, "")
 	}
@@ -67,18 +67,19 @@ func TestFindBy(t *testing.T) {
 			index++
 			return item == "b"
 		})
+		is.Equal(item1, "b")
+		is.Equal(ok1, true)
+		is.Equal(index1, 1)
+
 		item2, index2, ok2 := lo.FindIndexOf([]string{"foobar"}, func(item string) bool {
 			is.Equal("foobar", item)
 			return item == "b"
 		})
-
-		is.Equal(item1, "b")
-		is.Equal(ok1, true)
-		is.Equal(index1, 1)
 		is.Equal(item2, "")
 		is.Equal(ok2, false)
 		is.Equal(index2, -1)
 	}
+
 	{
 		nums := []int{1, 2, 3, 4, 5}
 
@@ -90,6 +91,29 @@ func TestFindBy(t *testing.T) {
 
 		assert.Equal(t, 2, result)
 		assert.Equal(t, true, ok)
+	}
+
+	{
+		tests := []struct {
+			name      string
+			slice     []int
+			predicate func(int) bool
+			want      int
+			found     bool
+		}{
+			{"finds element", []int{1, 2, 3}, func(x int) bool { return x == 3 }, 3, true},
+			{"does not find element", []int{1, 2, 3}, func(x int) bool { return x == 5 }, 0, false},
+			{"empty slice", []int{}, func(x int) bool { return true }, 0, false},
+		}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				got, found := predicate.Find(tt.slice, tt.predicate)
+				if got != tt.want || found != tt.found {
+					t.Errorf("Find() = %v, %v, want %v, %v", got, found, tt.want, tt.found)
+				}
+			})
+		}
 	}
 }
 
