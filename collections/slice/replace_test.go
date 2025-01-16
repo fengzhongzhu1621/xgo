@@ -3,9 +3,31 @@ package slice
 import (
 	"testing"
 
+	"github.com/samber/lo"
+
 	"github.com/duke-git/lancet/v2/slice"
 	"github.com/stretchr/testify/assert"
 )
+
+type foo struct {
+	bar string
+}
+
+func (f foo) Clone() foo {
+	return foo{f.bar}
+}
+
+// fills elements of array with `initial` value.
+func TestFill(t *testing.T) {
+	t.Parallel()
+	is := assert.New(t)
+
+	result1 := lo.Fill([]foo{{"a"}, {"a"}}, foo{"b"})
+	result2 := lo.Fill([]foo{}, foo{"a"})
+
+	is.Equal(result1, []foo{{"b"}, {"b"}})
+	is.Equal(result2, []foo{})
+}
 
 // TestReplace Returns a copy of the slice with the first n non-overlapping instances of old replaced by new.
 // 返回一个切片副本，其中前n个不重叠的旧实例被新实例替换。

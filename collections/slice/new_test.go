@@ -11,6 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// 任务执行指定次数
 func TestTimes(t *testing.T) {
 	t.Parallel()
 	is := assert.New(t)
@@ -65,27 +66,30 @@ func TestToSlicePointer(t *testing.T) {
 // TestWithout Creates a slice excluding all given items.
 // func Without[T comparable](slice []T, items ...T) []T
 func TestWithout(t *testing.T) {
-	result := slice.Without([]int{1, 2, 3, 4}, 1, 2)
-	assert.Equal(t, []int{3, 4}, result)
-}
-
-func TestWithout2(t *testing.T) {
 	t.Parallel()
 	is := assert.New(t)
 
-	result1 := lo.Without([]int{0, 2, 10}, 0, 1, 2, 3, 4, 5)
-	result2 := lo.Without([]int{0, 7}, 0, 1, 2, 3, 4, 5)
-	result3 := lo.Without([]int{}, 0, 1, 2, 3, 4, 5)
-	result4 := lo.Without([]int{0, 1, 2}, 0, 1, 2)
-	result5 := lo.Without([]int{})
-	is.Equal(result1, []int{10})
-	is.Equal(result2, []int{7})
-	is.Equal(result3, []int{})
-	is.Equal(result4, []int{})
-	is.Equal(result5, []int{})
+	{
+		result := slice.Without([]int{1, 2, 3, 4}, 1, 2)
+		assert.Equal(t, []int{3, 4}, result)
 
-	type myStrings []string
-	allStrings := myStrings{"", "foo", "bar"}
-	nonempty := lo.Without(allStrings, "")
-	is.IsType(nonempty, allStrings, "type preserved")
+	}
+
+	{
+		result1 := lo.Without([]int{0, 2, 10}, 0, 1, 2, 3, 4, 5)
+		result2 := lo.Without([]int{0, 7}, 0, 1, 2, 3, 4, 5)
+		result3 := lo.Without([]int{}, 0, 1, 2, 3, 4, 5)
+		result4 := lo.Without([]int{0, 1, 2}, 0, 1, 2)
+		result5 := lo.Without([]int{})
+		is.Equal(result1, []int{10})
+		is.Equal(result2, []int{7})
+		is.Equal(result3, []int{})
+		is.Equal(result4, []int{})
+		is.Equal(result5, []int{})
+
+		type myStrings []string
+		allStrings := myStrings{"", "foo", "bar"}
+		nonempty := lo.Without(allStrings, "")
+		is.IsType(nonempty, allStrings, "type preserved")
+	}
 }

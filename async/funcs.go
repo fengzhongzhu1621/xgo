@@ -7,7 +7,7 @@ import (
 	"github.com/fengzhongzhu1621/xgo"
 )
 
-// Internal usage to gather results from tasks.
+// execResult Internal usage to gather results from tasks.
 type execResult struct {
 	err     error
 	results []reflect.Value
@@ -20,7 +20,7 @@ type funcs struct {
 	Stack interface{} // 函数任务列表
 }
 
-// 任务顺序执行，前一个任务的执行结果作为下一个任务的输入
+// ExecInSeries 任务顺序执行，前一个任务的执行结果作为下一个任务的输入
 // ExecInSeries executes recursively each task of the stack until it reachs
 // the bottom of the stack or it is interrupted by an error.
 func (f *funcs) ExecInSeries(args ...reflect.Value) ([]interface{}, error) {

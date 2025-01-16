@@ -5,29 +5,31 @@ import (
 	"testing"
 
 	"github.com/araujo88/lambda-go/pkg/utils"
+
 	"github.com/duke-git/lancet/v2/slice"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestConcat(t *testing.T) {
-	slice1 := []int{1, 2, 3}
-	slice2 := []int{4, 5, 6}
+	{
+		slice1 := []int{1, 2, 3}
+		slice2 := []int{4, 5, 6}
 
-	concatenated := utils.Concat(slice1, slice2)
-	assert.Equal(t, []int{1, 2, 3, 4, 5, 6}, concatenated)
+		concatenated := utils.Concat(slice1, slice2)
+		assert.Equal(t, []int{1, 2, 3, 4, 5, 6}, concatenated)
+	}
+	{
+		result1 := slice.Concat([]int{1, 2}, []int{3, 4})
+		result2 := slice.Concat([]string{"a", "b"}, []string{"c"}, []string{"d"})
+
+		assert.Equal(t, []int{1, 2, 3, 4}, result1)
+		assert.Equal(t, []string{"a", "b", "c", "d"}, result2)
+	}
 }
 
-func TestLancetConcat(t *testing.T) {
-	result1 := slice.Concat([]int{1, 2}, []int{3, 4})
-	result2 := slice.Concat([]string{"a", "b"}, []string{"c"}, []string{"d"})
-
-	assert.Equal(t, []int{1, 2, 3, 4}, result1)
-	assert.Equal(t, []string{"a", "b", "c", "d"}, result2)
-}
-
-// TestLancetConcatBy Concats the elements of a slice into a single value using the provided separator and connector function.
+// TestConcatBy Concats the elements of a slice into a single value using the provided separator and connector function.
 // func ConcatBy[T any](slice []T, sep T, connector func(T, T) T) T
-func TestLancetConcatBy(t *testing.T) {
+func TestConcatBy(t *testing.T) {
 	type Person struct {
 		Name string
 		Age  int

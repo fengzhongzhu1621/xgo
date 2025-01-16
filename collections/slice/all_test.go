@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/duke-git/lancet/v2/slice"
+
 	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
 )
@@ -11,30 +12,29 @@ import (
 // TestEvery Return true if all of the values in the slice pass the predicate function.
 // func Every[T any](slice []T, predicate func(index int, item T) bool) bool
 func TestEvery(t *testing.T) {
-	nums := []int{1, 2, 3, 5}
-
-	isEven := func(i, num int) bool {
-		return num%2 == 0
-	}
-
-	result := slice.Every(nums, isEven)
-
-	assert.Equal(t, false, result)
-}
-
-func TestEvery2(t *testing.T) {
 	t.Parallel()
 	is := assert.New(t)
 
-	result1 := lo.Every([]int{0, 1, 2, 3, 4, 5}, []int{0, 2})
-	result2 := lo.Every([]int{0, 1, 2, 3, 4, 5}, []int{0, 6})
-	result3 := lo.Every([]int{0, 1, 2, 3, 4, 5}, []int{-1, 6})
-	result4 := lo.Every([]int{0, 1, 2, 3, 4, 5}, []int{})
+	{
+		result1 := lo.Every([]int{0, 1, 2, 3, 4, 5}, []int{0, 2})
+		result2 := lo.Every([]int{0, 1, 2, 3, 4, 5}, []int{0, 6})
+		result3 := lo.Every([]int{0, 1, 2, 3, 4, 5}, []int{-1, 6})
+		result4 := lo.Every([]int{0, 1, 2, 3, 4, 5}, []int{})
 
-	is.True(result1)
-	is.False(result2)
-	is.False(result3)
-	is.True(result4)
+		is.True(result1)
+		is.False(result2)
+		is.False(result3)
+		is.True(result4)
+	}
+
+	{
+		nums := []int{1, 2, 3, 5}
+		isEven := func(i, num int) bool {
+			return num%2 == 0
+		}
+		result := slice.Every(nums, isEven)
+		assert.Equal(t, false, result)
+	}
 }
 
 func TestEveryBy(t *testing.T) {
