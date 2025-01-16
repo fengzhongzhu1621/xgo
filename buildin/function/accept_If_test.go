@@ -11,13 +11,15 @@ import (
 	"github.com/duke-git/lancet/v2/function"
 )
 
+// 根据条件判断确定是否执行函数
 func TestAcceptIf(t *testing.T) {
 
 	adder := function.AcceptIf(
 		function.And(
 			func(x int) bool {
 				return x > 10
-			}, func(x int) bool {
+			},
+			func(x int) bool {
 				return x%2 == 0
 			}),
 		// 条件为 true 时才执行次函数

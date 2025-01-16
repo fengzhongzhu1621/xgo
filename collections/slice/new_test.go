@@ -1,7 +1,9 @@
 package slice
 
 import (
+	"fmt"
 	"reflect"
+	"strconv"
 	"testing"
 
 	"github.com/duke-git/lancet/v2/slice"
@@ -9,9 +11,40 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestTimes(t *testing.T) {
+	t.Parallel()
+	is := assert.New(t)
+
+	result1 := lo.Times(3, func(i int) string {
+		return strconv.FormatInt(int64(i), 10)
+	})
+
+	is.Equal(len(result1), 3)
+	is.Equal(result1, []string{"0", "1", "2"})
+}
+
 // TestToSlice Creates a slice of give items.
 // func ToSlice[T any](items ...T) []T
 func TestToSlice(t *testing.T) {
+	t.Parallel()
+	is := assert.New(t)
+
+	{
+		{
+			result1 := lo.MapToSlice(map[int]int{1: 5, 2: 6, 3: 7, 4: 8}, func(k int, v int) string {
+				return fmt.Sprintf("%d_%d", k, v)
+			})
+			result2 := lo.MapToSlice(map[int]int{1: 5, 2: 6, 3: 7, 4: 8}, func(k int, _ int) string {
+				return strconv.FormatInt(int64(k), 10)
+			})
+
+			is.Equal(len(result1), 4)
+			is.Equal(len(result2), 4)
+			is.ElementsMatch(result1, []string{"1_5", "2_6", "3_7", "4_8"})
+			is.ElementsMatch(result2, []string{"1", "2", "3", "4"})
+		}
+	}
+
 	result := slice.ToSlice("a", "b", "c")
 	assert.Equal(t, []string{"a", "b", "c"}, result)
 }

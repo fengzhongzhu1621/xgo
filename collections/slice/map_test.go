@@ -1,41 +1,21 @@
 package slice
 
 import (
-	"fmt"
 	"strconv"
 	"testing"
 
-	"github.com/araujo88/lambda-go/pkg/core"
-	"github.com/duke-git/lancet/v2/slice"
 	"github.com/samber/lo"
+
+	"github.com/araujo88/lambda-go/pkg/core"
+
+	"github.com/duke-git/lancet/v2/slice"
 	"github.com/stretchr/testify/assert"
 )
 
 // TestMap 函数对片段中的每个元素应用给定的函数，返回一个包含转换后元素的新片段。
 func TestMap(t *testing.T) {
-	numbers := []int{1, 2, 3, 4, 5}
-	doubled := core.Map(numbers, func(x int) int { return x * 2 })
-	assert.Equal(t, doubled, []int{2, 4, 6, 8, 10})
-}
-
-// TestLancetMap Creates an slice of values by running each element in slice thru function.
-// func Map[T any, U any](slice []T, iteratee func(index int, item T) U) []U
-func TestLancetMap(t *testing.T) {
 	t.Parallel()
 	is := assert.New(t)
-	{
-		result1 := lo.MapToSlice(map[int]int{1: 5, 2: 6, 3: 7, 4: 8}, func(k int, v int) string {
-			return fmt.Sprintf("%d_%d", k, v)
-		})
-		result2 := lo.MapToSlice(map[int]int{1: 5, 2: 6, 3: 7, 4: 8}, func(k int, _ int) string {
-			return strconv.FormatInt(int64(k), 10)
-		})
-
-		is.Equal(len(result1), 4)
-		is.Equal(len(result2), 4)
-		is.ElementsMatch(result1, []string{"1_5", "2_6", "3_7", "4_8"})
-		is.ElementsMatch(result2, []string{"1", "2", "3", "4"})
-	}
 
 	{
 		nums := []int{1, 2, 3}
@@ -46,6 +26,26 @@ func TestLancetMap(t *testing.T) {
 
 		result := slice.Map(nums, addOne)
 		assert.Equal(t, []int{2, 3, 4}, result)
+	}
+
+	{
+		numbers := []int{1, 2, 3, 4, 5}
+		doubled := core.Map(numbers, func(x int) int { return x * 2 })
+		assert.Equal(t, doubled, []int{2, 4, 6, 8, 10})
+	}
+
+	{
+		result1 := lo.Map([]int{1, 2, 3, 4}, func(x int, _ int) string {
+			return "Hello"
+		})
+		result2 := lo.Map([]int64{1, 2, 3, 4}, func(x int64, _ int) string {
+			return strconv.FormatInt(x, 10)
+		})
+
+		is.Equal(len(result1), 4)
+		is.Equal(len(result2), 4)
+		is.Equal(result1, []string{"Hello", "Hello", "Hello", "Hello"})
+		is.Equal(result2, []string{"1", "2", "3", "4"})
 	}
 }
 
@@ -70,15 +70,35 @@ func TestKeyBy(t *testing.T) {
 // TestForEach Iterates over elements of slice and invokes function for each element.
 // func ForEach[T any](slice []T, iteratee func(index int, item T))
 func TestForEach(t *testing.T) {
-	nums := []int{1, 2, 3}
+	t.Parallel()
+	is := assert.New(t)
 
-	var result []int
-	addOne := func(_ int, v int) {
-		result = append(result, v+1)
+	{
+		// check of callback is called for every element and in proper order
+		callParams1 := []string{}
+		callParams2 := []int{}
+
+		lo.ForEach([]string{"a", "b", "c"}, func(item string, i int) {
+			callParams1 = append(callParams1, item)
+			callParams2 = append(callParams2, i)
+		})
+
+		is.ElementsMatch([]string{"a", "b", "c"}, callParams1)
+		is.ElementsMatch([]int{0, 1, 2}, callParams2)
+		is.IsIncreasing(callParams2)
 	}
 
-	slice.ForEach(nums, addOne)
-	assert.Equal(t, []int{2, 3, 4}, result)
+	{
+		nums := []int{1, 2, 3}
+
+		var result []int
+		addOne := func(_ int, v int) {
+			result = append(result, v+1)
+		}
+
+		slice.ForEach(nums, addOne)
+		assert.Equal(t, []int{2, 3, 4}, result)
+	}
 }
 
 // TestForEachConcurrent Applies the iteratee function to each item in the slice concurrently.
@@ -99,19 +119,44 @@ func TestForEachConcurrent(t *testing.T) {
 // TestForEachWithBreak Iterates over elements of slice and invokes function for each element, when iteratee return false, will break the for each loop.
 // func ForEachWithBreak[T any](slice []T, iteratee func(index int, item T) bool)
 func TestForEachWithBreak(t *testing.T) {
-	numbers := []int{1, 2, 3, 4, 5}
+	{
+		t.Parallel()
+		is := assert.New(t)
 
-	var sum int
+		// check of callback is called for every element and in proper order
 
-	slice.ForEachWithBreak(numbers, func(_, n int) bool {
-		if n > 3 {
-			// 停止循环
-			return false
-		}
-		sum += n
-		return true
-	})
+		var callParams1 []string
+		var callParams2 []int
 
-	// 1 + 2 + 3
-	assert.Equal(t, 6, sum)
+		lo.ForEachWhile([]string{"a", "b", "c"}, func(item string, i int) bool {
+			if item == "c" {
+				return false
+			}
+			callParams1 = append(callParams1, item)
+			callParams2 = append(callParams2, i)
+			return true
+		})
+
+		is.ElementsMatch([]string{"a", "b"}, callParams1)
+		is.ElementsMatch([]int{0, 1}, callParams2)
+		is.IsIncreasing(callParams2)
+	}
+
+	{
+		numbers := []int{1, 2, 3, 4, 5}
+
+		var sum int
+
+		slice.ForEachWithBreak(numbers, func(_, n int) bool {
+			if n > 3 {
+				// 停止循环
+				return false
+			}
+			sum += n
+			return true
+		})
+
+		// 1 + 2 + 3
+		assert.Equal(t, 6, sum)
+	}
 }

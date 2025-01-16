@@ -17,6 +17,7 @@ func TestThrottle(t *testing.T) {
 		callCount++
 	}
 
+	// 一秒最多执行一次
 	throttledFn := function.Throttle(fn, 1*time.Second)
 
 	for i := 0; i < 5; i++ {

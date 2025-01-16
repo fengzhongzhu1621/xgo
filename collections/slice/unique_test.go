@@ -6,37 +6,75 @@ import (
 	"testing"
 
 	"github.com/araujo88/lambda-go/pkg/utils"
+
 	"github.com/duke-git/lancet/v2/slice"
 	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
 )
 
 // TestUnique 去重切片
-func TestUnique(t *testing.T) {
-	withDuplicates := []int{1, 2, 2, 3, 3, 3, 4}
-	unique := utils.Unique(withDuplicates)
-	fmt.Println(unique) // Output: [1 2 3 4]
-}
-
-// TestLancetUnique Remove duplicate elements in slice.
 // func Unique[T comparable](slice []T) []T
-func TestLancetUnique(t *testing.T) {
-	result := slice.Unique([]string{"a", "a", "b"})
-	assert.Equal(t, []string{"a", "b"}, result)
+func TestUnique(t *testing.T) {
+	t.Parallel()
+	is := assert.New(t)
+
+	{
+		result1 := lo.Uniq([]int{1, 2, 2, 1})
+
+		is.Equal(len(result1), 2)
+		is.Equal(result1, []int{1, 2})
+
+		type myStrings []string
+		allStrings := myStrings{"", "foo", "bar"}
+		nonempty := lo.Uniq(allStrings)
+		is.IsType(nonempty, allStrings, "type preserved")
+	}
+
+	{
+		withDuplicates := []int{1, 2, 2, 3, 3, 3, 4}
+		unique := utils.Unique(withDuplicates)
+		fmt.Println(unique) // Output: [1 2 3 4]
+	}
+
+	{
+		result := slice.Unique([]string{"a", "a", "b"})
+		assert.Equal(t, []string{"a", "b"}, result)
+	}
 }
 
-// TestLancetUniqueBy Removes duplicate elements from the input slice based
+// TestUniqueBy Removes duplicate elements from the input slice based
 // on the values returned by the iteratee function.
 // this function maintains the order of the elements.
 // func UniqueBy[T any, U comparable](slice []T, iteratee func(item T) U) []T
-func TestLancetUniqueBy(t *testing.T) {
-	nums := []int{1, 2, 3, 4, 5, 6}
-	result := slice.UniqueBy(nums, func(val int) int {
-		// 对余数进行去重
-		return val % 3
-	})
+func TestUniqueBy(t *testing.T) {
+	t.Parallel()
+	is := assert.New(t)
 
-	assert.Equal(t, []int{1, 2, 3}, result)
+	{
+		result1 := lo.UniqBy([]int{0, 1, 2, 3, 4, 5}, func(i int) int {
+			return i % 3
+		})
+
+		is.Equal(len(result1), 3)
+		is.Equal(result1, []int{0, 1, 2})
+
+		type myStrings []string
+		allStrings := myStrings{"", "foo", "bar"}
+		nonempty := lo.UniqBy(allStrings, func(i string) string {
+			return i
+		})
+		is.IsType(nonempty, allStrings, "type preserved")
+	}
+
+	{
+		nums := []int{1, 2, 3, 4, 5, 6}
+		result := slice.UniqueBy(nums, func(val int) int {
+			// 对余数进行去重
+			return val % 3
+		})
+
+		assert.Equal(t, []int{1, 2, 3}, result)
+	}
 }
 
 // TestUniqueByComparator Removes duplicate elements from the input slice using the provided comparator function.

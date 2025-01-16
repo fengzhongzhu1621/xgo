@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/samber/lo"
+
 	"github.com/araujo88/lambda-go/pkg/core"
 	"github.com/duke-git/lancet/v2/slice"
 	"github.com/stretchr/testify/assert"
@@ -20,16 +22,32 @@ func TestFold(t *testing.T) {
 // TestReduceBy Produces a value from slice by accumulating the result of each element as passed through the reducer function.
 // func ReduceBy[T any, U any](slice []T, initial U, reducer func(index int, item T, agg U) U) U
 func TestReduceBy(t *testing.T) {
-	result1 := slice.ReduceBy([]int{1, 2, 3, 4}, 0, func(_ int, item int, agg int) int {
-		return agg + item
-	})
+	t.Parallel()
+	is := assert.New(t)
 
-	result2 := slice.ReduceBy([]int{1, 2, 3, 4}, "", func(_ int, item int, agg string) string {
-		return agg + fmt.Sprintf("%v", item)
-	})
+	{
+		result1 := lo.Reduce([]int{1, 2, 3, 4}, func(agg int, item int, _ int) int {
+			return agg + item
+		}, 0)
+		result2 := lo.Reduce([]int{1, 2, 3, 4}, func(agg int, item int, _ int) int {
+			return agg + item
+		}, 10)
 
-	assert.Equal(t, 10, result1)
-	assert.Equal(t, 1234, result2)
+		is.Equal(result1, 10)
+		is.Equal(result2, 20)
+	}
+	{
+		result1 := slice.ReduceBy([]int{1, 2, 3, 4}, 0, func(_ int, item int, agg int) int {
+			return agg + item
+		})
+
+		result2 := slice.ReduceBy([]int{1, 2, 3, 4}, "", func(_ int, item int, agg string) string {
+			return agg + fmt.Sprintf("%v", item)
+		})
+
+		assert.Equal(t, 10, result1)
+		assert.Equal(t, 1234, result2)
+	}
 }
 
 // TestReduceConcurrent Reduces the slice to a single value by applying the reducer function to each item in the slice concurrently.
@@ -47,9 +65,28 @@ func TestReduceConcurrent(t *testing.T) {
 // TestReduceRight ReduceRight is like ReduceBy, but it iterates over elements of slice from right to left.
 // func ReduceRight[T any, U any](slice []T, initial U, reducer func(index int, item T, agg U) U) U
 func TestReduceRight(t *testing.T) {
-	result := slice.ReduceRight([]int{1, 2, 3, 4}, "", func(_ int, item int, agg string) string {
-		return agg + fmt.Sprintf("%v", item)
-	})
+	t.Parallel()
+	is := assert.New(t)
 
-	assert.Equal(t, "4321", result)
+	{
+		result1 := lo.ReduceRight([][]int{{0, 1}, {2, 3}, {4, 5}}, func(agg []int, item []int, _ int) []int {
+			return append(agg, item...)
+		}, []int{})
+
+		is.Equal(result1, []int{4, 5, 2, 3, 0, 1})
+
+		type collection []int
+		result3 := lo.ReduceRight(collection{1, 2, 3, 4}, func(agg int, item int, _ int) int {
+			return agg + item
+		}, 10)
+		is.Equal(result3, 20)
+	}
+
+	{
+		result := slice.ReduceRight([]int{1, 2, 3, 4}, "", func(_ int, item int, agg string) string {
+			return agg + fmt.Sprintf("%v", item)
+		})
+
+		assert.Equal(t, "4321", result)
+	}
 }
