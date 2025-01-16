@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/araujo88/lambda-go/pkg/utils"
+	"github.com/gookit/goutil/arrutil"
 	"github.com/samber/lo"
 
 	"github.com/duke-git/lancet/v2/slice"
@@ -106,6 +107,17 @@ func TestDrop(t *testing.T) {
 		assert.Equal(t, []string{}, result4)
 		assert.Equal(t, []string{"a", "b", "c"}, result5)
 		assert.Equal(t, []string{}, result6)
+	}
+
+	{
+		ss := []string{"a", "b", "c"}
+		ns := arrutil.Remove(ss, "b")
+		assert.Equal(t, []string{"a", "c"}, ns)
+
+		ints := []int{1, 2, 3}
+		ni := arrutil.Remove(ints, 2)
+		assert.Equal(t, []int{1, 3}, ni)
+
 	}
 }
 

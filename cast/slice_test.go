@@ -8,6 +8,7 @@ import (
 
 	"github.com/duke-git/lancet/v2/convertor"
 	"github.com/fengzhongzhu1621/xgo/tests"
+	"github.com/gookit/goutil/arrutil"
 	"github.com/samber/lo"
 
 	"github.com/stretchr/testify/assert"
@@ -60,4 +61,26 @@ func TestFromAnySlice(t *testing.T) {
 		is.Equal([]string{"foobar", "42"}, out2)
 		is.True(ok2)
 	})
+}
+
+func TestStringsToInts(t *testing.T) {
+	is := assert.New(t)
+
+	ints, err := arrutil.StringsToInts([]string{"1", "2"})
+	is.Nil(err)
+	is.Equal("[]int{1, 2}", fmt.Sprintf("%#v", ints))
+
+	_, err = arrutil.StringsToInts([]string{"a", "b"})
+	is.Error(err)
+
+	ints = arrutil.StringsAsInts([]string{"1", "2"})
+	is.Equal("[]int{1, 2}", fmt.Sprintf("%#v", ints))
+	is.Nil(arrutil.StringsAsInts([]string{"abc"}))
+}
+
+func TestStringsToSlice(t *testing.T) {
+	is := assert.New(t)
+
+	as := arrutil.StringsToSlice([]string{"1", "2"})
+	is.Equal(`[]interface {}{"1", "2"}`, fmt.Sprintf("%#v", as))
 }

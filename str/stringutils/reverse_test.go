@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/duke-git/lancet/v2/strutil"
+	"github.com/gookit/goutil/arrutil"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -83,4 +84,14 @@ func BenchmarkReverseSliceNew(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		ReverseSliceGetNew(names)
 	}
+}
+
+func TestReverse(t *testing.T) {
+	ss := []string{"a", "b", "c"}
+	arrutil.Reverse(ss)
+	assert.Equal(t, []string{"c", "b", "a"}, ss)
+
+	ints := []int{1, 2, 3}
+	arrutil.Reverse(ints)
+	assert.Equal(t, []int{3, 2, 1}, ints)
 }

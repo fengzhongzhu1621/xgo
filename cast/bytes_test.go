@@ -1,11 +1,11 @@
 package cast
 
 import (
+	"bytes"
 	"fmt"
 	"testing"
 
 	"github.com/duke-git/lancet/v2/convertor"
-	"github.com/stretchr/testify/assert"
 )
 
 // func EncodeByte(data any) ([]byte, error)
@@ -33,8 +33,11 @@ func TestDecodeByte(t *testing.T) {
 	// abc
 }
 
-func TestTruncateBytes(t *testing.T) {
-	content := []byte("Hello, world!")
-	truncated := TruncateBytes(content, 5)
-	assert.Equal(t, "Hello", string(truncated))
+func TestStringToBytes(t *testing.T) {
+	for i := 0; i < 100; i++ {
+		s := RandStringBytesMaskImprSrcSB(64)
+		if !bytes.Equal(rawStrToBytes(s), StringToBytes(s)) {
+			t.Fatal("don't match")
+		}
+	}
 }

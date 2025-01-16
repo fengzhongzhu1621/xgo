@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/duke-git/lancet/v2/strutil"
+	"github.com/gookit/goutil/arrutil"
 	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
 )
@@ -259,4 +260,13 @@ func TestEllipsis(t *testing.T) {
 		assert.Equal(t, "你好...", result2)
 		assert.Equal(t, "😀😃😄...", result3)
 	}
+}
+
+func TestStringsRemove(t *testing.T) {
+	ss := []string{"a", "b", "c"}
+	ns := arrutil.StringsRemove(ss, "b")
+
+	assert.Contains(t, ns, "a")
+	assert.NotContains(t, ns, "b")
+	assert.Len(t, ns, 2)
 }

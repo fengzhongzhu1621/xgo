@@ -1,7 +1,6 @@
 package cast
 
 import (
-	"bytes"
 	"fmt"
 	"math/rand"
 	"reflect"
@@ -12,15 +11,6 @@ import (
 	"github.com/duke-git/lancet/v2/strutil"
 	"github.com/stretchr/testify/assert"
 )
-
-func TestStringToBytes(t *testing.T) {
-	for i := 0; i < 100; i++ {
-		s := RandStringBytesMaskImprSrcSB(64)
-		if !bytes.Equal(rawStrToBytes(s), StringToBytes(s)) {
-			t.Fatal("don't match")
-		}
-	}
-}
 
 func BenchmarkBytesConvStrToBytesRaw(b *testing.B) {
 	for i := 0; i < b.N; i++ {

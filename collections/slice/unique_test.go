@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/araujo88/lambda-go/pkg/utils"
+	"github.com/gookit/goutil/arrutil"
 
 	"github.com/duke-git/lancet/v2/slice"
 	"github.com/samber/lo"
@@ -58,6 +59,13 @@ func TestUnique(t *testing.T) {
 	{
 		result := slice.Unique([]string{"a", "a", "b"})
 		assert.Equal(t, []string{"a", "b"}, result)
+	}
+
+	{
+		assert.Equal(t, []int{2}, arrutil.Unique[int]([]int{2}))
+		assert.Equal(t, []int{2, 3, 4}, arrutil.Unique[int]([]int{2, 3, 2, 4}))
+		assert.Equal(t, []uint{2, 3, 4}, arrutil.Unique([]uint{2, 3, 2, 4}))
+		assert.Equal(t, []string{"ab", "bc", "cd"}, arrutil.Unique([]string{"ab", "bc", "ab", "cd"}))
 	}
 }
 

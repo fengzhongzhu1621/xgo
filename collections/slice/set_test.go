@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/duke-git/lancet/v2/slice"
+	"github.com/gookit/goutil/arrutil"
 	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
 )
@@ -100,34 +101,48 @@ func TestUnion2(t *testing.T) {
 // TestDifference Creates an slice of whose element not included in the other given slice.
 // func Difference[T comparable](slice, comparedSlice []T) []T
 func TestDifference(t *testing.T) {
-	s1 := []int{1, 2, 3, 4, 5}
-	s2 := []int{4, 5, 6}
+	{
+		t.Parallel()
+		is := assert.New(t)
 
-	result := slice.Difference(s1, s2)
-	assert.Equal(t, []int{1, 2, 3}, result)
-}
+		left1, right1 := lo.Difference([]int{0, 1, 2, 3, 4, 5}, []int{0, 2, 6})
+		is.Equal(left1, []int{1, 3, 4, 5})
+		is.Equal(right1, []int{6})
 
-func TestDifference2(t *testing.T) {
-	t.Parallel()
-	is := assert.New(t)
+		left2, right2 := lo.Difference([]int{1, 2, 3, 4, 5}, []int{0, 6})
+		is.Equal(left2, []int{1, 2, 3, 4, 5})
+		is.Equal(right2, []int{0, 6})
 
-	left1, right1 := lo.Difference([]int{0, 1, 2, 3, 4, 5}, []int{0, 2, 6})
-	is.Equal(left1, []int{1, 3, 4, 5})
-	is.Equal(right1, []int{6})
+		left3, right3 := lo.Difference([]int{0, 1, 2, 3, 4, 5}, []int{0, 1, 2, 3, 4, 5})
+		is.Equal(left3, []int{})
+		is.Equal(right3, []int{})
 
-	left2, right2 := lo.Difference([]int{1, 2, 3, 4, 5}, []int{0, 6})
-	is.Equal(left2, []int{1, 2, 3, 4, 5})
-	is.Equal(right2, []int{0, 6})
+		type myStrings []string
+		allStrings := myStrings{"", "foo", "bar"}
+		a, b := lo.Difference(allStrings, allStrings)
+		is.IsType(a, allStrings, "type preserved")
+		is.IsType(b, allStrings, "type preserved")
+	}
 
-	left3, right3 := lo.Difference([]int{0, 1, 2, 3, 4, 5}, []int{0, 1, 2, 3, 4, 5})
-	is.Equal(left3, []int{})
-	is.Equal(right3, []int{})
+	{
+		s1 := []int{1, 2, 3, 4, 5}
+		s2 := []int{4, 5, 6}
 
-	type myStrings []string
-	allStrings := myStrings{"", "foo", "bar"}
-	a, b := lo.Difference(allStrings, allStrings)
-	is.IsType(a, allStrings, "type preserved")
-	is.IsType(b, allStrings, "type preserved")
+		result := slice.Difference(s1, s2)
+		assert.Equal(t, []int{1, 2, 3}, result)
+	}
+
+	{
+		data := []string{"a", "b", "c"}
+		result := arrutil.Differences[string](data, []string{"a", "b"}, arrutil.StringEqualsComparer)
+		assert.Equal(t, []string{"c"}, result)
+
+		result = arrutil.Differences[string]([]string{"a", "b"}, data, arrutil.StringEqualsComparer)
+		assert.Equal(t, []string{"c"}, result)
+
+		result = arrutil.Diff([]string{"a", "b", "d"}, data, arrutil.ReflectEqualsComparer[string])
+		assert.Equal(t, 2, len(result))
+	}
 }
 
 // TestDifferenceBy DifferenceBy accepts iteratee func which is invoked for each element of slice and values to generate the criterion by which they're compared.

@@ -35,11 +35,3 @@ func rawStrToBytes(s string) []byte {
 func SafeBytes(s string) []byte {
 	return []byte(s)
 }
-
-// TruncateBytes 截断字节切片
-func TruncateBytes(content []byte, length int) []byte {
-	if len(content) > length {
-		return content[:length]
-	}
-	return content
-}

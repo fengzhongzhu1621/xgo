@@ -1,9 +1,11 @@
 package stringutils
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/duke-git/lancet/v2/strutil"
+	"github.com/gookit/goutil/arrutil"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -11,18 +13,31 @@ import (
 // 先去掉附加字符，然后再去掉空白字符
 // func Trim(str string, characterMask ...string) string
 func TestTrim(t *testing.T) {
-	result1 := strutil.Trim("\nabcd")
+	is := assert.New(t)
 
-	str := "$ ab    cd $ "
+	{
+		result1 := strutil.Trim("\nabcd")
 
-	result2 := strutil.Trim(str)
-	result3 := strutil.Trim(str, "$")
-	result4 := strutil.Trim("     hi,       你好 ", "你好")
+		str := "$ ab    cd $ "
 
-	assert.Equal(t, "abcd", result1)
-	assert.Equal(t, "$ ab    cd $", result2)
-	assert.Equal(t, "ab    cd", result3)
-	assert.Equal(t, "hi,", result4)
+		result2 := strutil.Trim(str)
+		result3 := strutil.Trim(str, "$")
+		result4 := strutil.Trim("     hi,       你好 ", "你好")
+
+		assert.Equal(t, "abcd", result1)
+		assert.Equal(t, "$ ab    cd $", result2)
+		assert.Equal(t, "ab    cd", result3)
+		assert.Equal(t, "hi,", result4)
+	}
+
+	{
+		ss := arrutil.TrimStrings([]string{" a", "b ", " c "})
+		is.Equal("[a b c]", fmt.Sprint(ss))
+		ss = arrutil.TrimStrings([]string{",a", "b.", ",.c,"}, ",.")
+		is.Equal("[a b c]", fmt.Sprint(ss))
+		ss = arrutil.TrimStrings([]string{",a", "b.", ",.c,"}, ",", ".")
+		is.Equal("[a b c]", fmt.Sprint(ss))
+	}
 }
 
 // TestSplitAndTrim 通过字符串delimiter将字符串str分割为切片，并对切片的每个元素调用Trim。它会忽略在Trim后为空的元素。

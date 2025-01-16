@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/gookit/goutil/arrutil"
 	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
 )
@@ -14,13 +15,24 @@ func TestSample(t *testing.T) {
 	t.Parallel()
 	is := assert.New(t)
 
-	rand.Seed(time.Now().UnixNano())
+	{
+		rand.Seed(time.Now().UnixNano())
 
-	result1 := lo.Sample([]string{"a", "b", "c"})
-	result2 := lo.Sample([]string{})
+		result1 := lo.Sample([]string{"a", "b", "c"})
+		result2 := lo.Sample([]string{})
 
-	is.True(lo.Contains([]string{"a", "b", "c"}, result1))
-	is.Equal(result2, "")
+		is.True(lo.Contains([]string{"a", "b", "c"}, result1))
+		is.Equal(result2, "")
+	}
+
+	{
+		intSlice := []int{1, 2, 3, 4, 5, 6}
+		intVal := arrutil.GetRandomOne(intSlice)
+		intVal1 := arrutil.GetRandomOne(intSlice)
+		for intVal == intVal1 {
+			intVal1 = arrutil.GetRandomOne(intSlice)
+		}
+	}
 
 }
 

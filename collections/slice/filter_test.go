@@ -9,6 +9,7 @@ import (
 
 	"github.com/araujo88/lambda-go/pkg/predicate"
 	"github.com/araujo88/lambda-go/pkg/utils"
+	"github.com/gookit/goutil/arrutil"
 	"github.com/samber/lo"
 
 	"github.com/duke-git/lancet/v2/slice"
@@ -68,6 +69,11 @@ func TestFilter(t *testing.T) {
 				}
 			})
 		}
+	}
+
+	{
+		ss := arrutil.Filter([]string{"a", "", "b", ""})
+		is.Equal([]string{"a", "b"}, ss)
 	}
 }
 

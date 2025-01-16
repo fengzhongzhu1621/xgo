@@ -6,6 +6,7 @@ import (
 
 	"github.com/araujo88/lambda-go/pkg/predicate"
 	"github.com/duke-git/lancet/v2/slice"
+	"github.com/gookit/goutil/arrutil"
 	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
 )
@@ -180,6 +181,11 @@ func TestIndexOf(t *testing.T) {
 
 		assert.Equal(t, 0, result1)
 		assert.Equal(t, -1, result2)
+	}
+
+	{
+		assert.Equal(t, 1, arrutil.IndexOf(3, []int{2, 3, 4}))
+		assert.Equal(t, -1, arrutil.IndexOf(5, []int{2, 3, 4}))
 	}
 }
 
