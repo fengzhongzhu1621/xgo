@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/duke-git/lancet/v2/strutil"
+	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -233,11 +234,29 @@ func TestRemoveNonPrintable(t *testing.T) {
 // TestEllipsis 将字符串截断为指定的长度并附加一个省略号。
 // func Ellipsis(str string, length int) string
 func TestEllipsis(t *testing.T) {
-	result1 := strutil.Ellipsis("hello world", 5)
-	result2 := strutil.Ellipsis("你好，世界!", 2)
-	result3 := strutil.Ellipsis("😀😃😄😁😆", 3)
+	t.Parallel()
+	is := assert.New(t)
 
-	assert.Equal(t, "hello...", result1)
-	assert.Equal(t, "你好...", result2)
-	assert.Equal(t, "😀😃😄...", result3)
+	{
+		is.Equal("12345", lo.Elipse("12345", 5))
+		is.Equal("1...", lo.Elipse("12345", 4))
+		is.Equal("1...", lo.Elipse("	12345  ", 4))
+		is.Equal("12345", lo.Elipse("12345", 6))
+		is.Equal("12345", lo.Elipse("12345", 10))
+		is.Equal("12345", lo.Elipse("  12345  ", 10))
+		is.Equal("...", lo.Elipse("12345", 3))
+		is.Equal("...", lo.Elipse("12345", 2))
+		is.Equal("...", lo.Elipse("12345", -1))
+		is.Equal("hello...", lo.Elipse(" hello   world ", 9))
+	}
+
+	{
+		result1 := strutil.Ellipsis("hello world", 5)
+		result2 := strutil.Ellipsis("你好，世界!", 2)
+		result3 := strutil.Ellipsis("😀😃😄😁😆", 3)
+
+		assert.Equal(t, "hello...", result1)
+		assert.Equal(t, "你好...", result2)
+		assert.Equal(t, "😀😃😄...", result3)
+	}
 }

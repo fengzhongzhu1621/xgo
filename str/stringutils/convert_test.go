@@ -4,6 +4,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/samber/lo"
+
 	"github.com/duke-git/lancet/v2/strutil"
 	"github.com/stretchr/testify/assert"
 )
@@ -29,53 +31,74 @@ func BenchmarkBuildInToLower(b *testing.B) {
 
 // TestCapitalize 将字符串的第一个字符转换为大写
 func TestCapitalize(t *testing.T) {
-	tests := []struct {
-		name string
-		args string
-		want string
-	}{
-		{
-			name: "test1",
-			args: "",
-			want: "",
-		},
-		{
-			name: "test2",
-			args: "Foo",
-			want: "Foo",
-		},
-		{
-			name: "test3",
-			args: "_foo",
-			want: "_foo",
-		},
-		{
-			name: "test4",
-			args: "fooBar",
-			want: "Foobar",
-		},
-		{
-			name: "test5",
-			args: "foo-bar",
-			want: "Foo-bar",
-		},
-		{
-			name: "test6",
-			args: "convert_test.go",
-			want: "Convert_test.go",
-		},
-		{
-			name: "test7",
-			args: "convertTest.go",
-			want: "Converttest.go",
-		},
+	{
+		type args struct {
+			word string
+		}
+		tests := []struct {
+			name string
+			args args
+			want string
+		}{
+			{"", args{"hello"}, "Hello"},
+			{"", args{"heLLO"}, "Hello"},
+		}
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				assert.Equalf(t, tt.want, lo.Capitalize(tt.args.word), "Capitalize(%v)", tt.args.word)
+			})
+		}
 	}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			expect := strutil.Capitalize(tt.args)
-			assert.Equal(t, tt.want, expect)
-		})
+	{
+		tests := []struct {
+			name string
+			args string
+			want string
+		}{
+			{
+				name: "test1",
+				args: "",
+				want: "",
+			},
+			{
+				name: "test2",
+				args: "Foo",
+				want: "Foo",
+			},
+			{
+				name: "test3",
+				args: "_foo",
+				want: "_foo",
+			},
+			{
+				name: "test4",
+				args: "fooBar",
+				want: "Foobar",
+			},
+			{
+				name: "test5",
+				args: "foo-bar",
+				want: "Foo-bar",
+			},
+			{
+				name: "test6",
+				args: "convert_test.go",
+				want: "Convert_test.go",
+			},
+			{
+				name: "test7",
+				args: "convertTest.go",
+				want: "Converttest.go",
+			},
+		}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				expect := strutil.Capitalize(tt.args)
+				assert.Equal(t, tt.want, expect)
+			})
+		}
 	}
 }
 

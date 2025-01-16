@@ -1,4 +1,4 @@
-package randutils
+package uuid
 
 import (
 	"encoding/hex"

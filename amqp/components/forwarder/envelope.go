@@ -3,8 +3,9 @@ package forwarder
 import (
 	"encoding/json"
 
+	"github.com/fengzhongzhu1621/xgo/crypto/uuid"
+
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
-	"github.com/fengzhongzhu1621/xgo/crypto/randutils"
 	"github.com/pkg/errors"
 )
 
@@ -55,7 +56,7 @@ func wrapMessageInEnvelope(destinationTopic string, msg *message.Message) (*mess
 	}
 
 	// 将信封转化为一个信封消息
-	wrappedMsg := message.NewMessage(randutils.NewUUID(), envelopedMessage)
+	wrappedMsg := message.NewMessage(uuid.NewUUID(), envelopedMessage)
 	wrappedMsg.SetContext(msg.Context())
 
 	return wrappedMsg, nil

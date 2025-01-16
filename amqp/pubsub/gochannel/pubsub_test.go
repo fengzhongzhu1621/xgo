@@ -8,12 +8,13 @@ import (
 	"testing"
 	"time"
 
+	"github.com/fengzhongzhu1621/xgo/crypto/uuid"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/amqp/subscriber"
-	"github.com/fengzhongzhu1621/xgo/crypto/randutils"
 	"github.com/fengzhongzhu1621/xgo/logging"
 )
 
@@ -50,7 +51,7 @@ func TestPublishSubscribe_not_persistent(t *testing.T) {
 		Config{OutputChannelBuffer: int64(messagesCount)},
 		logging.NewStdLogger(true, true, "[watermill] "),
 	)
-	topicName := "test_topic_" + randutils.NewUUID()
+	topicName := "test_topic_" + uuid.NewUUID()
 
 	msgs, err := pubSub.Subscribe(context.Background(), topicName)
 	require.NoError(t, err)
@@ -68,7 +69,7 @@ func TestPublishSubscribe_block_until_ack(t *testing.T) {
 		Config{BlockPublishUntilSubscriberAck: true},
 		logging.NewStdLogger(true, true, "[watermill] "),
 	)
-	topicName := "test_topic_" + randutils.NewUUID()
+	topicName := "test_topic_" + uuid.NewUUID()
 
 	msgs, err := pubSub.Subscribe(context.Background(), topicName)
 	require.NoError(t, err)
@@ -172,7 +173,7 @@ func TestPublishSubscribe_do_not_block_other_subscribers(t *testing.T) {
 		Config{},
 		logging.NewStdLogger(true, true, "[watermill] "),
 	)
-	topicName := "test_topic_" + randutils.NewUUID()
+	topicName := "test_topic_" + uuid.NewUUID()
 
 	msgsFromSubscriber1, err := pubSub.Subscribe(context.Background(), topicName)
 	require.NoError(t, err)
@@ -230,7 +231,7 @@ func testPublishSubscribeSubRace(t *testing.T) {
 	sentMessages := message.Messages{}
 	go func() {
 		for i := 0; i < messagesCount; i++ {
-			msg := message.NewMessage(randutils.NewUUID(), nil)
+			msg := message.NewMessage(uuid.NewUUID(), nil)
 			sentMessages = append(sentMessages, msg)
 
 			go func() {

@@ -1,4 +1,4 @@
-package randutils
+package sha
 
 import (
 	"fmt"

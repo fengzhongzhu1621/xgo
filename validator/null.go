@@ -1,4 +1,4 @@
-package reflectutils
+package validator
 
 import "reflect"
 

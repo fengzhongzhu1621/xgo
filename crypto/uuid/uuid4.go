@@ -1,6 +1,7 @@
-package randutils
+package uuid
 
 import (
+	"github.com/fengzhongzhu1621/xgo/crypto/randutils"
 	"github.com/google/uuid"
 )
 
@@ -17,7 +18,7 @@ func GetUUIDv4() (string, error) {
 func GetLocalUUIDv4() string {
 	id, err := uuid.NewRandom()
 	if err != nil {
-		return RandomString(24)
+		return randutils.RandomString(24)
 	}
 	return id.String()
 }

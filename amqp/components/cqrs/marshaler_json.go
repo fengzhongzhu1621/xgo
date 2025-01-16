@@ -3,9 +3,10 @@ package cqrs
 import (
 	"encoding/json"
 
+	"github.com/fengzhongzhu1621/xgo/crypto/uuid"
+
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/buildin"
-	"github.com/fengzhongzhu1621/xgo/crypto/randutils"
 )
 
 var _ CommandEventMarshaler = (*JSONMarshaler)(nil)
@@ -38,7 +39,7 @@ func (m JSONMarshaler) newUUID() string {
 	}
 
 	// default
-	return randutils.NewUUID()
+	return uuid.NewUUID()
 }
 
 func (JSONMarshaler) Unmarshal(msg *message.Message, v interface{}) (err error) {

@@ -1,4 +1,4 @@
-package signature
+package hmac
 
 import (
 	"crypto/hmac"
@@ -7,7 +7,7 @@ import (
 	"hash"
 )
 
-// 生成签名串.
+// GenerateHmacSignedString 生成签名串.
 func GenerateHmacSignedString(algorithm string, key []byte, p []byte) (string, error) {
 	var h hash.Hash
 	if algorithm == "sha256" {

@@ -2,7 +2,7 @@ package middleware_test
 
 import (
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
-	"github.com/fengzhongzhu1621/xgo/crypto/randutils"
+	"github.com/fengzhongzhu1621/xgo/crypto/uuid"
 
 	"github.com/pkg/errors"
 )
@@ -56,8 +56,8 @@ func (mp *mockPublisher) PopMessages() []*message.Message {
 }
 
 var handlerFuncAlwaysOKMessages = []*message.Message{
-	message.NewMessage(randutils.NewUUID(), nil),
-	message.NewMessage(randutils.NewUUID(), nil),
+	message.NewMessage(uuid.NewUUID(), nil),
+	message.NewMessage(uuid.NewUUID(), nil),
 }
 
 func handlerFuncAlwaysOK(*message.Message) ([]*message.Message, error) {

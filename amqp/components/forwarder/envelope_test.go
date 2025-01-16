@@ -4,16 +4,16 @@ import (
 	"context"
 	"testing"
 
+	"github.com/fengzhongzhu1621/xgo/crypto/uuid"
+
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/collections/maps"
-	"github.com/fengzhongzhu1621/xgo/crypto/randutils"
-
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestEnvelope(t *testing.T) {
-	expectedUUID := randutils.NewUUID()
+	expectedUUID := uuid.NewUUID()
 	expectedPayload := message.Payload("msg content")
 	expectedMetadata := maps.Metadata{"key": "value"}
 	expectedDestinationTopic := "dest_topic"

@@ -1,7 +1,10 @@
 package stringutils
 
 import (
+	"math"
 	"testing"
+
+	"github.com/samber/lo"
 
 	"github.com/duke-git/lancet/v2/strutil"
 	"github.com/stretchr/testify/assert"
@@ -10,77 +13,116 @@ import (
 // TestSubstring 返回从指定偏移位置开始的指定长度的子字符串。
 // func Substring(s string, offset int, length uint) string
 func TestSubstring(t *testing.T) {
-	type args struct {
-		s      string
-		offset int
-		length uint
-	}
-	tests := []struct {
-		name string
-		args *args
-		want string
-	}{
-		{
-			name: "test1",
-			args: &args{
-				s:      "abcde",
-				offset: 1,
-				length: 3,
+	t.Parallel()
+	is := assert.New(t)
+
+	{
+		type args struct {
+			s      string
+			offset int
+			length uint
+		}
+		tests := []struct {
+			name string
+			args *args
+			want string
+		}{
+			{
+				name: "test1",
+				args: &args{
+					s:      "abcde",
+					offset: 1,
+					length: 3,
+				},
+				want: "bcd",
 			},
-			want: "bcd",
-		},
-		{
-			name: "test2",
-			args: &args{
-				s:      "abcde",
-				offset: 1,
-				length: 5,
+			{
+				name: "test2",
+				args: &args{
+					s:      "abcde",
+					offset: 1,
+					length: 5,
+				},
+				want: "bcde",
 			},
-			want: "bcde",
-		},
-		{
-			name: "test3",
-			args: &args{
-				s:      "abcde",
-				offset: -1,
-				length: 3,
+			{
+				name: "test3",
+				args: &args{
+					s:      "abcde",
+					offset: -1,
+					length: 3,
+				},
+				want: "e",
 			},
-			want: "e",
-		},
-		{
-			name: "test4",
-			args: &args{
-				s:      "abcde",
-				offset: -2,
-				length: 2,
+			{
+				name: "test4",
+				args: &args{
+					s:      "abcde",
+					offset: -2,
+					length: 2,
+				},
+				want: "de",
 			},
-			want: "de",
-		},
-		{
-			name: "test5",
-			args: &args{
-				s:      "abcde",
-				offset: -2,
-				length: 3,
+			{
+				name: "test5",
+				args: &args{
+					s:      "abcde",
+					offset: -2,
+					length: 3,
+				},
+				want: "de",
 			},
-			want: "de",
-		},
-		{
-			name: "test6",
-			args: &args{
-				s:      "你好，欢迎你",
-				offset: 0,
-				length: 2,
+			{
+				name: "test6",
+				args: &args{
+					s:      "你好，欢迎你",
+					offset: 0,
+					length: 2,
+				},
+				want: "你好",
 			},
-			want: "你好",
-		},
+		}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				expect := strutil.Substring(tt.args.s, tt.args.offset, tt.args.length)
+				assert.Equal(t, tt.want, expect, tt.name)
+			})
+		}
 	}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			expect := strutil.Substring(tt.args.s, tt.args.offset, tt.args.length)
-			assert.Equal(t, tt.want, expect, tt.name)
-		})
+	{
+		str1 := lo.Substring("hello", 0, 0)
+		str2 := lo.Substring("hello", 10, 2)
+		str3 := lo.Substring("hello", -10, 2)
+		str4 := lo.Substring("hello", 0, 10)
+		str5 := lo.Substring("hello", 0, 2)
+		str6 := lo.Substring("hello", 2, 2)
+		str7 := lo.Substring("hello", 2, 5)
+		str8 := lo.Substring("hello", 2, 3)
+		str9 := lo.Substring("hello", 2, 4)
+		str10 := lo.Substring("hello", -2, 4)
+		str11 := lo.Substring("hello", -4, 1)
+		str12 := lo.Substring("hello", -4, math.MaxUint)
+		str13 := lo.Substring("🏠🐶🐱", 0, 2)
+		str14 := lo.Substring("你好，世界", 0, 3)
+		str15 := lo.Substring("hello", 5, 1)
+
+		is.Equal("", str1)
+		is.Equal("", str2)
+		is.Equal("he", str3)
+		is.Equal("hello", str4)
+		is.Equal("he", str5)
+		is.Equal("ll", str6)
+		is.Equal("llo", str7)
+		is.Equal("llo", str8)
+		is.Equal("llo", str9)
+		is.Equal("lo", str10)
+		is.Equal("e", str11)
+		is.Equal("ello", str12)
+		is.Equal("🏠🐶", str13)
+		is.Equal("你好，", str14)
+		is.Equal("", str15)
 	}
 }
 

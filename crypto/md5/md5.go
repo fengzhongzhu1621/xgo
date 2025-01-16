@@ -1,4 +1,4 @@
-package randutils
+package md5
 
 import (
 	"crypto/md5"

@@ -4,7 +4,7 @@ import (
 	"github.com/fengzhongzhu1621/xgo"
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/buildin"
-	"github.com/fengzhongzhu1621/xgo/crypto/randutils"
+	"github.com/fengzhongzhu1621/xgo/crypto/uuid"
 
 	"github.com/gogo/protobuf/proto"
 	"github.com/pkg/errors"
@@ -45,7 +45,7 @@ func (m ProtobufMarshaler) newUUID() string {
 	}
 
 	// default
-	return randutils.NewUUID()
+	return uuid.NewUUID()
 }
 
 // Unmarshal unmarshals given watermill's Message into protobuf's message.

@@ -1,4 +1,4 @@
-package crypto
+package hex
 
 import (
 	"crypto/sha1"

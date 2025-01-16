@@ -6,10 +6,13 @@ import (
 	"testing"
 	"unicode"
 
+	"github.com/samber/lo"
+
 	"github.com/duke-git/lancet/v2/strutil"
 	"github.com/stretchr/testify/assert"
 )
 
+// TestHead 根据分隔符分割字符串.
 func TestHead(t *testing.T) {
 	s := "abc__def"
 	sep := "__"
@@ -138,63 +141,90 @@ func TestSplitEx(t *testing.T) {
 // TestSplitWords 把一个字符串分割成若干单词，每个单词只包含字母字符。
 // func SplitWords(s string) []string
 func TestSplitWords(t *testing.T) {
-	type args struct {
-		s string
-	}
-	tests := []struct {
-		name string
-		args *args
-		want []string
-	}{
-		{
-			name: "test1",
-			args: &args{
-				s: "a word",
-			},
-			want: []string{"a", "word"},
-		},
-		{
-			name: "test2",
-			args: &args{
-				s: "I'am a programmer",
-			},
-			want: []string{"I'am", "a", "programmer"},
-		},
-		{
-			name: "test3",
-			args: &args{
-				s: "Bonjour, je suis programmeur",
-			},
-			want: []string{"Bonjour", "je", "suis", "programmeur"},
-		},
-		{
-			name: "test4",
-			args: &args{
-				s: "a -b-c' 'd'e",
-			},
-			want: []string{"a", "b-c'", "d'e"},
-		},
-		{
-			name: "test5",
-			args: &args{
-				s: "你好，我是一名码农",
-			},
-			want: nil,
-		},
-		{
-			name: "test6",
-			args: &args{
-				s: "こんにちは，私はプログラマーです",
-			},
-			want: nil,
-		},
+	{
+		type args struct {
+			str string
+		}
+		tests := []struct {
+			name string
+			args args
+			want []string
+		}{
+			{"", args{"PascalCase"}, []string{"Pascal", "Case"}},
+			{"", args{"camelCase"}, []string{"camel", "Case"}},
+			{"", args{"snake_case"}, []string{"snake", "case"}},
+			{"", args{"kebab_case"}, []string{"kebab", "case"}},
+			{"", args{"_test text_"}, []string{"test", "text"}},
+			{"", args{"UPPERCASE"}, []string{"UPPERCASE"}},
+			{"", args{"HTTPCode"}, []string{"HTTP", "Code"}},
+			{"", args{"Int8Value"}, []string{"Int", "8", "Value"}},
+		}
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				assert.Equalf(t, tt.want, lo.Words(tt.args.str), "words(%v)", tt.args.str)
+			})
+		}
 	}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			expect := strutil.SplitWords(tt.args.s)
-			assert.Equal(t, tt.want, expect, tt.name)
-		})
+	{
+		type args struct {
+			s string
+		}
+		tests := []struct {
+			name string
+			args *args
+			want []string
+		}{
+			{
+				name: "test1",
+				args: &args{
+					s: "a word",
+				},
+				want: []string{"a", "word"},
+			},
+			{
+				name: "test2",
+				args: &args{
+					s: "I'am a programmer",
+				},
+				want: []string{"I'am", "a", "programmer"},
+			},
+			{
+				name: "test3",
+				args: &args{
+					s: "Bonjour, je suis programmeur",
+				},
+				want: []string{"Bonjour", "je", "suis", "programmeur"},
+			},
+			{
+				name: "test4",
+				args: &args{
+					s: "a -b-c' 'd'e",
+				},
+				want: []string{"a", "b-c'", "d'e"},
+			},
+			{
+				name: "test5",
+				args: &args{
+					s: "你好，我是一名码农",
+				},
+				want: nil,
+			},
+			{
+				name: "test6",
+				args: &args{
+					s: "こんにちは，私はプログラマーです",
+				},
+				want: nil,
+			},
+		}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				expect := strutil.SplitWords(tt.args.s)
+				assert.Equal(t, tt.want, expect, tt.name)
+			})
+		}
 	}
 }
 

@@ -6,8 +6,9 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/fengzhongzhu1621/xgo/crypto/uuid"
+
 	cache "github.com/fengzhongzhu1621/xgo/cache/common"
-	"github.com/fengzhongzhu1621/xgo/crypto/randutils"
 )
 
 var (
@@ -23,7 +24,7 @@ type APIGatewayJWTClientIDCacheKey struct {
 
 // Key ...
 func (k APIGatewayJWTClientIDCacheKey) Key() string {
-	return randutils.MD5Hash(k.JWTToken)
+	return uuid.MD5Hash(k.JWTToken)
 }
 
 var _ cache.Key = (*APIGatewayJWTClientIDCacheKey)(nil)

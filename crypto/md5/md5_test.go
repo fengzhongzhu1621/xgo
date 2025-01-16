@@ -1,4 +1,4 @@
-package randutils
+package md5
 
 import (
 	"errors"

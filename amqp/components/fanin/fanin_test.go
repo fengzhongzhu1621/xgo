@@ -7,11 +7,12 @@ import (
 	"testing"
 	"time"
 
+	"github.com/fengzhongzhu1621/xgo/crypto/uuid"
+
 	"github.com/fengzhongzhu1621/xgo/amqp/components/fanin"
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/amqp/pubsub/gochannel"
 	"github.com/fengzhongzhu1621/xgo/amqp/router"
-	"github.com/fengzhongzhu1621/xgo/crypto/randutils"
 	"github.com/fengzhongzhu1621/xgo/logging"
 	"github.com/stretchr/testify/require"
 )
@@ -90,7 +91,7 @@ func TestFanIn(t *testing.T) {
 	for _, topic := range upstreamTopics {
 		go func(topic string) {
 			for i := 0; i < messagesCount; i++ {
-				msg := message.NewMessage(randutils.NewUUID(), []byte(topic))
+				msg := message.NewMessage(uuid.NewUUID(), []byte(topic))
 				err := pubsub.Publish(topic, msg)
 				require.NoError(t, err)
 

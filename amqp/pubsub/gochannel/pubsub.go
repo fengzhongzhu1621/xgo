@@ -4,7 +4,8 @@ import (
 	"context"
 	"sync"
 
-	"github.com/fengzhongzhu1621/xgo/crypto/randutils"
+	"github.com/fengzhongzhu1621/xgo/crypto/uuid"
+
 	"github.com/fengzhongzhu1621/xgo/logging"
 
 	"github.com/lithammer/shortuuid/v3"
@@ -205,7 +206,7 @@ func (g *GoChannel) Subscribe(ctx context.Context, topic string) (<-chan *messag
 	// 自动创建一个订阅者
 	s := &GoChannelSubscriber{
 		ctx:           ctx,
-		uuid:          randutils.NewUUID(),
+		uuid:          uuid.NewUUID(),
 		outputChannel: make(chan *message.Message, g.config.OutputChannelBuffer),
 		logger:        g.logger,
 		closing:       make(chan struct{}),
