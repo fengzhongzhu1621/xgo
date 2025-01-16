@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/fengzhongzhu1621/xgo/collections/slice"
+	"github.com/fengzhongzhu1621/xgo/cast"
 	"github.com/fengzhongzhu1621/xgo/ginx/utils"
 	"github.com/fengzhongzhu1621/xgo/logging"
 	"github.com/fengzhongzhu1621/xgo/monitor/sentry"
@@ -46,7 +46,7 @@ func logContextFields(c *gin.Context) []zap.Field {
 		body = ""
 	} else {
 		// 截断响应结果，防止 body 过大
-		body = slice.TruncateBytesToString(requestBody, 1024)
+		body = cast.TruncateBytesToString(requestBody, 1024)
 	}
 
 	newWriter := &bodyLogWriter{body: bytes.NewBufferString(""), ResponseWriter: c.Writer}

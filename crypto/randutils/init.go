@@ -7,5 +7,4 @@ import (
 
 func init() {
 	rand.Seed(time.Now().UnixNano())
-	uuid.initUUID()
 }
