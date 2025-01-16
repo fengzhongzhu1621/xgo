@@ -2,9 +2,11 @@ package slice
 
 import (
 	"math"
+	"sort"
 	"testing"
 
 	"github.com/samber/lo"
+	"github.com/samber/lo/parallel"
 
 	"github.com/duke-git/lancet/v2/slice"
 	"github.com/stretchr/testify/assert"
@@ -113,6 +115,42 @@ func TestPartition(t *testing.T) {
 	}
 }
 
+func TestParallelPartitionBy(t *testing.T) {
+	is := assert.New(t)
+
+	oddEven := func(x int) string {
+		if x < 0 {
+			return "negative"
+		} else if x%2 == 0 {
+			return "even"
+		}
+		return "odd"
+	}
+
+	result1 := parallel.PartitionBy([]int{-2, -1, 0, 1, 2, 3, 4, 5}, oddEven)
+	result2 := parallel.PartitionBy([]int{}, oddEven)
+
+	// order
+	sort.Slice(result1, func(i, j int) bool {
+		return result1[i][0] < result1[j][0]
+	})
+	for x := range result1 {
+		sort.Slice(result1[x], func(i, j int) bool {
+			return result1[x][i] < result1[x][j]
+		})
+	}
+
+	is.ElementsMatch(result1, [][]int{{-2, -1}, {0, 2, 4}, {1, 3, 5}})
+	is.Equal(result2, [][]int{})
+
+	type myStrings []string
+	allStrings := myStrings{"", "foo", "bar"}
+	nonempty := parallel.PartitionBy(allStrings, func(item string) int {
+		return len(item)
+	})
+	is.IsType(nonempty[0], allStrings, "type preserved")
+}
+
 // TestGroupBy Iterates over elements of the slice, each element will be group by criteria, returns two slices.
 // func GroupBy[T any](slice []T, groupFn func(index int, item T) bool) ([]T, []T)
 func TestGroupBy(t *testing.T) {
@@ -126,6 +164,35 @@ func TestGroupBy(t *testing.T) {
 	assert.Equal(t, []int{2, 4}, even)
 	assert.Equal(t, []int{1, 3, 5}, odd)
 
+}
+
+func TestParallelGroupBy(t *testing.T) {
+	is := assert.New(t)
+
+	result1 := parallel.GroupBy([]int{0, 1, 2, 3, 4, 5}, func(i int) int {
+		return i % 3
+	})
+
+	// order
+	for x := range result1 {
+		sort.Slice(result1[x], func(i, j int) bool {
+			return result1[x][i] < result1[x][j]
+		})
+	}
+
+	is.EqualValues(len(result1), 3)
+	is.EqualValues(result1, map[int][]int{
+		0: {0, 3},
+		1: {1, 4},
+		2: {2, 5},
+	})
+
+	type myStrings []string
+	allStrings := myStrings{"", "foo", "bar"}
+	nonempty := parallel.GroupBy(allStrings, func(i string) int {
+		return 42
+	})
+	is.IsType(nonempty[42], allStrings, "type preserved")
 }
 
 // TestGroupWith Return a map composed of keys generated from the results of running each element of slice thru iteratee.

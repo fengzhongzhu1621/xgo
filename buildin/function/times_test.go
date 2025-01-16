@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/samber/lo"
+	"github.com/samber/lo/parallel"
 
 	"github.com/stretchr/testify/assert"
 
@@ -50,6 +51,17 @@ func TestTimes(t *testing.T) {
 	is := assert.New(t)
 
 	result1 := lo.Times(3, func(i int) string {
+		return strconv.FormatInt(int64(i), 10)
+	})
+
+	is.Equal(len(result1), 3)
+	is.Equal(result1, []string{"0", "1", "2"})
+}
+
+func TestParallelTimes(t *testing.T) {
+	is := assert.New(t)
+
+	result1 := parallel.Times(3, func(i int) string {
 		return strconv.FormatInt(int64(i), 10)
 	})
 

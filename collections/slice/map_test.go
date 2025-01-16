@@ -2,9 +2,11 @@ package slice
 
 import (
 	"strconv"
+	"sync/atomic"
 	"testing"
 
 	"github.com/samber/lo"
+	"github.com/samber/lo/parallel"
 
 	"github.com/araujo88/lambda-go/pkg/core"
 
@@ -52,10 +54,29 @@ func TestMap(t *testing.T) {
 // TestMapConcurrent Applies the iteratee function to each item in the slice by concrrent.
 // func MapConcurrent[T any, U any](slice []T, iteratee func(index int, item T) U, numThreads int) []U
 func TestMapConcurrent(t *testing.T) {
-	nums := []int{1, 2, 3, 4, 5, 6}
+	is := assert.New(t)
 
-	result := slice.MapConcurrent(nums, func(_, n int) int { return n * n }, 4)
-	assert.Equal(t, []int{1, 4, 9, 16, 25, 36}, result)
+	{
+		result1 := parallel.Map([]int{1, 2, 3, 4}, func(x int, _ int) string {
+			return "Hello"
+		})
+		result2 := parallel.Map([]int64{1, 2, 3, 4}, func(x int64, _ int) string {
+			return strconv.FormatInt(x, 10)
+		})
+
+		is.Equal(len(result1), 4)
+		is.Equal(len(result2), 4)
+		is.Equal(result1, []string{"Hello", "Hello", "Hello", "Hello"})
+		is.Equal(result2, []string{"1", "2", "3", "4"})
+	}
+
+	{
+		nums := []int{1, 2, 3, 4, 5, 6}
+
+		result := slice.MapConcurrent(nums, func(_, n int) int { return n * n }, 4)
+		assert.Equal(t, []int{1, 4, 9, 16, 25, 36}, result)
+	}
+
 }
 
 // TestForEach Iterates over elements of slice and invokes function for each element.
@@ -95,16 +116,30 @@ func TestForEach(t *testing.T) {
 // TestForEachConcurrent Applies the iteratee function to each item in the slice concurrently.
 // func ForEachConcurrent[T any](slice []T, iteratee func(index int, item T), numThreads int)
 func TestForEachConcurrent(t *testing.T) {
-	nums := []int{1, 2, 3, 4, 5, 6, 7, 8}
+	{
+		nums := []int{1, 2, 3, 4, 5, 6, 7, 8}
 
-	result := make([]int, len(nums))
+		result := make([]int, len(nums))
 
-	addOne := func(index int, value int) {
-		result[index] = value + 1
+		addOne := func(index int, value int) {
+			result[index] = value + 1
+		}
+
+		slice.ForEachConcurrent(nums, addOne, 4)
+		assert.Equal(t, []int{2, 3, 4, 5, 6, 7, 8, 9}, result)
 	}
 
-	slice.ForEachConcurrent(nums, addOne, 4)
-	assert.Equal(t, []int{2, 3, 4, 5, 6, 7, 8, 9}, result)
+	{
+		is := assert.New(t)
+
+		var counter uint64
+		collection := []int{1, 2, 3, 4}
+		parallel.ForEach(collection, func(x int, i int) {
+			atomic.AddUint64(&counter, 1)
+		})
+
+		is.Equal(uint64(4), atomic.LoadUint64(&counter))
+	}
 }
 
 // TestForEachWithBreak Iterates over elements of slice and invokes function for each element, when iteratee return false, will break the for each loop.
