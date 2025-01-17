@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/gookit/goutil/byteutil"
-	"github.com/gookit/goutil/testutil/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestHexEncoder(t *testing.T) {
@@ -14,5 +14,5 @@ func TestHexEncoder(t *testing.T) {
 
 	decSrc, err := byteutil.HexEncoder.Decode(dst)
 	assert.NoError(t, err)
-	assert.Eq(t, src, decSrc)
+	assert.Equal(t, src, decSrc)
 }

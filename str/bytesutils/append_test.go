@@ -7,16 +7,16 @@ import (
 	"time"
 
 	"github.com/gookit/goutil/byteutil"
-	"github.com/gookit/goutil/testutil/assert"
 	"github.com/gookit/goutil/timex"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestAppendAny(t *testing.T) {
-	assert.Eq(t, []byte("123"), byteutil.AppendAny(nil, 123))
-	assert.Eq(t, []byte("123"), byteutil.AppendAny([]byte{}, 123))
-	assert.Eq(t, []byte("123"), byteutil.AppendAny([]byte("1"), 23))
-	assert.Eq(t, []byte("1<nil>"), byteutil.AppendAny([]byte("1"), nil))
-	assert.Eq(t, "3600000000000", string(byteutil.AppendAny([]byte{}, timex.OneHour)))
+	assert.Equal(t, []byte("123"), byteutil.AppendAny(nil, 123))
+	assert.Equal(t, []byte("123"), byteutil.AppendAny([]byte{}, 123))
+	assert.Equal(t, []byte("123"), byteutil.AppendAny([]byte("1"), 23))
+	assert.Equal(t, []byte("1<nil>"), byteutil.AppendAny([]byte("1"), nil))
+	assert.Equal(t, "3600000000000", string(byteutil.AppendAny([]byte{}, timex.OneHour)))
 
 	tests := []struct {
 		dst []byte
@@ -49,10 +49,10 @@ func TestAppendAny(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		assert.Eq(t, tt.exp, byteutil.AppendAny(tt.dst, tt.v))
+		assert.Equal(t, tt.exp, byteutil.AppendAny(tt.dst, tt.v))
 	}
 
 	tim, err := time.Parse(time.RFC3339, "2019-01-01T00:00:00Z")
 	assert.NoError(t, err)
-	assert.Eq(t, []byte("2019-01-01T00:00:00Z"), byteutil.AppendAny(nil, tim))
+	assert.Equal(t, []byte("2019-01-01T00:00:00Z"), byteutil.AppendAny(nil, tim))
 }

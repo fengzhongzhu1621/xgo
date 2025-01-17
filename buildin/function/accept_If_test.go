@@ -10,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/gookit/goutil/basefn"
-	"github.com/gookit/goutil/testutil/assert"
+	"github.com/stretchr/testify/assert"
 
 	"github.com/duke-git/lancet/v2/function"
 )
@@ -84,7 +84,7 @@ func TestPanicf(t *testing.T) {
 		basefn.Panicf("hi %s", "inhere")
 	})
 
-	assert.Eq(t, "hi", basefn.Must("hi", nil))
+	assert.Equal(t, "hi", basefn.Must("hi", nil))
 	assert.Panics(t, func() {
 		basefn.Must("hi", errors.New("a error"))
 	})
@@ -95,24 +95,24 @@ func TestPanicf(t *testing.T) {
 
 func TestErrOnFail(t *testing.T) {
 	err := errors.New("a error")
-	assert.Err(t, basefn.ErrOnFail(false, err))
-	assert.NoErr(t, basefn.ErrOnFail(true, err))
+	assert.Error(t, basefn.ErrOnFail(false, err))
+	assert.NoError(t, basefn.ErrOnFail(true, err))
 }
 
 func TestOrValue(t *testing.T) {
-	assert.Eq(t, "ab", basefn.OrValue(true, "ab", "dc"))
-	assert.Eq(t, "dc", basefn.OrValue(false, "ab", "dc"))
-	assert.Eq(t, 1, basefn.FirstOr([]int{1, 2}, 3))
-	assert.Eq(t, 3, basefn.FirstOr(nil, 3))
+	assert.Equal(t, "ab", basefn.OrValue(true, "ab", "dc"))
+	assert.Equal(t, "dc", basefn.OrValue(false, "ab", "dc"))
+	assert.Equal(t, 1, basefn.FirstOr([]int{1, 2}, 3))
+	assert.Equal(t, 3, basefn.FirstOr(nil, 3))
 }
 
 func TestOrReturn(t *testing.T) {
-	assert.Eq(t, "ab", basefn.OrReturn(true, func() string {
+	assert.Equal(t, "ab", basefn.OrReturn(true, func() string {
 		return "ab"
 	}, func() string {
 		return "dc"
 	}))
-	assert.Eq(t, "dc", basefn.OrReturn(false, func() string {
+	assert.Equal(t, "dc", basefn.OrReturn(false, func() string {
 		return "ab"
 	}, func() string {
 		return "dc"
