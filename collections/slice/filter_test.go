@@ -243,3 +243,33 @@ func TestSlice(t *testing.T) {
 	nonempty := lo.Slice(allStrings, 0, 2)
 	is.IsType(nonempty, allStrings, "type preserved")
 }
+
+// TakeWhile tests
+func TestTakeWhileShouldPassed(t *testing.T) {
+	data := []string{"a", "b", "c"}
+
+	result := arrutil.TakeWhile(data, func(a string) bool { return a == "b" || a == "c" })
+	assert.Equal(t, []string{"b", "c"}, result)
+}
+
+func TestTakeWhileEmptyReturnsEmpty(t *testing.T) {
+	var data []string
+	result := arrutil.TakeWhile(data, func(a string) bool { return a == "b" || a == "c" })
+	assert.Equal(t, []string{}, result)
+	assert.NotSame(t, &data, &result, "should always returns new slice")
+}
+
+func TestExceptWhileShouldPassed(t *testing.T) {
+	data := []string{"a", "b", "c"}
+
+	result := arrutil.ExceptWhile(data, func(a string) bool { return a == "b" || a == "c" })
+	assert.Equal(t, []string{"a"}, result)
+}
+
+func TestExceptWhileEmptyReturnsEmpty(t *testing.T) {
+	var data []string
+	result := arrutil.ExceptWhile(data, func(a string) bool { return a == "b" || a == "c" })
+
+	assert.Equal(t, []string{}, result)
+	assert.NotSame(t, &data, &result, "should always returns new slice")
+}

@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/gookit/goutil/byteutil"
+	"github.com/stretchr/testify/assert"
+
 	"github.com/duke-git/lancet/v2/random"
 )
 
@@ -21,4 +24,14 @@ func TestRandSliceFromGivenSlice(t *testing.T) {
 	chosen3goods := random.RandSliceFromGivenSlice(goods, 3, false)
 
 	fmt.Println(chosen3goods)
+}
+
+func TestRandom(t *testing.T) {
+	bs, err := byteutil.Random(10)
+	assert.NoError(t, err)
+	assert.Len(t, bs, 10)
+
+	bs, err = byteutil.Random(0)
+	assert.NoError(t, err)
+	assert.Len(t, bs, 0)
 }

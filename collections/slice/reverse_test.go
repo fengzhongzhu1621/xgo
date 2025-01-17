@@ -4,6 +4,8 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/gookit/goutil/arrutil"
+
 	"github.com/samber/lo"
 
 	"github.com/araujo88/lambda-go/pkg/utils"
@@ -58,5 +60,57 @@ func TestReverse(t *testing.T) {
 				}
 			})
 		}
+	}
+
+	{
+		ss := []string{"a", "b", "c"}
+		arrutil.Reverse(ss)
+		assert.Equal(t, []string{"c", "b", "a"}, ss)
+
+		ints := []int{1, 2, 3}
+		arrutil.Reverse(ints)
+		assert.Equal(t, []int{3, 2, 1}, ints)
+	}
+}
+
+func TestReflectReverseSlice(t *testing.T) {
+	names := []string{"a", "b", "c", "d", "e", "f", "g"}
+	ReflectReverseSlice(names)
+	expected := []string{"g", "f", "e", "d", "c", "b", "a"}
+	assert.Equal(t, expected, names)
+}
+
+func TestReverseSliceGetNew(t *testing.T) {
+	names := []string{"a", "b", "c", "d", "e", "f", "g"}
+	newNames := ReverseSliceGetNew(names)
+	expected := []string{"g", "f", "e", "d", "c", "b", "a"}
+	assert.Equal(t, expected, newNames)
+}
+
+func TestReverseSlice(t *testing.T) {
+	names := []string{"a", "b", "c", "d", "e", "f", "g"}
+	ReverseSlice(names)
+	expected := []string{"g", "f", "e", "d", "c", "b", "a"}
+	assert.Equal(t, expected, names)
+}
+
+func BenchmarkReverseReflectSlice(b *testing.B) {
+	names := []string{"a", "b", "c", "d", "e", "f", "g"}
+	for i := 0; i < b.N; i++ {
+		ReflectReverseSlice(names)
+	}
+}
+
+func BenchmarkReverseSlice(b *testing.B) {
+	names := []string{"a", "b", "c", "d", "e", "f", "g"}
+	for i := 0; i < b.N; i++ {
+		ReverseSlice(names)
+	}
+}
+
+func BenchmarkReverseSliceNew(b *testing.B) {
+	names := []string{"a", "b", "c", "d", "e", "f", "g"}
+	for i := 0; i < b.N; i++ {
+		ReverseSliceGetNew(names)
 	}
 }

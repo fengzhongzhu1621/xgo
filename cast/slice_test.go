@@ -84,3 +84,14 @@ func TestStringsToSlice(t *testing.T) {
 	as := arrutil.StringsToSlice([]string{"1", "2"})
 	is.Equal(`[]interface {}{"1", "2"}`, fmt.Sprintf("%#v", as))
 }
+
+func TestAnyToSlice(t *testing.T) {
+	is := assert.New(t)
+
+	sl, err := arrutil.AnyToSlice([]int{1, 2})
+	is.NoError(err)
+	is.Equal("[]interface {}{1, 2}", fmt.Sprintf("%#v", sl))
+
+	_, err = arrutil.AnyToSlice(123)
+	is.Error(err)
+}

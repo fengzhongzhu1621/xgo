@@ -42,6 +42,7 @@ func TestAsync(t *testing.T) {
 	// 启动子任务
 	sync <- struct{}{}
 
+	// 等待子任务执行完成
 	select {
 	case result := <-ch:
 		is.Equal(result, 10)

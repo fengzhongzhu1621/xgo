@@ -1,9 +1,12 @@
 package slice
 
 import (
+	"fmt"
 	"strconv"
 	"sync/atomic"
 	"testing"
+
+	"github.com/gookit/goutil/arrutil"
 
 	"github.com/samber/lo"
 	"github.com/samber/lo/parallel"
@@ -79,6 +82,13 @@ func TestMap(t *testing.T) {
 		is.Equal(len(result2), 4)
 		is.Equal(result1, []string{"Hello", "Hello", "Hello", "Hello"})
 		is.Equal(result2, []string{"1", "2", "3", "4"})
+	}
+
+	{
+		ss := arrutil.StringsMap([]string{"a", "b", "c"}, func(s string) string {
+			return s + "1"
+		})
+		is.Equal([]string{"a1", "b1", "c1"}, ss)
 	}
 }
 
@@ -216,4 +226,16 @@ func TestForEachWithBreak(t *testing.T) {
 		// 1 + 2 + 3
 		assert.Equal(t, 6, sum)
 	}
+}
+
+func TestTrimStrings(t *testing.T) {
+	is := assert.New(t)
+
+	// TrimStrings
+	ss := arrutil.TrimStrings([]string{" a", "b ", " c "})
+	is.Equal("[a b c]", fmt.Sprint(ss))
+	ss = arrutil.TrimStrings([]string{",a", "b.", ",.c,"}, ",.")
+	is.Equal("[a b c]", fmt.Sprint(ss))
+	ss = arrutil.TrimStrings([]string{",a", "b.", ",.c,"}, ",", ".")
+	is.Equal("[a b c]", fmt.Sprint(ss))
 }

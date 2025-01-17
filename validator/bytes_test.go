@@ -1,21 +1,12 @@
-package bytesutils
+package validator
 
 import (
 	"testing"
 
+	"github.com/gookit/goutil/byteutil"
+
 	"github.com/stretchr/testify/assert"
 )
-
-var eolTests = []string{
-	"", "\n", "\r\n", "ok\n", "ok\n",
-	"quite long string for our test\n",
-	"quite long string for our test\r\n",
-}
-
-var eolAnswers = []string{
-	"", "", "", "ok", "ok",
-	"quite long string for our test", "quite long string for our test",
-}
 
 func TestHasPrefixAndSuffix(t *testing.T) {
 	s := []byte("ab____cd")
@@ -27,4 +18,18 @@ func TestHasPrefixAndSuffix(t *testing.T) {
 	prefix = []byte("abc")
 	actual = HasPrefixAndSuffix(s, prefix, suffix)
 	assert.Equal(t, actual, false, "they should not be equal")
+}
+
+func TestIsNumChar(t *testing.T) {
+	tests := []struct {
+		args byte
+		want bool
+	}{
+		{'2', true},
+		{'a', false},
+		{'+', false},
+	}
+	for _, tt := range tests {
+		assert.Equal(t, tt.want, byteutil.IsNumChar(tt.args))
+	}
 }

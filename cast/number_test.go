@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/gookit/goutil/arrutil"
+
 	"github.com/duke-git/lancet/v2/convertor"
 	"github.com/stretchr/testify/assert"
 )
@@ -642,4 +644,24 @@ func TestToBigInt(t *testing.T) {
 	fmt.Println(bigInt)
 	// Output:
 	// 9876543210
+}
+
+func TestToInt64s(t *testing.T) {
+	is := assert.New(t)
+
+	ints, err := arrutil.ToInt64s([]string{"1", "2"})
+	is.Nil(err)
+	is.Equal("[]int64{1, 2}", fmt.Sprintf("%#v", ints))
+
+	ints = arrutil.MustToInt64s([]string{"1", "2"})
+	is.Equal("[]int64{1, 2}", fmt.Sprintf("%#v", ints))
+
+	ints = arrutil.MustToInt64s([]any{"1", "2"})
+	is.Equal("[]int64{1, 2}", fmt.Sprintf("%#v", ints))
+
+	ints = arrutil.SliceToInt64s([]any{"1", "2"})
+	is.Equal("[]int64{1, 2}", fmt.Sprintf("%#v", ints))
+
+	_, err = arrutil.ToInt64s([]string{"a", "b"})
+	is.Error(err)
 }

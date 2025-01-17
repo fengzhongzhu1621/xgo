@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/gookit/goutil/arrutil"
+	"github.com/gookit/goutil/testutil/assert"
+
 	"github.com/duke-git/lancet/v2/compare"
 )
 
@@ -26,4 +29,33 @@ func TestEqual(t *testing.T) {
 	fmt.Println(result5) // false
 	fmt.Println(result6) // false
 	fmt.Println(result7) // false
+}
+
+// StringEqualComparer tests
+func TestStringEqualsComparer(t *testing.T) {
+	assert.Eq(t, 0, arrutil.StringEqualsComparer("a", "a"))
+	assert.Eq(t, -1, arrutil.StringEqualsComparer("a", "b"))
+}
+
+func TestValueEqualsComparer(t *testing.T) {
+	assert.Eq(t, 0, arrutil.ValueEqualsComparer("1", "1"))
+	assert.Eq(t, -1, arrutil.ValueEqualsComparer(1, 2))
+}
+
+// ReflectEqualsComparer tests
+func TestReflectEqualsComparer(t *testing.T) {
+	assert.Eq(t, 0, arrutil.ReflectEqualsComparer(1, 1))
+	assert.Eq(t, -1, arrutil.ReflectEqualsComparer(1, 2))
+}
+
+// ElemTypeEqualCompareFunc
+func TestElemTypeEqualCompareFuncShouldEquals(t *testing.T) {
+	var c = 1
+	assert.Eq(t, 0, arrutil.ElemTypeEqualsComparer(c, c))
+	assert.Eq(t, 0, arrutil.ElemTypeEqualsComparer(1, 1))
+
+	var a, b any
+	a = 1
+	b = "2"
+	assert.Eq(t, -1, arrutil.ElemTypeEqualsComparer(a, b))
 }

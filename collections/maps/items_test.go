@@ -6,6 +6,8 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/gookit/goutil/arrutil"
+
 	"github.com/duke-git/lancet/v2/maputil"
 	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
@@ -496,4 +498,18 @@ func TestToPairs(t *testing.T) {
 			Value: 4,
 		},
 	})
+}
+
+func TestMap(t *testing.T) {
+	list1 := []map[string]any{
+		{"name": "tom", "age": 23},
+		{"name": "john", "age": 34},
+	}
+
+	flatArr := arrutil.Column(list1, func(obj map[string]any) (val any, find bool) {
+		return obj["age"], true
+	})
+	fmt.Println(flatArr) // [23 34]
+	assert.NotEmpty(t, flatArr)
+	assert.Contains(t, flatArr, 23)
 }

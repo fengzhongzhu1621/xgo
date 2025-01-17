@@ -113,19 +113,6 @@ func TestToBool(t *testing.T) {
 	// false
 }
 
-// func ToBytes(data any) ([]byte, error)
-func TestToBytes(t *testing.T) {
-	bytesData, err := convertor.ToBytes("abc")
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	fmt.Println(bytesData)
-
-	// Output:
-	// [97 98 99]
-}
-
 // func Ternary[T, U any](isTrue T, ifValue U, elseValue U) U
 func TestTernary(t *testing.T) {
 	conditionTrue := 2 > 1

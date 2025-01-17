@@ -137,6 +137,34 @@ func TestContainSubSlice(t *testing.T) {
 	}
 }
 
+func TestIntsHas(t *testing.T) {
+	ints := []int{2, 4, 5}
+	assert.True(t, arrutil.IntsHas(ints, 2))
+	assert.True(t, arrutil.IntsHas(ints, 5))
+	assert.False(t, arrutil.IntsHas(ints, 3))
+
+	uints := []uint{2, 4, 5}
+	assert.True(t, arrutil.IntsHas(uints, 2))
+	assert.False(t, arrutil.IntsHas(uints, 3))
+}
+
+func TestInt64sHas(t *testing.T) {
+	ints := []int64{2, 4, 5}
+	assert.True(t, arrutil.Int64sHas(ints, 2))
+	assert.True(t, arrutil.Int64sHas(ints, 5))
+	assert.False(t, arrutil.Int64sHas(ints, 3))
+}
+
+func TestStringsHas(t *testing.T) {
+	ss := []string{"a", "b"}
+	assert.True(t, arrutil.StringsHas(ss, "a"))
+	assert.True(t, arrutil.StringsHas(ss, "b"))
+	assert.True(t, arrutil.InStrings("b", ss))
+
+	assert.False(t, arrutil.StringsHas(ss, "c"))
+	assert.False(t, arrutil.InStrings("c", ss))
+}
+
 func TestInAndNotIn(t *testing.T) {
 	is := assert.New(t)
 

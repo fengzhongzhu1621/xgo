@@ -1,18 +1,12 @@
 package bytesutils
 
 import (
-	"bytes"
 	"fmt"
 	"strconv"
 	"time"
 
 	"github.com/fengzhongzhu1621/xgo/cast"
 )
-
-// HasPrefixAndSuffix 判断前缀和后缀是否全部匹配.
-func HasPrefixAndSuffix(s, prefix []byte, suffix []byte) bool {
-	return bytes.HasPrefix(s, prefix) && bytes.HasSuffix(s, suffix)
-}
 
 // AppendArg 字符数组拼接，将对象追加到字节数组b的后面.
 func AppendArg(b []byte, v interface{}) []byte {

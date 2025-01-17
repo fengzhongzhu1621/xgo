@@ -12,34 +12,58 @@ import (
 // TestIntersection Creates a slice of unique values that included by all slices.
 // func Intersection[T comparable](slices ...[]T) []T
 func TestIntersection(t *testing.T) {
-	nums1 := []int{1, 2, 3}
-	nums2 := []int{2, 3, 4}
-
-	result := slice.Intersection(nums1, nums2)
-
-	assert.Equal(t, []int{2, 3}, result)
-}
-
-func TestIntersect2(t *testing.T) {
 	t.Parallel()
 	is := assert.New(t)
 
-	result1 := lo.Intersect([]int{0, 1, 2, 3, 4, 5}, []int{0, 2})
-	result2 := lo.Intersect([]int{0, 1, 2, 3, 4, 5}, []int{0, 6})
-	result3 := lo.Intersect([]int{0, 1, 2, 3, 4, 5}, []int{-1, 6})
-	result4 := lo.Intersect([]int{0, 6}, []int{0, 1, 2, 3, 4, 5})
-	result5 := lo.Intersect([]int{0, 6, 0}, []int{0, 1, 2, 3, 4, 5})
+	{
+		result1 := lo.Intersect([]int{0, 1, 2, 3, 4, 5}, []int{0, 2})
+		result2 := lo.Intersect([]int{0, 1, 2, 3, 4, 5}, []int{0, 6})
+		result3 := lo.Intersect([]int{0, 1, 2, 3, 4, 5}, []int{-1, 6})
+		result4 := lo.Intersect([]int{0, 6}, []int{0, 1, 2, 3, 4, 5})
+		result5 := lo.Intersect([]int{0, 6, 0}, []int{0, 1, 2, 3, 4, 5})
 
-	is.Equal(result1, []int{0, 2})
-	is.Equal(result2, []int{0})
-	is.Equal(result3, []int{})
-	is.Equal(result4, []int{0})
-	is.Equal(result5, []int{0})
+		is.Equal(result1, []int{0, 2})
+		is.Equal(result2, []int{0})
+		is.Equal(result3, []int{})
+		is.Equal(result4, []int{0})
+		is.Equal(result5, []int{0})
 
-	type myStrings []string
-	allStrings := myStrings{"", "foo", "bar"}
-	nonempty := lo.Intersect(allStrings, allStrings)
-	is.IsType(nonempty, allStrings, "type preserved")
+		type myStrings []string
+		allStrings := myStrings{"", "foo", "bar"}
+		nonempty := lo.Intersect(allStrings, allStrings)
+		is.IsType(nonempty, allStrings, "type preserved")
+	}
+
+	{
+		nums1 := []int{1, 2, 3}
+		nums2 := []int{2, 3, 4}
+
+		result := slice.Intersection(nums1, nums2)
+
+		assert.Equal(t, []int{2, 3}, result)
+	}
+}
+
+func TestIntersectsShouldPassed(t *testing.T) {
+	data := []string{"a", "b", "c"}
+	result := arrutil.Intersects(data, []string{"a", "b"}, arrutil.StringEqualsComparer)
+	assert.Equal(t, []string{"a", "b"}, result)
+}
+
+func TestIntersectsFirstEmptyShouldReturnsEmpty(t *testing.T) {
+	var data []string
+	second := []string{"a", "b"}
+	result := arrutil.Intersects(data, second, arrutil.StringEqualsComparer)
+	assert.Equal(t, []string{}, result)
+	assert.NotSame(t, &second, &result, "should always returns new slice")
+}
+
+func TestIntersectsSecondEmptyShouldReturnsEmpty(t *testing.T) {
+	data := []string{"a", "b"}
+	second := []string{}
+	result := arrutil.Intersects(data, second, arrutil.StringEqualsComparer)
+	assert.Equal(t, []string{}, result)
+	assert.NotSame(t, &data, &result, "should always returns new slice")
 }
 
 // TestUnion Creates a slice of unique values, in order, from all given slices. using == for equality comparisons.
@@ -56,46 +80,70 @@ func TestUnion(t *testing.T) {
 // TestUnionBy UnionBy is like Union, what's more it accepts iteratee which is invoked for each element of each slice.
 // func UnionBy[T any, V comparable](predicate func(item T) V, slices ...[]T) []T
 func TestUnionBy(t *testing.T) {
-	nums := []int{1, 2, 3, 4}
-
-	divideTwo := func(n int) int {
-		return n / 2
-	}
-	result := slice.UnionBy(divideTwo, nums)
-
-	assert.Equal(t, []int{1, 2, 4}, result)
-}
-
-func TestUnion2(t *testing.T) {
 	t.Parallel()
 	is := assert.New(t)
 
-	result1 := lo.Union([]int{0, 1, 2, 3, 4, 5}, []int{0, 2, 10})
-	result2 := lo.Union([]int{0, 1, 2, 3, 4, 5}, []int{6, 7})
-	result3 := lo.Union([]int{0, 1, 2, 3, 4, 5}, []int{})
-	result4 := lo.Union([]int{0, 1, 2}, []int{0, 1, 2})
-	result5 := lo.Union([]int{}, []int{})
-	is.Equal(result1, []int{0, 1, 2, 3, 4, 5, 10})
-	is.Equal(result2, []int{0, 1, 2, 3, 4, 5, 6, 7})
-	is.Equal(result3, []int{0, 1, 2, 3, 4, 5})
-	is.Equal(result4, []int{0, 1, 2})
-	is.Equal(result5, []int{})
+	{
+		nums := []int{1, 2, 3, 4}
 
-	result11 := lo.Union([]int{0, 1, 2, 3, 4, 5}, []int{0, 2, 10}, []int{0, 1, 11})
-	result12 := lo.Union([]int{0, 1, 2, 3, 4, 5}, []int{6, 7}, []int{8, 9})
-	result13 := lo.Union([]int{0, 1, 2, 3, 4, 5}, []int{}, []int{})
-	result14 := lo.Union([]int{0, 1, 2}, []int{0, 1, 2}, []int{0, 1, 2})
-	result15 := lo.Union([]int{}, []int{}, []int{})
-	is.Equal(result11, []int{0, 1, 2, 3, 4, 5, 10, 11})
-	is.Equal(result12, []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9})
-	is.Equal(result13, []int{0, 1, 2, 3, 4, 5})
-	is.Equal(result14, []int{0, 1, 2})
-	is.Equal(result15, []int{})
+		divideTwo := func(n int) int {
+			return n / 2
+		}
+		result := slice.UnionBy(divideTwo, nums)
 
-	type myStrings []string
-	allStrings := myStrings{"", "foo", "bar"}
-	nonempty := lo.Union(allStrings, allStrings)
-	is.IsType(nonempty, allStrings, "type preserved")
+		assert.Equal(t, []int{1, 2, 4}, result)
+	}
+
+	{
+		result1 := lo.Union([]int{0, 1, 2, 3, 4, 5}, []int{0, 2, 10})
+		result2 := lo.Union([]int{0, 1, 2, 3, 4, 5}, []int{6, 7})
+		result3 := lo.Union([]int{0, 1, 2, 3, 4, 5}, []int{})
+		result4 := lo.Union([]int{0, 1, 2}, []int{0, 1, 2})
+		result5 := lo.Union([]int{}, []int{})
+		is.Equal(result1, []int{0, 1, 2, 3, 4, 5, 10})
+		is.Equal(result2, []int{0, 1, 2, 3, 4, 5, 6, 7})
+		is.Equal(result3, []int{0, 1, 2, 3, 4, 5})
+		is.Equal(result4, []int{0, 1, 2})
+		is.Equal(result5, []int{})
+
+		result11 := lo.Union([]int{0, 1, 2, 3, 4, 5}, []int{0, 2, 10}, []int{0, 1, 11})
+		result12 := lo.Union([]int{0, 1, 2, 3, 4, 5}, []int{6, 7}, []int{8, 9})
+		result13 := lo.Union([]int{0, 1, 2, 3, 4, 5}, []int{}, []int{})
+		result14 := lo.Union([]int{0, 1, 2}, []int{0, 1, 2}, []int{0, 1, 2})
+		result15 := lo.Union([]int{}, []int{}, []int{})
+		is.Equal(result11, []int{0, 1, 2, 3, 4, 5, 10, 11})
+		is.Equal(result12, []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9})
+		is.Equal(result13, []int{0, 1, 2, 3, 4, 5})
+		is.Equal(result14, []int{0, 1, 2})
+		is.Equal(result15, []int{})
+
+		type myStrings []string
+		allStrings := myStrings{"", "foo", "bar"}
+		nonempty := lo.Union(allStrings, allStrings)
+		is.IsType(nonempty, allStrings, "type preserved")
+	}
+}
+
+func TestUnionShouldPassed(t *testing.T) {
+	data := []string{"a", "b", "c"}
+	result := arrutil.Union(data, []string{"a", "b", "d"}, arrutil.StringEqualsComparer)
+	assert.Equal(t, []string{"a", "b", "c", "d"}, result)
+}
+
+func TestUnionFirstEmptyShouldReturnsSecond(t *testing.T) {
+	data := []string{}
+	second := []string{"a", "b"}
+	result := arrutil.Union(data, second, arrutil.StringEqualsComparer)
+	assert.Equal(t, []string{"a", "b"}, result)
+	assert.NotSame(t, &second, &result, "should always returns new slice")
+}
+
+func TestUnionSecondEmptyShouldReturnsFirst(t *testing.T) {
+	data := []string{"a", "b"}
+	second := []string{}
+	result := arrutil.Union(data, second, arrutil.StringEqualsComparer)
+	assert.Equal(t, data, result)
+	assert.NotSame(t, &data, &result, "should always returns new slice")
 }
 
 // TestDifference Creates an slice of whose element not included in the other given slice.
@@ -184,4 +232,24 @@ func TestSymmetricDifference(t *testing.T) {
 	result := slice.SymmetricDifference(nums1, nums2)
 
 	assert.Equal(t, []int{3, 4}, result)
+}
+
+func TestExceptsShouldPassed(t *testing.T) {
+	data := []string{"a", "b", "c"}
+	result := arrutil.Excepts(data, []string{"a", "b"}, arrutil.ValueEqualsComparer[string])
+	assert.Equal(t, []string{"c"}, result)
+}
+
+func TestExceptsFirstEmptyShouldReturnsEmpty(t *testing.T) {
+	data := []string{}
+	result := arrutil.Excepts(data, []string{"a", "b"}, arrutil.StringEqualsComparer)
+	assert.Equal(t, []string{}, result)
+	assert.NotSame(t, &data, &result, "should always returns new slice")
+}
+
+func TestExceptsSecondEmptyShouldReturnsFirst(t *testing.T) {
+	data := []string{"a", "b"}
+	result := arrutil.Excepts(data, []string{}, arrutil.StringEqualsComparer)
+	assert.Equal(t, data, result)
+	assert.NotSame(t, &data, &result, "should always returns new slice")
 }

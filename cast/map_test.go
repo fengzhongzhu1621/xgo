@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/gookit/goutil/arrutil"
+
 	"github.com/duke-git/lancet/v2/slice"
 
 	"github.com/samber/lo"
@@ -198,4 +200,30 @@ func TestCountValuesBy(t *testing.T) {
 	is.Equal(map[bool]int{true: 2, false: 1}, result3)
 	is.Equal(map[int]int{0: 1, 3: 2}, result4)
 	is.Equal(map[int]int{3: 3}, result5)
+}
+
+func TestCombineToMap(t *testing.T) {
+	keys := []string{"key0", "key1"}
+
+	mp := arrutil.CombineToMap(keys, []int{1, 2})
+	assert.Len(t, mp, 2)
+	assert.Equal(t, 1, mp["key0"])
+	assert.Equal(t, 2, mp["key1"])
+
+	mp = arrutil.CombineToMap(keys, []int{1})
+	assert.Len(t, mp, 1)
+	assert.Equal(t, 1, mp["key0"])
+}
+
+func TestCombineToSMap(t *testing.T) {
+	keys := []string{"key0", "key1"}
+
+	mp := arrutil.CombineToSMap(keys, []string{"val0", "val1"})
+	assert.Len(t, mp, 2)
+	assert.Equal(t, "val0", mp["key0"])
+
+	mp = arrutil.CombineToSMap(keys, []string{"val0"})
+	assert.Len(t, mp, 2)
+	assert.Equal(t, "val0", mp["key0"])
+	assert.Equal(t, "", mp["key1"])
 }

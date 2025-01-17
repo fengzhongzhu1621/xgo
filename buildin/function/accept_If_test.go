@@ -5,13 +5,17 @@ package function
 // 一个`apply`函数，它也接受一个类型为`T`的参数并返回一个相同类型的修改后的值。
 // func AcceptIf[T any](predicate func(T) bool, apply func(T) T) func(T) (T, bool)
 import (
+	"errors"
 	"fmt"
 	"testing"
+
+	"github.com/gookit/goutil/basefn"
+	"github.com/gookit/goutil/testutil/assert"
 
 	"github.com/duke-git/lancet/v2/function"
 )
 
-// 根据条件判断确定是否执行函数
+// TestAcceptIf 根据条件判断确定是否执行函数
 func TestAcceptIf(t *testing.T) {
 
 	adder := function.AcceptIf(
@@ -35,4 +39,82 @@ func TestAcceptIf(t *testing.T) {
 	result, ok = adder(21)
 	fmt.Println(result) // 0
 	fmt.Println(ok)     // false
+}
+
+func TestPanicIf(t *testing.T) {
+	basefn.PanicIf(false, "")
+	assert.Panics(t, func() {
+		basefn.PanicIf(true, "a error msg")
+	})
+
+	assert.Panics(t, func() {
+		basefn.PanicIf(true)
+	})
+	assert.Panics(t, func() {
+		basefn.PanicIf(true, 234)
+	})
+	assert.Panics(t, func() {
+		basefn.PanicIf(true, 234, "abc")
+	})
+
+	assert.Panics(t, func() {
+		basefn.PanicIf(true, "a error %s", "msg")
+	})
+}
+
+func TestPanicErr(t *testing.T) {
+	basefn.MustOK(nil)
+	basefn.PanicErr(nil)
+	assert.Panics(t, func() {
+		basefn.PanicErr(errors.New("a error"))
+	})
+
+	// must ignore
+	assert.NotPanics(t, func() {
+		basefn.MustIgnore(nil, nil)
+	})
+	assert.Panics(t, func() {
+		basefn.MustIgnore(nil, errors.New("a error"))
+	})
+}
+
+func TestPanicf(t *testing.T) {
+	basefn.MustOK(nil)
+	assert.Panics(t, func() {
+		basefn.Panicf("hi %s", "inhere")
+	})
+
+	assert.Eq(t, "hi", basefn.Must("hi", nil))
+	assert.Panics(t, func() {
+		basefn.Must("hi", errors.New("a error"))
+	})
+	assert.Panics(t, func() {
+		basefn.MustOK(errors.New("a error"))
+	})
+}
+
+func TestErrOnFail(t *testing.T) {
+	err := errors.New("a error")
+	assert.Err(t, basefn.ErrOnFail(false, err))
+	assert.NoErr(t, basefn.ErrOnFail(true, err))
+}
+
+func TestOrValue(t *testing.T) {
+	assert.Eq(t, "ab", basefn.OrValue(true, "ab", "dc"))
+	assert.Eq(t, "dc", basefn.OrValue(false, "ab", "dc"))
+	assert.Eq(t, 1, basefn.FirstOr([]int{1, 2}, 3))
+	assert.Eq(t, 3, basefn.FirstOr(nil, 3))
+}
+
+func TestOrReturn(t *testing.T) {
+	assert.Eq(t, "ab", basefn.OrReturn(true, func() string {
+		return "ab"
+	}, func() string {
+		return "dc"
+	}))
+	assert.Eq(t, "dc", basefn.OrReturn(false, func() string {
+		return "ab"
+	}, func() string {
+		return "dc"
+	}))
 }

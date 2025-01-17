@@ -6,23 +6,18 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/gookit/goutil/byteutil"
+
+	"github.com/gookit/goutil/arrutil"
+
 	"github.com/duke-git/lancet/v2/convertor"
 
 	"github.com/duke-git/lancet/v2/strutil"
 	"github.com/stretchr/testify/assert"
 )
 
-func BenchmarkBytesConvStrToBytesRaw(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		rawStrToBytes(testString)
-	}
-}
-
-func BenchmarkBytesConvStrToBytes(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		StringToBytes(testString)
-	}
-}
+var testString = "Albert Einstein: Logic will get you from A to B. Imagination will take you everywhere."
+var testBytes = []byte(testString)
 
 // TestLancetStringToBytes 将字符串转换为字节切片而无需进行内存分配。
 // func StringToBytes(str string) (b []byte)
@@ -55,54 +50,120 @@ func TestToChar(t *testing.T) {
 }
 
 // func ToString(value any) string
-func TestToString(t *testing.T) {
-	result1 := convertor.ToString("")
-	result2 := convertor.ToString(nil)
-	result3 := convertor.ToString(0)
-	result4 := convertor.ToString(1.23)
-	result5 := convertor.ToString(true)
-	result6 := convertor.ToString(false)
-	result7 := convertor.ToString([]int{1, 2, 3})
+func TestAnyToString(t *testing.T) {
+	{
+		result1 := convertor.ToString("")
+		result2 := convertor.ToString(nil)
+		result3 := convertor.ToString(0)
+		result4 := convertor.ToString(1.23)
+		result5 := convertor.ToString(true)
+		result6 := convertor.ToString(false)
+		result7 := convertor.ToString([]int{1, 2, 3})
 
-	fmt.Println(result1)
-	fmt.Println(result2)
-	fmt.Println(result3)
-	fmt.Println(result4)
-	fmt.Println(result5)
-	fmt.Println(result6)
-	fmt.Println(result7)
+		fmt.Println(result1)
+		fmt.Println(result2)
+		fmt.Println(result3)
+		fmt.Println(result4)
+		fmt.Println(result5)
+		fmt.Println(result6)
+		fmt.Println(result7)
 
-	// Output:
-	//
-	//
-	// 0
-	// 1.23
-	// true
-	// false
-	// [1,2,3]
-}
+		// Output:
+		//
+		//
+		// 0
+		// 1.23
+		// true
+		// false
+		// [1,2,3]
+	}
 
-var testString = "Albert Einstein: Logic will get you from A to B. Imagination will take you everywhere."
-var testBytes = []byte(testString)
+	{
+		is := assert.New(t)
+		arr := [2]string{"a", "b"}
 
-// go test -v
-
-func TestBytesToString(t *testing.T) {
-	data := make([]byte, 1024)
-	for i := 0; i < 100; i++ {
-		rand.Read(data)
-		if rawBytesToStr(data) != BytesToString(data) {
-			t.Fatal("don't match")
-		}
+		is.Equal("", arrutil.AnyToString(nil))
+		is.Equal("[]", arrutil.AnyToString([]string{}))
+		is.Equal("[a, b]", arrutil.AnyToString(arr))
+		is.Equal("[a, b]", arrutil.AnyToString([]string{"a", "b"}))
+		is.Equal("", arrutil.AnyToString("invalid"))
 	}
 }
 
 // TestLancetBytesToString 将字节切片转换为字符串而无需进行内存分配。
 // func BytesToString(bytes []byte) string
-func TestLancetBytesToString(t *testing.T) {
-	bytes := []byte{'a', 'b', 'c'}
-	result := strutil.BytesToString(bytes)
-	assert.Equal(t, "abc", result)
+func TestBytesToString(t *testing.T) {
+	{
+		bytes := []byte{'a', 'b', 'c'}
+		result := strutil.BytesToString(bytes)
+		assert.Equal(t, "abc", result)
+	}
+
+	{
+		data := make([]byte, 1024)
+		for i := 0; i < 100; i++ {
+			rand.Read(data)
+			if rawBytesToStr(data) != BytesToString(data) {
+				t.Fatal("don't match")
+			}
+		}
+
+	}
+
+	{
+		assert.Equal(t, "123", byteutil.String([]byte("123")))
+		assert.Equal(t, "123", byteutil.ToString([]byte("123")))
+	}
+}
+
+func TestTruncateBytesToString(t *testing.T) {
+	content := []byte("Hello, world!")
+	truncatedStr := TruncateBytesToString(content, 5)
+	assert.Equal(t, "Hello", string(truncatedStr))
+}
+
+func TestToStrings(t *testing.T) {
+	is := assert.New(t)
+
+	ss, err := arrutil.ToStrings([]int{1, 2})
+	is.Nil(err)
+	is.Equal(`[]string{"1", "2"}`, fmt.Sprintf("%#v", ss))
+
+	ss = arrutil.MustToStrings([]int{1, 2})
+	is.Equal(`[]string{"1", "2"}`, fmt.Sprintf("%#v", ss))
+
+	ss = arrutil.MustToStrings([]any{1, 2})
+	is.Equal(`[]string{"1", "2"}`, fmt.Sprintf("%#v", ss))
+
+	ss = arrutil.SliceToStrings([]any{1, 2})
+	is.Equal(`[]string{"1", "2"}`, fmt.Sprintf("%#v", ss))
+
+	ss, err = arrutil.ToStrings("b")
+	is.Nil(err)
+	is.Equal(`[]string{"b"}`, fmt.Sprintf("%#v", ss))
+
+	is.Empty(arrutil.AnyToStrings(234))
+	is.Panics(func() {
+		arrutil.MustToStrings(234)
+	})
+
+	_, err = arrutil.ToStrings([]any{[]int{1}, nil})
+	is.Error(err)
+}
+
+func TestSliceToString(t *testing.T) {
+	is := assert.New(t)
+	is.Equal("[]", arrutil.SliceToString(nil))
+
+	is.Equal("[]", arrutil.ToString[any](nil))
+	is.Equal("[a,b]", arrutil.ToString([]any{"a", "b"}))
+
+	is.Equal("[a,b]", arrutil.SliceToString("a", "b"))
+}
+
+func TestIntsToString(t *testing.T) {
+	assert.Equal(t, "[]", arrutil.IntsToString([]int{}))
+	assert.Equal(t, "[1,2,3]", arrutil.IntsToString([]int{1, 2, 3}))
 }
 
 // go test -v -run=none -bench=^BenchmarkBytesConv -benchmem=true
@@ -119,8 +180,14 @@ func BenchmarkBytesConvBytesToStr(b *testing.B) {
 	}
 }
 
-func TestTruncateBytesToString(t *testing.T) {
-	content := []byte("Hello, world!")
-	truncatedStr := TruncateBytesToString(content, 5)
-	assert.Equal(t, "Hello", string(truncatedStr))
+func BenchmarkBytesConvStrToBytesRaw(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		rawStrToBytes(testString)
+	}
+}
+
+func BenchmarkBytesConvStrToBytes(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		StringToBytes(testString)
+	}
 }

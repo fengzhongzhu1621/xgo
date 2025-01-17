@@ -397,3 +397,22 @@ func TestWithout(t *testing.T) {
 		is.IsType(nonempty, allStrings, "type preserved")
 	}
 }
+
+func TestRemove(t *testing.T) {
+	ss := []string{"a", "b", "c"}
+	ns := arrutil.Remove(ss, "b")
+	assert.Equal(t, []string{"a", "c"}, ns)
+
+	ints := []int{1, 2, 3}
+	ni := arrutil.Remove(ints, 2)
+	assert.Equal(t, []int{1, 3}, ni)
+}
+
+func TestStringsRemove(t *testing.T) {
+	ss := []string{"a", "b", "c"}
+	ns := arrutil.StringsRemove(ss, "b")
+
+	assert.Contains(t, ns, "a")
+	assert.NotContains(t, ns, "b")
+	assert.Len(t, ns, 2)
+}

@@ -231,3 +231,34 @@ func TestFindOrElse(t *testing.T) {
 	is.Equal(result1, "b")
 	is.Equal(result2, "x")
 }
+
+func TestFindShouldPassed(t *testing.T) {
+	data := []string{"a", "b", "c"}
+
+	result, err := arrutil.Find(data, func(a string) bool { return a == "b" })
+	assert.Nil(t, err)
+	assert.Equal(t, "b", result)
+
+	_, err = arrutil.Find(data, func(a string) bool { return a == "d" })
+	assert.NotNil(t, err)
+	assert.Equal(t, arrutil.ErrElementNotFound, err)
+
+}
+
+func TestFindEmptyReturnsErrElementNotFound(t *testing.T) {
+	data := []string{}
+	_, err := arrutil.Find(data, func(a string) bool { return a == "b" })
+	assert.NotNil(t, err)
+	assert.Equal(t, arrutil.ErrElementNotFound, err)
+}
+
+// FindOrDefault tests
+func TestFindOrDefaultShouldPassed(t *testing.T) {
+	data := []string{"a", "b", "c"}
+
+	result := arrutil.FindOrDefault(data, func(a string) bool { return a == "b" }, "d")
+	assert.Equal(t, "b", result)
+
+	result = arrutil.FindOrDefault(data, func(a string) bool { return a == "d" }, "d")
+	assert.Equal(t, "d", result)
+}

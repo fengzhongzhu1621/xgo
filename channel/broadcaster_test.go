@@ -22,8 +22,10 @@ func TestNewChannelBroadcaster(t *testing.T) {
 		wg.Done()
 	})
 
+	// 给所有的子任务发送开始执行信号
 	b.Broadcast()
 
+	// 等待所有子任务执行完成
 	wg.Wait()
 }
 

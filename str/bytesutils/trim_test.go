@@ -2,6 +2,17 @@ package bytesutils
 
 import "testing"
 
+var eolTests = []string{
+	"", "\n", "\r\n", "ok\n", "ok\n",
+	"quite long string for our test\n",
+	"quite long string for our test\r\n",
+}
+
+var eolAnswers = []string{
+	"", "", "", "ok", "ok",
+	"quite long string for our test", "quite long string for our test",
+}
+
 func TestTrimEOL(t *testing.T) {
 	for n := 0; n < len(eolTests); n++ {
 		answer := TrimEOL([]byte(eolTests[n]))

@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/gookit/goutil/byteutil"
+
 	"github.com/duke-git/lancet/v2/cryptor"
 
 	"github.com/stretchr/testify/assert"
@@ -120,4 +122,16 @@ func TestMd5ByteWithBase64(t *testing.T) {
 func TestMd5File(t *testing.T) {
 	s, _ := cryptor.Md5File("./main.go")
 	fmt.Println(s)
+}
+
+func TestMd5(t *testing.T) {
+	assert.NotEmpty(t, byteutil.Md5("abc"))
+	assert.NotEmpty(t, byteutil.Md5([]int{12, 34}))
+
+	assert.Equal(t, "202cb962ac59075b964b07152d234b70", string(byteutil.Md5("123")))
+	assert.Equal(t, "900150983cd24fb0d6963f7d28e17f72", string(byteutil.Md5("abc")))
+
+	// short md5
+	assert.Equal(t, "ac59075b964b0715", string(byteutil.ShortMd5("123")))
+	assert.Equal(t, "3cd24fb0d6963f7d", string(byteutil.ShortMd5("abc")))
 }

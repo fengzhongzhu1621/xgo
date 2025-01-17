@@ -5,6 +5,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/gookit/goutil/arrutil"
+
 	"github.com/araujo88/lambda-go/pkg/utils"
 
 	"github.com/duke-git/lancet/v2/slice"
@@ -110,4 +112,26 @@ func TestAppendIfAbsent(t *testing.T) {
 
 	assert.Equal(t, []string{"a", "b"}, result1)
 	assert.Equal(t, []string{"a", "b", "c"}, result2)
+}
+
+func TestStringsToString(t *testing.T) {
+	is := assert.New(t)
+
+	is.Equal("a,b", arrutil.JoinStrings(",", []string{"a", "b"}...))
+	is.Equal("a,b", arrutil.StringsJoin(",", []string{"a", "b"}...))
+	is.Equal("a,b", arrutil.StringsJoin(",", "a", "b"))
+}
+
+func TestJoinTyped(t *testing.T) {
+	assert.Equal(t, "", arrutil.JoinTyped[any](","))
+	assert.Equal(t, "", arrutil.JoinTyped[any](",", nil))
+	assert.Equal(t, "1,2", arrutil.JoinTyped(",", 1, 2))
+	assert.Equal(t, "a,b", arrutil.JoinTyped(",", "a", "b"))
+	assert.Equal(t, "1,a", arrutil.JoinTyped[any](",", 1, "a"))
+}
+
+func TestJoinSlice(t *testing.T) {
+	assert.Equal(t, "", arrutil.JoinSlice(","))
+	assert.Equal(t, "", arrutil.JoinSlice(",", nil))
+	assert.Equal(t, "a,23,b", arrutil.JoinSlice(",", "a", 23, "b"))
 }

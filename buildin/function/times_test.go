@@ -1,9 +1,12 @@
 package function
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 	"testing"
+
+	"github.com/gookit/goutil/basefn"
 
 	"github.com/samber/lo"
 	"github.com/samber/lo/parallel"
@@ -67,4 +70,24 @@ func TestParallelTimes(t *testing.T) {
 
 	is.Equal(len(result1), 3)
 	is.Equal(result1, []string{"0", "1", "2"})
+}
+
+func TestCallOn(t *testing.T) {
+	assert.NoError(t, basefn.CallOn(false, func() error {
+		return errors.New("a error")
+	}))
+	assert.Error(t, basefn.CallOn(true, func() error {
+		return errors.New("a error")
+	}))
+
+	assert.Error(t, basefn.CallOrElse(true, func() error {
+		return errors.New("a error 001")
+	}, func() error {
+		return errors.New("a error 002")
+	}), "a error 001")
+	assert.Error(t, basefn.CallOrElse(false, func() error {
+		return errors.New("a error 001")
+	}, func() error {
+		return errors.New("a error 002")
+	}), "a error 002")
 }

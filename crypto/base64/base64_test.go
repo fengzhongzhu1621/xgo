@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/gookit/goutil/byteutil"
+
 	"github.com/duke-git/lancet/v2/cryptor"
 
 	"github.com/duke-git/lancet/v2/convertor"
@@ -246,4 +248,14 @@ func TestToRawUrlBase64(t *testing.T) {
 	// MTIzLjQ1Ng
 	// dHJ1ZQ
 	// ZXJy
+}
+
+func TestB64Encoder(t *testing.T) {
+	src := []byte("abc1234566")
+	dst := byteutil.B64Encoder.Encode(src)
+	assert.NotEmpty(t, dst)
+
+	decSrc, err := byteutil.B64Encoder.Decode(dst)
+	assert.NoError(t, err)
+	assert.Equal(t, src, decSrc)
 }
