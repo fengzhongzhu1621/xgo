@@ -166,35 +166,6 @@ func TestJsonMarshal(t *testing.T) {
 	assert.Equal(t, expect, actual)
 }
 
-func TestJsonRawMessage(t *testing.T) {
-	type Data struct {
-		Name  string          `json:"name"`
-		Value json.RawMessage `json:"value"`
-	}
-
-	jsonData := `{"name": "example", "value": {"key": "value"}}`
-
-	var data Data
-	err := json.Unmarshal([]byte(jsonData), &data)
-	if err != nil {
-		fmt.Println("Error:", err)
-		return
-	}
-
-	fmt.Println("Name:", data.Name)                  // Name: example
-	fmt.Printf("Value (raw JSON): %s\n", data.Value) // Value (raw JSON): {"key": "value"}
-
-	// 如果你知道 value 的结构，可以在这里解析它
-	var value map[string]string
-	err = json.Unmarshal(data.Value, &value)
-	if err != nil {
-		fmt.Println("Error:", err)
-		return
-	}
-
-	fmt.Println("Value (parsed):", value) // Value (parsed): map[key:value]
-}
-
 type Person struct {
 	Name string `json:"name"`
 	Age  int    `json:"age"`

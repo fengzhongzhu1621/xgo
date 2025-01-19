@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/gookit/goutil/arrutil"
-
 	"github.com/duke-git/lancet/v2/maputil"
+	"github.com/gookit/goutil/arrutil"
+	goutil_maputil "github.com/gookit/goutil/maputil"
 	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
 )
@@ -512,4 +512,13 @@ func TestMap(t *testing.T) {
 	fmt.Println(flatArr) // [23 34]
 	assert.NotEmpty(t, flatArr)
 	assert.Contains(t, flatArr, 23)
+}
+
+func TestHTTPQueryString(t *testing.T) {
+	src := map[string]any{"a": "v0", "b": 23}
+	str := goutil_maputil.HTTPQueryString(src)
+
+	fmt.Println(str)
+	assert.Contains(t, str, "b=23")
+	assert.Contains(t, str, "a=v0")
 }

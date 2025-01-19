@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/duke-git/lancet/v2/maputil"
+	goutil_maputil "github.com/gookit/goutil/maputil"
 	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
 )
@@ -226,4 +227,12 @@ func TestMapGetOrSet(t *testing.T) {
 		// a
 		// b
 	}
+}
+
+func TestKeyToLower(t *testing.T) {
+	src := map[string]string{"A": "v0"}
+	ret := goutil_maputil.KeyToLower(src)
+
+	assert.Contains(t, ret, "a")
+	assert.NotContains(t, ret, "A")
 }

@@ -1,6 +1,7 @@
 package cast
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"html/template"
@@ -70,12 +71,6 @@ func jsonStringToObject(s string, v any) error {
 	return json.Unmarshal(data, v)
 }
 
-// ToString casts an interface to a string type.
-func ToString(i interface{}) string {
-	v, _ := ToStringE(i)
-	return v
-}
-
 // From html/template/content.go
 // Copyright 2011 The Go Authors. All rights reserved.
 // indirectToStringerOrError returns the value, after dereferencing as many times
@@ -97,6 +92,12 @@ func indirectToStringerOrError(a interface{}) interface{} {
 		v = v.Elem()
 	}
 	return v.Interface()
+}
+
+// ToString casts an interface to a string type.
+func ToString(i interface{}) string {
+	v, _ := ToStringE(i)
+	return v
 }
 
 // ToStringE casts an interface to a string type.
@@ -168,4 +169,23 @@ func TruncateBytes(content []byte, length int) []byte {
 		return content[:length]
 	}
 	return content
+}
+
+// Int64SliceToString 整型数组转换为字符串
+// []int64{1, 2, 3} -> 1,2,3
+func Int64SliceToString(s []int64, sep string) string {
+	return strings.Trim(strings.Join(strings.Fields(fmt.Sprint(s)), sep), "[]")
+}
+
+// ArrayInt64ToString 将 A 中的每个元素转换为字符串，并用 delim 分隔，最后返回一个拼接后的字符串。
+func ArrayInt64ToString(A []int64, delim string) string {
+	var buffer bytes.Buffer
+	for i := 0; i < len(A); i++ {
+		buffer.WriteString(strconv.FormatInt(A[i], 10))
+		if i != len(A)-1 {
+			buffer.WriteString(delim)
+		}
+	}
+
+	return buffer.String()
 }

@@ -30,3 +30,13 @@ func RemoteTabCharacters(data string) string {
 
 	return data
 }
+
+// EncodeDot 将字符串中的点（.）编码为 Unicode 转义序列 \u002E
+func EncodeDot(input string) string {
+	return strings.ReplaceAll(input, ".", "\\u002E")
+}
+
+// DecodeDot 将字符串中的 Unicode 转义序列 \u002E 解码为点（.）
+func DecodeDot(input string) string {
+	return strings.ReplaceAll(input, "\\u002E", ".")
+}

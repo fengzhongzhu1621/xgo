@@ -2,6 +2,7 @@ package cast
 
 import (
 	"fmt"
+	"html/template"
 	"math/rand"
 	"reflect"
 	"testing"
@@ -18,6 +19,22 @@ import (
 
 var testString = "Albert Einstein: Logic will get you from A to B. Imagination will take you everywhere."
 var testBytes = []byte(testString)
+
+type foo struct {
+	val string
+}
+
+func (x foo) String() string {
+	return x.val
+}
+
+type fu struct {
+	val string
+}
+
+func (x fu) Error() string {
+	return x.val
+}
 
 // TestLancetStringToBytes 将字符串转换为字节切片而无需进行内存分配。
 // func StringToBytes(str string) (b []byte)
@@ -190,4 +207,72 @@ func BenchmarkBytesConvStrToBytes(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		StringToBytes(testString)
 	}
+}
+
+func TestToStringE(t *testing.T) {
+	type Key struct {
+		k string
+	}
+	key := &Key{"foo"}
+
+	tests := []struct {
+		input  interface{}
+		expect string
+		iserr  bool
+	}{
+		{int(8), "8", false},
+		{int8(8), "8", false},
+		{int16(8), "8", false},
+		{int32(8), "8", false},
+		{int64(8), "8", false},
+		{uint(8), "8", false},
+		{uint8(8), "8", false},
+		{uint16(8), "8", false},
+		{uint32(8), "8", false},
+		{uint64(8), "8", false},
+		{float32(8.31), "8.31", false},
+		{float64(8.31), "8.31", false},
+		{true, "true", false},
+		{false, "false", false},
+		{nil, "", false},
+		{[]byte("one time"), "one time", false},
+		{"one more time", "one more time", false},
+		{template.HTML("one time"), "one time", false},
+		{template.URL("http://somehost.foo"), "http://somehost.foo", false},
+		{template.JS("(1+2)"), "(1+2)", false},
+		{template.CSS("a"), "a", false},
+		{template.HTMLAttr("a"), "a", false},
+		// errors
+		{testing.T{}, "", true},
+		{key, "", true},
+	}
+
+	for i, test := range tests {
+		errMsg := fmt.Sprintf("i = %d", i) // assert helper message
+
+		v, err := ToStringE(test.input)
+		if test.iserr {
+			assert.Error(t, err, errMsg)
+			continue
+		}
+
+		assert.NoError(t, err, errMsg)
+		assert.Equal(t, test.expect, v, errMsg)
+
+		// Non-E test
+		v = ToString(test.input)
+		assert.Equal(t, test.expect, v, errMsg)
+	}
+}
+
+func TestStringerToString(t *testing.T) {
+	var x foo
+	x.val = "bar"
+	assert.Equal(t, "bar", ToString(x))
+}
+
+func TestErrorToString(t *testing.T) {
+	var x fu
+	x.val = "bar"
+	assert.Equal(t, "bar", ToString(x))
 }

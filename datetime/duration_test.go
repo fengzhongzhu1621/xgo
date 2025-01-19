@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/gookit/goutil/fmtutil"
 	"github.com/samber/lo"
 
 	"github.com/stretchr/testify/assert"
@@ -211,4 +212,22 @@ func TestGenerateDatetimesBetween(t *testing.T) {
 	// Output:
 	// [2024-09-01 00:00:00 2024-09-01 01:00:00 2024-09-01 02:00:00]
 	// <nil>
+}
+
+func TestHowLongAgo(t *testing.T) {
+	tests := []struct {
+		args int64
+		want string
+	}{
+		{-36, "unknown"},
+		{36, "36 secs"},
+		{346, "5 mins"},
+		{3467, "57 mins"},
+		{346778, "4 days"},
+		{1200346778, "463 months"},
+	}
+
+	for _, tt := range tests {
+		assert.Equal(t, tt.want, fmtutil.HowLongAgo(tt.args))
+	}
 }

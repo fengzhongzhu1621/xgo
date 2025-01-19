@@ -665,3 +665,12 @@ func TestToInt64s(t *testing.T) {
 	_, err = arrutil.ToInt64s([]string{"a", "b"})
 	is.Error(err)
 }
+
+func TestIndirectPointers(t *testing.T) {
+	x := 13
+	y := &x
+	z := &y
+
+	assert.Equal(t, ToInt(y), 13)
+	assert.Equal(t, ToInt(z), 13)
+}
