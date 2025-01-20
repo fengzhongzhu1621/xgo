@@ -16,3 +16,12 @@ func Head(str, sep string) (head string, tail string) {
 func SplitString(r rune) bool {
 	return r == ';' || r == ',' || r == '\n'
 }
+
+// SplitMulti split multi string by sep string.
+func SplitMulti(ss []string, sep string) []string {
+	ns := make([]string, 0, len(ss)+1)
+	for _, s := range ss {
+		ns = append(ns, strings.Split(s, sep)...)
+	}
+	return ns
+}

@@ -5,9 +5,11 @@ import (
 	"os"
 	"testing"
 
-	"github.com/duke-git/lancet/v2/cryptor"
+	"github.com/gookit/goutil/encodes/hashutil"
 
+	"github.com/duke-git/lancet/v2/cryptor"
 	"github.com/duke-git/lancet/v2/fileutil"
+	"github.com/stretchr/testify/assert"
 )
 
 // returns file sha value, param `shaType` should be 1, 256 or 512.
@@ -164,4 +166,59 @@ func TestHmacSha512WithBase64(t *testing.T) {
 
 	// Output:
 	// 3Y8SkKndI9NU4lJtmi6c6M///dN8syCADRxsE9Lvw2Mog3ahlsVFja9T+OGqa0Wm2FYwPVwKIGS/+XhYYdSM/A==
+}
+
+func TestHash(t *testing.T) {
+	tests := []struct {
+		src  any
+		algo string
+		want string
+	}{
+		{"abc12", "crc32", "b744b523"},
+		{"abc12", "crc64", "41b31776c4200000"},
+		{"abc12", "md5", "b2157e7b2ae716a747597717f1efb7a0"},
+		{"abc12", "sha1", "8fe670fef2b8c74ef8987cdfccdb32e96ad4f9a2"},
+	}
+
+	for _, tt := range tests {
+		assert.Equal(t, tt.want, hashutil.Hash(tt.algo, tt.src))
+	}
+
+	assert.Panics(t, func() {
+		hashutil.Hash("unknown", nil)
+	})
+}
+
+func TestHash32(t *testing.T) {
+	tests := []struct {
+		src  any
+		algo string
+		want string
+	}{
+		{"abc12", "crc32", "MT2BA8O"},
+		{"abc12", "crc64", "86PHETM440000"},
+		{"abc12", "md5", "M8ANSUPASSBAEHQPESBV3RTNK0"},
+		{"abc12", "sha1", "HVJ71VNIN33KTU4OFJFSPMPIT5LD9UD2"},
+	}
+
+	for _, tt := range tests {
+		assert.Equal(t, tt.want, hashutil.Hash32(tt.algo, tt.src))
+	}
+}
+
+func TestHash64(t *testing.T) {
+	tests := []struct {
+		src  any
+		algo string
+		want string
+	}{
+		{"abc12", "crc32", "t0S1Iw"},
+		{"abc12", "crc64", "QbMXdsQgAAA"},
+		{"abc12", "md5", "shV+eyrnFqdHWXcX8e+3oA"},
+		{"abc12", "sha1", "j+Zw/vK4x074mHzfzNsy6WrU+aI"},
+	}
+
+	for _, tt := range tests {
+		assert.Equal(t, tt.want, hashutil.Hash64(tt.algo, tt.src))
+	}
 }

@@ -10,7 +10,7 @@ type ApkInfo struct {
 	PackageName  string `json:"packageName"`
 	MainActivity string `json:"mainActivity"`
 	Version      struct {
-		Code int    `json:"code"`
+		Code int32  `json:"code"`
 		Name string `json:"name"`
 	} `json:"version"`
 }
@@ -29,8 +29,10 @@ func ParseApkInfo(path string) (ai *ApkInfo) {
 	ai = &ApkInfo{}
 	ai.MainActivity, _ = apkf.MainActivity()
 	ai.PackageName = apkf.PackageName()
-	ai.Version.Code = apkf.Manifest().VersionCode
-	ai.Version.Name = apkf.Manifest().VersionName
+	code, _ := apkf.Manifest().VersionCode.Int32()
+	ai.Version.Code = code
+	name, _ := apkf.Manifest().VersionName.String()
+	ai.Version.Name = name
 
 	return ai
 }

@@ -10,9 +10,10 @@ import (
 	"html/template"
 	"net/http"
 
+	"github.com/fengzhongzhu1621/xgo/validator"
+
 	"github.com/fengzhongzhu1621/xgo/cast"
 	json "github.com/fengzhongzhu1621/xgo/crypto/encoding/json"
-	bytes_utils "github.com/fengzhongzhu1621/xgo/str/bytesutils"
 )
 
 // JSON contains the given interface object.
@@ -99,7 +100,7 @@ func (r SecureJSON) Render(w http.ResponseWriter) error {
 		return err
 	}
 	// if the jsonBytes is array values
-	if bytes_utils.HasPrefixAndSuffix(jsonBytes, cast.StringToBytes("["), cast.StringToBytes("]")) {
+	if validator.HasPrefixAndSuffix(jsonBytes, cast.StringToBytes("["), cast.StringToBytes("]")) {
 		_, err = w.Write(cast.StringToBytes(r.Prefix))
 		if err != nil {
 			return err
