@@ -4,11 +4,11 @@ import (
 	"testing"
 
 	"github.com/gookit/goutil/byteutil"
-	"github.com/gookit/goutil/testutil/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestFirstLine(t *testing.T) {
 	bs := []byte("hi\ninhere")
-	assert.Eq(t, []byte("hi"), byteutil.FirstLine(bs))
-	assert.Eq(t, []byte("hi"), byteutil.FirstLine([]byte("hi")))
+	assert.Equal(t, []byte("hi"), byteutil.FirstLine(bs))
+	assert.Equal(t, []byte("hi"), byteutil.FirstLine([]byte("hi")))
 }

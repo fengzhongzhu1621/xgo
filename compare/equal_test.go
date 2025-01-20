@@ -4,10 +4,9 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/gookit/goutil/arrutil"
-	"github.com/gookit/goutil/testutil/assert"
-
 	"github.com/duke-git/lancet/v2/compare"
+	"github.com/gookit/goutil/arrutil"
+	"github.com/stretchr/testify/assert"
 )
 
 // TestEqual 检查两个值是否相等（同时检查类型和值）。
@@ -33,29 +32,29 @@ func TestEqual(t *testing.T) {
 
 // StringEqualComparer tests
 func TestStringEqualsComparer(t *testing.T) {
-	assert.Eq(t, 0, arrutil.StringEqualsComparer("a", "a"))
-	assert.Eq(t, -1, arrutil.StringEqualsComparer("a", "b"))
+	assert.Equal(t, 0, arrutil.StringEqualsComparer("a", "a"))
+	assert.Equal(t, -1, arrutil.StringEqualsComparer("a", "b"))
 }
 
 func TestValueEqualsComparer(t *testing.T) {
-	assert.Eq(t, 0, arrutil.ValueEqualsComparer("1", "1"))
-	assert.Eq(t, -1, arrutil.ValueEqualsComparer(1, 2))
+	assert.Equal(t, 0, arrutil.ValueEqualsComparer("1", "1"))
+	assert.Equal(t, -1, arrutil.ValueEqualsComparer(1, 2))
 }
 
 // ReflectEqualsComparer tests
 func TestReflectEqualsComparer(t *testing.T) {
-	assert.Eq(t, 0, arrutil.ReflectEqualsComparer(1, 1))
-	assert.Eq(t, -1, arrutil.ReflectEqualsComparer(1, 2))
+	assert.Equal(t, 0, arrutil.ReflectEqualsComparer(1, 1))
+	assert.Equal(t, -1, arrutil.ReflectEqualsComparer(1, 2))
 }
 
 // ElemTypeEqualCompareFunc
 func TestElemTypeEqualCompareFuncShouldEquals(t *testing.T) {
 	var c = 1
-	assert.Eq(t, 0, arrutil.ElemTypeEqualsComparer(c, c))
-	assert.Eq(t, 0, arrutil.ElemTypeEqualsComparer(1, 1))
+	assert.Equal(t, 0, arrutil.ElemTypeEqualsComparer(c, c))
+	assert.Equal(t, 0, arrutil.ElemTypeEqualsComparer(1, 1))
 
 	var a, b any
 	a = 1
 	b = "2"
-	assert.Eq(t, -1, arrutil.ElemTypeEqualsComparer(a, b))
+	assert.Equal(t, -1, arrutil.ElemTypeEqualsComparer(a, b))
 }

@@ -32,3 +32,12 @@ func TestRemoveWhiteSpace(t *testing.T) {
 	assert.Equal(t, "helloworld", result1)
 	assert.Equal(t, "hello world", result2)
 }
+
+func TestDot(t *testing.T) {
+	str := "test1.test2.test3.test4"
+	encodedStr := EncodeDot(str)
+	assert.Equal(t, encodedStr, "test1\\u002etest2\\u002etest3\\u002etest4")
+
+	decodedStr := DecodeDot(encodedStr)
+	assert.Equal(t, decodedStr, str)
+}

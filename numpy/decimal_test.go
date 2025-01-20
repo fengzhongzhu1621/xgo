@@ -5,6 +5,8 @@ import (
 	"testing"
 
 	"github.com/duke-git/lancet/v2/formatter"
+	"github.com/gookit/goutil/mathutil"
+	"github.com/stretchr/testify/assert"
 )
 
 // 返回以十进制（基数为1000）标准下人类可读的字节大小。精度参数指定小数点后的位数，默认为4位。
@@ -83,4 +85,21 @@ func TestParseBinaryBytes(t *testing.T) {
 	// 12288
 	// 12288
 	// 12492
+}
+
+func TestDataSize(t *testing.T) {
+	tests := []struct {
+		args uint64
+		want string
+	}{
+		{346, "346B"},
+		{3467, "3.39K"},
+		{346778, "338.65K"},
+		{12346778, "11.77M"},
+		{1200346778, "1.12G"},
+	}
+
+	for _, tt := range tests {
+		assert.Equal(t, tt.want, mathutil.DataSize(tt.args))
+	}
 }

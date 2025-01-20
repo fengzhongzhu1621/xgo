@@ -10,7 +10,7 @@ import (
 
 	"github.com/duke-git/lancet/v2/convertor"
 	"github.com/gookit/goutil/byteutil"
-	"github.com/gookit/goutil/testutil/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 // func EncodeByte(data any) ([]byte, error)
@@ -93,12 +93,12 @@ func TestToBytes(t *testing.T) {
 
 		for _, item := range tests {
 			bs, err := byteutil.ToBytes(item.v)
-			assert.Eq(t, item.ok, err == nil)
-			assert.Eq(t, item.exp, bs, "real value: %v", item.v)
+			assert.Equal(t, item.ok, err == nil)
+			assert.Equal(t, item.exp, bs, "real value: %v", item.v)
 		}
 
 		// SafeBytes
 		bs := byteutil.SafeBytes([]string{"123"})
-		assert.Eq(t, []byte("[123]"), bs)
+		assert.Equal(t, []byte("[123]"), bs)
 	}
 }
