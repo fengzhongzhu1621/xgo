@@ -49,24 +49,20 @@ func initSystemLogger(cfg *config.LogConfig) {
 }
 
 // InitLogger 初始化日志记录器，只能执行一次
-func InitLogger() {
+func InitLogger(cache bool) {
 	globalConfig := config.GetGlobalConfig()
 	logger := globalConfig.Logger
 
 	// 设置系统日志记录器
 	initSystemLogger(&logger.System)
 
-	// TOOD InitSLogger
-
 	loggerInitOnce.Do(func() {
-		// 设置 api 服务器日志记录器
-		// apiLogger = NewZapJSONLogger(&logger.API)
 		// 设置 web 服务器日志记录器
-		appLogger = NewZapJSONLogger(&logger.Web)
+		appLogger = NewZapJSONLogger(&logger.Web, cache)
 	})
 
 }
 
 func init() {
-	InitLogger()
+	InitLogger(false)
 }

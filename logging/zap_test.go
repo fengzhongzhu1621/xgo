@@ -49,7 +49,7 @@ func TestNewZapJSONLogger(t *testing.T) {
 		Level:    "info",
 		Settings: map[string]string{"name": "stdout"},
 	}
-	logger := NewZapJSONLogger(&logConfig)
+	logger := NewZapJSONLogger(&logConfig, false)
 	logger.Info("这是一条信息级别的日志")
 	logger.Sync()
 	// {"level":"info","time":"2024-10-03T11:34:14.395+0800","msg":"这是一条信息级别的日志"}
