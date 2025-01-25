@@ -25,7 +25,7 @@ const (
 	// 代码中提到go-redis/cache库的版本升级可能导致不兼容问题，需要注意版本管理
 	CacheVersion = "00"
 
-	// 批量 key 的最大数量
+	// PipelineSizeThreshold 批量 key 的最大数量
 	PipelineSizeThreshold = 100
 )
 

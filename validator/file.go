@@ -7,6 +7,11 @@ import (
 	"time"
 )
 
+// IsSymbolicLink 判断文件是否是符号链接.
+func IsSymbolicLink(fileInfo os.FileInfo) bool {
+	return fileInfo.Mode()&os.ModeSymlink != 0
+}
+
 // PathExists 判断文件路径是否存在.
 func PathExists(path string) (bool, error) {
 	_, err := os.Stat(path)

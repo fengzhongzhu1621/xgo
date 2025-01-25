@@ -192,6 +192,7 @@ require (
 	github.com/go-redis/cache/v8 v8.4.4
 	github.com/go-redis/cache/v9 v9.0.0
 	github.com/go-redis/redis/v8 v8.11.5
+	github.com/go-redsync/redsync/v4 v4.13.0
 	github.com/go-resty/resty/v2 v2.16.2
 	github.com/go-sql-driver/mysql v1.8.1
 	github.com/go-yaml/yaml v2.1.0+incompatible

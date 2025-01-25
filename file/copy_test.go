@@ -2,6 +2,7 @@ package file
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -89,4 +90,17 @@ func TestCopyDir(t *testing.T) {
 	})
 
 	os.RemoveAll(destPath)
+}
+
+func TestCopyFS(t *testing.T) {
+	// 定义源目录和目标目录
+	srcDir := "source_dir"
+	destDir := "destination_dir"
+
+	// 使用 os.CopyFS 复制目录
+	err := os.CopyFS(destDir, os.DirFS(srcDir))
+	if err != nil {
+		log.Fatalf("Failed to copy directory: %v", err)
+	}
+	log.Println("Directory copied successfully!")
 }

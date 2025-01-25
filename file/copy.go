@@ -5,15 +5,11 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+
+	"github.com/fengzhongzhu1621/xgo/validator"
 )
 
-// 判断文件是否是符号链接.
-func IsSymbolicLink(fileInfo os.FileInfo) bool {
-	return fileInfo.Mode()&os.ModeSymlink != 0
-}
-
-
-// 复制符号链接.
+// CopySymlink 复制符号链接.
 func CopySymlink(src string, dest string) error {
 	// 通过符号链接，能获取其所指向的路径名
 	src, err := os.Readlink(src)
@@ -26,7 +22,7 @@ func CopySymlink(src string, dest string) error {
 
 func _copy(src, dest string, fileInfo os.FileInfo) error {
 	// 如果源文件是符号链接
-	if IsSymbolicLink(fileInfo) {
+	if validator.IsSymbolicLink(fileInfo) {
 		return CopySymlink(src, dest)
 	}
 	// 如果源文件是目录
@@ -37,7 +33,7 @@ func _copy(src, dest string, fileInfo os.FileInfo) error {
 	return CopyFile(src, dest, fileInfo)
 }
 
-// 复制目录.
+// CopyDir 复制目录.
 func CopyDir(src string, dst string, fileInfo os.FileInfo) error {
 	if fileInfo == nil {
 		fileInfo2, err := os.Lstat(src)
@@ -69,7 +65,7 @@ func CopyDir(src string, dst string, fileInfo os.FileInfo) error {
 	return nil
 }
 
-// 复制文件.
+// CopyFile 复制文件.
 func CopyFile(src string, dest string, fileInfo os.FileInfo) error {
 	// 如果没有 FileInfo，则获取源文件的 FileInfo
 	if fileInfo == nil {
@@ -110,7 +106,7 @@ func CopyFile(src string, dest string, fileInfo os.FileInfo) error {
 	return err
 }
 
-// 复制文件
+// Copy 复制文件
 // 注意Lstat和stat函数的区别，两个都是返回文件的状态信息
 // Lstat多了处理Link文件的功能，会返回Linked文件的信息，而state直接返回的是Link文件所指向的文件的信息.
 func Copy(src, dest string) error {
