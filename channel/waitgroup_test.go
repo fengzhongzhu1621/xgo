@@ -1,10 +1,14 @@
 package channel
 
 import (
+	"context"
 	"fmt"
+	"net/http"
 	"sync"
 	"testing"
 	"time"
+
+	"golang.org/x/sync/errgroup"
 
 	"github.com/remeh/sizedwaitgroup"
 	"github.com/stretchr/testify/assert"
@@ -15,8 +19,8 @@ func TestWaitGroupTimeout_no_timeout(t *testing.T) {
 	// 它提供了一种简单的方式来同步多个并发执行的协程，确保在所有协程完成之前，主协程不会退出。
 	wg := &sync.WaitGroup{}
 
-	timeouted := WaitGroupTimeout(wg, time.Millisecond*100)
-	assert.False(t, timeouted)
+	isTimeout := WaitGroupTimeout(wg, time.Millisecond*100)
+	assert.False(t, isTimeout)
 }
 
 func TestWaitGroupTimeout_timeout(t *testing.T) {
@@ -25,8 +29,8 @@ func TestWaitGroupTimeout_timeout(t *testing.T) {
 	wg.Add(1)
 
 	// 因为没有执行 wg.Done() // 减少等待组计数器，wg 会超时退出
-	timeouted := WaitGroupTimeout(wg, time.Millisecond*100)
-	assert.True(t, timeouted)
+	isTimeout := WaitGroupTimeout(wg, time.Millisecond*100)
+	assert.True(t, isTimeout)
 }
 
 func TestSizedWaitGroup(t *testing.T) {
@@ -51,4 +55,145 @@ func TestSizedWaitGroup(t *testing.T) {
 	// 还需要使用标准库中的 sync.WaitGroup 来确保主协程等待所有任务完成。
 	// 这是因为 sizedwaitgroup 只负责限制并发数量，而不负责等待所有任务完成。
 	wg.Wait() // 等待所有协程完成
+}
+
+// TestErrgroup 用于替代 sync.WaitGroup
+// sync.WaitGroup 只负责等待 goroutine 完成，不处理 goroutine 的返回值或错误。
+// errgroup.Group 虽然目前也不能直接处理 goroutine 的返回值，但在 goroutine 返回错误时，可以立即取消其他正在运行的 goroutine，并在 Wait 方法中返回第一个非 nil 的错误。
+func TestErrgroup(t *testing.T) {
+	var urls = []string{
+		"http://www.golang.org/",
+		"http://www.google.com/",
+		"http://www.somestupidname.com/", // 这是一个错误的 URL，会导致任务失败
+	}
+
+	var g errgroup.Group
+
+	for _, url := range urls {
+		// 启动一个 goroutine 来获取 URL
+		g.Go(func() error {
+			resp, err := http.Get(url)
+			if err != nil {
+				return err // 发生错误，返回该错误
+			}
+			defer resp.Body.Close()
+			fmt.Printf("fetch url %s status %s\n", url, resp.Status)
+			return nil // 返回 nil 表示成功
+		})
+	}
+
+	// 等待所有 goroutine 完成并返回第一个错误（如果有）
+	if err := g.Wait(); err != nil {
+		fmt.Printf("Error: %s\n", err)
+	}
+}
+
+// TestErrGroupWithContext 测试任务取消
+// errgroup.WithContext 可以与 context.Context 配合使用，支持在某个 goroutine 出现错误时自动取消其他 goroutine，这样可以更好地控制资源，避免不必要的工作。
+func TestErrGroupWithContext(t *testing.T) {
+	var urls = []string{
+		"http://www.golang.org/",
+		"http://www.google.com/",
+		"http://www.somestupidname.com/", // 这是一个错误的 URL，会导致任务失败
+	}
+
+	// 任何一个 goroutine 返回非 nil 的错误，或 Wait() 等待所有 goroutine 完成后，context 都会被取消
+	g, ctx := errgroup.WithContext(context.Background())
+
+	// 创建一个 map 来保存结果
+	var result sync.Map
+
+	for _, url := range urls {
+		// 启动一个 goroutine 来获取 URL
+		g.Go(func() error {
+			req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+			if err != nil {
+				return err // 发生错误，返回该错误
+			}
+
+			// 发起请求
+			resp, err := http.DefaultClient.Do(req)
+			if err != nil {
+				return err // 发生错误，返回该错误
+			}
+			defer resp.Body.Close()
+
+			// 保存每个 URL 的响应状态码
+			result.Store(url, resp.Status)
+			return nil // 返回 nil 表示成功
+		})
+	}
+
+	// 等待所有 goroutine 完成并返回第一个错误（如果有）
+	if err := g.Wait(); err != nil {
+		fmt.Println("Error: ", err)
+	}
+
+	// 所有 goroutine 都执行完成，遍历并打印成功的结果
+	result.Range(func(key, value any) bool {
+		fmt.Printf("fetch url %s status %s\n", key, value)
+		return true
+	})
+}
+
+// TestErrGroupSetLimit 限制并发数量
+// errgroup 提供了便捷的接口来限制并发 goroutine 的数量，避免过载，而 sync.WaitGroup 没有这样的功能。
+func TestErrGroupSetLimit(t *testing.T) {
+	// 创建一个 errgroup.Group
+	var g errgroup.Group
+	// 设置最大并发限制为 3
+	g.SetLimit(3)
+
+	// 启动 10 个 goroutine
+	for i := 1; i <= 10; i++ {
+		g.Go(func() error {
+			// 打印正在运行的 goroutine
+			fmt.Printf("Goroutine %d is starting\n", i)
+			time.Sleep(2 * time.Second) // 模拟任务耗时
+			fmt.Printf("Goroutine %d is done\n", i)
+			return nil
+		})
+	}
+
+	// 等待所有 goroutine 完成
+	if err := g.Wait(); err != nil {
+		fmt.Printf("Encountered an error: %v\n", err)
+	}
+
+	fmt.Println("All goroutines complete.")
+}
+
+// TestTryGo 尝试启动一个任务，它返回一个 bool 值，标识任务是否启动成功，true 表示成功，false 表示失败。
+// 需要搭配 errgroup.SetLimit 一同使用，因为如果不限制并发数量，那么 errgroup.TryGo 始终返回 true，
+// 注意在调用 errgroup.Go 或 errgroup.TryGo 方法前调用 errgroup.SetLimit，以防程序出现 panic
+// 当达到最大并发数量限制时，errgroup.TryGo 返回 false。
+func TestTryGo(t *testing.T) {
+	// 创建一个 errgroup.Group
+	var g errgroup.Group
+	// 设置最大并发限制为 3
+	g.SetLimit(3)
+
+	// 启动 10 个 goroutine
+	for i := 1; i <= 10; i++ {
+		if g.TryGo(func() error {
+			// 打印正在运行的 goroutine
+			fmt.Printf("Goroutine %d is starting\n", i)
+			time.Sleep(2 * time.Second) // 模拟工作
+			fmt.Printf("Goroutine %d is done\n", i)
+			return nil
+		}) {
+			// 如果成功启动，打印提示
+			fmt.Printf("Goroutine %d started successfully\n", i)
+		} else {
+			// 如果达到并发限制，打印提示
+			fmt.Printf("Goroutine %d waiting\n", i)
+		}
+	}
+
+	// 等待所有 goroutine 完成
+	if err := g.Wait(); err != nil {
+		fmt.Printf("Encountered an error: %v\n", err)
+	}
+
+	fmt.Println("All goroutines complete.")
 }
