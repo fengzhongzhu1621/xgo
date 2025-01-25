@@ -20,22 +20,22 @@ func LocateFile(filename string, dirs []string) (string, error) {
 		return filepath.Join(abs, filename), nil
 	}
 	// 在指定目录下查询文件
-	filepaths := []string{}
+	filePaths := []string{}
 	for _, dir := range dirs {
 		filepath := filepath.Join(dir, filename)
 		if validator.IsFileType(filepath) {
-			filepaths = append(filepaths, filepath)
+			filePaths = append(filePaths, filepath)
 		}
 	}
 	// 判断查询到的文件的数量
-	if len(filepaths) == 0 {
+	if len(filePaths) == 0 {
 		return "", fmt.Errorf("%s not found in %v", filename, dirs)
-	} else if len(filepaths) > 1 {
+	} else if len(filePaths) > 1 {
 		return "", fmt.Errorf("%s was found in more than one directory: %v", filename, dirs)
 	}
 
 	// 获得文件的绝对路径
-	absPath, err := filepath.Abs(filepaths[0])
+	absPath, err := filepath.Abs(filePaths[0])
 	if err != nil {
 		return "", err
 	}
@@ -61,15 +61,15 @@ func DeepPath(basedir, name string, maxDepth int) string {
 	return name
 }
 
-// Which 实现 unix whtich 命令功能
+// Which 实现 unix which 命令功能
 func Which(cmd string) (filepath string, err error) {
 	// 获得当前PATH环境变量
 	envPath := os.Getenv("PATH")
 	// 分割为多个路径
-	path_list := strings.Split(envPath, string(os.PathListSeparator))
-	for _, dirpath := range path_list {
+	pathList := strings.Split(envPath, string(os.PathListSeparator))
+	for _, dirPath := range pathList {
 		// 判断环境变量路径是否是目录
-		dirInfo, err := os.Stat(dirpath)
+		dirInfo, err := os.Stat(dirPath)
 		if err != nil {
 			return "", err
 		}
@@ -77,7 +77,7 @@ func Which(cmd string) (filepath string, err error) {
 			continue
 		}
 		// 判断命令所在的路径是否存在
-		filepath := path.Join(dirpath, cmd)
+		filepath := path.Join(dirPath, cmd)
 		_, err = os.Stat(filepath)
 		if err == nil || os.IsExist(err) {
 			return filepath, err
