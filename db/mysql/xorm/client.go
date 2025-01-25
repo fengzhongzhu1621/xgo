@@ -5,6 +5,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/fengzhongzhu1621/xgo/logging"
+
 	xormLog "xorm.io/xorm/log"
 
 	"github.com/fengzhongzhu1621/xgo/db/mysql"
@@ -125,7 +127,7 @@ func (db *XormDBClient) Connect() error {
 
 	// 每次执行数据库操作时，将生成的 SQL 语句及其参数打印到控制台。
 	if db.debugMode {
-		dbLogger := logging.GetXormDBLogger()
+		dbLogger := logging.GetAppLogger()
 		if dbLogger != nil {
 			db.DB.SetLogger(xormLog.NewLoggerAdapter(dbLogger))
 		}
