@@ -35,6 +35,7 @@ func GetVersion() string {
 }
 
 // /////////////////////////////////////////////////////////////////////////
+
 func Version() string {
 	return fmt.Sprintf(
 		"\nVersion  : %s\nGitCommit: %s\nBuildTime: %s\nTemplateVersion: %s\nGoVersion: %s\n",
@@ -43,6 +44,7 @@ func Version() string {
 }
 
 // /////////////////////////////////////////////////////////////////////////
+
 type VersionList [][3]int
 
 func (m VersionList) Len() int {

@@ -20,7 +20,7 @@ func InitFlags() {
 	pflag.CommandLine.BoolVarP(&help, "help", "h", false, "show help info")
 
 	// 添加版本
-	ver := pflag.CommandLine.Bool("version", false, "show version info")
+	ver := pflag.CommandLine.Bool("version", false, "print version information")
 
 	// 解析命令行参数
 	pflag.Parse()

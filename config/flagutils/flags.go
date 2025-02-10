@@ -8,7 +8,7 @@ import (
 // to bind a set of flags to viper.
 // 使用代理模式访问 pflag.FlagSet，只支持遍历FlagValue .
 type IFlagValueSet interface {
-	// 遍历标签
+	// VisitAll 遍历标签
 	VisitAll(fn func(IFlagValue))
 }
 
@@ -25,7 +25,7 @@ type IFlagValue interface {
 var _ IFlagValueSet = (*PFlagValueSet)(nil)
 var _ IFlagValue = (*PFlagValue)(nil)
 
-// pflagValueSet is a wrapper around *pflag.ValueSet
+// PFlagValueSet is a wrapper around *pflag.ValueSet
 // that implements IFlagValueSet.
 type PFlagValueSet struct {
 	flags *pflag.FlagSet
@@ -39,7 +39,7 @@ func (p PFlagValueSet) VisitAll(fn func(flag IFlagValue)) {
 	})
 }
 
-// pflagValue is a wrapper aroung *pflag.flag
+// PFlagValue is a wrapper aroung *pflag.flag
 // that implements IFlagValue .
 type PFlagValue struct {
 	flag *pflag.Flag
