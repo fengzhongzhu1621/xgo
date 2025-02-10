@@ -12,7 +12,7 @@ import (
 	"github.com/fengzhongzhu1621/xgo/network/ssl"
 )
 
-type HttpRespone struct {
+type HttpResponse struct {
 	Reply      []byte // 响应内容
 	StatusCode int
 	Status     string
@@ -35,6 +35,7 @@ func NewHttpClient() *HttpClient {
 	}
 }
 
+// GetClient 获得客户端对象
 func (client *HttpClient) GetClient() *http.Client {
 	return client.httpCli
 }
@@ -122,10 +123,10 @@ func (client *HttpClient) SetBatchHeader(headerSet []*HeaderSet) {
 }
 
 // RequestEx do http request, old version
-func (client *HttpClient) RequestEx(url, method string, header http.Header, data []byte) (*HttpRespone, error) {
+func (client *HttpClient) RequestEx(url, method string, header http.Header, data []byte) (*HttpResponse, error) {
 	var req *http.Request
 	var errReq error
-	httpRsp := &HttpRespone{
+	httpRsp := &HttpResponse{
 		Reply:      nil,
 		StatusCode: http.StatusInternalServerError,
 		Status:     "Internal Server Error",
@@ -242,23 +243,23 @@ func (client *HttpClient) PATCH(url string, header http.Header, data []byte) ([]
 	return client.Request(url, "PATCH", header, data)
 }
 
-func (client *HttpClient) Get(url string, header http.Header, data []byte) (*HttpRespone, error) {
+func (client *HttpClient) Get(url string, header http.Header, data []byte) (*HttpResponse, error) {
 	return client.RequestEx(url, "GET", header, data)
 }
 
-func (client *HttpClient) Post(url string, header http.Header, data []byte) (*HttpRespone, error) {
+func (client *HttpClient) Post(url string, header http.Header, data []byte) (*HttpResponse, error) {
 	return client.RequestEx(url, "POST", header, data)
 }
 
-func (client *HttpClient) Delete(url string, header http.Header, data []byte) (*HttpRespone, error) {
+func (client *HttpClient) Delete(url string, header http.Header, data []byte) (*HttpResponse, error) {
 	return client.RequestEx(url, "DELETE", header, data)
 }
 
-func (client *HttpClient) Put(url string, header http.Header, data []byte) (*HttpRespone, error) {
+func (client *HttpClient) Put(url string, header http.Header, data []byte) (*HttpResponse, error) {
 	return client.RequestEx(url, "PUT", header, data)
 }
 
-func (client *HttpClient) Patch(url string, header http.Header, data []byte) (*HttpRespone, error) {
+func (client *HttpClient) Patch(url string, header http.Header, data []byte) (*HttpResponse, error) {
 	return client.RequestEx(url, "PATCH", header, data)
 }
 
