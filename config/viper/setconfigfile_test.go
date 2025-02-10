@@ -9,7 +9,7 @@ import (
 )
 
 func TestSetConfigFile(t *testing.T) {
-	// 使用SetConfigFile指定配置文件的路径
+	// 使用 SetConfigFile 指定配置文件的路径
 	viper.SetConfigFile("config.yaml")
 
 	// 读取并解析配置文件

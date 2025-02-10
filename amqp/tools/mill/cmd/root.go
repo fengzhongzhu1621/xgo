@@ -104,6 +104,7 @@ func initConfig() {
 			os.Exit(1)
 		}
 
+		// 添加配置文件搜索路径
 		viper.AddConfigPath(home)
 		viper.SetConfigName(".mill")
 	}

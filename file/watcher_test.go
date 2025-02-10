@@ -461,6 +461,7 @@ func TestSafeWriteConfigWithExistingFile(t *testing.T) {
 	fs := afero.NewMemMapFs()
 	fs.Create(tests.AbsFilePath(t, "/test/c.yaml"))
 	v.SetFs(fs)
+	// 添加配置文件搜索路径
 	v.AddConfigPath("/test")
 	v.SetConfigName("c")
 	v.SetConfigType("yaml")
