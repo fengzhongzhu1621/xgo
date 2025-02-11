@@ -12,6 +12,7 @@ import (
 	"github.com/robfig/cron/v3"
 )
 
+// TestNew 创建一个分钟任务
 func TestNew(t *testing.T) {
 	c := cron.New()
 
@@ -46,6 +47,7 @@ func TestNew(t *testing.T) {
 	}
 }
 
+// TestWithSeconds 创建一个秒级任务
 func TestWithSeconds(t *testing.T) {
 	// 创建新的 Cron 实例，启用秒级调度（默认 cron 不支持秒级，需要额外启用）
 	c := cron.New(cron.WithSeconds())
@@ -80,6 +82,8 @@ func TestWithSeconds(t *testing.T) {
 		return
 	}
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // 定义一个自定义任务，实现 cron.Job 接口
 type MyTask struct {
@@ -130,6 +134,7 @@ func TestAddJob(t *testing.T) {
 	}
 }
 
+// TestNewParser 解析crontab字符串，并将任务添加到调度器中
 func TestNewParser(t *testing.T) {
 	// cron.NewParser 可以指定哪些时间字段被解析，包含秒字段的表达式需要额外支持秒字段
 	parser := cron.NewParser(cron.Second | cron.Minute | cron.Hour | cron.Dom | cron.Month | cron.Dow)
@@ -184,6 +189,7 @@ func TestNewParser(t *testing.T) {
 	}
 }
 
+// TestLock 并发添加多个定时任务到调度器中
 func TestLock(t *testing.T) {
 	c := cron.New(cron.WithSeconds())
 
@@ -233,6 +239,7 @@ func TestLock(t *testing.T) {
 	fmt.Println("程序已安全退出")
 }
 
+// TestLocation 测试时区
 func TestLocation(t *testing.T) {
 	// 加载时区信息
 	nyLocation, err := time.LoadLocation("America/New_York")
@@ -264,6 +271,7 @@ func TestLocation(t *testing.T) {
 	fmt.Println("程序已安全退出")
 }
 
+// TestSignal 测试信号
 func TestSignal(t *testing.T) {
 	c := cron.New()
 

@@ -4,7 +4,7 @@ import (
 	"github.com/tidwall/gjson"
 )
 
-// IndexJSON provides for the ability to create an index on any JSON field.
+// CompareJSON provides for the ability to create an index on any JSON field.
 // When the field is a string, the comparison will be case-insensitive.
 // It returns a helper function used by CreateIndex.
 func CompareJSON(path string) func(a, b string) bool {

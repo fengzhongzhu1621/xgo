@@ -24,15 +24,29 @@ func TestWaitFor(t *testing.T) {
 		tests.TestWithTimeout(t, testTimeout)
 		is := assert.New(t)
 
+		// 超时也会终止定时任务
+		// i 表示执行次数
+		sum := 0
 		laterTrue := func(i int) bool {
 			// 根据执行次数，决定是否结束定时任务，返回 true 表示结束定时任务
+			sum += 1
 			return i >= 5
 		}
-
-		// 超时也会终止定时任务
+		// laterTrue 终止条件
+		// longTimeout 超时时间
+		// time.Microsecond 心跳间隔
+		//
+		// iter 执行次数
+		// duration 执行耗时
+		// ok 超时返回false
 		iter, duration, ok := lo.WaitFor(laterTrue, longTimeout, time.Millisecond)
+
+		// 执行次数
 		is.Equal(6, iter, "unexpected iteration count")
+		is.Equal(6, sum, "unexpected iteration count")
+		// 执行耗时
 		is.InEpsilon(6*time.Millisecond, duration, float64(500*time.Microsecond))
+		// 因为符合终止条件，终止了定时任务
 		is.True(ok)
 	})
 
