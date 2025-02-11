@@ -1,17 +1,35 @@
 package validator
 
 import (
+	"errors"
 	"fmt"
+	"reflect"
 
-	"github.com/fengzhongzhu1621/xgo/cast"
 	"github.com/gin-gonic/gin/binding"
 )
+
+var ErrNotArray = errors.New("only support array")
+
+// toSlice conv an array-interface to []interface{}
+// will error if the type is not slice
+func toSlice(array interface{}) ([]interface{}, error) {
+	v := reflect.ValueOf(array)
+	if v.Kind() != reflect.Slice {
+		return nil, ErrNotArray
+	}
+	l := v.Len()
+	ret := make([]interface{}, l)
+	for i := 0; i < l; i++ {
+		ret[i] = v.Index(i).Interface()
+	}
+	return ret, nil
+}
 
 // ValidateArray 接受一个任意类型的参数 data，并返回一个布尔值和一个字符串。
 // 主要目的是验证传入的数据是否是一个非空数组，并且数组中的每个元素都通过结构体验证。
 func ValidateArray(data any) (bool, string) {
 	// 将 data 转换为数组切片
-	array, err := cast.ToSlice2(data)
+	array, err := toSlice(data)
 	if err != nil {
 		return false, err.Error()
 	}

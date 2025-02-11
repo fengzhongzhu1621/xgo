@@ -3,8 +3,11 @@ package cast
 import (
 	"fmt"
 	"reflect"
+	"regexp"
 	"strings"
 	"time"
+
+	"github.com/fengzhongzhu1621/xgo/validator"
 )
 
 type timeFormatType int
@@ -15,6 +18,26 @@ const (
 	timeFormatNumericTimezone
 	timeFormatNumericAndNamedTimezone
 	timeFormatTimeOnly
+)
+
+const (
+	dateTimePattern         = `^[0-9]{4}[\-]{1}[0-9]{2}[\-]{1}[0-9]{2}[\s]{1}[0-9]{2}[\:]{1}[0-9]{2}[\:]{1}[0-9]{2}$`
+	timeWithLocationPattern = `^[0-9]{4}[\-]{1}[0-9]{2}[\-]{1}[0-9]{2}[T]{1}[0-9]{2}[\:]{1}[0-9]{2}[\:]{1}[0-9]{2}([\.]{1}[0-9]+)?[\+]{1}[0-9]{2}[\:]{1}[0-9]{2}$`
+)
+
+var (
+	dateTimeRegexp         = regexp.MustCompile(dateTimePattern)
+	timeWithLocationRegexp = regexp.MustCompile(timeWithLocationPattern)
+)
+
+type DateTimeFieldType string
+
+const (
+	// timeWithoutLocationType the common date time type which is used by front end and api
+	timeWithoutLocationType DateTimeFieldType = "time_without_location"
+	// timeWithLocationType the date time type compatible for values from db which is marshaled with time zone
+	timeWithLocationType DateTimeFieldType = "time_with_location"
+	invalidDateTimeType  DateTimeFieldType = "invalid"
 )
 
 var (
@@ -186,7 +209,7 @@ func StringToDateInDefaultLocation(s string, location *time.Location) (time.Time
 	return parseDateWith(s, location, timeFormats)
 }
 
-// 将字符串格式的时间转换为 time.Time 类型，根据 timeFormats 的格式进行转换.
+// parseDateWith 将字符串格式的时间转换为 time.Time 类型，根据 timeFormats 的格式进行转换.
 func parseDateWith(s string, location *time.Location, formats []timeFormat) (d time.Time, e error) {
 	for _, format := range formats {
 		if d, e = time.Parse(format.format, s); e == nil {
@@ -206,4 +229,66 @@ func parseDateWith(s string, location *time.Location, formats []timeFormat) (d t
 		}
 	}
 	return d, fmt.Errorf("unable to parse date: %s", s)
+}
+
+// ConvToTime convert value to time type
+func ConvToTime(value interface{}) (time.Time, error) {
+	timeVal, ok := value.(time.Time)
+	if ok {
+		return timeVal, nil
+	}
+
+	if validator.IsNumeric(value) {
+		intVal, err := ToInt64E(value)
+		if err != nil {
+			return time.Time{}, fmt.Errorf("value(%+v) type is not int", value)
+		}
+		return time.Unix(intVal, 0), nil
+	}
+
+	strVal, ok := value.(string)
+	if !ok {
+		return time.Time{}, fmt.Errorf("value(%+v) type is not string", value)
+	}
+
+	timeType, isTime := isTime(strVal)
+	if !isTime {
+		return time.Time{}, fmt.Errorf("value(%+v)  is not a string of time type", value)
+	}
+
+	return Str2Time(strVal, timeType), nil
+}
+
+// Str2Time string convert to time type
+func Str2Time(timeStr string, timeType DateTimeFieldType) time.Time {
+	var layout string
+	switch timeType {
+	case timeWithoutLocationType:
+		layout = "2006-01-02 15:04:05"
+	case timeWithLocationType:
+		layout = "2006-01-02T15:04:05+08:00"
+	default:
+		return time.Time{}
+	}
+
+	fTime, err := time.ParseInLocation(layout, timeStr, time.Local)
+	if nil != err {
+		return fTime
+	}
+	return fTime.UTC()
+}
+
+func isTime(sInput interface{}) (DateTimeFieldType, bool) {
+	switch val := sInput.(type) {
+	case string:
+		if dateTimeRegexp.MatchString(val) {
+			return timeWithoutLocationType, true
+		}
+		if timeWithLocationRegexp.MatchString(val) {
+			return timeWithLocationType, true
+		}
+		return invalidDateTimeType, false
+	default:
+		return invalidDateTimeType, false
+	}
 }

@@ -26,6 +26,15 @@ func init() {
 	opFactory[gt.Name()] = &gt
 	gte := GreaterOrEqualOp(GreaterOrEqual)
 	opFactory[gte.Name()] = &gte
+
+	datetimeLt := DatetimeLessOp(DatetimeLess)
+	opFactory[datetimeLt.Name()] = &datetimeLt
+	datetimeLte := DatetimeLessOrEqualOp(DatetimeLessOrEqual)
+	opFactory[datetimeLte.Name()] = &datetimeLte
+	datetimeGt := DatetimeGreaterOp(DatetimeGreater)
+	opFactory[datetimeGt.Name()] = &datetimeGt
+	datetimeGte := DatetimeGreaterOrEqualOp(DatetimeGreaterOrEqual)
+	opFactory[datetimeGte.Name()] = &datetimeGte
 }
 
 // Operator 根据操作符类型从仓库获取一个操作符对象
