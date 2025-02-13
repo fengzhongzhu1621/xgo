@@ -29,6 +29,7 @@ func ConfigureTLS() *tls.Config {
 			// 根据需要添加更多加密套件
 		},
 
+		// 要求客户端提供证书。
 		// 如果需要双向认证，可以配置 ClientAuth
 		// ClientAuth: tls.RequireAndVerifyClientCert,
 

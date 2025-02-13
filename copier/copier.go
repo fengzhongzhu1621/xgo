@@ -7,6 +7,7 @@
 // 以源对象字段为参数调用目标对象的方法，从而为目标对象赋值（当然也可以做其它的任何事情）；
 // 将切片赋值给切片（可以是不同类型哦）；
 // 将结构体追加到切片中。
+
 package copier
 
 import (
@@ -313,7 +314,7 @@ func copier(toValue interface{}, fromValue interface{}, opt reflectutils.Option)
 				}
 			}
 
-			// Copy from from method to dest field
+			// Copy from method to dest field
 			for _, field := range deepFields(toType) {
 				name := field.Name
 				srcFieldName, destFieldName := getFieldName(name, flgs)
