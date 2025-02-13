@@ -25,7 +25,7 @@ func ExtractOpenSSHVersion(input string) ([]string, error) {
 	return versions, nil
 }
 
-// ExtractOpenSSHVersionV2 提取 OpenSSH 版本号（包含主版本号和子版本号）
+// ExtractOpenSSHVersionWithMajorAndMinor 提取 OpenSSH 版本号（包含主版本号和子版本号）
 func ExtractOpenSSHVersionWithMajorAndMinor(input string) (*SSHVersion, error) {
 	// 找到了所有的匹配项及其子匹配项，并将它们存储在一个二维切片中
 	matches := OpensslVersionRegexV2.FindAllStringSubmatch(input, -1)

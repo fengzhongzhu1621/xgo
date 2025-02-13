@@ -2,6 +2,42 @@ package ssl
 
 import "crypto/tls"
 
+func ConfigureTLS() *tls.Config {
+	return &tls.Config{
+		// 设置 TLS 的最低版本为 TLS 1.2。这确保了使用较新的加密协议，增强了安全性，
+		// 避免了较旧且不安全的协议（如 SSLv3、TLS 1.0 和 TLS 1.1）。
+		MinVersion: tls.VersionTLS12,
+		// 推荐启用 TLS 1.3 以获得更好的安全性和性能
+		MaxVersion: tls.VersionTLS13,
+		// 指示服务器优先选择其支持的加密套件列表中的套件。这有助于服务器强制使用特定的加密算法，提升安全性和性能。
+		// 已被弃用，取而代之的是通过明确指定 CipherSuites 列表来控制服务器使用的加密套件。
+		// 需要手动指定希望服务器支持的加密套件，而不是依赖于优先级设置。
+		// PreferServerCipherSuites: true,
+		// 明确指定服务器支持的加密套件
+		// 定义了一组服务器支持的加密套件。这些套件结合了密钥交换机制、对称加密算法和消息认证码（MAC），用于保护数据传输的安全性。
+		// 这些套件使用了 ECDHE（椭圆曲线 Diffie-Hellman 密钥交换）进行密钥协商，提供了前向保密性（Forward Secrecy），
+		// 并且结合了 AES-GCM 或 ChaCha20-Poly1305 进行对称加密，确保数据的机密性和完整性。
+		CipherSuites: []uint16{
+			tls.TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
+			tls.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+			tls.TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,
+			tls.TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,
+			tls.TLS_AES_256_GCM_SHA384,
+			tls.TLS_AES_128_GCM_SHA256,
+			tls.TLS_CHACHA20_POLY1305_SHA256,
+			tls.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+			// 根据需要添加更多加密套件
+		},
+
+		// 如果需要双向认证，可以配置 ClientAuth
+		// ClientAuth: tls.RequireAndVerifyClientCert,
+
+		// 其他 TLS 配置选项
+		// SessionTicketsDisabled: false,
+		// SessionTicketKey:       sessionTicketKey,
+	}
+}
+
 // ClientTslConfNoVerity InsecureSkipVerify是一个布尔类型的字段，用于控制是否跳过TLS服务器证书验证。
 // 当设置为true时，客户端将不会验证服务器的TLS证书是否有效，这可能会导致安全风险，因为中间人攻击者可能会伪造证书。
 func ClientTslConfNoVerity() *tls.Config {

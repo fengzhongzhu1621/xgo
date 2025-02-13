@@ -79,7 +79,7 @@ func TestNewECDSAKey(t *testing.T) {
 
 			// 解码 PEM 格式的私钥
 			// 将私钥字符串转换为 pem.Block 对象
-			privPEM := sshKey.PrivKey // 读取私钥文件
+			privPEM := sshKey.PrivateKey // 读取私钥文件
 			privBlock, _ := pem.Decode([]byte(privPEM))
 			// 解析 PKCS#8 私钥
 			privKey, _ := x509.ParsePKCS8PrivateKey(privBlock.Bytes)

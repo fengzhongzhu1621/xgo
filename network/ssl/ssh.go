@@ -44,7 +44,7 @@ func NewSSHKey(keyType int, length uint) (*SSHKey, error) {
 	}
 
 	// 私钥
-	key.PrivKey = buf.String()
+	key.PrivateKey = buf.String()
 	// 公钥 MarshalAuthorizedKey 将一个 SSH 公钥对象（通常是 *ssh.PublicKey 类型）转换为可以在 SSH 授权文件（如 ~/.ssh/authorized_keys）中使用的格式
 	key.PubKey = strings.TrimSpace(string(ssh.MarshalAuthorizedKey(publicKey)))
 
@@ -54,7 +54,7 @@ func NewSSHKey(keyType int, length uint) (*SSHKey, error) {
 // NewSshKeyGenerator 创建 ssh 密钥生成器
 // - keyType 非对称算法类型
 // - keyLength 密钥队列长度
-func NewSshKeyGenerator(loger *zap.Logger, keyType, keyLength, size int) *SshKeyGenerator {
+func NewSshKeyGenerator(logger *zap.Logger, keyType, keyLength, size int) *SshKeyGenerator {
 	switch keyType {
 	case CA_CERT_TYPE_RSA:
 	case CA_CERT_TYPE_ECDSA:
@@ -70,7 +70,7 @@ func NewSshKeyGenerator(loger *zap.Logger, keyType, keyLength, size int) *SshKey
 		Running: true,
 		Length:  keyLength,
 		Type:    keyType,
-		loger:   loger,
+		logger:  logger,
 		Queue:   make(chan SSHKey2, size),
 	}
 
@@ -89,21 +89,21 @@ func (g *SshKeyGenerator) run() {
 			err error
 		)
 		// 生成密钥
-		sshkey, err := NewSSHKey(g.Type, uint(g.Length))
+		sshKey, err := NewSSHKey(g.Type, uint(g.Length))
 		if err != nil {
-			g.loger.Error("[SshKeyGenerator]Generator RSA key pairs error", zap.String("errmsg", err.Error()))
+			g.logger.Error("[SshKeyGenerator]Generator RSA key pairs error", zap.String("errmsg", err.Error()))
 			// 失败重试 in case of cpu 100%
 			time.Sleep(100 * time.Millisecond)
 			continue
 		}
 
 		// 将生成的密钥放入队列
-		skey_item := SSHKey2{
-			PubKey:  sshkey.PubKey,
-			PrivKey: sshkey.PrivKey,
-			Type:    g.Type,
+		queueValue := SSHKey2{
+			PubKey:     sshKey.PubKey,
+			PrivateKey: sshKey.PrivateKey,
+			Type:       g.Type,
 		}
-		g.Queue <- skey_item
+		g.Queue <- queueValue
 	}
 }
 

@@ -26,7 +26,7 @@ func LoadX509Cert(caFile string) (*x509.CertPool, error) {
 	return certPool, nil
 }
 
-// LoadCertificates 从指定的客户端证书和私钥文件中加载 TLS 证书，并在需要时解密私钥，返回一个 *tls.Certificate 对象
+// LoadX509Certificates 从指定的客户端证书和私钥文件中加载 TLS 证书，并在需要时解密私钥，返回一个 *tls.Certificate 对象
 func LoadX509Certificates(certFile, keyFile, passwd string) (*tls.Certificate, error) {
 	// 读取私钥文件
 	privateKey, err := os.ReadFile(keyFile)

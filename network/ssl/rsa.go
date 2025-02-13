@@ -13,14 +13,14 @@ import (
 	"golang.org/x/crypto/ssh"
 )
 
-// NewRsaKeyPair 生成RSA密钥对
-func NewRSAKeyPair(key_len int) (string, string, error) {
+// NewRSAKeyPair 生成RSA密钥对
+func NewRSAKeyPair(keyLen int) (string, string, error) {
 	// RSA密钥长度
-	if key_len == 0 {
-		key_len = DEFAULT_RSA_KEY_LENGTH
+	if keyLen == 0 {
+		keyLen = DEFAULT_RSA_KEY_LENGTH
 	}
 	// 生成一个RSA私钥
-	private, err := rsa.GenerateKey(rand.Reader, key_len)
+	private, err := rsa.GenerateKey(rand.Reader, keyLen)
 	if err != nil {
 		return "", "", err
 	}
