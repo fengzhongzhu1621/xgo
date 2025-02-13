@@ -74,5 +74,5 @@ func NewZapJSONLogger(cfg *config.LogConfig, cache bool) *zap.Logger {
 	}
 
 	// 使用自定义的 Core 创建一个 Logger 实例，并设置输出文件名和行号
-	return zap.New(core, zap.AddCaller())
+	return zap.New(core, zap.AddCaller(), zap.AddStacktrace(zapcore.ErrorLevel))
 }

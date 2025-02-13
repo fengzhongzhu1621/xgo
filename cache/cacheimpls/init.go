@@ -20,6 +20,7 @@ var (
 	LocalAPIGatewayJWTClientIDCache memory.Cache
 
 	// for unittest
+
 	TestRedisCache   *redis.Cache
 	TestCacheCleaner *cleaner.CacheCleaner
 )

@@ -2,6 +2,7 @@ package randutils
 
 import (
 	crand "crypto/rand"
+	"encoding/base64"
 	"fmt"
 	"math/big"
 	"math/rand"
@@ -31,7 +32,7 @@ func RandString2(length int64) string {
 	return string(result)
 }
 
-// RandomString 随机字符串
+// RandomString3 随机字符串
 func RandomString3(size int) string {
 	buf := make([]byte, size, size)
 	max := big.NewInt(int64(chLen))
@@ -53,8 +54,16 @@ func RandAuthToken() string {
 	buf := make([]byte, 32)
 	_, err := crand.Read(buf)
 	if err != nil {
-		return RandString2(64)
+		return RandString2(32)
 	}
 
 	return fmt.Sprintf("%x", buf)
+}
+
+func GenerateSecureID() string {
+	b := make([]byte, 32)
+	if _, err := crand.Read(b); err != nil {
+		panic(err) // 或者返回错误，视具体需求而定
+	}
+	return base64.URLEncoding.EncodeToString(b)
 }

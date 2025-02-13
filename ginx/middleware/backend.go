@@ -3,7 +3,7 @@ package middleware
 import (
 	"github.com/fengzhongzhu1621/xgo/config"
 	"github.com/fengzhongzhu1621/xgo/ginx/utils"
-	"github.com/fengzhongzhu1621/xgo/network/nethttp/auth/jwtx"
+	"github.com/fengzhongzhu1621/xgo/network/nethttp/auth/jwt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -11,7 +11,7 @@ import (
 func BackendAuthMiddleware(cfg *config.Config) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 从请求头获取 jwt 的值
-		jwt_token, err := jwtx.GetJwtTokenFromHeader(c)
+		jwt_token, err := jwt.GetJwtTokenFromHeader(c)
 
 		if err != nil {
 			utils.UnauthorizedJSONResponse(
@@ -23,12 +23,12 @@ func BackendAuthMiddleware(cfg *config.Config) gin.HandlerFunc {
 
 		// 解析 jwt token
 		var (
-			option jwtx.CustomJwtClaimsOption
-			claims *jwtx.CustomJwtClaims
+			option jwt.CustomJwtClaimsOption
+			claims *jwt.CustomJwtClaims
 		)
 		option.Cfg = cfg
 		option.HS256Key = cfg.Auth.JwtToken
-		claims, _ = jwtx.NewCustomJwtClaims(&option)
+		claims, _ = jwt.NewCustomJwtClaims(&option)
 		jwtclaims, err := claims.ParseHS256JwtToken(jwt_token)
 
 		if err != nil {

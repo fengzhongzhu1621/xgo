@@ -1,4 +1,4 @@
-package jwtx
+package jwt
 
 import (
 	"time"

@@ -22,7 +22,6 @@ type APIGatewayJWTClientIDCacheKey struct {
 	JWTToken string
 }
 
-// Key ...
 func (k APIGatewayJWTClientIDCacheKey) Key() string {
 	return uuid.MD5Hash(k.JWTToken)
 }

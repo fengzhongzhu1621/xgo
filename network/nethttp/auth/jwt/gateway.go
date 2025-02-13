@@ -1,4 +1,4 @@
-package jwtx
+package jwt
 
 import (
 	"fmt"
@@ -18,12 +18,12 @@ func GetJwtTokenFromHeader(c *gin.Context) (string, error) {
 		return "", xgo.JwtTokenNoneErr
 	}
 	// 获得 Bearer 的值
-	strs := strings.SplitN(header, " ", 2)
-	if len(strs) != 2 || strs[0] != "Bearer" {
+	bearerStr := strings.SplitN(header, " ", 2)
+	if len(bearerStr) != 2 || bearerStr[0] != "Bearer" {
 		return "", xgo.JwtTokenInvalidErr
 	}
 
-	return strs[1], nil
+	return bearerStr[1], nil
 }
 
 // GetClientIDFromJWTToken 从 jwt 中解析出 app_code 和 username

@@ -1,13 +1,13 @@
-package jwtx
+package jwt
 
 import "errors"
 
 var (
-	ErrUnauthorized = errors.New("jwtauth: token is unauthorized")
+	ErrUnauthorized = errors.New("jwt auth: token is unauthorized")
 
-	ErrExpired    = errors.New("jwtauth: token is expired")
-	ErrNBFInvalid = errors.New("jwtauth: token nbf validation failed")
-	ErrIATInvalid = errors.New("jwtauth: token iat validation failed")
+	ErrExpired    = errors.New("jwt auth: token is expired")
+	ErrNBFInvalid = errors.New("jwt auth: token nbf validation failed")
+	ErrIATInvalid = errors.New("jwt auth: token iat validation failed")
 
 	ErrAPIGatewayJWTMissingApp             = errors.New("app not in jwt claims")
 	ErrAPIGatewayJWTAppInfoParseFail       = errors.New("app info parse fail")
@@ -17,7 +17,7 @@ var (
 	ErrAPIGatewayJWTAppInfoVerifiedNotBool = errors.New("verified not bool")
 	ErrAPIGatewayJWTAppNotVerified         = errors.New("app not verified")
 
-	ErrAPIGatewayJWTAppInfoNoUsername = errors.New("username not in jwt chaims")
+	ErrAPIGatewayJWTAppInfoNoUsername = errors.New("username not in jwt claims")
 
-	ErrJwtRootTokenNone = errors.New("jwt root token none")
+	ErrJwtRootTokenNone = errors.New("jwt root token not found")
 )

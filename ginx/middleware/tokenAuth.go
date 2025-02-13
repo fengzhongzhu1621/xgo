@@ -11,7 +11,7 @@ import (
 	"github.com/samber/lo"
 )
 
-// UserAuth 用户身份认证中间件
+// TokenAuth 用户身份认证中间件
 func TokenAuth(username string, loginUrl string, getUserInfo func(string) (string, error)) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 构造重定向地址

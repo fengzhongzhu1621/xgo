@@ -9,13 +9,13 @@ import (
 )
 
 var (
-	// 创建一个新的SimpleNonceStore实例。SimpleNonceStore是一个用于存储和检索随机数（nonce）的简单容器
+	// NonceStore 创建一个新的SimpleNonceStore实例。SimpleNonceStore是一个用于存储和检索随机数（nonce）的简单容器
 	// 在密码学中，nonce 是一个只使用一次的数值，通常与密码散列函数一起使用，以确保先前的散列不会在未来被重复使用。这对于防止重放攻击特别重要。
 	NonceStore = openid.NewSimpleNonceStore()
-	// 用于创建一个新的SimpleDiscoveryCache实例。SimpleDiscoveryCache是一个用于缓存OpenID提供者元数据的简单容器。
+	// DiscoveryCache 用于创建一个新的SimpleDiscoveryCache实例。SimpleDiscoveryCache是一个用于缓存OpenID提供者元数据的简单容器。
 	// 这些元数据包括提供者的端点URL、公钥等，用于在OpenID认证过程中进行验证和授权。
 	DiscoveryCache = openid.NewSimpleDiscoveryCache()
-	// 用于创建一个新的基于 cookie 的 session 存储引擎。
+	// Store 用于创建一个新的基于 cookie 的 session 存储引擎。
 	// 接受一个密钥（key）切片作为参数，这些密钥用于对 cookie 数据进行签名和加密，以确保数据的安全性和完整性。
 	Store              = sessions.NewCookieStore([]byte("something-very-secret"))
 	DefaultSessionName = "ghs-session"

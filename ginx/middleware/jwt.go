@@ -5,7 +5,7 @@ import (
 
 	"github.com/fengzhongzhu1621/xgo/config"
 	"github.com/fengzhongzhu1621/xgo/ginx/utils"
-	"github.com/fengzhongzhu1621/xgo/network/nethttp/auth/jwtx"
+	"github.com/fengzhongzhu1621/xgo/network/nethttp/auth/jwt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -47,7 +47,7 @@ func ClientAuthMiddleware(apiGatewayPublicKey []byte) gin.HandlerFunc {
 
 		// 2. 从 jwt 中解析出 app_code 和 username
 		var err error
-		clientID, clientUsername, err = jwtx.GetClientIDFromJWTToken(jwtToken, apiGatewayPublicKey)
+		clientID, clientUsername, err = jwt.GetClientIDFromJWTToken(jwtToken, apiGatewayPublicKey)
 		if err != nil {
 			message := fmt.Sprintf("request from apigateway jwt token invalid! err=%s", err.Error())
 			utils.UnauthorizedJSONResponse(c, message)

@@ -1,4 +1,4 @@
-package jwtx
+package jwt
 
 import (
 	"crypto/rsa"
@@ -8,7 +8,6 @@ import (
 	"github.com/dgrijalva/jwt-go/v4"
 	"github.com/fengzhongzhu1621/xgo/config"
 	"github.com/fengzhongzhu1621/xgo/logging"
-	"go.uber.org/zap"
 )
 
 // JWTRsa JWTRsa结构，用于存储RSA算法的私钥和公钥
@@ -35,12 +34,13 @@ type CustomJwtClaimsOption struct {
 
 // CustomJwtClaims 自定义JwtClaims内容
 type CustomJwtClaims struct {
-	Operator    string          `json:"operator"`
-	Extra       string          `json:"extra"`
-	logger      *zap.Logger     `json:"-"`
-	HS256Key    string          `json:"-"`
-	RS256PriKey *rsa.PrivateKey `json:"-"`
-	RS256PubKey *rsa.PublicKey  `json:"-"`
+	Operator    string            `json:"operator"`
+	Extra       string            `json:"extra"`
+	logger      *logging.DBLogger `json:"-"`
+	HS256Key    string            `json:"-"`
+	RS256PriKey *rsa.PrivateKey   `json:"-"`
+	RS256PubKey *rsa.PublicKey    `json:"-"`
+
 	// JWT标准声明的一部分，包含如iss（发行者）、sub（主题）、exp（过期时间）等字段
 	jwt.StandardClaims
 }
@@ -89,7 +89,7 @@ func NewCustomJwtClaims(option *CustomJwtClaimsOption) (*CustomJwtClaims, error)
 	return claims, nil
 }
 
-// GenerateHS256JwtToken 生成 JWT-token 令牌字符串
+// GenerateHS256JwtToken 生成 JWT-token HS256 令牌字符串
 func (c *CustomJwtClaims) GenerateHS256JwtToken() (string, error) {
 	// 创建了一个新的 JWT Token，并指定了签名方法为 HS256
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, c)
@@ -113,7 +113,7 @@ func (c *CustomJwtClaims) GetOperator() string {
 	return c.Operator
 }
 
-// ParseJwtToken 解析一个 JWT（JSON Web Token），并将其转换为 CustomJwtClaims 类型的声明
+// ParseHS256JwtToken 解析一个 JWT（JSON Web Token），并将其转换为 CustomJwtClaims 类型的声明
 func (c *CustomJwtClaims) ParseHS256JwtToken(jwtStr string) (*CustomJwtClaims, error) {
 	token, err := jwt.ParseWithClaims(jwtStr, &CustomJwtClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(c.HS256Key), nil
