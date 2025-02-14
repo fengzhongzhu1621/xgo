@@ -35,6 +35,16 @@ func init() {
 	opFactory[datetimeGt.Name()] = &datetimeGt
 	datetimeGte := DatetimeGreaterOrEqualOp(DatetimeGreaterOrEqual)
 	opFactory[datetimeGte.Name()] = &datetimeGte
+
+	beginsWith := BeginsWithOp(BeginsWith)
+	opFactory[beginsWith.Name()] = &beginsWith
+	beginsWithInsensitive := BeginsWithInsensitiveOp(BeginsWithInsensitive)
+	opFactory[beginsWithInsensitive.Name()] = &beginsWithInsensitive
+	notBeginsWith := NotBeginsWithOp(NotBeginsWith)
+	opFactory[notBeginsWith.Name()] = &notBeginsWith
+	notBeginsWithInsensitive := NotBeginsWithInsensitiveOp(NotBeginsWithInsensitive)
+	opFactory[notBeginsWithInsensitive.Name()] = &notBeginsWithInsensitive
+
 }
 
 // Operator 根据操作符类型从仓库获取一个操作符对象
