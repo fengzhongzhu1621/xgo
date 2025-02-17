@@ -1,12 +1,12 @@
 package upload
 
 import (
-	"crypto/rand"
-	"encoding/hex"
 	"errors"
 	"mime/multipart"
 	"path/filepath"
 	"strings"
+
+	"github.com/fengzhongzhu1621/xgo/crypto/randutils"
 
 	"github.com/samber/lo"
 )
@@ -41,19 +41,10 @@ func (v *FileValidator) ValidateFile(file *multipart.FileHeader) (string, error)
 	}
 
 	// 生成随机文件名
-	randomName, err := generateRandomFileName(ext)
+	randomName, err := randutils.GenerateRandomFileName(ext)
 	if err != nil {
 		return "", err
 	}
 
 	return randomName, nil
-}
-
-// generateRandomFileName 生成随机文件名
-func generateRandomFileName(ext string) (string, error) {
-	bytes := make([]byte, 16)
-	if _, err := rand.Read(bytes); err != nil {
-		return "", err
-	}
-	return hex.EncodeToString(bytes) + ext, nil
 }

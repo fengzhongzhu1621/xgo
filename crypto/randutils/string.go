@@ -3,6 +3,7 @@ package randutils
 import (
 	crand "crypto/rand"
 	"encoding/base64"
+	"encoding/hex"
 	"fmt"
 	"math/big"
 	"math/rand"
@@ -66,4 +67,39 @@ func GenerateSecureID() string {
 		panic(err) // 或者返回错误，视具体需求而定
 	}
 	return base64.URLEncoding.EncodeToString(b)
+}
+
+func GenerateSecureToken(length int) (string, error) {
+	b := make([]byte, length)
+	if _, err := crand.Read(b); err != nil {
+		return "", err
+	}
+
+	return base64.URLEncoding.EncodeToString(b), nil
+}
+
+// GenerateRandomFileName 生成随机文件名
+func GenerateRandomFileName(ext string) (string, error) {
+	bytes := make([]byte, 16)
+	if _, err := rand.Read(bytes); err != nil {
+		return "", err
+	}
+	return hex.EncodeToString(bytes) + ext, nil
+}
+
+func GenerateRandomPassword(length int) (string, error) {
+	const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*"
+	bytes := make([]byte, length)
+
+	if _, err := crand.Read(bytes); err != nil {
+		return "", err
+	}
+	count := len(chars)
+
+	// 填充字符
+	for i, b := range bytes {
+		bytes[i] = chars[b%byte(count)]
+	}
+
+	return string(bytes), nil
 }
