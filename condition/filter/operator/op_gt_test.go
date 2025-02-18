@@ -3,6 +3,8 @@ package operator
 import (
 	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGreaterValidate(t *testing.T) {
@@ -105,4 +107,35 @@ func TestGreaterMongoCond(t *testing.T) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}
+}
+
+func TestGreaterMatch(t *testing.T) {
+	op := GetOperator(Greater)
+
+	// test greater int type
+	matched, err := op.Match(3, 1)
+	assert.NoError(t, err)
+	assert.Equal(t, true, matched)
+
+	matched, err = op.Match(0.01, 1)
+	assert.NoError(t, err)
+	assert.Equal(t, false, matched)
+
+	// test greater than 0
+	matched, err = op.Match(1.1, uint64(0))
+	assert.NoError(t, err)
+	assert.Equal(t, true, matched)
+
+	matched, err = op.Match(-1, uint64(0))
+	assert.NoError(t, err)
+	assert.Equal(t, false, matched)
+
+	// test greater than a negative number
+	matched, err = op.Match(-0.01, int32(-1))
+	assert.NoError(t, err)
+	assert.Equal(t, true, matched)
+
+	matched, err = op.Match(-1, int32(-1))
+	assert.NoError(t, err)
+	assert.Equal(t, false, matched)
 }

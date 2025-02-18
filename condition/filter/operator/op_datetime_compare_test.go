@@ -4,6 +4,8 @@ import (
 	"reflect"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestDatetimeLessValidate(t *testing.T) {
@@ -440,4 +442,136 @@ func TestDatetimeGreaterOrEqualMongoCond(t *testing.T) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}
+}
+
+func TestDatetimeLessMatch(t *testing.T) {
+	op := GetOperator(DatetimeLess)
+
+	// test datetime less time type
+	now := time.Now()
+	matched, err := op.Match(now.Unix()-1, now)
+	assert.NoError(t, err)
+	assert.Equal(t, true, matched)
+
+	matched, err = op.Match(now.Add(time.Second).Format(time.DateTime), now)
+	assert.NoError(t, err)
+	assert.Equal(t, false, matched)
+
+	// test datetime less timestamp type
+	matched, err = op.Match(now.Add(-time.Second).Format(time.DateTime), now.Unix())
+	assert.NoError(t, err)
+	assert.Equal(t, true, matched)
+
+	matched, err = op.Match(now, now.Unix())
+	assert.NoError(t, err)
+	assert.Equal(t, false, matched)
+
+	// test datetime less time string
+	nowStr := now.Format(time.DateTime)
+	matched, err = op.Match(now.Add(-time.Second), nowStr)
+	assert.NoError(t, err)
+	assert.Equal(t, true, matched)
+
+	matched, err = op.Match(now.Unix()+1, nowStr)
+	assert.NoError(t, err)
+	assert.Equal(t, false, matched)
+}
+
+func TestDatetimeLessOrEqualMatch(t *testing.T) {
+	op := GetOperator(DatetimeLessOrEqual)
+
+	// test datetime less or equal time type
+	now := time.Now()
+	matched, err := op.Match(now.Unix()-1, now)
+	assert.NoError(t, err)
+	assert.Equal(t, true, matched)
+
+	matched, err = op.Match(now.Add(time.Second).Format(time.DateTime), now)
+	assert.NoError(t, err)
+	assert.Equal(t, false, matched)
+
+	// test datetime less or equal timestamp type
+	matched, err = op.Match(now.Format(time.DateTime), now.Unix())
+	assert.NoError(t, err)
+	assert.Equal(t, true, matched)
+
+	matched, err = op.Match(now.Add(time.Second), now.Unix())
+	assert.NoError(t, err)
+	assert.Equal(t, false, matched)
+
+	// test datetime less or equal time string
+	nowStr := now.Format(time.DateTime)
+	matched, err = op.Match(now.Add(-time.Second), nowStr)
+	assert.NoError(t, err)
+	assert.Equal(t, true, matched)
+
+	matched, err = op.Match(now.Unix()+1, nowStr)
+	assert.NoError(t, err)
+	assert.Equal(t, false, matched)
+}
+
+func TestDatetimeGreaterMatch(t *testing.T) {
+	op := GetOperator(DatetimeGreater)
+
+	// test datetime greater time type
+	now := time.Now()
+	matched, err := op.Match(now.Add(time.Second).Format(time.DateTime), now)
+	assert.NoError(t, err)
+	assert.Equal(t, true, matched)
+
+	matched, err = op.Match(now.Unix()-1, now)
+	assert.NoError(t, err)
+	assert.Equal(t, false, matched)
+
+	// test datetime greater timestamp type
+	matched, err = op.Match(now.Add(time.Second), now.Unix())
+	assert.NoError(t, err)
+	assert.Equal(t, true, matched)
+
+	matched, err = op.Match(now.Format(time.DateTime), now.Unix())
+	assert.NoError(t, err)
+	assert.Equal(t, false, matched)
+
+	// test datetime greater time string
+	nowStr := now.Format(time.DateTime)
+	matched, err = op.Match(now.Unix()+1, nowStr)
+	assert.NoError(t, err)
+	assert.Equal(t, true, matched)
+
+	matched, err = op.Match(now.Add(-time.Second), nowStr)
+	assert.NoError(t, err)
+	assert.Equal(t, false, matched)
+}
+
+func TestDatetimeGreaterOrEqualMatch(t *testing.T) {
+	op := GetOperator(DatetimeGreaterOrEqual)
+
+	// test datetime greater or equal time type
+	now := time.Now()
+	matched, err := op.Match(now.Add(time.Second).Format(time.DateTime), now)
+	assert.NoError(t, err)
+	assert.Equal(t, true, matched)
+
+	matched, err = op.Match(now.Unix()-1, now)
+	assert.NoError(t, err)
+	assert.Equal(t, false, matched)
+
+	// test datetime greater or equal timestamp type
+	matched, err = op.Match(now.Format(time.DateTime), now.Unix())
+	assert.NoError(t, err)
+	assert.Equal(t, true, matched)
+
+	matched, err = op.Match(now.Add(-time.Second), now.Unix())
+	assert.NoError(t, err)
+	assert.Equal(t, false, matched)
+
+	// test datetime greater or equal time string
+	nowStr := now.Format(time.DateTime)
+	matched, err = op.Match(now.Unix()+1, nowStr)
+	assert.NoError(t, err)
+	assert.Equal(t, true, matched)
+
+	matched, err = op.Match(now.Add(-time.Second).Format(time.DateTime), nowStr)
+	assert.NoError(t, err)
+	assert.Equal(t, false, matched)
 }

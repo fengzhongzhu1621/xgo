@@ -3,6 +3,8 @@ package operator
 import (
 	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestInValidate(t *testing.T) {
@@ -117,4 +119,35 @@ func TestInMongoCond(t *testing.T) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}
+}
+
+func TestInMatch(t *testing.T) {
+	op := GetOperator(In)
+
+	// test in int array type
+	matched, err := op.Match(1.0, []int64{1, 2})
+	assert.NoError(t, err)
+	assert.Equal(t, true, matched)
+
+	matched, err = op.Match(3, []int64{1, 2})
+	assert.NoError(t, err)
+	assert.Equal(t, false, matched)
+
+	// test in string array type
+	matched, err = op.Match("b", []string{"a", "b"})
+	assert.NoError(t, err)
+	assert.Equal(t, true, matched)
+
+	matched, err = op.Match("c", []string{"a", "b"})
+	assert.NoError(t, err)
+	assert.Equal(t, false, matched)
+
+	// test in bool array type
+	matched, err = op.Match(false, []interface{}{true, false})
+	assert.NoError(t, err)
+	assert.Equal(t, true, matched)
+
+	matched, err = op.Match(false, []interface{}{true})
+	assert.NoError(t, err)
+	assert.Equal(t, false, matched)
 }

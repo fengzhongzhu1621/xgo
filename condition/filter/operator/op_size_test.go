@@ -7,31 +7,24 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestLessValidate(t *testing.T) {
-	op := GetOperator(Less)
+func TestSizeValidate(t *testing.T) {
+	op := GetOperator(Size)
 
-	// test less int type
+	// test size int type
 	err := op.ValidateValue(1, nil)
 	if err != nil {
 		t.Errorf("validate failed, err: %v", err)
 		return
 	}
 
-	// test less than 0
+	// test size equal to 0
 	err = op.ValidateValue(uint64(0), nil)
 	if err != nil {
 		t.Errorf("validate failed, err: %v", err)
 		return
 	}
 
-	// test less than a negative number
-	err = op.ValidateValue(int32(-1), nil)
-	if err != nil {
-		t.Errorf("validate failed, err: %v", err)
-		return
-	}
-
-	// test invalid less type
+	// test invalid size type
 	err = op.ValidateValue("a", nil)
 	if err == nil {
 		t.Errorf("validate should return error")
@@ -67,75 +60,67 @@ func TestLessValidate(t *testing.T) {
 		t.Errorf("validate should return error")
 		return
 	}
+
+	err = op.ValidateValue(int32(-1), nil)
+	if err == nil {
+		t.Errorf("validate should return error")
+		return
+	}
 }
 
-func TestLessMongoCond(t *testing.T) {
-	op := GetOperator(Less)
+func TestSizeMongoCond(t *testing.T) {
+	op := GetOperator(Size)
 
-	// test less int type
+	// test size int type
 	cond, err := op.ToMgo("test", 1)
 	if err != nil {
 		t.Errorf("to mongo failed, err: %v", err)
 		return
 	}
 
-	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{DBLT: 1}}) {
+	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{DBSize: 1}}) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}
 
-	// test less than 0
+	// test size equal to 0
 	cond, err = op.ToMgo("test", uint64(0))
 	if err != nil {
 		t.Errorf("to mongo failed, err: %v", err)
 		return
 	}
 
-	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{DBLT: uint64(0)}}) {
-		t.Errorf("cond %+v is invalid", cond)
-		return
-	}
-
-	// test less than a negative number
-	cond, err = op.ToMgo("test", int32(-1))
-	if err != nil {
-		t.Errorf("to mongo failed, err: %v", err)
-		return
-	}
-
-	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{DBLT: int32(-1)}}) {
+	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{DBSize: uint64(0)}}) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}
 }
 
-func TestLessMatch(t *testing.T) {
-	op := GetOperator(Less)
+func TestSizeMatch(t *testing.T) {
+	op := GetOperator(Size)
 
-	// test less int type
-	matched, err := op.Match(0.01, 1)
+	// test size matched
+	matched, err := op.Match([]int64{1, 2, 3}, 3)
 	assert.NoError(t, err)
 	assert.Equal(t, true, matched)
 
-	matched, err = op.Match(3, 1)
+	matched, err = op.Match([]float64{1, 2}, 1)
 	assert.NoError(t, err)
 	assert.Equal(t, false, matched)
 
-	// test less than 0
-	matched, err = op.Match(-1, uint64(0))
+	matched, err = op.Match([]string{"1", "2"}, 2)
 	assert.NoError(t, err)
 	assert.Equal(t, true, matched)
 
-	matched, err = op.Match(1.1, uint64(0))
+	matched, err = op.Match([]string{""}, 2)
 	assert.NoError(t, err)
 	assert.Equal(t, false, matched)
 
-	// test less than a negative number
-	matched, err = op.Match(-1.23, int32(-1))
+	matched, err = op.Match([]bool{}, 0)
 	assert.NoError(t, err)
 	assert.Equal(t, true, matched)
 
-	matched, err = op.Match(-1, int32(-1))
+	matched, err = op.Match([]bool{true}, 2)
 	assert.NoError(t, err)
 	assert.Equal(t, false, matched)
 }

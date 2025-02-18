@@ -41,8 +41,7 @@ func NewDefaultExprOpt(ruleFields map[string]criteria.FieldType) *ExprOption {
 	}
 }
 
-// NewDefaultExprOpt init an expression option with default limit option.
-func cloneExprOption(opt *ExprOption) *ExprOption {
+func CloneExprOption(opt *ExprOption) *ExprOption {
 	return &ExprOption{
 		RuleFields:       opt.RuleFields,
 		IgnoreRuleFields: opt.IgnoreRuleFields,

@@ -1,6 +1,8 @@
 package mapstr
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // MapStr is the map[string]interface{} type
 type MapStr map[string]interface{}

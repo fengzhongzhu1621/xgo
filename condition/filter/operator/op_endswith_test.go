@@ -7,17 +7,17 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestBeginsWithValidate(t *testing.T) {
-	op := GetOperator(BeginsWith)
+func TestEndsWithValidate(t *testing.T) {
+	op := GetOperator(EndsWith)
 
-	// test begins with string type
+	// test ends with string type
 	err := op.ValidateValue("a", nil)
 	if err != nil {
 		t.Errorf("validate failed, err: %v", err)
 		return
 	}
 
-	// test invalid begins with type
+	// test invalid ends with type
 	err = op.ValidateValue("", nil)
 	if err == nil {
 		t.Errorf("validate should return error")
@@ -61,35 +61,33 @@ func TestBeginsWithValidate(t *testing.T) {
 	}
 }
 
-func TestBeginsWithMongoCond(t *testing.T) {
-	op := GetOperator(BeginsWith)
+func TestEndsWithMongoCond(t *testing.T) {
+	op := GetOperator(EndsWith)
 
-	// test begins with string type
+	// test ends with string type
 	cond, err := op.ToMgo("test", "a")
 	if err != nil {
 		t.Errorf("to mongo failed, err: %v", err)
 		return
 	}
 
-	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{
-		DBLIKE: "^a",
-	}}) {
+	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{DBLIKE: "a$"}}) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}
 }
 
-func TestBeginsWithInsensitiveValidate(t *testing.T) {
-	op := GetOperator(BeginsWithInsensitive)
+func TestEndsWithInsensitiveValidate(t *testing.T) {
+	op := GetOperator(EndsWithInsensitive)
 
-	// test begins with insensitive string type
+	// test ends with insensitive string type
 	err := op.ValidateValue("a", nil)
 	if err != nil {
 		t.Errorf("validate failed, err: %v", err)
 		return
 	}
 
-	// test invalid begins with insensitive type
+	// test invalid ends with insensitive type
 	err = op.ValidateValue("", nil)
 	if err == nil {
 		t.Errorf("validate should return error")
@@ -133,35 +131,34 @@ func TestBeginsWithInsensitiveValidate(t *testing.T) {
 	}
 }
 
-func TestBeginsWithInsensitiveMongoCond(t *testing.T) {
-	op := GetOperator(BeginsWithInsensitive)
+func TestEndsWithInsensitiveMongoCond(t *testing.T) {
+	op := GetOperator(EndsWithInsensitive)
 
-	// test begins with insensitive string type
+	// test ends with insensitive string type
 	cond, err := op.ToMgo("test", "a")
 	if err != nil {
 		t.Errorf("to mongo failed, err: %v", err)
 		return
 	}
 
-	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{
-		DBLIKE:    "^a",
+	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{DBLIKE: "a$",
 		DBOPTIONS: "i"}}) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}
 }
 
-func TestNotBeginsWithValidate(t *testing.T) {
-	op := GetOperator(NotBeginsWith)
+func TestNotEndsWithValidate(t *testing.T) {
+	op := GetOperator(NotEndsWith)
 
-	// test not begins with string type
+	// test not ends with string type
 	err := op.ValidateValue("a", nil)
 	if err != nil {
 		t.Errorf("validate failed, err: %v", err)
 		return
 	}
 
-	// test invalid not begins with type
+	// test invalid not ends with type
 	err = op.ValidateValue("", nil)
 	if err == nil {
 		t.Errorf("validate should return error")
@@ -205,10 +202,10 @@ func TestNotBeginsWithValidate(t *testing.T) {
 	}
 }
 
-func TestNotBeginsWithMongoCond(t *testing.T) {
-	op := GetOperator(NotBeginsWith)
+func TestNotEndsWithMongoCond(t *testing.T) {
+	op := GetOperator(NotEndsWith)
 
-	// test not begins with string type
+	// test not ends with string type
 	cond, err := op.ToMgo("test", "a")
 	if err != nil {
 		t.Errorf("to mongo failed, err: %v", err)
@@ -216,23 +213,23 @@ func TestNotBeginsWithMongoCond(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{
-		DBNot: map[string]interface{}{DBLIKE: "^a"}}}) {
+		DBNot: map[string]interface{}{DBLIKE: "a$"}}}) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}
 }
 
-func TestNotBeginsWithInsensitiveValidate(t *testing.T) {
-	op := GetOperator(NotBeginsWithInsensitive)
+func TestNotEndsWithInsensitiveValidate(t *testing.T) {
+	op := GetOperator(NotEndsWithInsensitive)
 
-	// test not begins with insensitive string type
+	// test not ends with insensitive string type
 	err := op.ValidateValue("a", nil)
 	if err != nil {
 		t.Errorf("validate failed, err: %v", err)
 		return
 	}
 
-	// test invalid not begins with insensitive type
+	// test invalid not ends with insensitive type
 	err = op.ValidateValue("", nil)
 	if err == nil {
 		t.Errorf("validate should return error")
@@ -276,10 +273,10 @@ func TestNotBeginsWithInsensitiveValidate(t *testing.T) {
 	}
 }
 
-func TestNotBeginsWithInsensitiveMongoCond(t *testing.T) {
-	op := GetOperator(NotBeginsWithInsensitive)
+func TestNotEndsWithInsensitiveMongoCond(t *testing.T) {
+	op := GetOperator(NotEndsWithInsensitive)
 
-	// test not begins with insensitive string type
+	// test not ends with insensitive string type
 	cond, err := op.ToMgo("test", "a")
 	if err != nil {
 		t.Errorf("to mongo failed, err: %v", err)
@@ -287,68 +284,68 @@ func TestNotBeginsWithInsensitiveMongoCond(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{
-		DBNot: map[string]interface{}{DBLIKE: "^a", DBOPTIONS: "i"}}}) {
+		DBNot: map[string]interface{}{DBLIKE: "a$", DBOPTIONS: "i"}}}) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}
 }
 
-func TestBeginsWithMatch(t *testing.T) {
-	op := GetOperator(BeginsWith)
+func TestEndsWithMatch(t *testing.T) {
+	op := GetOperator(EndsWith)
 
-	// test begins with string type
-	matched, err := op.Match("abcdef", "ab")
+	// test ends with string type
+	matched, err := op.Match("123abcdef", "ef")
 	assert.NoError(t, err)
 	assert.Equal(t, true, matched)
 
-	matched, err = op.Match("abcdef", "ac")
+	matched, err = op.Match("123abcdef", "eF")
 	assert.NoError(t, err)
 	assert.Equal(t, false, matched)
 
-	matched, err = op.Match("abcdef", "aB")
-	assert.NoError(t, err)
-	assert.Equal(t, false, matched)
-}
-
-func TestBeginsWithInsensitiveMatch(t *testing.T) {
-	op := GetOperator(BeginsWithInsensitive)
-
-	// test begins with insensitive string type
-	matched, err := op.Match("aBcdef", "Ab")
-	assert.NoError(t, err)
-	assert.Equal(t, true, matched)
-
-	matched, err = op.Match("Abcdef", "ac")
+	matched, err = op.Match("123abcdef", "df")
 	assert.NoError(t, err)
 	assert.Equal(t, false, matched)
 }
 
-func TestNotBeginsWithMatch(t *testing.T) {
-	op := GetOperator(NotBeginsWith)
+func TestEndsWithInsensitiveMatch(t *testing.T) {
+	op := GetOperator(EndsWithInsensitive)
 
-	// test not begins with string type
-	matched, err := op.Match("abcdef", "ac")
+	// test ends with insensitive string type
+	matched, err := op.Match("123abcDef", "dEf")
 	assert.NoError(t, err)
 	assert.Equal(t, true, matched)
 
-	matched, err = op.Match("abcdef", "aB")
-	assert.NoError(t, err)
-	assert.Equal(t, true, matched)
-
-	matched, err = op.Match("abcdef", "ab")
+	matched, err = op.Match("123Abcdef", "abc")
 	assert.NoError(t, err)
 	assert.Equal(t, false, matched)
 }
 
-func TestNotBeginsWithInsensitiveMatch(t *testing.T) {
-	op := GetOperator(NotBeginsWithInsensitive)
+func TestNotEndsWithMatch(t *testing.T) {
+	op := GetOperator(NotEndsWith)
 
-	// test not begins with insensitive string type
-	matched, err := op.Match("abcdef", "ac")
+	// test not ends with string type
+	matched, err := op.Match("123abcdef", "ac")
 	assert.NoError(t, err)
 	assert.Equal(t, true, matched)
 
-	matched, err = op.Match("aBcdef", "Ab")
+	matched, err = op.Match("123abcdef", "aB")
+	assert.NoError(t, err)
+	assert.Equal(t, true, matched)
+
+	matched, err = op.Match("123abcdef", "ef")
+	assert.NoError(t, err)
+	assert.Equal(t, false, matched)
+}
+
+func TestNotEndsWithInsensitiveMatch(t *testing.T) {
+	op := GetOperator(NotEndsWithInsensitive)
+
+	// test not ends with insensitive string type
+	matched, err := op.Match("123Abcdef", "abc")
+	assert.NoError(t, err)
+	assert.Equal(t, true, matched)
+
+	matched, err = op.Match("123abcDef", "dEf")
 	assert.NoError(t, err)
 	assert.Equal(t, false, matched)
 }

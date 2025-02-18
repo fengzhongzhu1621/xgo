@@ -3,6 +3,8 @@ package operator
 import (
 	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestEqualValidate(t *testing.T) {
@@ -91,4 +93,35 @@ func TestEqualMongoCond(t *testing.T) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}
+}
+
+func TestEqualMatch(t *testing.T) {
+	op := GetOperator(Equal)
+
+	// test equal int type
+	matched, err := op.Match(int32(1), 1.0)
+	assert.NoError(t, err)
+	assert.Equal(t, true, matched)
+
+	matched, err = op.Match(int32(2), 1.0)
+	assert.NoError(t, err)
+	assert.Equal(t, false, matched)
+
+	// test equal string type
+	matched, err = op.Match("a", "a")
+	assert.NoError(t, err)
+	assert.Equal(t, true, matched)
+
+	matched, err = op.Match("a", "b")
+	assert.NoError(t, err)
+	assert.Equal(t, false, matched)
+
+	// test equal bool type
+	matched, err = op.Match(false, false)
+	assert.NoError(t, err)
+	assert.Equal(t, true, matched)
+
+	matched, err = op.Match(true, false)
+	assert.NoError(t, err)
+	assert.Equal(t, false, matched)
 }

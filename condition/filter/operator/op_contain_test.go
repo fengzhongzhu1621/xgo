@@ -7,17 +7,17 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestBeginsWithValidate(t *testing.T) {
-	op := GetOperator(BeginsWith)
+func TestContainsValidate(t *testing.T) {
+	op := GetOperator(Contains)
 
-	// test begins with string type
+	// test contains string type
 	err := op.ValidateValue("a", nil)
 	if err != nil {
 		t.Errorf("validate failed, err: %v", err)
 		return
 	}
 
-	// test invalid begins with type
+	// test invalid contains type
 	err = op.ValidateValue("", nil)
 	if err == nil {
 		t.Errorf("validate should return error")
@@ -61,10 +61,10 @@ func TestBeginsWithValidate(t *testing.T) {
 	}
 }
 
-func TestBeginsWithMongoCond(t *testing.T) {
-	op := GetOperator(BeginsWith)
+func TestContainsMongoCond(t *testing.T) {
+	op := GetOperator(Contains)
 
-	// test begins with string type
+	// test contains string type
 	cond, err := op.ToMgo("test", "a")
 	if err != nil {
 		t.Errorf("to mongo failed, err: %v", err)
@@ -72,24 +72,25 @@ func TestBeginsWithMongoCond(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{
-		DBLIKE: "^a",
+		DBLIKE:    "a",
+		DBOPTIONS: "i",
 	}}) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}
 }
 
-func TestBeginsWithInsensitiveValidate(t *testing.T) {
-	op := GetOperator(BeginsWithInsensitive)
+func TestContainsSensitiveValidate(t *testing.T) {
+	op := GetOperator(ContainsSensitive)
 
-	// test begins with insensitive string type
+	// test contains string type
 	err := op.ValidateValue("a", nil)
 	if err != nil {
 		t.Errorf("validate failed, err: %v", err)
 		return
 	}
 
-	// test invalid begins with insensitive type
+	// test invalid contains type
 	err = op.ValidateValue("", nil)
 	if err == nil {
 		t.Errorf("validate should return error")
@@ -133,35 +134,33 @@ func TestBeginsWithInsensitiveValidate(t *testing.T) {
 	}
 }
 
-func TestBeginsWithInsensitiveMongoCond(t *testing.T) {
-	op := GetOperator(BeginsWithInsensitive)
+func TestContainsSensitiveMongoCond(t *testing.T) {
+	op := GetOperator(ContainsSensitive)
 
-	// test begins with insensitive string type
+	// test contains string type
 	cond, err := op.ToMgo("test", "a")
 	if err != nil {
 		t.Errorf("to mongo failed, err: %v", err)
 		return
 	}
 
-	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{
-		DBLIKE:    "^a",
-		DBOPTIONS: "i"}}) {
+	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{DBLIKE: "a"}}) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}
 }
 
-func TestNotBeginsWithValidate(t *testing.T) {
-	op := GetOperator(NotBeginsWith)
+func TestNotContainsValidate(t *testing.T) {
+	op := GetOperator(NotContains)
 
-	// test not begins with string type
+	// test not contains string type
 	err := op.ValidateValue("a", nil)
 	if err != nil {
 		t.Errorf("validate failed, err: %v", err)
 		return
 	}
 
-	// test invalid not begins with type
+	// test invalid not contains type
 	err = op.ValidateValue("", nil)
 	if err == nil {
 		t.Errorf("validate should return error")
@@ -205,10 +204,10 @@ func TestNotBeginsWithValidate(t *testing.T) {
 	}
 }
 
-func TestNotBeginsWithMongoCond(t *testing.T) {
-	op := GetOperator(NotBeginsWith)
+func TestNotContainsMongoCond(t *testing.T) {
+	op := GetOperator(NotContains)
 
-	// test not begins with string type
+	// test not contains string type
 	cond, err := op.ToMgo("test", "a")
 	if err != nil {
 		t.Errorf("to mongo failed, err: %v", err)
@@ -216,23 +215,23 @@ func TestNotBeginsWithMongoCond(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{
-		DBNot: map[string]interface{}{DBLIKE: "^a"}}}) {
+		DBNot: map[string]interface{}{DBLIKE: "a"}}}) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}
 }
 
-func TestNotBeginsWithInsensitiveValidate(t *testing.T) {
-	op := GetOperator(NotBeginsWithInsensitive)
+func TestNotContainsInsensitiveValidate(t *testing.T) {
+	op := GetOperator(NotContainsInsensitive)
 
-	// test not begins with insensitive string type
+	// test not contains insensitive string type
 	err := op.ValidateValue("a", nil)
 	if err != nil {
 		t.Errorf("validate failed, err: %v", err)
 		return
 	}
 
-	// test invalid not begins with insensitive type
+	// test invalid not contains insensitive type
 	err = op.ValidateValue("", nil)
 	if err == nil {
 		t.Errorf("validate should return error")
@@ -276,10 +275,10 @@ func TestNotBeginsWithInsensitiveValidate(t *testing.T) {
 	}
 }
 
-func TestNotBeginsWithInsensitiveMongoCond(t *testing.T) {
-	op := GetOperator(NotBeginsWithInsensitive)
+func TestNotContainsInsensitiveMongoCond(t *testing.T) {
+	op := GetOperator(NotContainsInsensitive)
 
-	// test not begins with insensitive string type
+	// test not contains insensitive string type
 	cond, err := op.ToMgo("test", "a")
 	if err != nil {
 		t.Errorf("to mongo failed, err: %v", err)
@@ -287,68 +286,70 @@ func TestNotBeginsWithInsensitiveMongoCond(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{
-		DBNot: map[string]interface{}{DBLIKE: "^a", DBOPTIONS: "i"}}}) {
+		DBNot: map[string]interface{}{
+			DBLIKE: "a", DBOPTIONS: "i",
+		}}}) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}
 }
 
-func TestBeginsWithMatch(t *testing.T) {
-	op := GetOperator(BeginsWith)
+func TestContainsMatch(t *testing.T) {
+	op := GetOperator(Contains)
 
-	// test begins with string type
-	matched, err := op.Match("abcdef", "ab")
+	// test contains string type
+	matched, err := op.Match("123aBcdef", "Ab")
 	assert.NoError(t, err)
 	assert.Equal(t, true, matched)
 
-	matched, err = op.Match("abcdef", "ac")
-	assert.NoError(t, err)
-	assert.Equal(t, false, matched)
-
-	matched, err = op.Match("abcdef", "aB")
+	matched, err = op.Match("123abcdef", "ac")
 	assert.NoError(t, err)
 	assert.Equal(t, false, matched)
 }
 
-func TestBeginsWithInsensitiveMatch(t *testing.T) {
-	op := GetOperator(BeginsWithInsensitive)
+func TestContainsSensitiveMatch(t *testing.T) {
+	op := GetOperator(ContainsSensitive)
 
-	// test begins with insensitive string type
-	matched, err := op.Match("aBcdef", "Ab")
+	// test contains string type
+	matched, err := op.Match("123abcdef", "ab")
 	assert.NoError(t, err)
 	assert.Equal(t, true, matched)
 
-	matched, err = op.Match("Abcdef", "ac")
+	matched, err = op.Match("123abcdef", "ac")
+	assert.NoError(t, err)
+	assert.Equal(t, false, matched)
+
+	matched, err = op.Match("123abcdef", "aB")
 	assert.NoError(t, err)
 	assert.Equal(t, false, matched)
 }
 
-func TestNotBeginsWithMatch(t *testing.T) {
-	op := GetOperator(NotBeginsWith)
+func TestNotContainsMatch(t *testing.T) {
+	op := GetOperator(NotContains)
 
-	// test not begins with string type
-	matched, err := op.Match("abcdef", "ac")
+	// test not contains string type
+	matched, err := op.Match("123abcdef", "ac")
 	assert.NoError(t, err)
 	assert.Equal(t, true, matched)
 
-	matched, err = op.Match("abcdef", "aB")
+	matched, err = op.Match("123abcdef", "aB")
 	assert.NoError(t, err)
 	assert.Equal(t, true, matched)
 
-	matched, err = op.Match("abcdef", "ab")
+	matched, err = op.Match("123abcdef", "ab")
 	assert.NoError(t, err)
 	assert.Equal(t, false, matched)
 }
 
-func TestNotBeginsWithInsensitiveMatch(t *testing.T) {
-	op := GetOperator(NotBeginsWithInsensitive)
+func TestNotContainsInsensitiveMatch(t *testing.T) {
+	op := GetOperator(NotContainsInsensitive)
 
-	// test not begins with insensitive string type
-	matched, err := op.Match("abcdef", "ac")
+	// test not contains insensitive string type
+	matched, err := op.Match("123abcdef", "ac")
 	assert.NoError(t, err)
 	assert.Equal(t, true, matched)
 
-	matched, err = op.Match("aBcdef", "Ab")
+	matched, err = op.Match("123Abcdef", "aB")
 	assert.NoError(t, err)
 	assert.Equal(t, false, matched)
 }

@@ -3,9 +3,11 @@ package operator
 import (
 	"errors"
 	"fmt"
+	"testing"
 
 	"github.com/fengzhongzhu1621/xgo/collections/maps/mapstr"
 	"github.com/fengzhongzhu1621/xgo/validator"
+	"github.com/stretchr/testify/assert"
 )
 
 // NotEqualOp is not equal operator type
@@ -42,4 +44,35 @@ func (ne NotEqualOp) Match(value1, value2 interface{}) (bool, error) {
 		return false, err
 	}
 	return !matched, nil
+}
+
+func TestNotEqualMatch(t *testing.T) {
+	op := GetOperator(NotEqual)
+
+	// test not equal int type
+	matched, err := op.Match(int32(1), 1.0)
+	assert.NoError(t, err)
+	assert.Equal(t, false, matched)
+
+	matched, err = op.Match(int32(2), 1.0)
+	assert.NoError(t, err)
+	assert.Equal(t, true, matched)
+
+	// test not equal string type
+	matched, err = op.Match("a", "a")
+	assert.NoError(t, err)
+	assert.Equal(t, false, matched)
+
+	matched, err = op.Match("a", "b")
+	assert.NoError(t, err)
+	assert.Equal(t, true, matched)
+
+	// test not equal bool type
+	matched, err = op.Match(false, false)
+	assert.NoError(t, err)
+	assert.Equal(t, false, matched)
+
+	matched, err = op.Match(true, false)
+	assert.NoError(t, err)
+	assert.Equal(t, true, matched)
 }

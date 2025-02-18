@@ -3,9 +3,11 @@ package operator
 import (
 	"errors"
 	"fmt"
+	"testing"
 
 	"github.com/fengzhongzhu1621/xgo/collections/maps/mapstr"
 	"github.com/fengzhongzhu1621/xgo/validator"
+	"github.com/stretchr/testify/assert"
 )
 
 // NotInOp is not in operator
@@ -48,4 +50,35 @@ func (o NotInOp) Match(value1, value2 interface{}) (bool, error) {
 		return false, err
 	}
 	return !matched, nil
+}
+
+func TestNotInMatch(t *testing.T) {
+	op := GetOperator(NotIn)
+
+	// test not in int array type
+	matched, err := op.Match(1.0, []int64{1, 2})
+	assert.NoError(t, err)
+	assert.Equal(t, false, matched)
+
+	matched, err = op.Match(3, []int64{1, 2})
+	assert.NoError(t, err)
+	assert.Equal(t, true, matched)
+
+	// test not in string array type
+	matched, err = op.Match("b", []string{"a", "b"})
+	assert.NoError(t, err)
+	assert.Equal(t, false, matched)
+
+	matched, err = op.Match("c", []string{"a", "b"})
+	assert.NoError(t, err)
+	assert.Equal(t, true, matched)
+
+	// test not in bool array type
+	matched, err = op.Match(true, []interface{}{false, true})
+	assert.NoError(t, err)
+	assert.Equal(t, false, matched)
+
+	matched, err = op.Match(false, []interface{}{true})
+	assert.NoError(t, err)
+	assert.Equal(t, true, matched)
 }
