@@ -14,6 +14,15 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
+// ### 原子过滤规则
+// 基础的过滤规则，表示用于对某一个字段进行过滤的规则。任何过滤规则都直接是原子过滤规则, 或由多个原子过滤规则组合而成
+
+// | 名称       | 类型                            | 必填  | 说明  |
+// |----------|-------------------------------|-----|-----|
+// | field    | string                        | 是   | 字段名 |
+// | operator | string                        | 是   | 操作符 |
+// | value    | 不同的field和operator对应不同的value格式 | 否   | 操作数 |
+
 const (
 	// UnknownType means it's an unknown type.
 	UnknownType operator.RuleType = "Unknown"
@@ -43,32 +52,33 @@ func (ar *AtomRule) Validate(opt *operator.ExprOption) error {
 		return errors.New("field is empty")
 	}
 
-	// validate operator
+	// 判断操作符是否定义
 	if err := ar.Operator.Validate(); err != nil {
 		return err
 	}
-
 	if opt == nil {
 		return errors.New("validate option must be set")
 	}
 
 	// ignore rule fields validation, only validate the operator's value
 	if opt.IgnoreRuleFields {
+		// 仅仅验证操作符 和 需要匹配的值
 		if err := operator.GetOperator(ar.Operator).ValidateValue(ar.Value, opt); err != nil {
 			return fmt.Errorf("%s validate failed, %v", ar.Field, err)
 		}
 		return nil
 	}
 
+	// 获得设置的规则字段的类型
 	if len(opt.RuleFields) == 0 {
 		return errors.New("validate rule fields option must be set")
 	}
-
 	typ, exist := opt.RuleFields[ar.Field]
 	if !exist {
 		return fmt.Errorf("rule field: %s is not exist in the expr option", ar.Field)
 	}
 
+	// 验证规则字段的类型和匹配的值
 	if err := ar.validateValueWithType(opt, typ); err != nil {
 		return err
 	}
@@ -76,9 +86,8 @@ func (ar *AtomRule) Validate(opt *operator.ExprOption) error {
 	return nil
 }
 
+// validateValueWithType 验证 Field 操作符的类型 和 执行操作符验证
 func (ar *AtomRule) validateValueWithType(opt *operator.ExprOption, typ criteria.FieldType) error {
-	childOpt := operator.CloneExprOption(opt)
-
 	// TODO confirm how to deal with object and array and mapstr
 	switch ar.Operator {
 	case operator.Object:
@@ -90,11 +99,14 @@ func (ar *AtomRule) validateValueWithType(opt *operator.ExprOption, typ criteria
 			return fmt.Errorf("%s is of %s type, should not use operator: %s", ar.Field, typ, ar.Operator)
 		}
 	default:
+		// 验证字段类型和需要匹配的值
 		if err := criteria.ValidateFieldValue(ar.Value, typ); err != nil {
 			return fmt.Errorf("invalid %s's value, %v", ar.Field, err)
 		}
 	}
 
+	// 定义子规则
+	childOpt := operator.CloneExprOption(opt)
 	switch typ {
 	case criteria.Object, criteria.Array:
 		ruleFields := make(map[string]criteria.FieldType)
@@ -104,14 +116,11 @@ func (ar *AtomRule) validateValueWithType(opt *operator.ExprOption, typ criteria
 			}
 		}
 		childOpt.RuleFields = ruleFields
-
-		if err := operator.GetOperator(ar.Operator).ValidateValue(ar.Value, childOpt); err != nil {
-			return fmt.Errorf("%s validate failed, %v", ar.Field, err)
-		}
 	case criteria.MapString:
 		childOpt.IgnoreRuleFields = true
 	}
 
+	// 匹配子规则
 	// validate the operator's value
 	if err := operator.GetOperator(ar.Operator).ValidateValue(ar.Value, childOpt); err != nil {
 		return fmt.Errorf("%s validate failed, %v", ar.Field, err)
@@ -261,7 +270,7 @@ func (ar *AtomRule) UnmarshalJSON(raw []byte) error {
 		return nil
 	case operator.Object, operator.Array:
 		// filter object and array operator's value should be a rule.
-		subRule, err := parseJsonRule(br.Value)
+		subRule, err := ParseJsonRule(br.Value)
 		if err != nil {
 			return err
 		}

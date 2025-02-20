@@ -34,8 +34,8 @@ type ExprOption struct {
 func NewDefaultExprOpt(ruleFields map[string]criteria.FieldType) *ExprOption {
 	return &ExprOption{
 		RuleFields:    ruleFields,
-		MaxInLimit:    500,
-		MaxNotInLimit: 500,
+		MaxInLimit:    500, // in 操作符支持的数组最大数量
+		MaxNotInLimit: 500, // notin 操作符支持的数组最大数量
 		MaxRulesLimit: 50,
 		MaxRulesDepth: MaxRulesDepth,
 	}

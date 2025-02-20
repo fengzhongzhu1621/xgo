@@ -8,6 +8,7 @@ import (
 	"github.com/fengzhongzhu1621/xgo/validator"
 )
 
+// ValidateFieldValue 验证字段类型和需要匹配的值，即规则中的 Field 和 Value
 func ValidateFieldValue(v interface{}, typ FieldType) error {
 	switch reflect.TypeOf(v).Kind() {
 	case reflect.Array, reflect.Slice:

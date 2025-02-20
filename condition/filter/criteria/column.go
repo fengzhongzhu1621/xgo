@@ -1,6 +1,7 @@
 package criteria
 
 // FieldType define the table's field data type.
+// 规则字段的类型
 type FieldType string
 
 // MapStringType 自定义 map[string]string

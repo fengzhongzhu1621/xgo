@@ -10,7 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func parseJsonRule(raw []byte) (operator.IRuleFactory, error) {
+func ParseJsonRule(raw []byte) (operator.IRuleFactory, error) {
 	// rule with 'condition' key means that it is a combined rule
 	if gjson.GetBytes(raw, "condition").Exists() {
 		rule := new(CombinedRule)

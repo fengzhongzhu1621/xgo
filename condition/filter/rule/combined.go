@@ -152,7 +152,7 @@ func (cr *CombinedRule) UnmarshalJSON(raw []byte) error {
 	cr.Rules = make([]operator.IRuleFactory, len(broker.Rules))
 
 	for idx, rawRule := range broker.Rules {
-		rule, err := parseJsonRule(rawRule)
+		rule, err := ParseJsonRule(rawRule)
 		if err != nil {
 			return fmt.Errorf("parse rules[%d] %s failed, err: %v", idx, string(rawRule), err)
 		}
