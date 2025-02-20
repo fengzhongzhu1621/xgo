@@ -85,3 +85,33 @@ func TestAtomRuleFields(t *testing.T) {
 		return
 	}
 }
+
+func TestAtomRuleToMgo(t *testing.T) {
+	var (
+		rule operator.IRuleFactory
+	)
+
+	// test atomic rule to mongo
+	rule = &AtomRule{
+		Field:    "test1",
+		Operator: operator.NotIn,
+		Value:    []string{"a", "b", "c"},
+	}
+
+	mgo, err := rule.ToMgo(nil)
+	if err != nil {
+		t.Errorf("covert rule to mongo failed, err: %v", err)
+		return
+	}
+
+	expectMgo := map[string]interface{}{
+		"test1": map[string]interface{}{
+			operator.DBNIN: []string{"a", "b", "c"},
+		},
+	}
+
+	if !reflect.DeepEqual(mgo, expectMgo) {
+		t.Errorf("rule mongo condition %+v is invalid", mgo)
+		return
+	}
+}
