@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"go.uber.org/zap"
+
 	"github.com/dgrijalva/jwt-go/v4"
 	"github.com/fengzhongzhu1621/xgo/config"
 	"github.com/fengzhongzhu1621/xgo/logging"
@@ -34,12 +36,12 @@ type CustomJwtClaimsOption struct {
 
 // CustomJwtClaims 自定义JwtClaims内容
 type CustomJwtClaims struct {
-	Operator    string            `json:"operator"`
-	Extra       string            `json:"extra"`
-	logger      *logging.DBLogger `json:"-"`
-	HS256Key    string            `json:"-"`
-	RS256PriKey *rsa.PrivateKey   `json:"-"`
-	RS256PubKey *rsa.PublicKey    `json:"-"`
+	Operator    string          `json:"operator"`
+	Extra       string          `json:"extra"`
+	logger      *zap.Logger     `json:"-"`
+	HS256Key    string          `json:"-"`
+	RS256PriKey *rsa.PrivateKey `json:"-"`
+	RS256PubKey *rsa.PublicKey  `json:"-"`
 
 	// JWT标准声明的一部分，包含如iss（发行者）、sub（主题）、exp（过期时间）等字段
 	jwt.StandardClaims

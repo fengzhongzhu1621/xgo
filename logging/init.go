@@ -3,13 +3,16 @@ package logging
 import (
 	"sync"
 
+	"go.uber.org/zap"
+
 	"github.com/fengzhongzhu1621/xgo/config"
 	"github.com/sirupsen/logrus"
 )
 
 var loggerInitOnce sync.Once
 
-var appLogger *DBLogger
+var dbLogger *DBLogger
+var appLogger *zap.Logger
 
 func initSystemLogger(cfg *config.LogConfig) {
 	writer, err := GetWriter(cfg.Writer, cfg.Settings)
@@ -38,8 +41,12 @@ func GetSystemLogger() *logrus.Logger {
 }
 
 // GetAppLogger 获得 web 应用的日志记录器
-func GetAppLogger() *DBLogger {
+func GetAppLogger() *zap.Logger {
 	return appLogger
+}
+
+func GetDbLogger() *DBLogger {
+	return dbLogger
 }
 
 // InitLogger 初始化日志记录器，只能执行一次
@@ -52,8 +59,8 @@ func InitLogger(cache bool) {
 
 	loggerInitOnce.Do(func() {
 		// 设置 web 服务器日志记录器
-		appLoggerTmp := NewZapJSONLogger(&logger.Web, cache)
-		appLogger = &DBLogger{appLoggerTmp}
+		appLogger := NewZapJSONLogger(&logger.Web, cache)
+		dbLogger = &DBLogger{appLogger}
 	})
 
 }

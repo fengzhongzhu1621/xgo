@@ -127,7 +127,7 @@ func (db *XormDBClient) Connect() error {
 
 	// 每次执行数据库操作时，将生成的 SQL 语句及其参数打印到控制台。
 	if db.debugMode {
-		dbLogger := logging.GetAppLogger()
+		dbLogger := logging.GetDbLogger()
 		if dbLogger != nil {
 			db.DB.SetLogger(xormLog.NewLoggerAdapter(dbLogger))
 		}
