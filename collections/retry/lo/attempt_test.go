@@ -1,125 +1,13 @@
-package retry
+package lo
 
 import (
-	"context"
-	"errors"
 	"fmt"
 	"testing"
 	"time"
 
 	"github.com/samber/lo"
-
-	"github.com/duke-git/lancet/v2/retry"
 	"github.com/stretchr/testify/assert"
 )
-
-func TestRetryContext(t *testing.T) {
-	ctx, cancel := context.WithCancel(context.TODO())
-
-	number := 0
-	increaseNumber := func() error {
-		number++
-		if number > 3 {
-			// 成功则取消重试
-			cancel()
-		}
-		// 失败才会重试
-		return errors.New("error occurs")
-	}
-
-	retry.Retry(increaseNumber,
-		// 重试间隔
-		retry.RetryWithLinearBackoff(time.Microsecond*50),
-		retry.Context(ctx),
-	)
-
-	assert.Equal(t, 4, number)
-}
-
-func TestRetryWithLinearBackoff(t *testing.T) {
-	number := 0
-	increaseNumber := func() error {
-		number++
-		if number == 3 {
-			// 成功取消重试
-			return nil
-		}
-		// 失败才会重试
-		return errors.New("error occurs")
-	}
-
-	retry.Retry(increaseNumber,
-		retry.RetryWithLinearBackoff(time.Microsecond*50),
-	)
-
-	assert.Equal(t, 3, number)
-}
-
-type ExampleCustomBackoffStrategy struct {
-	interval time.Duration
-}
-
-func (c *ExampleCustomBackoffStrategy) CalculateInterval() time.Duration {
-	return c.interval + 1
-}
-
-func TestRetryWithCustomBackoff(t *testing.T) {
-	number := 0
-	increaseNumber := func() error {
-		number++
-		if number == 3 {
-			// 成功取消重试
-			return nil
-		}
-		// 失败才会重试
-		return errors.New("error occurs")
-	}
-
-	err := retry.Retry(increaseNumber, retry.RetryWithCustomBackoff(&ExampleCustomBackoffStrategy{interval: time.Microsecond * 50}))
-	if err != nil {
-		return
-	}
-
-	assert.Equal(t, 3, number)
-}
-
-func TestRetryWithExponentialWithJitterBackoff(t *testing.T) {
-	number := 0
-	increaseNumber := func() error {
-		number++
-		if number == 3 {
-			return nil
-		}
-		return errors.New("error occurs")
-	}
-
-	err := retry.Retry(increaseNumber, retry.RetryWithExponentialWithJitterBackoff(time.Microsecond*50, 2, time.Microsecond*25))
-	if err != nil {
-		return
-	}
-
-	assert.Equal(t, 3, number)
-}
-
-func TestRetryTimes(t *testing.T) {
-	number := 0
-	increaseNumber := func() error {
-		number++
-		if number == 3 {
-			// 成功取消重试
-			return nil
-		}
-		// 失败才会重试
-		return errors.New("error occurs")
-	}
-
-	// 最多重试两次
-	err := retry.Retry(increaseNumber, retry.RetryTimes(2))
-	if err != nil {
-		assert.Equal(t, 2, number)
-		assert.EqualError(t, err, "function retry.TestRetryTimes.func1 run failed after 2 times retry")
-	}
-}
 
 // 调用一个函数N次，直到它返回有效输出。返回捕获到的错误或者nil（空值）。当第一个参数小于1时，该函数会一直运行直到返回成功的响应。
 func TestAttempt(t *testing.T) {
@@ -302,6 +190,7 @@ func TestAttemptWhileWithDelay(t *testing.T) {
 
 	err := fmt.Errorf("failed")
 
+	// 执行 1 次
 	iter1, dur1, err1 := lo.AttemptWhileWithDelay(42, 10*time.Millisecond, func(i int, d time.Duration) (error, bool) {
 		return nil, true
 	})
@@ -311,6 +200,7 @@ func TestAttemptWhileWithDelay(t *testing.T) {
 	is.Less(dur1, 1*time.Millisecond)
 	is.Nil(err1)
 
+	// 执行 6 次
 	iter2, dur2, err2 := lo.AttemptWhileWithDelay(42, 10*time.Millisecond, func(i int, d time.Duration) (error, bool) {
 		if i == 5 {
 			return nil, true
