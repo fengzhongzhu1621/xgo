@@ -13,7 +13,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// GetVersionContent 获得版本日志内容
+// @Summary 获得版本日志内容
+// @Description 获得版本日志内容
+// @Router /api/v1/versions/ [get]
 func GetVersionContent(cfg *config.Config) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var (

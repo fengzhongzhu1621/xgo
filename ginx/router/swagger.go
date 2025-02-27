@@ -2,6 +2,7 @@ package router
 
 import (
 	"github.com/fengzhongzhu1621/xgo/config"
+	_ "github.com/fengzhongzhu1621/xgo/ginx/docs" // 引入 docs 包
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -10,7 +11,7 @@ import (
 // RegisterSwagger 注册文档
 func RegisterSwagger(cfg *config.Config, router *gin.Engine) {
 	if cfg.EnableSwagger {
-		url := ginSwagger.URL("/swagger/doc.json")
-		router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
+		// 设置 Swagger 文档路由
+		router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}
 }

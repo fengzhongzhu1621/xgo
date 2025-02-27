@@ -1,0 +1,9 @@
+info:
+  contact: {}
+paths:
+  /api/v1/versions/:
+    get:
+      description: 获得版本日志内容
+      responses: {}
+      summary: 获得版本日志内容
+swagger: "2.0"

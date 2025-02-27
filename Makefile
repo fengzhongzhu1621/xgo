@@ -7,7 +7,7 @@ OS = $(shell uname | tr A-Z a-z)
 # 设置性能分析参数
 # ?= 是一个条件赋值操作符，用于设置变量的默认值。如果变量已经被赋值，则不会改变其值；如果变量未被赋值，则会使用 ?= 后面的值作为默认值。
 # -cpuprofile=cpu.pprof 启用 CPU 性能分析，并将结果输出到名为 cpu.pprof 的文件中。性能分析可以帮助你找出代码中的 CPU 使用瓶颈，从而优化程序性能。
-# -memprofile=mem.pprof 启用内存分配性能分析，并将结果输出到名为 mem.pprof 的文件中。内存分析可以帮助你找出代码中的内存分配和泄漏问题，从而优化程序的内存使用。	
+# -memprofile=mem.pprof 启用内存分配性能分析，并将结果输出到名为 mem.pprof 的文件中。内存分析可以帮助你找出代码中的内存分配和泄漏问题，从而优化程序的内存使用。
 # -benchmem 此标志用于在运行基准测试时显示内存分配统计信息。它会报告每次操作分配的字节数以及总分配的字节数。这有助于了解基准测试中的内存使用情况。
 BENCH_FLAGS ?= -cpuprofile=cpu.pprof -memprofile=mem.pprof -benchmem
 
@@ -76,11 +76,15 @@ GOFUMPT ?= $(LOCALBIN)/gofumpt
 
 swag: $(SWAG) ## install swagger
 $(SWAG): $(LOCALBIN)
-	GOBIN=$(LOCALBIN) go install github.com/swaggo/swag/cmd/swag@v1.16.3
+	GOBIN=$(LOCALBIN) go install github.com/swaggo/swag/cmd/swag@latest
+
+swag_init: $(SWAG)
+	# http://127.0.0.1:8000/swagger/index.html
+	cd ginx && $(LOCALBIN)/swag init --parseDependency --parseDepth=6 --generalInfo ../main/main.go
 
 golines: $(GOLINES) ## install golines
 $(GOLINES): $(LOCALBIN)
-	GOBIN=$(LOCALBIN) go install github.com/segmentio/golines@v0.12.2
+	GOBIN=$(LOCALBIN) go install github.com/segmentio/golines@latest
 
 gofumpt: $(GOFUMPT) ## install gofumpt
 $(GOFUMPT): $(LOCALBIN)
@@ -181,8 +185,9 @@ validate_examples:
 	go run dev/validate-examples/main.go
 
 # 安装 go install golang.org/x/tools/cmd/godoc
-godoc: ## show doc
+godoc:
 	echo "http://127.0.0.1:6060"
+	# http://127.0.0.1:6060/ginx/
 	godoc -http=127.0.0.1:6060 -goroot="."
 
 docker-build: ## build docker image

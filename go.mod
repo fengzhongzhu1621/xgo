@@ -102,7 +102,6 @@ require (
 	github.com/sethvargo/go-retry v0.3.0 // indirect
 	github.com/smarty/assertions v1.15.0 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
-	github.com/swaggo/swag v1.16.4 // indirect
 	github.com/syndtr/goleveldb v1.0.0 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/tidwall/tinyqueue v0.1.1 // indirect
@@ -249,6 +248,7 @@ require (
 	github.com/steinfletcher/apitest v1.5.17
 	github.com/swaggo/files v1.0.1
 	github.com/swaggo/gin-swagger v1.6.0
+	github.com/swaggo/swag v1.16.4
 	github.com/tidwall/assert v0.1.0
 	github.com/tidwall/btree v1.7.0
 	github.com/tidwall/gjson v1.18.0
