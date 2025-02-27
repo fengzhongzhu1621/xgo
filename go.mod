@@ -239,6 +239,7 @@ require (
 	github.com/remeh/sizedwaitgroup v1.0.0
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/rogpeppe/fastuuid v1.2.0
+	github.com/rs/xid v1.6.0
 	github.com/russross/blackfriday v1.6.0
 	github.com/samber/lo v1.49.1
 	github.com/shogo82148/androidbinary v1.0.5
