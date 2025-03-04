@@ -5,6 +5,8 @@ import (
 	"sync"
 	"testing"
 
+	cmap "github.com/orcaman/concurrent-map/v2"
+
 	"github.com/duke-git/lancet/v2/maputil"
 )
 
@@ -207,4 +209,29 @@ func TestConcurrentMapIter(t *testing.T) {
 	// 2
 	// 1
 	// 0
+}
+
+func TestCMap(t *testing.T) {
+	// 初始化并发map（键类型string，值类型int）
+	m := cmap.New[int]()
+
+	// 设置值
+	m.Set("apple", 10)
+	m.Set("banana", 20)
+
+	// 获取值
+	if val, ok := m.Get("apple"); ok {
+		fmt.Println("apple:", val) // 输出: apple: 10
+	}
+
+	// 删除键
+	m.Remove("banana")
+
+	// 遍历所有元素
+	for item := range m.IterBuffered() {
+		fmt.Printf("Key: %s, Val: %d\n", item.Key, item.Val)
+	}
+
+	// 获取元素总数
+	fmt.Println("Total items:", m.Count())
 }

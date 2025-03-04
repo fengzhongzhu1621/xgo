@@ -65,6 +65,8 @@ bin/gotestsum: bin/gotestsum-${GOTESTSUM_VERSION}
 bin/golangci-lint-${GOLANGCI_VERSION}:
 	@mkdir -p bin
 	curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | bash -s -- -b ./bin/ v${GOLANGCI_VERSION}
+	# binary will be $(go env GOPATH)/bin/golangci-lint
+	# curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin
 	@mv bin/golangci-lint "$@"
 
 bin/golangci-lint: bin/golangci-lint-${GOLANGCI_VERSION}
