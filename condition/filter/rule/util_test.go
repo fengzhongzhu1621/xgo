@@ -10,6 +10,47 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+//	{
+//		"condition": "AND",
+//		"rules": [
+//				{
+//						"field": "test",
+//						"operator": "equal",
+//						"value": 1
+//				},
+//				{
+//						"condition": "OR",
+//						"rules": [
+//								{
+//										"field": "test1",
+//										"operator": "filter_array",
+//										"value": {
+//												"field": "element",
+//												"operator": "filter_object",
+//												"value": {
+//														"condition": "AND",
+//														"rules": [
+//																{
+//																		"field": "test2",
+//																		"operator": "in",
+//																		"value": [
+//																				"b",
+//																				"c"
+//																		]
+//																}
+//														]
+//												}
+//										}
+//								},
+//								{
+//										"field": "test3",
+//										"operator": "datetime_less",
+//										"value": 1
+//								}
+//						]
+//				}
+//		]
+//	}
 var (
 	exampleRule = &CombinedRule{
 		Condition: operator.And,

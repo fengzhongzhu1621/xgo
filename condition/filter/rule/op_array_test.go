@@ -156,15 +156,21 @@ func TestArrayMongoCond(t *testing.T) {
 	}
 
 	expectCond := map[string]interface{}{
-		operator.DBAND: []map[string]interface{}{{
-			"arr": map[string]interface{}{operator.DBEQ: 1},
-		}, {
-			operator.DBOR: []map[string]interface{}{{
-				"arr": map[string]interface{}{operator.DBNE: "a"},
-			}, {
-				"arr": map[string]interface{}{operator.DBIN: []string{"b", "c"}},
-			}},
-		}},
+		operator.DBAND: []map[string]interface{}{
+			{
+				"arr": map[string]interface{}{operator.DBEQ: 1},
+			},
+			{
+				operator.DBOR: []map[string]interface{}{
+					{
+						"arr": map[string]interface{}{operator.DBNE: "a"},
+					},
+					{
+						"arr": map[string]interface{}{operator.DBIN: []string{"b", "c"}},
+					},
+				},
+			},
+		},
 	}
 
 	if !reflect.DeepEqual(cond, expectCond) {

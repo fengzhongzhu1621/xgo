@@ -16,6 +16,7 @@ const (
 type ArrayOp OpType
 
 // Name is filter array operator name
+// 数组中的每个元素是否匹配指定规则
 func (o ArrayOp) Name() OpType {
 	return Array
 }
