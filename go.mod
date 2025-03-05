@@ -179,6 +179,7 @@ require (
 	github.com/araujo88/lambda-go v0.0.0-20240731183007-b33464d3e215
 	github.com/avast/retry-go/v4 v4.6.1
 	github.com/bndr/gotabulate v1.1.2
+	github.com/bruceshao/lockfree v1.1.2
 	github.com/bytedance/mockey v1.2.13
 	github.com/cenkalti/backoff/v3 v3.2.2
 	github.com/cheggaaa/pb/v3 v3.1.7
