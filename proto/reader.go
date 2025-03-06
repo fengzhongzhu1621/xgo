@@ -17,19 +17,19 @@ const (
 	ArrayReply  = '*'
 )
 
-// 自定义错误 .
+// RedisError 自定义错误
 type RedisError string
 
-const Nil = RedisError("redis: nil") // nolint:errname
+const Nil = RedisError("redis: nil") //nolint:errname
 
 func (e RedisError) Error() string { return string(e) }
 
 func (RedisError) RedisError() {}
 
-// 数组响应的协议解析回调.
+// MultiBulkParse 数组响应的协议解析回调
 type MultiBulkParse func(*Reader, int64) (interface{}, error)
 
-// 用于读取指令.
+// Reader 用于读取指令
 type Reader struct {
 	rd   *bufio.Reader
 	_buf []byte // 读缓存大小
@@ -42,23 +42,23 @@ func NewReader(rd io.Reader) *Reader {
 	}
 }
 
-// buf中可被读的长度（缓存数据的大小）.
+// Buffered buf中可被读的长度（缓存数据的大小）.
 func (r *Reader) Buffered() int {
 	return r.rd.Buffered()
 }
 
-// 只是“窥探”一下 Reader 中没有读取的 n 个字节。好比栈数据结构中的取栈顶元素，但不出栈。
+// Peek 只是“窥探”一下 Reader 中没有读取的 n 个字节。好比栈数据结构中的取栈顶元素，但不出栈。
 // 返回的 []byte 只是 buffer 中的引用，在下次IO操作后会无效，可见该方法（以及ReadSlice这样的，返回buffer引用的方法）对多 goroutine 是不安全的，也就是在多并发环境下，不能依赖其结果。
 func (r *Reader) Peek(n int) ([]byte, error) {
 	return r.rd.Peek(n)
 }
 
-// 重置缓存，丢弃未被处理的数据.
+// Reset 重置缓存，丢弃未被处理的数据.
 func (r *Reader) Reset(rd io.Reader) {
 	r.rd.Reset(rd)
 }
 
-// 读取一行数据，并去掉换行符.
+// ReadLine 读取一行数据，并去掉换行符.
 func (r *Reader) ReadLine() ([]byte, error) {
 	// 读取换行符前的字节
 	line, err := r.readLine()
@@ -91,7 +91,8 @@ func (r *Reader) readLine() ([]byte, error) {
 		if err != nil {
 			return nil, err
 		}
-		full = append(full, b...) // nolint:makezero
+		// 禁用 makezero lint 检查的注释。makezero 是一个 Go 语言的静态分析工具，用于检查切片是否被正确初始化。
+		full = append(full, b...) //nolint:makezero
 		b = full
 	}
 	// 判断读取的数据是否包含换行符且包含有效数据
@@ -102,7 +103,7 @@ func (r *Reader) readLine() ([]byte, error) {
 	return b[:len(b)-2], nil
 }
 
-// 读取并解析指令的返回结果.
+// ReadReply 读取并解析指令的返回结果.
 func (r *Reader) ReadReply(m MultiBulkParse) (interface{}, error) {
 	// 读取一行数据，并去掉换行符
 	line, err := r.ReadLine()
@@ -140,7 +141,7 @@ func (r *Reader) ReadReply(m MultiBulkParse) (interface{}, error) {
 	return nil, fmt.Errorf("redis: can't parse %.100q", line)
 }
 
-// 读取int类型的指令响应.
+// ReadIntReply 读取int类型的指令响应.
 func (r *Reader) ReadIntReply() (int64, error) {
 	// 读取一行数据，并去掉换行符
 	line, err := r.ReadLine()
@@ -159,7 +160,7 @@ func (r *Reader) ReadIntReply() (int64, error) {
 	}
 }
 
-// 读取string类型的指令响应.
+// ReadString 读取string类型的指令响应.
 func (r *Reader) ReadString() (string, error) {
 	// 读取一行数据，并去掉换行符
 	line, err := r.ReadLine()
@@ -184,7 +185,7 @@ func (r *Reader) ReadString() (string, error) {
 	}
 }
 
-// 读取指令响应内容，line中包含响应的长度，需要根据长度继续读取后面的响应内容.
+// readStringReply 读取指令响应内容，line中包含响应的长度，需要根据长度继续读取后面的响应内容.
 func (r *Reader) readStringReply(line []byte) (string, error) {
 	if isNilReply(line) {
 		return "", Nil
@@ -204,7 +205,7 @@ func (r *Reader) readStringReply(line []byte) (string, error) {
 	return cast.BytesToString(b[:replyLen]), nil
 }
 
-// 读取数组类型的指令响应的内容.
+// ReadArrayReply 读取数组类型的指令响应的内容.
 func (r *Reader) ReadArrayReply(m MultiBulkParse) (interface{}, error) {
 	// 读取一行数据，并去掉换行符
 	line, err := r.ReadLine()
@@ -225,7 +226,7 @@ func (r *Reader) ReadArrayReply(m MultiBulkParse) (interface{}, error) {
 	}
 }
 
-// 读取数组类型的响应的长度，例如"*2\r\n$5\r\nhello\r\n$5\r\nworld\r\n"，返回2.
+// ReadArrayLen 读取数组类型的响应的长度，例如"*2\r\n$5\r\nhello\r\n$5\r\nworld\r\n"，返回2.
 func (r *Reader) ReadArrayLen() (int, error) {
 	// 读取一行数据，并去掉换行符
 	line, err := r.ReadLine()
@@ -246,7 +247,7 @@ func (r *Reader) ReadArrayLen() (int, error) {
 	}
 }
 
-// 读取扫描类型的响应.
+// ReadScanReply 读取扫描类型的响应.
 func (r *Reader) ReadScanReply() ([]string, uint64, error) {
 	// 读取数组类型的响应的长度
 	n, err := r.ReadArrayLen()
@@ -305,7 +306,7 @@ func (r *Reader) ReadFloatReply() (float64, error) {
 	return cast.ParseFloat(b, 64)
 }
 
-// 读取数组中每个元素的内容，例如"$5\r\nhello\r\n，返回hello.
+// readTmpBytesReply 读取数组中每个元素的内容，例如"$5\r\nhello\r\n，返回hello.
 func (r *Reader) readTmpBytesReply() ([]byte, error) {
 	// 读取一行数据，并去掉换行符
 	line, err := r.ReadLine()
@@ -325,7 +326,7 @@ func (r *Reader) readTmpBytesReply() ([]byte, error) {
 	}
 }
 
-// 读取数组中每个元素的内容.
+// _readTmpBytesReply 读取数组中每个元素的内容.
 func (r *Reader) _readTmpBytesReply(line []byte) ([]byte, error) {
 	if isNilReply(line) {
 		return nil, Nil
@@ -354,7 +355,7 @@ func (r *Reader) buf(n int) []byte {
 	return r._buf
 }
 
-// 判断响应是否是空响应
+// isNilReply 判断响应是否是空响应
 // 空响应返回结果必须是：$-1 或  *-1 .
 func isNilReply(b []byte) bool {
 	return len(b) == 3 &&
@@ -366,7 +367,7 @@ func ParseErrorReply(line []byte) error {
 	return RedisError(string(line[1:]))
 }
 
-// 如果响应结果是数组格式，返回数组的长度，例如 "*2\r\n$5\r\nhello\r\n$5\r\nworld\r\n"，返回2.
+// parseArrayLen 如果响应结果是数组格式，返回数组的长度，例如 "*2\r\n$5\r\nhello\r\n$5\r\nworld\r\n"，返回2.
 func parseArrayLen(line []byte) (int64, error) {
 	if isNilReply(line) {
 		return 0, Nil

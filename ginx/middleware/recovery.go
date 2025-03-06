@@ -75,7 +75,8 @@ func Recovery(withSentry bool) gin.HandlerFunc {
 
 				// If the connection is dead, we can't write a status to it.
 				if brokenPipe {
-					c.Error(err.(error)) // nolint: errcheck
+					// 禁用 errcheck 的 lint 检查
+					c.Error(err.(error)) //nolint: errcheck
 					c.Abort()
 				} else {
 					c.AbortWithStatus(http.StatusInternalServerError)

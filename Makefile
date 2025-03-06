@@ -47,30 +47,20 @@ TEST_PKGS ?= ./...
 
 ###############################################################################
 # Dependency versions
-# golangci-lint
 GOTESTSUM_VERSION = 1.12.0
-GOLANGCI_VERSION = 1.62.0
 LOCALBIN ?= $(shell pwd)/bin
 $(LOCALBIN):
 	mkdir -p $(LOCALBIN)
 .PHONY: golines swag gofumpt
 
-bin/gotestsum-${GOTESTSUM_VERSION}:
+bin/gotestsum:
 	@mkdir -p bin
 	curl -L https://github.com/gotestyourself/gotestsum/releases/download/v${GOTESTSUM_VERSION}/gotestsum_${GOTESTSUM_VERSION}_${OS}_amd64.tar.gz | tar -zOxf - gotestsum > ./bin/gotestsum-${GOTESTSUM_VERSION} && chmod +x ./bin/gotestsum-${GOTESTSUM_VERSION}
 
-bin/gotestsum: bin/gotestsum-${GOTESTSUM_VERSION}
-	@ln -sf gotestsum-${GOTESTSUM_VERSION} bin/gotestsum
-
-bin/golangci-lint-${GOLANGCI_VERSION}:
+bin/golangci-lint:
 	@mkdir -p bin
-	curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | bash -s -- -b ./bin/ v${GOLANGCI_VERSION}
 	# binary will be $(go env GOPATH)/bin/golangci-lint
-	# curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin
-	@mv bin/golangci-lint "$@"
-
-bin/golangci-lint: bin/golangci-lint-${GOLANGCI_VERSION}
-	@ln -sf golangci-lint-${GOLANGCI_VERSION} bin/golangci-lint
+	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b ./bin
 
 SWAG ?= $(LOCALBIN)/swag
 GOLINES ?= $(LOCALBIN)/golines
@@ -90,11 +80,12 @@ $(GOLINES): $(LOCALBIN)
 
 gofumpt: $(GOFUMPT) ## install gofumpt
 $(GOFUMPT): $(LOCALBIN)
-	GOBIN=$(LOCALBIN) go install mvdan.cc/gofumpt@v0.6.0
+	GOBIN=$(LOCALBIN) go install mvdan.cc/gofumpt@latest
 
 gowatch:
 	go install github.com/silenceper/gowatch@latest
 
+tools: bin/gotestsum bin/golangci-lint swag golines gofumpt gowatch
 
 ###############################################################################
 # 自定义命令
