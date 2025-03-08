@@ -12,8 +12,8 @@ func IsSymbolicLink(fileInfo os.FileInfo) bool {
 	return fileInfo.Mode()&os.ModeSymlink != 0
 }
 
-// PathExists 判断文件路径是否存在.
-func PathExists(path string) (bool, error) {
+// IsPathExists 判断文件路径是否存在.
+func IsPathExists(path string) (bool, error) {
 	_, err := os.Stat(path)
 	if err == nil {
 		return true, nil
@@ -54,7 +54,7 @@ func IsFileOrDirExists(path string) bool {
 	return true
 }
 
-// IsDirType 判断是否是目录.
+// IsDirType 判断是否是目录
 func IsDirType(path string) bool {
 	s, err := os.Stat(path)
 	if err != nil {
@@ -63,7 +63,7 @@ func IsDirType(path string) bool {
 	return s.IsDir()
 }
 
-// IsFileType 判断是否是文件.
+// IsFileType 判断是否是文件
 func IsFileType(path string) bool {
 	return !IsDirType(path)
 }
