@@ -2,9 +2,11 @@ package validator
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"net"
 	"regexp"
+	"strings"
 )
 
 var (
@@ -70,4 +72,12 @@ func IsDomainName(domain string) bool {
 	RegExp := regexp.MustCompile(`^(([a-zA-Z]{1})|([a-zA-Z]{1}[a-zA-Z]{1})|([a-zA-Z]{1}[0-9]{1})|([0-9]{1}[a-zA-Z]{1})|([a-zA-Z0-9][a-zA-Z0-9-_]{1,61}[a-zA-Z0-9]))\.([a-zA-Z]{2,6}|[a-zA-Z0-9-]{2,30}\.[a-zA-Z]{2,3})$`)
 
 	return RegExp.MatchString(domain)
+}
+
+// CheckAddrPort 判断服务器地址是否包含 :
+func CheckAddrPort(addrPort string) error {
+	if strings.Count(addrPort, ":") == 0 {
+		return fmt.Errorf("the value of flag[AddrPort: %s] is wrong", addrPort)
+	}
+	return nil
 }
