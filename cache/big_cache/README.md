@@ -1,4 +1,4 @@
-# 简介
+# 1. 简介
 是一个为 Go 语言设计的高效内存缓存库，专门针对大规模缓存应用场景进行了优化。
 
 * 内存优化：内存管理方面进行了大量优化，需要存储非常多的小对象时，可以有效减少内存的碎片化，避免内存浪费。
@@ -11,4 +11,28 @@
 go get github.com/allegro/bigcache/v3
 ```
 
+# 2. 语法
+## 2.1 缓存项的设置与获取
+```go
+Set(key string, value []byte)：将一个缓存项存储到缓存中。
+Get(key string)：从缓存中获取指定的缓存项。
+```
+
+## 2.2 删除缓存项
+```go
+Delete(key string)：删除指定的缓存项。
+```
+
+## 2.3 统计信息
+```go
+stats := cache.Stats()
+fmt.Println("Cache stats:", stats)
+```
+
+# 3. 配置
+* MaxEntriesInWindow：每个窗口中最大缓存项数（默认为 10000）。如果缓存项数超过这个数量，BigCache会开始逐步清理。
+* LifeWindow：缓存项的生存时间窗口，指定缓存的最大存活时间，过期后会被清除（默认为 10 分钟）。
+* HardMaxCacheSize：最大缓存大小（字节），当缓存达到这个限制时会开始清理过期项。
+* CleanWindow：清理缓存的间隔时间（默认为 1 分钟）。这个选项决定了缓存的过期项清理的频率。
+* Verbose：开启详细日志信息（默认为false）。
 

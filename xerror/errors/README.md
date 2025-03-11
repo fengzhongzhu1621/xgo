@@ -1,7 +1,7 @@
 # github.com/pkg/errors
 
 在Go 1.13版本之前，用于扩展Go错误处理能力的一个第三方库。它的功能比标准库的pkg/errors更加丰富。可以保存和打印错误发生时的堆栈信息。
-
+Go 1.13 之后，标准库errors引入了Wrap和Is等方法来处理错误的包装和检查，部分功能和pkg/errors类似。
 github.com/pkg/errors 的Wrap函数和标准库的 fmt.Errorf 的 %w 占位符有一些不同。如果用github.com/pkg/errors的代码中混用了 fmt.Errorf 的 % w，需要使用 errors.Unwrap 或 errors.Is、errors.As 来获取原始错误，而不能使用 github.com/pkg/errors 的Cause函数。
 
 ## New()

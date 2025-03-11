@@ -16,6 +16,7 @@ func TestInfo(t *testing.T) {
 	err := xerror.Wrap(cause, "invalid username").Id("e001").With("level", "high")
 
 	errInfo := err.Info()
+	fmt.Println(errInfo) // &{invalid username e001 [0x140001030b0 0x140001030e0 0x14000103110] error map[level:high]}
 
 	assert.Equal(t, "e001", errInfo.Id)
 	fmt.Println(errInfo.Cause) // error
