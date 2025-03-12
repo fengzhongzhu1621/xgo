@@ -15,4 +15,9 @@ func TestGetMany(t *testing.T) {
 	for _, result := range results {
 		fmt.Println(result)
 	}
+
+	// dj
+	// 18
+	// 2
+	// 123456789
 }

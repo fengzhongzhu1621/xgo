@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"io"
 	"reflect"
+	"strings"
 
 	jsoniter "github.com/json-iterator/go"
+	"github.com/tidwall/gjson"
 	"github.com/ugorji/go/codec"
 )
 
@@ -84,4 +86,75 @@ func TruncateJson(args any, length int) string {
 		return s
 	}
 	return s[:length]
+}
+
+// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var iteratorJson = jsoniter.Config{
+	EscapeHTML:             true,
+	SortMapKeys:            true,
+	ValidateJsonRawMessage: true,
+	UseNumber:              true,
+}.Froze()
+
+func JsonMarshalToString(v interface{}) (string, error) {
+	return iteratorJson.MarshalToString(v)
+}
+
+func JsonMarshal(v interface{}) ([]byte, error) {
+	return iteratorJson.Marshal(v)
+}
+
+func JsonMarshalIndent(v interface{}, prefix, indent string) ([]byte, error) {
+	return iteratorJson.MarshalIndent(v, prefix, indent)
+}
+
+func JsonUnmarshalFromString(str string, v interface{}) error {
+	return iteratorJson.UnmarshalFromString(str, v)
+}
+
+func JsonUnmarshal(data []byte, v interface{}) error {
+	return iteratorJson.Unmarshal(data, v)
+}
+
+func JsonUnmarshalArray(items []string, result interface{}) error {
+	strArrJSON := "[" + strings.Join(items, ",") + "]"
+	return iteratorJson.Unmarshal([]byte(strArrJSON), result)
+}
+
+// ExtractFieldsFromJSON 从原始 JSON 中提取指定字段并返回新的 JSON 字符串
+func ExtractFieldsFromJSON(jsonData *string, fields []string) (*string, error) {
+	if jsonData == nil {
+		return nil, fmt.Errorf("jsonData is nil")
+	}
+	if len(fields) == 0 || *jsonData == "" {
+		return jsonData, nil
+	}
+
+	elements := gjson.GetMany(*jsonData, fields...)
+	if len(elements) != len(fields) {
+		return nil, fmt.Errorf("mismatch in number of fields and extracted elements")
+	}
+
+	result := make(map[string]interface{}, len(fields))
+	for idx, field := range fields {
+		if elements[idx].Exists() {
+			// 根据需要处理不同的数据类型
+			result[field] = elements[idx].Value()
+		} else {
+			result[field] = nil
+		}
+	}
+
+	jsonBytes, err := json.Marshal(result)
+	if err != nil {
+		return nil, err
+	}
+
+	return stringPtr(string(jsonBytes)), nil
+}
+
+// stringPtr 辅助函数，将字符串转换为 *string
+func stringPtr(s string) *string {
+	return &s
 }
