@@ -42,3 +42,48 @@ func TestIsWeekend(t *testing.T) {
 	// true
 	// false
 }
+
+func TestIsDate(t *testing.T) {
+	type args struct {
+		sInput string
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{args: args{"2018-10-10"}, want: true},
+		{args: args{"2018/10/10"}, want: false},
+		{args: args{`2018\10\10`}, want: false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := IsDate(tt.args.sInput); got != tt.want {
+				t.Errorf("IsDate() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestIsTime(t *testing.T) {
+	type args struct {
+		sInput string
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{args: args{"2018-10-10 10:56:67"}, want: true},
+		{args: args{"105667"}, want: false},
+		{args: args{`10-56-67`}, want: false},
+		{args: args{"2021-04-07T21:50:50.351153+08:00"}, want: true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if _, got := IsTime(tt.args.sInput); got != tt.want {
+				t.Errorf("IsTime() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

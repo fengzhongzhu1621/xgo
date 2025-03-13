@@ -92,3 +92,28 @@ func TestIsNumberStr(t *testing.T) {
 	assert.Equal(t, true, result3)
 	assert.Equal(t, false, result4)
 }
+
+func TestIsNumChar2(t *testing.T) {
+	type args struct {
+		sInput string
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{args: args{"1"}, want: true},
+		{args: args{"aA1"}, want: true},
+		{args: args{" 1"}, want: false},
+		{args: args{"1 "}, want: false},
+		{args: args{"和"}, want: false},
+		{args: args{"_"}, want: false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := IsNumChar(tt.args.sInput); got != tt.want {
+				t.Errorf("IsNumChar() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

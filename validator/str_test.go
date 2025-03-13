@@ -287,3 +287,61 @@ func TestIsJWT(t *testing.T) {
 	assert.Equal(t, true, result1, "result1")
 	assert.Equal(t, false, result2, "result2")
 }
+
+func TestIsChar(t *testing.T) {
+	type args struct {
+		sInput string
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{args: args{"c"}, want: true},
+		{args: args{" c"}, want: false},
+		{args: args{"c "}, want: false},
+		{args: args{"和"}, want: false},
+		{args: args{"_"}, want: false},
+		{args: args{"3"}, want: false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := IsChar(tt.args.sInput); got != tt.want {
+				t.Errorf("IsChar() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestCheckLen(t *testing.T) {
+	type args struct {
+		sInput string
+		min    int
+		max    int
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{
+			args: args{"123", 0, 3},
+			want: true,
+		},
+		{
+			args: args{"123", 1, 2},
+			want: false,
+		},
+		{
+			args: args{"123", -1, 3},
+			want: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := CheckLen(tt.args.sInput, tt.args.min, tt.args.max); got != tt.want {
+				t.Errorf("CheckLen() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
