@@ -2,6 +2,7 @@ package ip
 
 import (
 	"fmt"
+	"net/url"
 	"strconv"
 	"strings"
 
@@ -40,4 +41,16 @@ func GetPort(addrPort string) (uint, error) {
 		return uint(0), err
 	}
 	return getPort(s)
+}
+
+func GetDailAddress(addr string) (string, error) {
+	uri, err := url.Parse(addr)
+	if err != nil {
+		return "", err
+	}
+	var port = uri.Port()
+	if uri.Port() == "" {
+		port = "80"
+	}
+	return uri.Hostname() + ":" + port, err
 }

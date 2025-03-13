@@ -36,3 +36,15 @@ func ReadRequestBody(r *http.Request) ([]byte, error) {
 
 	return body, err
 }
+
+func PeekRequest(req *http.Request) ([]byte, error) {
+	if req.Body != nil {
+		byt, err := io.ReadAll(req.Body)
+		if err != nil {
+			return nil, err
+		}
+		req.Body = io.NopCloser(bytes.NewBuffer(byt))
+		return byt, nil
+	}
+	return make([]byte, 0), nil
+}
