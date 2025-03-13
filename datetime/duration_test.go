@@ -25,6 +25,7 @@ func TestDuration(t *testing.T) {
 	fmt.Println("Duration:", duration) // 输出: Duration: 1s
 }
 
+// 获得执行时间
 func TestDuration0(t *testing.T) {
 	t.Parallel()
 	is := assert.New(t)
@@ -33,6 +34,7 @@ func TestDuration0(t *testing.T) {
 	is.InEpsilon(10*time.Millisecond, result, float64(2*time.Millisecond))
 }
 
+// 获得执行时间
 func TestDurationX(t *testing.T) {
 	t.Parallel()
 	is := assert.New(t)
@@ -166,6 +168,7 @@ func TestDurationX(t *testing.T) {
 	}
 }
 
+// 获得两个时间点的差值（秒数）
 // func BetweenSeconds(t1 time.Time, t2 time.Time) int64
 func TestBetweenSeconds(t *testing.T) {
 	today := time.Now()
@@ -183,6 +186,7 @@ func TestBetweenSeconds(t *testing.T) {
 	// -86400
 }
 
+// 获得两个时间点的差值（天）
 // func DaysBetween(start, end time.Time) int
 func TestDaysBetween(t *testing.T) {
 	start := time.Date(2024, time.September, 1, 0, 0, 0, 0, time.UTC)
@@ -196,6 +200,7 @@ func TestDaysBetween(t *testing.T) {
 	// 9
 }
 
+// 生成两个时间点之间的日期时间列表
 // func GenerateDatetimesBetween(start, end time.Time, layout string, interval string) ([]string, error)
 func TestGenerateDatetimesBetween(t *testing.T) {
 	start := time.Date(2024, time.September, 1, 0, 0, 0, 0, time.UTC)
@@ -214,6 +219,7 @@ func TestGenerateDatetimesBetween(t *testing.T) {
 	// <nil>
 }
 
+// 返回多长时间之后的文字描述
 func TestHowLongAgo(t *testing.T) {
 	tests := []struct {
 		args int64

@@ -50,9 +50,9 @@ require (
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
 	github.com/alecthomas/units v0.0.0-20240927000941-0f3dac36c52b // indirect
 	github.com/alicebob/gopher-json v0.0.0-20230218143504-906a9b012302 // indirect
-	github.com/allegro/bigcache/v3 v3.1.0 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
+	github.com/bits-and-blooms/bitset v1.10.0 // indirect
 	github.com/bytedance/sonic v1.12.10 // indirect
 	github.com/bytedance/sonic/loader v0.2.3 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
@@ -84,7 +84,6 @@ require (
 	github.com/hashicorp/go-metrics v0.5.4 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
-	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/jonboulle/clockwork v0.4.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/jtolds/gls v4.20.0+incompatible // indirect
@@ -183,8 +182,10 @@ require (
 	github.com/alecthomas/kingpin v2.2.6+incompatible
 	github.com/alexedwards/argon2id v1.0.0
 	github.com/alicebob/miniredis/v2 v2.34.0
+	github.com/allegro/bigcache/v3 v3.1.0
 	github.com/araujo88/lambda-go v0.0.0-20240731183007-b33464d3e215
 	github.com/avast/retry-go/v4 v4.6.1
+	github.com/bits-and-blooms/bloom/v3 v3.7.0
 	github.com/bndr/gotabulate v1.1.2
 	github.com/bruceshao/lockfree v1.1.2
 	github.com/bytedance/mockey v1.2.13
@@ -231,6 +232,7 @@ require (
 	github.com/hashicorp/go-version v1.6.0
 	github.com/jinzhu/copier v0.4.0
 	github.com/jinzhu/gorm v1.9.16
+	github.com/jinzhu/now v1.1.5
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/karlseguin/ccache/v2 v2.0.8
 	github.com/kyokomi/emoji/v2 v2.2.13

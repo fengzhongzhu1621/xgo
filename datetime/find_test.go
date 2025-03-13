@@ -8,6 +8,7 @@ import (
 	"github.com/duke-git/lancet/v2/datetime"
 )
 
+// 返回指定日期是该年的第几天
 func TestDayOfYear(t *testing.T) {
 	date1 := time.Date(2023, 02, 01, 1, 1, 1, 0, time.Local)
 	result1 := datetime.DayOfYear(date1)
