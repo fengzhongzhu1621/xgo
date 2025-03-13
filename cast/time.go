@@ -30,16 +30,6 @@ var (
 	timeWithLocationRegexp = regexp.MustCompile(timeWithLocationPattern)
 )
 
-type DateTimeFieldType string
-
-const (
-	// timeWithoutLocationType the common date time type which is used by front end and api
-	timeWithoutLocationType DateTimeFieldType = "time_without_location"
-	// timeWithLocationType the date time type compatible for values from db which is marshaled with time zone
-	timeWithLocationType DateTimeFieldType = "time_with_location"
-	invalidDateTimeType  DateTimeFieldType = "invalid"
-)
-
 var (
 	timeFormats = []timeFormat{
 		{time.RFC3339, timeFormatNumericTimezone},
@@ -260,12 +250,12 @@ func ConvToTime(value interface{}) (time.Time, error) {
 }
 
 // Str2Time string convert to time type
-func Str2Time(timeStr string, timeType DateTimeFieldType) time.Time {
+func Str2Time(timeStr string, timeType validator.DateTimeFieldType) time.Time {
 	var layout string
 	switch timeType {
-	case timeWithoutLocationType:
+	case validator.TimeWithoutLocationType:
 		layout = "2006-01-02 15:04:05"
-	case timeWithLocationType:
+	case validator.TimeWithLocationType:
 		layout = "2006-01-02T15:04:05+08:00"
 	default:
 		return time.Time{}
@@ -278,17 +268,17 @@ func Str2Time(timeStr string, timeType DateTimeFieldType) time.Time {
 	return fTime.UTC()
 }
 
-func isTime(sInput interface{}) (DateTimeFieldType, bool) {
+func isTime(sInput interface{}) (validator.DateTimeFieldType, bool) {
 	switch val := sInput.(type) {
 	case string:
 		if dateTimeRegexp.MatchString(val) {
-			return timeWithoutLocationType, true
+			return validator.TimeWithoutLocationType, true
 		}
 		if timeWithLocationRegexp.MatchString(val) {
-			return timeWithLocationType, true
+			return validator.TimeWithLocationType, true
 		}
-		return invalidDateTimeType, false
+		return validator.InvalidDateTimeType, false
 	default:
-		return invalidDateTimeType, false
+		return validator.InvalidDateTimeType, false
 	}
 }

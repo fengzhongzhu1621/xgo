@@ -1,6 +1,17 @@
 package validator
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"regexp"
+)
+
+const (
+	numCharPattern = `^[a-zA-Z0-9]*$`
+)
+
+var (
+	numCharRegexp = regexp.MustCompile(numCharPattern)
+)
 
 // IsNumeric judges if value is a number
 func IsNumeric(val interface{}) bool {
@@ -20,4 +31,9 @@ func IsInteger(val interface{}) bool {
 	}
 
 	return false
+}
+
+// IsNumChar 是否字母、数字组合
+func IsNumChar(sInput string) bool {
+	return numCharRegexp.MatchString(sInput)
 }

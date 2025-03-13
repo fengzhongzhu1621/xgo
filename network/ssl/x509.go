@@ -53,7 +53,7 @@ func LoadX509Certificates(certFile, keyFile, passwd string) (*tls.Certificate, e
 		})
 	}
 
-	// 读取自定义的 CA 证书文件
+	// 读取客户端证书
 	certData, err := os.ReadFile(certFile)
 	if err != nil {
 		return nil, err

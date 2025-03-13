@@ -9,11 +9,11 @@ import (
 type DateTimeFieldType string
 
 const (
-	// timeWithoutLocationType the common date time type which is used by front end and api
-	timeWithoutLocationType DateTimeFieldType = "time_without_location"
-	// timeWithLocationType the date time type compatible for values from db which is marshaled with time zone
-	timeWithLocationType DateTimeFieldType = "time_with_location"
-	invalidDateTimeType  DateTimeFieldType = "invalid"
+	// TimeWithoutLocationType the common date time type which is used by front end and api
+	TimeWithoutLocationType DateTimeFieldType = "time_without_location"
+	// TimeWithLocationType the date time type compatible for values from db which is marshaled with time zone
+	TimeWithLocationType DateTimeFieldType = "time_with_location"
+	InvalidDateTimeType  DateTimeFieldType = "invalid"
 )
 
 const (
@@ -52,19 +52,31 @@ func ValidateDatetimeType(value interface{}) error {
 	return fmt.Errorf("value(%+v) is not of time type", value)
 }
 
+func IsDate(sInput interface{}) bool {
+	switch val := sInput.(type) {
+	case string:
+		if len(val) == 0 {
+			return false
+		}
+		return dateRegexp.MatchString(val)
+	default:
+		return false
+	}
+}
+
 // IsTime 是否是时间类型
 func IsTime(sInput interface{}) (DateTimeFieldType, bool) {
 	switch val := sInput.(type) {
 	case string:
 		if dateTimeRegexp.MatchString(val) {
-			return timeWithoutLocationType, true
+			return TimeWithoutLocationType, true
 		}
 		if timeWithLocationRegexp.MatchString(val) {
-			return timeWithLocationType, true
+			return TimeWithLocationType, true
 		}
-		return invalidDateTimeType, false
+		return InvalidDateTimeType, false
 	default:
-		return invalidDateTimeType, false
+		return InvalidDateTimeType, false
 	}
 }
 

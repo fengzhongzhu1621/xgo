@@ -1,6 +1,7 @@
 package stringutils
 
 import (
+	"strings"
 	"unicode"
 	"unicode/utf8"
 
@@ -51,4 +52,10 @@ func ChangeInitialCase(s string, mapper func(rune) rune) string {
 	r, n := utf8.DecodeRuneInString(s)
 	// 根据mapper方法转换首字符
 	return string(mapper(r)) + s[n:]
+}
+
+// Normalize to trim space of the str and get it's upper format
+// for example, Normalize(" hello world") ==> "HELLO WORLD"
+func Normalize(str string) string {
+	return strings.ToUpper(strings.TrimSpace(str))
 }

@@ -4,6 +4,15 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+	"regexp"
+)
+
+const (
+	charPattern = `^[a-zA-Z]*$`
+)
+
+var (
+	charRegexp = regexp.MustCompile(charPattern)
 )
 
 // IsLower 判断字符串是否包含小写字母.
@@ -36,4 +45,17 @@ func ValidateNotEmptyStringType(value interface{}) error {
 		return errors.New("value is empty")
 	}
 	return nil
+}
+
+// IsChar 是否大、小写字母组合
+func IsChar(sInput string) bool {
+	return charRegexp.MatchString(sInput)
+}
+
+// CheckLen 字符串输入长度
+func CheckLen(sInput string, min, max int) bool {
+	if len(sInput) >= min && len(sInput) <= max {
+		return true
+	}
+	return false
 }
