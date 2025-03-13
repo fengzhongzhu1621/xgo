@@ -7,7 +7,7 @@ import (
 	"github.com/fengzhongzhu1621/xgo/config"
 	"github.com/fengzhongzhu1621/xgo/db/mysql"
 	"github.com/fengzhongzhu1621/xgo/db/mysql/sqlxx"
-	redis "github.com/fengzhongzhu1621/xgo/db/redisx/client"
+	redis "github.com/fengzhongzhu1621/xgo/db/redis/client"
 	"github.com/fengzhongzhu1621/xgo/ginx/serializer"
 	"github.com/gin-gonic/gin"
 )

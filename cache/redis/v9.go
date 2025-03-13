@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	redisClient "github.com/fengzhongzhu1621/xgo/db/redisx/client"
+	redisClient "github.com/fengzhongzhu1621/xgo/db/redis/client"
 	"github.com/go-redis/cache/v9"
 )
 

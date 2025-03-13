@@ -1,9 +1,9 @@
-package redisx
+package redis
 
 import (
 	"github.com/fengzhongzhu1621/xgo/config"
-	"github.com/fengzhongzhu1621/xgo/db/redisx/client"
-	redis "github.com/fengzhongzhu1621/xgo/db/redisx/client"
+
+	redis "github.com/fengzhongzhu1621/xgo/db/redis/client"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -32,12 +32,12 @@ func InitRedis() {
 			panic("redis id=sentinel, the `masterName` required")
 		}
 		log.Info("init Redis mode=`sentinel`")
-		client.InitRedisClient(&sentinelConfig)
+		redis.InitRedisClient(&sentinelConfig)
 	}
 
 	if isStandalone {
 		log.Info("init Redis mode=`standalone`")
-		client.InitRedisClient(&standaloneConfig)
+		redis.InitRedisClient(&standaloneConfig)
 	}
 
 	log.Info("init Redis success")

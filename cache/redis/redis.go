@@ -7,7 +7,7 @@ import (
 	"time"
 
 	gopkgcache "github.com/fengzhongzhu1621/xgo/cache/common"
-	redisClient "github.com/fengzhongzhu1621/xgo/db/redisx/client"
+	redisClient "github.com/fengzhongzhu1621/xgo/db/redis/client"
 	"github.com/go-redis/cache/v8"
 	"github.com/go-redis/redis/v8"
 	log "github.com/sirupsen/logrus"

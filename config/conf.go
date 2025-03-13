@@ -3,7 +3,7 @@ package config
 import (
 	"github.com/fengzhongzhu1621/xgo/db/kafkax"
 	"github.com/fengzhongzhu1621/xgo/db/mysql"
-	redis "github.com/fengzhongzhu1621/xgo/db/redisx/client"
+	redis "github.com/fengzhongzhu1621/xgo/db/redis/client"
 	"github.com/spf13/viper"
 )
 

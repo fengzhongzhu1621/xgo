@@ -37,6 +37,9 @@ databases:
     connMaxLifetimeSecond: 600
     debugMode: false
 
+redis:
+  - type: standalone
+
 server:
   host: localhost
   port: 8000
