@@ -9,7 +9,7 @@ import (
 	"github.com/fengzhongzhu1621/xgo/str/bytesutils"
 
 	. "github.com/fengzhongzhu1621/xgo/logging"
-	. "github.com/fengzhongzhu1621/xgo/shell/command"
+	. "github.com/fengzhongzhu1621/xgo/system/command"
 )
 
 type ProcessEndpoint struct {
