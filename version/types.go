@@ -8,3 +8,10 @@ type VersionLog struct {
 	// 版本内容
 	Content string `json:"content"`
 }
+
+// Revision
+const (
+	RevisionEnterprise = "enterprise"
+	RevisionCommunity  = "community"
+	RevisionOpenSource = "opensource"
+)
