@@ -1,4 +1,4 @@
-package zookeeper
+package server_option
 
 import "github.com/spf13/pflag"
 

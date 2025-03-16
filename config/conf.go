@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/fengzhongzhu1621/xgo/config/flagutils"
 	"github.com/fengzhongzhu1621/xgo/db/kafkax"
 	"github.com/fengzhongzhu1621/xgo/db/mysql"
 	redis "github.com/fengzhongzhu1621/xgo/db/redis/client"
@@ -100,6 +101,59 @@ type Auth struct {
 type Crypto struct {
 	ID  string
 	Key string
+}
+
+type WebServerConfig struct {
+	Site                      Site
+	Session                   Session
+	Redis                     redis.Config
+	Version                   string
+	AgentAppUrl               string
+	LoginUrl                  string
+	LoginVersion              string
+	ConfigMap                 map[string]string
+	AuthCenter                AppInfo
+	DisableOperationStatistic bool
+	DeploymentMethod          flagutils.DeploymentMethod
+	EnableNotification        bool
+}
+
+type Site struct {
+	AccountUrl      string
+	DomainUrl       string
+	HttpsDomainUrl  string
+	HtmlRoot        string
+	ResourcesPath   string
+	BkLoginUrl      string
+	BkHttpsLoginUrl string
+	AppCode         string
+	CheckUrl        string
+	// available value: internal, iam
+	AuthScheme string
+	// available value: off, on
+	FullTextSearch string
+	PaasDomainUrl  string
+	// BkDomain it is used to set the unified international language of Blue Whale.
+	// this variable is returned to the front-end through configuration in the background.
+	// the corresponding front-end variable is: cookieDomain.
+	BkDomain string
+	// BkComponentApiUrl is the blueking component api url, and is also the esb domain url
+	// the corresponding front-end variable is: componentApiUrl.
+	BkComponentApiUrl string
+	HelpDocUrl        string
+	// BkSharedResUrl is the blueking shared resource url
+	BkSharedResUrl string
+}
+
+type Session struct {
+	Name            string
+	DefaultLanguage string
+	MultipleOwner   string
+}
+
+type AppInfo struct {
+	AppCode string `json:"appCode"`
+	URL     string `json:"url"`
 }
 
 // Load 将配置文件转换为全局结构体对象

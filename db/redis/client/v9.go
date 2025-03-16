@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/redis/go-redis/v9"
+	redisV9 "github.com/redis/go-redis/v9"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -14,13 +14,13 @@ var (
 	// 确保Redis客户端只初始化一次
 	initOnce sync.Once
 	// 确保Redis客户端只初始化一次
-	rdsV9 *redis.Client
+	rdsV9 *redisV9.Client
 )
 
 // InitRedisV9Client 初始化Redis客户端
 func InitRedisV9Client(ctx context.Context, cfg *RedisConfig) {
 	// 解析配置中的DSN字符串
-	opts, err := redis.ParseURL(cfg.DSN())
+	opts, err := redisV9.ParseURL(cfg.DSN())
 	if err != nil {
 		log.Fatalf("redis parse url error: %s", err.Error())
 	}
@@ -39,7 +39,7 @@ func InitRedisV9Client(ctx context.Context, cfg *RedisConfig) {
 	opts.MinIdleConns = minIdleConnectionMultiple * runtime.NumCPU()
 
 	initOnce.Do(func() {
-		rdsV9 = redis.NewClient(opts)
+		rdsV9 = redisV9.NewClient(opts)
 		if _, err = rds.Ping(ctx).Result(); err != nil {
 			log.Fatalf("redis connect error: %s", err.Error())
 		} else {
@@ -58,6 +58,6 @@ func InitRedisV9Client(ctx context.Context, cfg *RedisConfig) {
 	})
 }
 
-func GetDefaultRedisV9Client() *redis.Client {
+func GetDefaultRedisV9Client() *redisV9.Client {
 	return rdsV9
 }

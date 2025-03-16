@@ -1,4 +1,4 @@
-package zookeeper
+package server_option
 
 const (
 	MODULE_WEBSERVER = "webserver"
@@ -7,7 +7,6 @@ const (
 )
 
 var identification = "unknown"
-var server *ServerInfo
 
 // SetIdentification TODO
 func SetIdentification(id string) {

@@ -177,6 +177,7 @@ require (
 )
 
 require (
+	github.com/FZambia/sentinel v1.1.1
 	github.com/ThreeDotsLabs/watermill v1.4.4
 	github.com/agiledragon/gomonkey/v2 v2.12.0
 	github.com/alecthomas/kingpin v2.2.6+incompatible
@@ -187,6 +188,7 @@ require (
 	github.com/avast/retry-go/v4 v4.6.1
 	github.com/bits-and-blooms/bloom/v3 v3.7.0
 	github.com/bndr/gotabulate v1.1.2
+	github.com/boj/redistore v1.4.0
 	github.com/bruceshao/lockfree v1.1.2
 	github.com/bytedance/mockey v1.2.13
 	github.com/cenkalti/backoff/v3 v3.2.2
@@ -221,6 +223,7 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.5.1
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/golang/mock v1.6.0
+	github.com/gomodule/redigo v1.9.2
 	github.com/google/uuid v1.6.0
 	github.com/gookit/goutil v0.6.18
 	github.com/gorilla/csrf v1.7.2
