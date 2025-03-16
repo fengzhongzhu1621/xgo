@@ -6,7 +6,7 @@ import (
 
 	"github.com/fengzhongzhu1621/xgo"
 	"github.com/fengzhongzhu1621/xgo/config"
-	"github.com/fengzhongzhu1621/xgo/ginx/constant"
+	"github.com/fengzhongzhu1621/xgo/network/constant"
 	"github.com/fengzhongzhu1621/xgo/network/nethttp"
 	"github.com/gin-gonic/gin"
 )

@@ -14,3 +14,12 @@ const (
 	DefaultBackendOperator = "admin"
 	BackendUserKey         = "backend_user"
 )
+
+const (
+	// ContextRequestIDField TODO
+	ContextRequestIDField = "request_id"
+	// ContextRequestUserField TODO
+	ContextRequestUserField = "request_user"
+	// ContextRequestOwnerField TODO
+	ContextRequestOwnerField = "request_owner"
+)

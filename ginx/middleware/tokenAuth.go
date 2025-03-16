@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/fengzhongzhu1621/xgo/ginx/constant"
 	"github.com/fengzhongzhu1621/xgo/ginx/utils"
+	"github.com/fengzhongzhu1621/xgo/network/constant"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/samber/lo"

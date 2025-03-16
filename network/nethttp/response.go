@@ -1,7 +1,10 @@
 package nethttp
 
 import (
+	"fmt"
+
 	"github.com/fengzhongzhu1621/xgo"
+	"github.com/fengzhongzhu1621/xgo/iam"
 )
 
 type Response struct {
@@ -27,4 +30,55 @@ type PaginatedResp struct {
 // IsSuccess 判断响应是否成功返回结果
 func (r Response) IsSuccess() bool {
 	return r.Code == xgo.NoError
+}
+
+type BaseResp struct {
+	Result      bool               `json:"result" bson:"result" mapstructure:"result"`
+	Code        int                `json:"bk_error_code" bson:"bk_error_code" mapstructure:"bk_error_code"`
+	ErrMsg      string             `json:"bk_error_msg" bson:"bk_error_msg" mapstructure:"bk_error_msg"`
+	Permissions *iam.IamPermission `json:"permission" bson:"permission" mapstructure:"permission"`
+}
+
+func (br *BaseResp) ToString() string {
+	return fmt.Sprintf("code:%d, message:%s", br.Code, br.ErrMsg)
+}
+
+type JsonCntInfoResp struct {
+	BaseResp
+	Data CntInfoString `json:"data"`
+}
+
+// CntInfoString TODO
+type CntInfoString struct {
+	Count int64 `json:"count"`
+	// info is a json array string field.
+	Info string `json:"info"`
+}
+
+type JsonStringResp struct {
+	BaseResp
+	Data string
+}
+
+func NewNoPermissionResp(permission *iam.IamPermission) BaseResp {
+	return BaseResp{
+		Result:      false,
+		Code:        NoPermission,
+		ErrMsg:      "no permissions",
+		Permissions: permission,
+	}
+}
+
+type SuccessResponse struct {
+	BaseResp `json:",inline"`
+	Data     interface{} `json:"data"`
+}
+
+var SuccessBaseResp = BaseResp{Result: true, Code: Success, ErrMsg: SuccessStr}
+
+func NewSuccessResponse(data interface{}) *SuccessResponse {
+	return &SuccessResponse{
+		BaseResp: SuccessBaseResp,
+		Data:     data,
+	}
 }

@@ -1,7 +1,7 @@
 package cookie
 
 import (
-	"github.com/fengzhongzhu1621/xgo/ginx/constant"
+	"github.com/fengzhongzhu1621/xgo/network/constant"
 	"github.com/gin-gonic/gin"
 )
 

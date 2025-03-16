@@ -14,3 +14,21 @@ func GetPriority(ctx context.Context) (int, bool) {
 	priority, ok := ctx.Value(priorityKey{}).(int)
 	return priority, ok
 }
+
+type Context struct {
+	ctx context.Context
+}
+
+type ContextInterface interface {
+	WithCancel() (context.Context, context.CancelFunc)
+}
+
+func NewContext() ContextInterface {
+	return &Context{
+		ctx: context.Background(),
+	}
+}
+
+func (c *Context) WithCancel() (context.Context, context.CancelFunc) {
+	return context.WithCancel(c.ctx)
+}

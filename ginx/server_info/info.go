@@ -1,4 +1,4 @@
-package webserver
+package server_info
 
 import (
 	"fmt"
@@ -36,7 +36,7 @@ func GetServerInfo() *ServerInfo {
 	return server
 }
 
-// NewServerInfo new a ServerInfo object
+// NewServerInfo new a ServerInfo object，配置是从命令行获取的
 func NewServerInfo(conf *server_option.APIConfig) (*ServerInfo, error) {
 	ipValue, err := ip.GetAddress(conf.AddrPort)
 	if err != nil {

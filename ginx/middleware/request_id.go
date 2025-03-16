@@ -3,8 +3,8 @@ package middleware
 import (
 	"encoding/hex"
 
-	"github.com/fengzhongzhu1621/xgo/ginx/constant"
 	"github.com/fengzhongzhu1621/xgo/ginx/utils"
+	"github.com/fengzhongzhu1621/xgo/network/constant"
 	"github.com/gin-gonic/gin"
 	"github.com/gofrs/uuid"
 	log "github.com/sirupsen/logrus"
