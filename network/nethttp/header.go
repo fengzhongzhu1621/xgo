@@ -5,9 +5,6 @@ import (
 	"net/http"
 	"net/textproto"
 	"strings"
-
-	"github.com/fengzhongzhu1621/xgo"
-	"github.com/gin-gonic/gin"
 )
 
 var HeaderNewlineToSpace = strings.NewReplacer("\n", " ", "\r", " ") // 换行字符替换器
@@ -58,47 +55,6 @@ func PushHeaders(h http.Header, hdrs []string) {
 	}
 }
 
-// GetBluekingLanguageFromHeader 从请求头获取语言
-func GetBluekingLanguageFromHeader(c *gin.Context) (string, error) {
-	header := c.Request.Header.Get("X-BkApi-Blueking-Language")
-	if len(header) == 0 {
-		return "", xgo.JwtTokenNoneErr
-	}
-	strs := strings.Split(header, " ")
-
-	return strs[0], nil
-}
-
-// GetEnvFromHeader 从请求头获取 env 的值，如果找不到则从 Get 请求参数中获取
-func GetEnvFromHeader(c *gin.Context) string {
-	env := c.Request.Header.Get("env")
-	if env == "" {
-		env = c.Query("env")
-	}
-
-	return env
-}
-
-// GetUsernameFromHeader 从 header 中获取用户名
-func GetUsernameFromHeader(c *gin.Context) string {
-	username := c.Request.Header.Get("bk_username")
-	if username == "" {
-		username = c.Query("bk_username")
-	}
-
-	return username
-}
-
-// GetTokenFromHeader 从 header 中获取 token
-func GetTokenFromHeader(c *gin.Context) string {
-	token := c.Request.Header.Get("token")
-	if token == "" {
-		token = c.Query("token")
-	}
-
-	return token
-}
-
 // CloneHeader clone http header
 func CloneHeader(src http.Header) http.Header {
 	tar := http.Header{}
@@ -113,5 +69,37 @@ func CloneHeader(src http.Header) http.Header {
 func CopyHeader(src http.Header, target http.Header) {
 	for key := range src {
 		target.Set(key, src.Get(key))
+	}
+}
+
+func GetUser(header http.Header) string {
+	return header.Get(UserHeader)
+}
+
+// GetLanguage get language from http header
+func GetLanguage(header http.Header) string {
+	return header.Get(LanguageHeader)
+}
+
+// GetSupplierAccount get supplier account from http header
+func GetSupplierAccount(header http.Header) string {
+	return header.Get(SupplierAccountHeader)
+}
+
+func AddUser(header http.Header, value string) {
+	if GetUser(header) != value {
+		header.Add(UserHeader, value)
+	}
+}
+
+func AddLanguage(header http.Header, value string) {
+	if GetLanguage(header) != value {
+		header.Add(LanguageHeader, value)
+	}
+}
+
+func AddSupplierAccount(header http.Header, value string) {
+	if GetSupplierAccount(header) != value {
+		header.Add(SupplierAccountHeader, value)
 	}
 }

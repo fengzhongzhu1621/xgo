@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/fengzhongzhu1621/xgo/config"
+	"github.com/fengzhongzhu1621/xgo/ginx/request/header"
 	"github.com/fengzhongzhu1621/xgo/ginx/serializer"
 	"github.com/fengzhongzhu1621/xgo/ginx/service"
 	"github.com/fengzhongzhu1621/xgo/ginx/service/types"
@@ -33,7 +34,7 @@ func GetVersionContent(cfg *config.Config) gin.HandlerFunc {
 		}
 
 		// 从请求头获取语言
-		language, err = nethttp.GetBluekingLanguageFromHeader(c)
+		language, err = header.GetLanguageFromHeader(c)
 		if err != nil || language == "" {
 			language = nethttp.WEB_LANGUAGE_CN
 		}
@@ -44,7 +45,7 @@ func GetVersionContent(cfg *config.Config) gin.HandlerFunc {
 		// 构造服务请求参数
 		getVersionContentRequestData = &types.GetVersionContentRequestData{
 			Version:  listObj.Version,
-			Operator: nethttp.GetUsernameFromHeader(c),
+			Operator: header.GetUsernameFromHeader(c),
 			Language: strings.ToLower(language),
 		}
 
@@ -69,7 +70,7 @@ func ListVersions(cfg *config.Config) gin.HandlerFunc {
 		)
 
 		// 从请求头获取语言
-		language, err = nethttp.GetBluekingLanguageFromHeader(c)
+		language, err = header.GetLanguageFromHeader(c)
 		if err != nil || language == "" {
 			language = nethttp.WEB_LANGUAGE_CN
 		}

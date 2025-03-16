@@ -10,3 +10,9 @@ const (
 )
 
 const DEFAULT_BACKEND_OPERATOR = "system"
+
+const (
+	UserHeader            = "X-XGO-User"
+	LanguageHeader        = "X-XGO-Language"
+	SupplierAccountHeader = "X-XGO-Supplier-Account"
+)
