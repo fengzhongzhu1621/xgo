@@ -1,4 +1,4 @@
-package ssl
+package backbone
 
 import (
 	"crypto/tls"
@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/fengzhongzhu1621/xgo/config/viper/viper_parser"
+	"github.com/fengzhongzhu1621/xgo/network/ssl"
 )
 
 type TLSClientConfig struct {
@@ -71,7 +72,7 @@ func GetClientTLSConfig(prefix string) (*tls.Config, error) {
 	tlsConf := &tls.Config{InsecureSkipVerify: config.InsecureSkipVerify}
 
 	if len(config.CAFile) != 0 && len(config.CertFile) != 0 && len(config.KeyFile) != 0 {
-		tlsConf, err = ClientTslConfVerity(config.CAFile, config.CertFile, config.KeyFile, config.Password)
+		tlsConf, err = ssl.ClientTslConfVerity(config.CAFile, config.CertFile, config.KeyFile, config.Password)
 		if err != nil {
 			return nil, err
 		}

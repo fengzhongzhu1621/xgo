@@ -21,10 +21,6 @@ type OpenTelemetryConfig struct {
 	enable bool
 	// openTelemetry跟踪链功能的自定义上报服务地址
 	endpoint string
-	// openTelemetry跟踪链功能的上报data_id, 用于旧版的数据上报
-	bkDataID int64
-	// openTelemetry跟踪链功能的上报bk.data.token, 用于新版的数据上报
-	bkDataToken string
 
 	tlsConf *tls.Config
 }
@@ -58,24 +54,6 @@ func InitOpenTelemetryConfig() error {
 	openTelemetryCfg.endpoint, err = viper_parser.String("openTelemetry.endpoint")
 	if err != nil {
 		return fmt.Errorf("config openTelemetry.endpoint err: %v", err)
-	}
-
-	if !viper_parser.IsExist("openTelemetry.bkDataID") && !viper_parser.IsExist("openTelemetry.bkDataToken") {
-		return errors.New("at least one of openTelemetry.bkDataID and openTelemetry.bkDataToken is set")
-	}
-
-	if viper_parser.IsExist("openTelemetry.bkDataID") {
-		openTelemetryCfg.bkDataID, err = viper_parser.Int64("openTelemetry.bkDataID")
-		if err != nil {
-			return fmt.Errorf("get config openTelemetry.bkDataID err: %v", err)
-		}
-	}
-
-	if viper_parser.IsExist("openTelemetry.bkDataToken") {
-		openTelemetryCfg.bkDataToken, err = viper_parser.String("openTelemetry.bkDataToken")
-		if err != nil {
-			return fmt.Errorf("get config openTelemetry.bkDataToken err: %v", err)
-		}
 	}
 
 	if !viper_parser.IsExist("openTelemetry.tls.caFile") || !viper_parser.IsExist("openTelemetry.tls.certFile") ||

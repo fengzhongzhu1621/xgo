@@ -6,7 +6,6 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/sdk/resource"
@@ -38,8 +37,6 @@ func InitTracer(ctx context.Context) error {
 	resources := resource.NewWithAttributes(
 		semconv.SchemaURL,
 		semconv.ServiceNameKey.String(serviceName()),
-		attribute.Key("bk_data_id").Int64(openTelemetryCfg.bkDataID),
-		attribute.Key("bk.data.token").String(openTelemetryCfg.bkDataToken),
 	)
 
 	// 初始化Trace配置
