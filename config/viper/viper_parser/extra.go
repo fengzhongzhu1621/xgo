@@ -26,3 +26,15 @@ func SetExtraFromByte(data []byte) error {
 	}
 	return nil
 }
+
+func SetExtraFromFile(target string) error {
+	var err error
+	confLock.Lock()
+	defer confLock.Unlock()
+	extraParser, err = newViperParserFromFile(target)
+	if err != nil {
+		log.Errorf("fail to read configure from extra")
+		return err
+	}
+	return nil
+}

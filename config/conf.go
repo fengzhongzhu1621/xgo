@@ -2,7 +2,7 @@ package config
 
 import (
 	"github.com/fengzhongzhu1621/xgo/config/flagutils"
-	"github.com/fengzhongzhu1621/xgo/db/kafkax"
+	kafka "github.com/fengzhongzhu1621/xgo/db/kafka"
 	"github.com/fengzhongzhu1621/xgo/db/mysql"
 	redis "github.com/fengzhongzhu1621/xgo/db/redis/client"
 	"github.com/spf13/viper"
@@ -44,8 +44,8 @@ type Config struct {
 	RedisMap map[string]redis.Redis
 
 	// kafka 配置
-	Kafka    []kafkax.Kafka
-	KafkaMap map[string]kafkax.Kafka
+	Kafka    []kafka.Kafka
+	KafkaMap map[string]kafka.Kafka
 
 	// pprof
 	PProf PProf `yaml:"pprof"`

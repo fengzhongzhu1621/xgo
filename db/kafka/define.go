@@ -1,4 +1,4 @@
-package kafkax
+package kafka
 
 type Kafka struct {
 	Id       string `yaml:"id"`
