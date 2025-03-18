@@ -249,6 +249,7 @@ require (
 	github.com/karlseguin/ccache/v2 v2.0.8
 	github.com/kyokomi/emoji/v2 v2.2.13
 	github.com/lithammer/shortuuid/v3 v3.0.7
+	github.com/marusama/cyclicbarrier v1.1.0
 	github.com/microcosm-cc/bluemonday v1.0.27
 	github.com/mozillazg/go-pinyin v0.20.0
 	github.com/mssola/user_agent v0.6.0

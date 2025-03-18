@@ -14,25 +14,25 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestWaitGroupTimeout_no_timeout(t *testing.T) {
+// 支持等待超时
+func TestWaitGroupTimeout(t *testing.T) {
 	// sync.WaitGroup 是 Go 语言中的一个同步原语，用于等待一组协程（goroutine）完成执行。
 	// 它提供了一种简单的方式来同步多个并发执行的协程，确保在所有协程完成之前，主协程不会退出。
 	wg := &sync.WaitGroup{}
 
 	isTimeout := WaitGroupTimeout(wg, time.Millisecond*100)
 	assert.False(t, isTimeout)
-}
 
-func TestWaitGroupTimeout_timeout(t *testing.T) {
-	wg := &sync.WaitGroup{}
+	wg2 := &sync.WaitGroup{}
 	// 增加等待组的计数器。delta 参数表示要增加的值。通常在启动一个新的协程之前调用此方法。
-	wg.Add(1)
+	wg2.Add(1)
 
 	// 因为没有执行 wg.Done() // 减少等待组计数器，wg 会超时退出
-	isTimeout := WaitGroupTimeout(wg, time.Millisecond*100)
-	assert.True(t, isTimeout)
+	isTimeout2 := WaitGroupTimeout(wg2, time.Millisecond*100)
+	assert.True(t, isTimeout2)
 }
 
+// 限制 waitgroup 的大小
 func TestSizedWaitGroup(t *testing.T) {
 	var wg sync.WaitGroup
 	// 创建一个容量为 3 的 SizedWaitGroup, 最多只能有 3 个协程同时运行
@@ -57,14 +57,14 @@ func TestSizedWaitGroup(t *testing.T) {
 	wg.Wait() // 等待所有协程完成
 }
 
-// TestErrgroup 用于替代 sync.WaitGroup
+// 等待所有 goroutine 完成并返回第一个错误，所有的goroutine 都会执行
 // sync.WaitGroup 只负责等待 goroutine 完成，不处理 goroutine 的返回值或错误。
 // errgroup.Group 虽然目前也不能直接处理 goroutine 的返回值，但在 goroutine 返回错误时，可以立即取消其他正在运行的 goroutine，并在 Wait 方法中返回第一个非 nil 的错误。
 func TestErrgroup(t *testing.T) {
 	var urls = []string{
 		"http://www.golang.org/",
 		"http://www.google.com/",
-		"http://www.somestupidname.com/", // 这是一个错误的 URL，会导致任务失败
+		"xxx", // 这是一个错误的 URL，会导致任务失败
 	}
 
 	var g errgroup.Group
@@ -86,15 +86,20 @@ func TestErrgroup(t *testing.T) {
 	if err := g.Wait(); err != nil {
 		fmt.Printf("Error: %s\n", err)
 	}
+
+	// Output:
+	// fetch url http://www.google.com/ status 200 OK
+	// fetch url http://www.golang.org/ status 200 OK
+	// Error: Get "xxx": unsupported protocol scheme ""
 }
 
-// TestErrGroupWithContext 测试任务取消
+// 等待所有 goroutine 完成并返回第一个错误，如果有错误发生，则立即取消其他正在运行的 goroutine
 // errgroup.WithContext 可以与 context.Context 配合使用，支持在某个 goroutine 出现错误时自动取消其他 goroutine，这样可以更好地控制资源，避免不必要的工作。
 func TestErrGroupWithContext(t *testing.T) {
 	var urls = []string{
 		"http://www.golang.org/",
 		"http://www.google.com/",
-		"http://www.somestupidname.com/", // 这是一个错误的 URL，会导致任务失败
+		"xxx", // 这是一个错误的 URL，会导致任务失败
 	}
 
 	// 任何一个 goroutine 返回非 nil 的错误，或 Wait() 等待所有 goroutine 完成后，context 都会被取消
@@ -134,9 +139,12 @@ func TestErrGroupWithContext(t *testing.T) {
 		fmt.Printf("fetch url %s status %s\n", key, value)
 		return true
 	})
+
+	// Output:
+	// Error:  Get "xxx": unsupported protocol scheme ""
 }
 
-// TestErrGroupSetLimit 限制并发数量
+// 限制并发数量
 // errgroup 提供了便捷的接口来限制并发 goroutine 的数量，避免过载，而 sync.WaitGroup 没有这样的功能。
 func TestErrGroupSetLimit(t *testing.T) {
 	// 创建一个 errgroup.Group
