@@ -13,6 +13,7 @@ import (
 	"github.com/fengzhongzhu1621/xgo/ginx/backbone/configcenter"
 	"github.com/fengzhongzhu1621/xgo/ginx/discovery"
 	"github.com/fengzhongzhu1621/xgo/ginx/server_info"
+	"github.com/fengzhongzhu1621/xgo/ginx/utils/tls"
 	"github.com/fengzhongzhu1621/xgo/monitor"
 	"github.com/fengzhongzhu1621/xgo/monitor/metrics"
 	"github.com/fengzhongzhu1621/xgo/monitor/opentelemetry"
@@ -86,7 +87,7 @@ func NewBackbone(ctx context.Context, input *BackboneParameter) (*Engine, error)
 		}
 		configcenter.AddConfigCenter(configCenter)
 
-		tlsConf, err := GetTLSConf()
+		tlsConf, err := tls.GetTLSConf()
 		if err != nil {
 			log.Errorf("get tls config error, err: %v", err)
 			return nil, err
@@ -131,7 +132,7 @@ func NewBackbone(ctx context.Context, input *BackboneParameter) (*Engine, error)
 }
 
 func NewApiMachinery(c *APIMachineryConfig, discover discovery.IDiscoveryInterface) (IClientSetInterface, error) {
-	extraConf := make([]ExtraClientConfig, 0)
+	extraConf := make([]tls.ExtraClientConfig, 0)
 	if c.ExtraConf != nil {
 		extraConf = append(extraConf, *c.ExtraConf)
 	}
@@ -161,13 +162,13 @@ func getRegisterPath(ip string) string {
 
 func StartServer(ctx context.Context, cancel context.CancelFunc, e *Engine, HTTPHandler http.Handler,
 	pprofEnabled bool) error {
-	tlsConf, err := GetTLSConf()
+	tlsConf, err := tls.GetTLSConf()
 	if err != nil {
 		log.Errorf("get tls config error, err: %v", err)
 		return err
 	}
 
-	if IsTLS(tlsConf) {
+	if tls.IsTLS(tlsConf) {
 		e.srvInfo.Scheme = "https"
 	}
 

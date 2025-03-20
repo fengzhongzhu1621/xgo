@@ -5,6 +5,8 @@ import (
 
 	"github.com/fengzhongzhu1621/xgo/ginx/server_info"
 	"github.com/fengzhongzhu1621/xgo/ginx/service/coreservice"
+	"github.com/fengzhongzhu1621/xgo/ginx/utils/tls"
+	"github.com/fengzhongzhu1621/xgo/network/ssl"
 )
 
 type IClientSetInterface interface {
@@ -22,7 +24,7 @@ type Server struct {
 	ListenAddr   string
 	ListenPort   uint
 	Handler      http.Handler
-	TLS          *TLSClientConfig
+	TLS          *ssl.TLSClientConfig
 	PProfEnabled bool
 }
 
@@ -31,6 +33,6 @@ type APIMachineryConfig struct {
 	QPS int64
 	// request's burst value
 	Burst     int64
-	TLSConfig *TLSClientConfig
-	ExtraConf *ExtraClientConfig
+	TLSConfig *ssl.TLSClientConfig
+	ExtraConf *tls.ExtraClientConfig
 }

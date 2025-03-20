@@ -28,3 +28,16 @@ type SshKeyGenerator struct {
 	Running bool // 是否运行生成器
 	logger  *zap.Logger
 }
+
+type TLSClientConfig struct {
+	// Server should be accessed without verifying the TLS certificate. For testing only.
+	InsecureSkipVerify bool
+	// Server requires TLS client certificate authentication
+	CertFile string
+	// Server requires TLS client certificate authentication
+	KeyFile string
+	// Trusted root certificates for server
+	CAFile string
+	// the password to decrypt the certificate
+	Password string
+}

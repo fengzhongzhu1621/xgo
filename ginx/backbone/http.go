@@ -13,13 +13,14 @@ import (
 	"time"
 
 	"github.com/fengzhongzhu1621/xgo/db/zookeeper/zkclient"
+	tlsutil "github.com/fengzhongzhu1621/xgo/ginx/utils/tls"
 	"github.com/fengzhongzhu1621/xgo/monitor/opentelemetry"
 	"github.com/fengzhongzhu1621/xgo/network/ssl"
 	log "github.com/sirupsen/logrus"
 )
 
 // NewClient create a new http client
-func NewClient(c *TLSClientConfig, conf ...ExtraClientConfig) (*http.Client, error) {
+func NewClient(c *ssl.TLSClientConfig, conf ...tlsutil.ExtraClientConfig) (*http.Client, error) {
 	tlsConf := new(tls.Config)
 	if c != nil && len(c.CAFile) != 0 && len(c.CertFile) != 0 && len(c.KeyFile) != 0 {
 		var err error
@@ -97,7 +98,7 @@ func ListenAndServe(c Server, svcDisc ServiceRegisterInterface, cancel context.C
 		}
 	}()
 
-	if !IsTLS(c.TLS) {
+	if !tlsutil.IsTLS(c.TLS) {
 		log.Infof("start insecure server on %s:%d", c.ListenAddr, c.ListenPort)
 		go func() {
 			if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {

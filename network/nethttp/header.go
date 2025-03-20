@@ -113,12 +113,23 @@ func IsReqFromWeb(header http.Header) bool {
 	return header.Get(ReqFromWebHeader) == "true"
 }
 
-// GetBkJWT get blueking api gateway jwt info from http header
 func GetBkJWT(header http.Header) string {
 	return header.Get(BkJWTHeader)
 }
 
-// GetAppCode get blueking app code from http header
 func GetAppCode(header http.Header) string {
 	return header.Get(AppCodeHeader)
+}
+func GetUserToken(header http.Header) string {
+	return header.Get(UserTokenHeader)
+}
+
+// GetUserTicket get blueking user ticket from http header
+func GetUserTicket(header http.Header) string {
+	return header.Get(UserTicketHeader)
+}
+
+func SetBkAuth(header http.Header, value string) http.Header {
+	header.Set(BkAuthHeader, value)
+	return header
 }

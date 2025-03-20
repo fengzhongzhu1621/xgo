@@ -1,4 +1,4 @@
-package backbone
+package tls
 
 import (
 	"crypto/tls"
@@ -9,22 +9,9 @@ import (
 	"github.com/fengzhongzhu1621/xgo/network/ssl"
 )
 
-type TLSClientConfig struct {
-	// Server should be accessed without verifying the TLS certificate. For testing only.
-	InsecureSkipVerify bool
-	// Server requires TLS client certificate authentication
-	CertFile string
-	// Server requires TLS client certificate authentication
-	KeyFile string
-	// Trusted root certificates for server
-	CAFile string
-	// the password to decrypt the certificate
-	Password string
-}
-
 // NewTLSClientConfigFromConfig new config about tls client config
-func NewTLSClientConfigFromConfig(prefix string) (TLSClientConfig, error) {
-	tlsConfig := TLSClientConfig{}
+func NewTLSClientConfigFromConfig(prefix string) (ssl.TLSClientConfig, error) {
+	tlsConfig := ssl.TLSClientConfig{}
 
 	skipVerifyKey := fmt.Sprintf("%s.insecureSkipVerify", prefix)
 	if val, err := viper_parser.String(skipVerifyKey); err == nil {
@@ -81,14 +68,14 @@ func GetClientTLSConfig(prefix string) (*tls.Config, error) {
 	return tlsConf, nil
 }
 
-func IsTLS(config *TLSClientConfig) bool {
+func IsTLS(config *ssl.TLSClientConfig) bool {
 	if config == nil || len(config.CertFile) == 0 || len(config.KeyFile) == 0 {
 		return false
 	}
 	return true
 }
 
-func GetTLSConf() (*TLSClientConfig, error) {
+func GetTLSConf() (*ssl.TLSClientConfig, error) {
 	config, err := NewTLSClientConfigFromConfig("tls")
 	return &config, err
 }

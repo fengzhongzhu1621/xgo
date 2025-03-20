@@ -12,19 +12,20 @@ const (
 const DEFAULT_BACKEND_OPERATOR = "system"
 
 const (
-	RidHeader             = "X-Bkapi-Request-Id"
+	RidHeader    = "X-Bkapi-Request-Id"
+	BkAuthHeader = "X-Bkapi-Authorization"
+	BkJWTHeader  = "X-Bkapi-JWT"
+)
+
+const (
+	BKHTTPHeaderUser      = "BK_User"
 	UserHeader            = "X-Xgo-User"
 	LanguageHeader        = "X-Xgo-Language"
 	SupplierAccountHeader = "X-Xgo-Supplier-Account"
-	// ReqFromWebHeader is the http header key that represents if request is from web server
-	ReqFromWebHeader = "X-Xgo-Request-From-Web"
-	// AppCodeHeader is the blueking app code http header key, its value is from jwt info
-	AppCodeHeader = "X-Xgo-App-Code"
-
-	// BKHTTPHeaderUser current request http request header fields name for login user
-	BKHTTPHeaderUser = "BK_User"
-	// BkJWTHeader is the blueking api gateway jwt http header key
-	BkJWTHeader = "X-Bkapi-JWT"
+	ReqFromWebHeader      = "X-Xgo-Request-From-Web"
+	AppCodeHeader         = "X-Xgo-App-Code"
+	UserTokenHeader       = "X-Xgo-User-Token"
+	UserTicketHeader      = "X-Xgo-User-Ticket"
 )
 
 const (
