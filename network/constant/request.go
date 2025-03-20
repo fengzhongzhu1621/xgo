@@ -22,4 +22,10 @@ const (
 	ContextRequestUserField = "request_user"
 	// ContextRequestOwnerField TODO
 	ContextRequestOwnerField = "request_owner"
+
+	// DefaultOwnerID the default owner value
+	DefaultOwnerID         = "0"
+	SystemOperatorUserName = "system"
+	// ReadReferenceKey read preference key
+	ReadReferenceKey = "Read_Preference"
 )

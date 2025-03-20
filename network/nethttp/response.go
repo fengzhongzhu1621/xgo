@@ -82,3 +82,17 @@ func NewSuccessResponse(data interface{}) *SuccessResponse {
 		Data:     data,
 	}
 }
+
+// AbortTransactionResult abort transaction result
+type AbortTransactionResult struct {
+	// Retry defines if the transaction needs to retry, the following are the scenario that needs to retry:
+	// 1. the write operation in the transaction conflicts with another transaction,
+	// then do retry in the scene layer with server times depends on conditions.
+	Retry bool `json:"retry"`
+}
+
+// AbortTransactionResponse abort transaction response
+type AbortTransactionResponse struct {
+	BaseResp               `json:",inline"`
+	AbortTransactionResult `json:"data"`
+}

@@ -12,9 +12,18 @@ const (
 const DEFAULT_BACKEND_OPERATOR = "system"
 
 const (
-	RidHeader    = "X-Bkapi-Request-Id"
-	BkAuthHeader = "X-Bkapi-Authorization"
-	BkJWTHeader  = "X-Bkapi-JWT"
+	BKHTTPLanguage       = "HTTP_BLUEKING_LANGUAGE"
+	BKHTTPOwner          = "HTTP_BK_SUPPLIER_ACCOUNT"
+	BKHTTPOwnerID        = "HTTP_BLUEKING_SUPPLIER_ID"
+	BKHTTPRequestAppCode = "Bk-App-Code"
+	BKHTTPRequestID      = "Xgo_Request_Id"
+)
+
+const (
+	ReqRealIPHeader = "X-Real-Ip"
+	RidHeader       = "X-Bkapi-Request-Id"
+	BkAuthHeader    = "X-Bkapi-Authorization"
+	BkJWTHeader     = "X-Bkapi-JWT"
 )
 
 const (
@@ -26,6 +35,7 @@ const (
 	AppCodeHeader         = "X-Xgo-App-Code"
 	UserTokenHeader       = "X-Xgo-User-Token"
 	UserTicketHeader      = "X-Xgo-User-Ticket"
+	IsInnerReqHeader      = "X-Xgo-Is-Inner-Request"
 )
 
 const (

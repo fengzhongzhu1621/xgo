@@ -76,6 +76,17 @@ func GetRid(header http.Header) string {
 	return header.Get(RidHeader)
 }
 
+func SetRid(header http.Header, value string) {
+	header.Set(RidHeader, value)
+}
+
+// AddRid add request id to http header
+func AddRid(header http.Header, value string) {
+	if GetRid(header) != value {
+		header.Add(RidHeader, value)
+	}
+}
+
 func GetUser(header http.Header) string {
 	return header.Get(UserHeader)
 }
@@ -85,15 +96,27 @@ func GetLanguage(header http.Header) string {
 	return header.Get(LanguageHeader)
 }
 
+func SetLanguage(header http.Header, value string) {
+	header.Set(LanguageHeader, value)
+}
+
 // GetSupplierAccount get supplier account from http header
 func GetSupplierAccount(header http.Header) string {
 	return header.Get(SupplierAccountHeader)
+}
+
+func SetSupplierAccount(header http.Header, value string) {
+	header.Set(SupplierAccountHeader, value)
 }
 
 func AddUser(header http.Header, value string) {
 	if GetUser(header) != value {
 		header.Add(UserHeader, value)
 	}
+}
+
+func SetUser(header http.Header, value string) {
+	header.Set(UserHeader, value)
 }
 
 func AddLanguage(header http.Header, value string) {
@@ -113,18 +136,30 @@ func IsReqFromWeb(header http.Header) bool {
 	return header.Get(ReqFromWebHeader) == "true"
 }
 
+func SetReqFromWeb(header http.Header) {
+	header.Set(ReqFromWebHeader, "true")
+}
+
 func GetBkJWT(header http.Header) string {
 	return header.Get(BkJWTHeader)
+}
+
+func SetBkJWT(header http.Header, value string) {
+	header.Set(BkJWTHeader, value)
 }
 
 func GetAppCode(header http.Header) string {
 	return header.Get(AppCodeHeader)
 }
+
+func SetAppCode(header http.Header, value string) {
+	header.Set(AppCodeHeader, value)
+}
+
 func GetUserToken(header http.Header) string {
 	return header.Get(UserTokenHeader)
 }
 
-// GetUserTicket get blueking user ticket from http header
 func GetUserTicket(header http.Header) string {
 	return header.Get(UserTicketHeader)
 }
@@ -132,4 +167,31 @@ func GetUserTicket(header http.Header) string {
 func SetBkAuth(header http.Header, value string) http.Header {
 	header.Set(BkAuthHeader, value)
 	return header
+}
+
+func SetUserToken(header http.Header, value string) {
+	header.Set(UserTokenHeader, value)
+}
+
+func SetUserTicket(header http.Header, value string) {
+	header.Set(UserTicketHeader, value)
+}
+
+// GetReqRealIP get request real ip from http header
+func GetReqRealIP(header http.Header) string {
+	return header.Get(ReqRealIPHeader)
+}
+
+func SetReqRealIP(header http.Header, value string) {
+	header.Set(ReqRealIPHeader, value)
+}
+
+// IsInnerReq check if request is inner request
+func IsInnerReq(header http.Header) bool {
+	return header.Get(IsInnerReqHeader) == "true"
+}
+
+// SetIsInnerReqHeader set the request is inner flag to http header
+func SetIsInnerReqHeader(header http.Header) {
+	header.Set(IsInnerReqHeader, "true")
 }

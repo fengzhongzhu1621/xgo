@@ -1,9 +1,8 @@
 package db
 
 import (
+	"net/http"
 	"time"
-
-	"github.com/fengzhongzhu1621/xgo/network/nethttp"
 )
 
 // TxnOption TODO
@@ -20,16 +19,22 @@ type TxnCapable struct {
 	SessionID string        `json:"session_id"`
 }
 
-// AbortTransactionResult abort transaction result
-type AbortTransactionResult struct {
-	// Retry defines if the transaction needs to retry, the following are the scenario that needs to retry:
-	// 1. the write operation in the transaction conflicts with another transaction,
-	// then do retry in the scene layer with server times depends on conditions.
-	Retry bool `json:"retry"`
+// GetTXId get transaction id from http header
+func GetTXId(header http.Header) string {
+	return header.Get(TransactionIdHeader)
 }
 
-// AbortTransactionResponse abort transaction response
-type AbortTransactionResponse struct {
-	nethttp.BaseResp       `json:",inline"`
-	AbortTransactionResult `json:"data"`
+// GetTXTimeout get transaction timeout from http header
+func GetTXTimeout(header http.Header) string {
+	return header.Get(TransactionTimeoutHeader)
+}
+
+// SetTXId set transaction id to http header
+func SetTXId(header http.Header, value string) {
+	header.Set(TransactionIdHeader, value)
+}
+
+// SetTXTimeout set transaction timeout to http header
+func SetTXTimeout(header http.Header, value string) {
+	header.Set(TransactionTimeoutHeader, value)
 }
