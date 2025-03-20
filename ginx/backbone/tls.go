@@ -80,3 +80,15 @@ func GetClientTLSConfig(prefix string) (*tls.Config, error) {
 
 	return tlsConf, nil
 }
+
+func IsTLS(config *TLSClientConfig) bool {
+	if config == nil || len(config.CertFile) == 0 || len(config.KeyFile) == 0 {
+		return false
+	}
+	return true
+}
+
+func GetTLSConf() (*TLSClientConfig, error) {
+	config, err := NewTLSClientConfigFromConfig("tls")
+	return &config, err
+}

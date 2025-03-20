@@ -1,9 +1,10 @@
 package server_option
 
 const (
-	MODULE_WEBSERVER = "webserver"
-	MODULE_APISERVER = "apiserver"
-	MODULE_MIGRATE   = "migrate"
+	MODULE_WEBSERVER   = "webserver"
+	MODULE_APISERVER   = "apiserver"
+	MODULE_MIGRATE     = "migrate"
+	MODULE_CORESERVICE = "coreservice"
 )
 
 var identification = "unknown"

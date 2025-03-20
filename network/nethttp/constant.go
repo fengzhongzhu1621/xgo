@@ -12,6 +12,7 @@ const (
 const DEFAULT_BACKEND_OPERATOR = "system"
 
 const (
+	RidHeader             = "X-Bkapi-Request-Id"
 	UserHeader            = "X-Xgo-User"
 	LanguageHeader        = "X-Xgo-Language"
 	SupplierAccountHeader = "X-Xgo-Supplier-Account"

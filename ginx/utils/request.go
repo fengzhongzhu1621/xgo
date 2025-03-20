@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"context"
+
 	"github.com/fengzhongzhu1621/xgo/network/constant"
 	"github.com/gin-gonic/gin"
 )
@@ -57,4 +59,16 @@ func GetUserID(c *gin.Context) string {
 // SetUserID ...
 func SetUserID(c *gin.Context, userID string) {
 	c.Set(constant.UserIDKey, userID)
+}
+
+func ExtractRequestIDFromContext(ctx context.Context) string {
+	if ctx == nil {
+		return ""
+	}
+	rid := ctx.Value(constant.ContextRequestIDField)
+	ridValue, ok := rid.(string)
+	if ok == true {
+		return ridValue
+	}
+	return ""
 }

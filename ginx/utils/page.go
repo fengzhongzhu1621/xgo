@@ -10,14 +10,14 @@ const (
 	maxPageSize = 50
 )
 
-// GetPage 从请求参数获得页码
+// GetPage 从GET请求参数获得页码
 func GetPage(c *gin.Context) int {
 	page := cast.ToInt(c.Query("page"))
 
 	return max(1, page)
 }
 
-// GetLimit 从请求参数获得每页的大小
+// GetLimit 从GET请求参数获得每页的大小
 func GetPageSize(c *gin.Context) int {
 	pageSize := cast.ToInt(c.Query("limit"))
 	pageSize = min(maxPageSize, pageSize)

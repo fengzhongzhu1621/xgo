@@ -3,7 +3,7 @@ package middleware
 import (
 	"net/http"
 
-	"github.com/fengzhongzhu1621/xgo/collections/ratelimiter"
+	"github.com/fengzhongzhu1621/xgo/collections/flowctrl/ratelimiter"
 )
 
 func IPRateLimitMiddleware(limiter *ratelimiter.IPRateLimiter) func(http.Handler) http.Handler {

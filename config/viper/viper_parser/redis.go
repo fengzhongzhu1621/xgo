@@ -6,13 +6,14 @@ import (
 	"time"
 
 	"github.com/fengzhongzhu1621/xgo/db/redis/client"
+	redis "github.com/fengzhongzhu1621/xgo/db/redis/client"
 	log "github.com/sirupsen/logrus"
 )
 
 var redisParser *viperParser
 
 // Redis return redis configuration information according to the prefix.
-func Redis(prefix string, waitTime int) (client.Config, error) {
+func Redis(prefix string, waitTime int) (redis.Config, error) {
 	confLock.RLock()
 	defer confLock.RUnlock()
 

@@ -98,7 +98,6 @@ func (zlock *ZkLock) UnLock() error {
 	return nil
 }
 
-// ZkClient TODO
 type ZkClient struct {
 	ZkHost       []string
 	ZkConn       *zk.Conn

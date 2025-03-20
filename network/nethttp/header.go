@@ -72,6 +72,10 @@ func CopyHeader(src http.Header, target http.Header) {
 	}
 }
 
+func GetRid(header http.Header) string {
+	return header.Get(RidHeader)
+}
+
 func GetUser(header http.Header) string {
 	return header.Get(UserHeader)
 }

@@ -19,11 +19,11 @@ type Context struct {
 	ctx context.Context
 }
 
-type ContextInterface interface {
+type IContextInterface interface {
 	WithCancel() (context.Context, context.CancelFunc)
 }
 
-func NewContext() ContextInterface {
+func NewContext() IContextInterface {
 	return &Context{
 		ctx: context.Background(),
 	}
