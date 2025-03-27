@@ -1,4 +1,4 @@
-package util
+package cmdb
 
 import (
 	"encoding/json"

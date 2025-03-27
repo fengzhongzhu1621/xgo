@@ -90,3 +90,50 @@ const (
 	// DBSkip skip data index
 	DBSkip = "$skip"
 )
+
+const (
+	// GT TODO
+	// Comparison Operator
+	GT string = "$gt"
+	// LT TODO
+	LT string = "$lt"
+	// GTE TODO
+	GTE string = "$gte"
+	// LTE TODO
+	LTE string = "$lte"
+	// IN TODO
+	IN string = "$in"
+	// NIN TODO
+	NIN string = "$nin"
+	// EQ TODO
+	EQ string = "$eq"
+	// NEQ TODO
+	NEQ string = "$ne"
+	// REGEX TODO
+	REGEX string = "$regex"
+
+	// AND TODO
+	// Logic Operator
+	AND string = "$and"
+	// OR TODO
+	OR string = "$or"
+	// NOT TODO
+	NOT string = "$not"
+	// NOR TODO
+	NOR string = "$nor"
+
+	// EXISTS TODO
+	// TODO:
+	// Elements Operator
+	EXISTS string = "$exists"
+	// TYPE TODO
+	TYPE string = "$type"
+
+	// ALL TODO
+	// Array Operator
+	ALL string = "$all"
+	// ELEMMATCH TODO
+	ELEMMATCH string = "$elemMatch"
+	// SIZE TODO
+	SIZE string = "$size"
+)
