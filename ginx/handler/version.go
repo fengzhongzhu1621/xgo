@@ -1,9 +1,13 @@
 package handler
 
 import (
+	"net/http"
+	"os"
 	"strings"
+	"time"
 
 	"github.com/fengzhongzhu1621/xgo/config"
+	"github.com/fengzhongzhu1621/xgo/config/server_option"
 	"github.com/fengzhongzhu1621/xgo/ginx/request/header"
 	"github.com/fengzhongzhu1621/xgo/ginx/serializer"
 	"github.com/fengzhongzhu1621/xgo/ginx/service"
@@ -11,8 +15,24 @@ import (
 	"github.com/fengzhongzhu1621/xgo/ginx/utils"
 	"github.com/fengzhongzhu1621/xgo/network/nethttp"
 	"github.com/fengzhongzhu1621/xgo/validator"
+	"github.com/fengzhongzhu1621/xgo/version"
 	"github.com/gin-gonic/gin"
 )
+
+func Version(c *gin.Context) {
+	runEnv := os.Getenv("RUN_ENV")
+	now := time.Now()
+	c.JSON(http.StatusOK, gin.H{
+		"module":    server_option.GetIdentification(),
+		"version":   version.AppVersion,
+		"commit":    version.GitCommit,
+		"buildTime": version.BuildTime,
+		"goVersion": version.GoVersion,
+		"env":       runEnv,
+		"timestamp": now.Unix(),
+		"date":      now,
+	})
+}
 
 // @Summary 获得版本日志内容
 // @Description 获得版本日志内容

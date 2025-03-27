@@ -9,23 +9,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestPing(t *testing.T) {
-	t.Parallel()
-
-	// 注册路由
-	r := ginx.SetupRouter()
-	r.GET("/ping", Ping)
-
-	// 模拟调用
-	apitest.New().
-		Handler(r).
-		Get("/ping").
-		Expect(t).
-		Body(`pong`).
-		Status(http.StatusOK).
-		End()
-}
-
 func TestVersion(t *testing.T) {
 	t.Parallel()
 
