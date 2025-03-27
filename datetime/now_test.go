@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/dromara/carbon/v2"
 	"github.com/duke-git/lancet/v2/datetime"
 )
 
@@ -48,13 +49,15 @@ func TestGetNowTime(t *testing.T) {
 	// 15:57:33
 }
 
-// func GetNowDateTime() string
+// 获取当前时间（系统时区）
 func TestGetNowDateTime(t *testing.T) {
 	current := datetime.GetNowDateTime()
+	// 2022-01-28 15:59:33
 	fmt.Println(current)
 
-	// Output:
+	now := carbon.Now()
 	// 2022-01-28 15:59:33
+	fmt.Println("当前时间:", now)
 }
 
 // func GetTodayStartTime() string

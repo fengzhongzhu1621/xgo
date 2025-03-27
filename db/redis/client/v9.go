@@ -20,6 +20,7 @@ var (
 // InitRedisV9Client 初始化Redis客户端
 func InitRedisV9Client(ctx context.Context, cfg *RedisConfig) {
 	// 解析配置中的DSN字符串
+	// redis.ParseURL("redis://<user>:<pass>@localhost:6379/<db>")
 	opts, err := redisV9.ParseURL(cfg.DSN())
 	if err != nil {
 		log.Fatalf("redis parse url error: %s", err.Error())

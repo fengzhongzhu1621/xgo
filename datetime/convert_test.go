@@ -5,9 +5,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jinzhu/now"
-
+	"github.com/dromara/carbon/v2"
 	"github.com/duke-git/lancet/v2/datetime"
+	"github.com/jinzhu/now"
 )
 
 // 时间戳转换为本地时间字符串格式
@@ -21,20 +21,48 @@ func TestTimeStampToLocalString(t *testing.T) {
 // time.Time 转换为字符串格式
 // func FormatTimeToStr(t time.Time, format string, timezone ...string) string
 func TestFormatTimeToStr(t *testing.T) {
-	t1, _ := time.Parse("2006-01-02 15:04:05", "2021-01-02 16:04:08")
+	{
+		t1, _ := time.Parse("2006-01-02 15:04:05", "2021-01-02 16:04:08")
 
-	result1 := datetime.FormatTimeToStr(t1, "yyyy-mm-dd hh:mm:ss")
-	result2 := datetime.FormatTimeToStr(t1, "yyyy-mm-dd")
-	result3 := datetime.FormatTimeToStr(t1, "dd-mm-yy hh:mm:ss")
+		result1 := datetime.FormatTimeToStr(t1, "yyyy-mm-dd hh:mm:ss")
+		result2 := datetime.FormatTimeToStr(t1, "yyyy-mm-dd")
+		result3 := datetime.FormatTimeToStr(t1, "dd-mm-yy hh:mm:ss")
 
-	fmt.Println(result1)
-	fmt.Println(result2)
-	fmt.Println(result3)
+		fmt.Println(result1)
+		fmt.Println(result2)
+		fmt.Println(result3)
 
-	// Output:
-	// 2021-01-02 16:04:08
-	// 2021-01-02
-	// 02-01-21 16:04:08
+		// Output:
+		// 2021-01-02 16:04:08
+		// 2021-01-02
+		// 02-01-21 16:04:08
+	}
+
+	{
+		// func (t *theTime) ToFormat() string
+		tm, _ := datetime.NewFormat("2022-03-18 17:04:05")
+		fmt.Println(tm.ToFormat())
+
+		// Output:
+		// 2022-03-18 17:04:05
+	}
+
+	{
+		// func (t *theTime) ToFormatForTpl(tpl string) string
+		tm, _ := datetime.NewFormat("2022-03-18 17:04:05")
+		ts := tm.ToFormatForTpl("2006/01/02 15:04:05")
+		fmt.Println(ts)
+
+		// Output:
+		// 2022/03/18 17:04:05
+	}
+
+	{
+		now := carbon.Now()
+		formatted := now.Format("Y-m-d H:i:s") // 系统时区
+		fmt.Println("格式化后的时间:", formatted)
+	}
+
 }
 
 // 字符串转换为 time.Time 格式
@@ -100,25 +128,6 @@ func TestToUnix(t *testing.T) {
 
 	// Output:
 	// 1647597438
-}
-
-// func (t *theTime) ToFormat() string
-func TestToFormat(t *testing.T) {
-	tm, _ := datetime.NewFormat("2022-03-18 17:04:05")
-	fmt.Println(tm.ToFormat())
-
-	// Output:
-	// 2022-03-18 17:04:05
-}
-
-// func (t *theTime) ToFormatForTpl(tpl string) string
-func TestToFormatForTpl(t *testing.T) {
-	tm, _ := datetime.NewFormat("2022-03-18 17:04:05")
-	ts := tm.ToFormatForTpl("2006/01/02 15:04:05")
-	fmt.Println(ts)
-
-	// Output:
-	// 2022/03/18 17:04:05
 }
 
 // func (t *theTime) ToIso8601() string
