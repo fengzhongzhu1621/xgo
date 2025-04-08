@@ -1,6 +1,8 @@
 package nethttp
 
 import (
+	"encoding/json"
+	"errors"
 	"fmt"
 
 	"github.com/fengzhongzhu1621/xgo"
@@ -13,6 +15,20 @@ type Response struct {
 	Message   string      `json:"message"`
 	Data      interface{} `json:"data"`
 	RequestID string      `json:"requestID"`
+}
+
+func CreateResponse(code int, message string, data interface{}) (string, error) {
+	bResult := false
+	if 0 == code {
+		bResult = true
+	}
+	resp := Response{bResult, code, message, data, ""}
+	b, err := json.Marshal(resp)
+	if err != nil {
+		return "", err
+	}
+
+	return string(b), errors.New(string(b))
 }
 
 type ResponseList struct {
