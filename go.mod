@@ -44,7 +44,6 @@ require (
 	cloud.google.com/go/compute/metadata v0.6.0 // indirect
 	cloud.google.com/go/longrunning v0.6.4 // indirect
 	filippo.io/edwards25519 v1.1.0 // indirect
-	github.com/BurntSushi/toml v1.4.0 // indirect
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/VividCortex/ewma v1.2.0 // indirect
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
@@ -60,9 +59,7 @@ require (
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/cloudflare/circl v1.5.0 // indirect
 	github.com/cloudwego/base64x v0.1.5 // indirect
-	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
-	github.com/dromara/carbon/v2 v2.5.4 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.8 // indirect
@@ -74,12 +71,7 @@ require (
 	github.com/go-openapi/spec v0.21.0 // indirect
 	github.com/go-openapi/swag v0.23.0 // indirect
 	github.com/go-task/slim-sprig/v3 v3.0.0 // indirect
-	github.com/gobuffalo/envy v1.7.0 // indirect
-	github.com/gobuffalo/packd v0.3.0 // indirect
-	github.com/gobuffalo/packr v1.30.1 // indirect
 	github.com/goccy/go-json v0.10.5 // indirect
-	github.com/gogf/gf/v2 v2.9.0 // indirect
-	github.com/golang-module/carbon v1.7.3 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/google/pprof v0.0.0-20241210010833-40e02aabc2ad // indirect
@@ -93,13 +85,11 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.26.1 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-metrics v0.5.4 // indirect
-	github.com/imroc/req/v3 v3.50.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jonboulle/clockwork v0.4.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/jtolds/gls v4.20.0+incompatible // indirect
-	github.com/juju/ratelimit v1.0.2 // indirect
 	github.com/klauspost/compress v1.18.0 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.10 // indirect
 	github.com/mailru/easyjson v0.9.0 // indirect
@@ -120,16 +110,14 @@ require (
 	github.com/richardlehane/mscfb v1.0.4 // indirect
 	github.com/richardlehane/msoleps v1.0.4 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
-	github.com/rogpeppe/go-internal v1.13.1 // indirect
 	github.com/sagikazarmark/locafero v0.7.0 // indirect
 	github.com/sagikazarmark/slog-shim v0.1.0 // indirect
 	github.com/sethvargo/go-retry v0.3.0 // indirect
 	github.com/smarty/assertions v1.15.0 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	github.com/syndtr/goleveldb v1.0.0 // indirect
+	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
-	github.com/tidwall/sjson v1.2.5 // indirect
-	github.com/tidwall/tinyqueue v0.1.1 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/vmihailenco/go-tinylfu v0.2.2 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
@@ -221,6 +209,7 @@ require (
 	github.com/codeskyblue/go-accesslog v0.0.0-20171215023101-6188d3bd9371
 	github.com/codeskyblue/openid-go v0.0.0-20160923065855-0d30842b2fb4
 	github.com/coocood/freecache v1.2.4
+	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf
 	github.com/dablelv/cyan v0.0.56
 	github.com/deckarep/golang-set v1.8.0
 	github.com/deckarep/golang-set/v2 v2.7.0
@@ -228,6 +217,7 @@ require (
 	github.com/dgrijalva/jwt-go/v4 v4.0.0-preview1
 	github.com/disintegration/imaging v1.6.2
 	github.com/dlmiddlecote/sqlstats v1.0.2
+	github.com/dromara/carbon/v2 v2.5.4
 	github.com/duke-git/lancet/v2 v2.3.4
 	github.com/emicklei/go-restful/v3 v3.12.2
 	github.com/fork2fix/go-plist v0.0.0-20181126021357-36960be5e636
@@ -244,9 +234,10 @@ require (
 	github.com/go-yaml/yaml v2.1.0+incompatible
 	github.com/go-zookeeper/zk v1.0.4
 	github.com/gofrs/uuid v4.4.0+incompatible
+	github.com/gogf/gf/v2 v2.9.0
 	github.com/goji/httpauth v0.0.0-20160601135302-2da839ab0f4d
 	github.com/golang-cz/devslog v0.0.11
-	github.com/golang-jwt/jwt/v4 v4.5.1
+	github.com/golang-jwt/jwt/v4 v4.5.2
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/golang/mock v1.6.0
 	github.com/gomodule/redigo v1.9.2
@@ -259,10 +250,12 @@ require (
 	github.com/gwatts/gin-adapter v1.0.0
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/hashicorp/go-version v1.6.0
+	github.com/imroc/req/v3 v3.50.0
 	github.com/jinzhu/copier v0.4.0
 	github.com/jinzhu/gorm v1.9.16
 	github.com/jinzhu/now v1.1.5
 	github.com/jmoiron/sqlx v1.4.0
+	github.com/juju/ratelimit v1.0.2
 	github.com/karlseguin/ccache/v2 v2.0.8
 	github.com/kyokomi/emoji/v2 v2.2.13
 	github.com/lithammer/shortuuid/v3 v3.0.7
@@ -293,13 +286,8 @@ require (
 	github.com/swaggo/files v1.0.1
 	github.com/swaggo/gin-swagger v1.6.0
 	github.com/swaggo/swag v1.16.4
-	github.com/tidwall/assert v0.1.0
-	github.com/tidwall/btree v1.7.0
 	github.com/tidwall/gjson v1.18.0
-	github.com/tidwall/grect v0.1.4
-	github.com/tidwall/lotsa v1.0.3
-	github.com/tidwall/match v1.1.1
-	github.com/tidwall/rtred v0.1.2
+	github.com/tidwall/sjson v1.2.5
 	github.com/unrolled/secure v1.17.0
 	github.com/vmihailenco/msgpack/v5 v5.4.1
 	github.com/wneessen/niljson v0.1.0
