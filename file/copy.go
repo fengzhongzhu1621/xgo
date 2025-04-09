@@ -20,19 +20,6 @@ func CopySymlink(src string, dest string) error {
 	return os.Symlink(src, dest)
 }
 
-func _copy(src, dest string, fileInfo os.FileInfo) error {
-	// 如果源文件是符号链接
-	if validator.IsSymbolicLink(fileInfo) {
-		return CopySymlink(src, dest)
-	}
-	// 如果源文件是目录
-	if fileInfo.IsDir() {
-		return CopyDir(src, dest, fileInfo)
-	}
-	// 如果源文件是普通文件
-	return CopyFile(src, dest, fileInfo)
-}
-
 // CopyDir 复制目录.
 func CopyDir(src string, dst string, fileInfo os.FileInfo) error {
 	if fileInfo == nil {
@@ -115,4 +102,17 @@ func Copy(src, dest string) error {
 		return err
 	}
 	return _copy(src, dest, fileInfo)
+}
+
+func _copy(src, dest string, fileInfo os.FileInfo) error {
+	// 如果源文件是符号链接
+	if validator.IsSymbolicLink(fileInfo) {
+		return CopySymlink(src, dest)
+	}
+	// 如果源文件是目录
+	if fileInfo.IsDir() {
+		return CopyDir(src, dest, fileInfo)
+	}
+	// 如果源文件是普通文件
+	return CopyFile(src, dest, fileInfo)
 }
