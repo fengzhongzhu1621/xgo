@@ -17,6 +17,7 @@ type User2 struct {
 	_    struct{}
 }
 
+// 强制要求结构体在初始化时必须使用具名字段初始化
 func TestDefine(t *testing.T) {
 	user := User{"name", 10}
 	user = User{Name: "name", Age: 20}

@@ -165,31 +165,31 @@ func ToInt(i interface{}) int {
 	return v
 }
 
-// ToUint casts an interface to a uint type.
+// ToUint casts an interface to an uint type.
 func ToUint(i interface{}) uint {
 	v, _ := ToUintE(i)
 	return v
 }
 
-// ToUint64 casts an interface to a uint64 type.
+// ToUint64 casts an interface to an uint64 type.
 func ToUint64(i interface{}) uint64 {
 	v, _ := ToUint64E(i)
 	return v
 }
 
-// ToUint32 casts an interface to a uint32 type.
+// ToUint32 casts an interface to an uint32 type.
 func ToUint32(i interface{}) uint32 {
 	v, _ := ToUint32E(i)
 	return v
 }
 
-// ToUint16 casts an interface to a uint16 type.
+// ToUint16 casts an interface to an uint16 type.
 func ToUint16(i interface{}) uint16 {
 	v, _ := ToUint16E(i)
 	return v
 }
 
-// ToUint8 casts an interface to a uint8 type.
+// ToUint8 casts an interface to an uint8 type.
 func ToUint8(i interface{}) uint8 {
 	v, _ := ToUint8E(i)
 	return v
@@ -230,8 +230,8 @@ func ToIntSliceE(i interface{}) ([]int, error) {
 	}
 }
 
-// 转换为float32类型
-// ToFloat32E casts an interface to a float32 type.
+// ToFloat32E 转换为float32类型
+// casts an interface to a float32 type.
 func ToFloat32E(i interface{}) (float32, error) {
 	i = indirect(i)
 
@@ -324,8 +324,8 @@ func ToInt64E(i interface{}) (int64, error) {
 	}
 }
 
-// 转换为Int32类型
-// ToInt32E casts an interface to an int32 type.
+// ToInt32E 转换为Int32类型
+// casts an interface to an int32 type.
 func ToInt32E(i interface{}) (int32, error) {
 	i = indirect(i)
 
@@ -513,7 +513,7 @@ func ToIntE(i interface{}) (int, error) {
 	}
 }
 
-// ToUintE casts an interface to a uint type.
+// ToUintE casts an interface to an uint type.
 func ToUintE(i interface{}) (uint, error) {
 	i = indirect(i)
 
@@ -581,7 +581,7 @@ func ToUintE(i interface{}) (uint, error) {
 	}
 }
 
-// ToUint64E casts an interface to a uint64 type.
+// ToUint64E casts an interface to an uint64 type.
 func ToUint64E(i interface{}) (uint64, error) {
 	i = indirect(i)
 
@@ -649,7 +649,7 @@ func ToUint64E(i interface{}) (uint64, error) {
 	}
 }
 
-// ToUint32E casts an interface to a uint32 type.
+// ToUint32E casts an interface to an uint32 type.
 func ToUint32E(i interface{}) (uint32, error) {
 	i = indirect(i)
 
@@ -717,7 +717,7 @@ func ToUint32E(i interface{}) (uint32, error) {
 	}
 }
 
-// ToUint16E casts an interface to a uint16 type.
+// ToUint16E casts an interface to an uint16 type.
 func ToUint16E(i interface{}) (uint16, error) {
 	i = indirect(i)
 
@@ -785,7 +785,7 @@ func ToUint16E(i interface{}) (uint16, error) {
 	}
 }
 
-// ToUint8E casts an interface to a uint type.
+// ToUint8E casts an interface to an uint type.
 func ToUint8E(i interface{}) (uint8, error) {
 	i = indirect(i)
 

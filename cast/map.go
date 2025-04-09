@@ -284,6 +284,7 @@ func ToStringMapInt64E(i interface{}) (map[string]int64, error) {
 	return m, nil
 }
 
+// MapValueInterfaceToString 将map[string]any类型的数据，转换成map[string]string类型
 func MapValueInterfaceToString(input map[string]any) (map[string]string, error) {
 	data := make(map[string]string, len(input))
 	for key, value := range input {

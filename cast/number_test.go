@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/gogf/gf/v2/util/gconv"
+
 	"github.com/gookit/goutil/arrutil"
 
 	"github.com/duke-git/lancet/v2/convertor"
@@ -673,4 +675,29 @@ func TestIndirectPointers(t *testing.T) {
 
 	assert.Equal(t, ToInt(y), 13)
 	assert.Equal(t, ToInt(z), 13)
+}
+
+func TestGconv(t *testing.T) {
+	i := 123
+	fmt.Printf("%10s %v\n", "Int:", gconv.Int(i))
+	fmt.Printf("%10s %v\n", "Int8:", gconv.Int8(i))
+	fmt.Printf("%10s %v\n", "Int16:", gconv.Int16(i))
+	fmt.Printf("%10s %v\n", "Int32:", gconv.Int32(i))
+	fmt.Printf("%10s %v\n", "Int64:", gconv.Int64(i))
+	fmt.Printf("%10s %v\n", "Uint:", gconv.Uint(i))
+	fmt.Printf("%10s %v\n", "Float32:", gconv.Float32(i))
+	fmt.Printf("%10s %v\n", "Float64:", gconv.Float64(i))
+	fmt.Printf("%10s %v\n", "Bool:", gconv.Bool(i))
+	fmt.Printf("%10s %v\n", "String:", gconv.String(i))
+
+	//      Int: 123
+	//     Int8: 123
+	//    Int16: 123
+	//    Int32: 123
+	//    Int64: 123
+	//     Uint: 123
+	//  Float32: 123
+	//  Float64: 123
+	//     Bool: true
+	//   String: 123
 }

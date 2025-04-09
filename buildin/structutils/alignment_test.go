@@ -19,6 +19,7 @@ type Efficient struct {
 	// 6 个字节的填充
 }
 
+// 计算结构体大小
 func TestAlignment(t *testing.T) {
 	inefficient := Inefficient{}
 	efficient := Efficient{}

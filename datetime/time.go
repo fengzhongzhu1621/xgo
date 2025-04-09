@@ -14,7 +14,7 @@ type Time struct {
 	time.Time `bson:",inline" json:",inline"`
 }
 
-// MarshalJSON TODO
+// MarshalJSON godoc
 func (t Time) MarshalJSON() ([]byte, error) {
 	return json.Marshal(t.Time)
 }

@@ -78,6 +78,7 @@ require (
 	github.com/gobuffalo/packd v0.3.0 // indirect
 	github.com/gobuffalo/packr v1.30.1 // indirect
 	github.com/goccy/go-json v0.10.5 // indirect
+	github.com/gogf/gf/v2 v2.9.0 // indirect
 	github.com/golang-module/carbon v1.7.3 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect

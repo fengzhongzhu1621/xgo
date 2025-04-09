@@ -52,6 +52,7 @@ func TestCopyProperties(t *testing.T) {
 
 	indicatorVO := IndicatorVO{}
 
+	// indicator -> indicatorVO
 	err := convertor.CopyProperties(&indicatorVO, indicator)
 
 	if err != nil {
