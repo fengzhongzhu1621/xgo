@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/duke-git/lancet/v2/random"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -87,4 +88,22 @@ func TestUUIdV4(t *testing.T) {
 		fmt.Println(uuid) // c746705a-860f-46cf-a117-ef996fc4defe}
 	}
 
+}
+
+func TestGoogleUUID(t *testing.T) {
+	// 生成版本4的随机UUID
+	id := uuid.New()
+	fmt.Println("生成的UUID:", id) // 77dd4d61-d08c-4eee-8cd6-9e15a7d3d19d
+
+	// 生成版本1的基于时间的UUID
+	idV1, _ := uuid.NewUUID()
+	fmt.Println("版本1 UUID:", idV1) // ffe0e9aa-15ba-11f0-a84f-c6eda4bffd12
+
+	// 从字符串解析UUID
+	parsedUUID, err := uuid.Parse("6ba7b810-9dad-11d1-80b4-00c04fd430c8")
+	if err != nil {
+		fmt.Println("解析错误:", err)
+		return
+	}
+	fmt.Println("解析后的UUID:", parsedUUID) // 6ba7b810-9dad-11d1-80b4-00c04fd430c8
 }
