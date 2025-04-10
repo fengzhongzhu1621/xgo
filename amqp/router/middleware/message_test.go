@@ -56,8 +56,8 @@ func (mp *mockPublisher) PopMessages() []*message.Message {
 }
 
 var handlerFuncAlwaysOKMessages = []*message.Message{
-	message.NewMessage(uuid.NewUUID(), nil),
-	message.NewMessage(uuid.NewUUID(), nil),
+	message.NewMessage(uuid.NewUUID4(), nil),
+	message.NewMessage(uuid.NewUUID4(), nil),
 }
 
 func handlerFuncAlwaysOK(*message.Message) ([]*message.Message, error) {

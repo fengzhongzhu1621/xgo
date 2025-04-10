@@ -39,7 +39,7 @@ func (m JSONMarshaler) newUUID() string {
 	}
 
 	// default
-	return uuid.NewUUID()
+	return uuid.NewUUID4()
 }
 
 func (JSONMarshaler) Unmarshal(msg *message.Message, v interface{}) (err error) {

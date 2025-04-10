@@ -44,7 +44,7 @@ func process(messages <-chan *message.Message) {
 // 生产者发送消息
 func publishMessages(publisher message.Publisher) {
 	for i := 0; i < 10; i++ {
-		msg := message.NewMessage(uuid.NewUUID(), []byte("Hello, world!"))
+		msg := message.NewMessage(uuid.NewUUID4(), []byte("Hello, world!"))
 		// 生产者发送消息给所有注册的订阅者，并启动协程模拟订阅者接受消息到消息缓存队列，并等待消息返回ack
 		if err := publisher.Publish("example.topic", msg); err != nil {
 			panic(err)

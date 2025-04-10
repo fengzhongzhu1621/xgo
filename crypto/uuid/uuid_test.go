@@ -47,7 +47,7 @@ func testUniqness(t *testing.T, genFunc func() string) {
 }
 
 func TestUUID(t *testing.T) {
-	testUniqness(t, NewUUID)
+	testUniqness(t, NewUUID4)
 }
 
 func TestShortUUID(t *testing.T) {
@@ -79,9 +79,12 @@ func TestGenerateId(t *testing.T) {
 // TestUUIdV4 Generate a random UUID of version 4 according to RFC 4122.
 // func UUIdV4() (string, error)
 func TestUUIdV4(t *testing.T) {
-	uuid, err := random.UUIdV4()
-	if err != nil {
-		return
+	{
+		uuid, err := random.UUIdV4()
+		if err != nil {
+			return
+		}
+		fmt.Println(uuid) // c746705a-860f-46cf-a117-ef996fc4defe}
 	}
-	fmt.Println(uuid) // c746705a-860f-46cf-a117-ef996fc4defe
+
 }

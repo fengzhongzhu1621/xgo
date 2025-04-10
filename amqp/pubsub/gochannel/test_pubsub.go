@@ -242,8 +242,8 @@ func TestPublishSubscribe(
 
 	// 创建100个消息，放到发送缓存数组
 	for i := 0; i < 100; i++ {
-		id := uuid.NewUUID()
-		testMetadata := uuid.NewUUID()
+		id := uuid.NewUUID4()
+		testMetadata := uuid.NewUUID4()
 
 		// 创建一个消息
 		payload := []byte(fmt.Sprintf("%d", i))
@@ -338,7 +338,7 @@ func TestConcurrentSubscribeMultipleTopics(
 
 	var messagesToPublish []*message.Message
 	for i := 0; i < messagesCount; i++ {
-		id := uuid.NewUUID()
+		id := uuid.NewUUID4()
 
 		msg := message.NewMessage(id, nil)
 		messagesToPublish = append(messagesToPublish, msg)
@@ -419,7 +419,7 @@ func TestPublishSubscribeInOrder(
 	expectedMessages := map[string][]string{}
 
 	for i := 0; i < messagesCount; i++ {
-		id := uuid.NewUUID()
+		id := uuid.NewUUID4()
 		msgType := fmt.Sprintf("%d", i%16)
 
 		msg := message.NewMessage(id, []byte(msgType))
@@ -539,7 +539,7 @@ func TestNoAck(
 	}
 
 	for i := 0; i < 2; i++ {
-		id := uuid.NewUUID()
+		id := uuid.NewUUID4()
 		log.Printf("sending %s", id)
 
 		msg := message.NewMessage(id, nil)
@@ -876,8 +876,8 @@ func TestTopic(
 		require.NoError(t, subscribeInitializer.SubscribeInitialize(topic2))
 	}
 
-	topic1Msg := message.NewMessage(uuid.NewUUID(), nil)
-	topic2Msg := message.NewMessage(uuid.NewUUID(), nil)
+	topic1Msg := message.NewMessage(uuid.NewUUID4(), nil)
+	topic2Msg := message.NewMessage(uuid.NewUUID4(), nil)
 
 	require.NoError(t, publishWithRetry(pub, topic1, topic1Msg))
 	require.NoError(t, publishWithRetry(pub, topic2, topic2Msg))
@@ -919,7 +919,7 @@ func TestMessageCtx(
 		require.NoError(t, subscribeInitializer.SubscribeInitialize(topicName))
 	}
 
-	msg := message.NewMessage(uuid.NewUUID(), nil)
+	msg := message.NewMessage(uuid.NewUUID4(), nil)
 
 	// ensuring that context is not propagated via pub/sub
 	ctx, ctxCancel := context.WithCancel(context.Background())
@@ -1085,7 +1085,7 @@ func TestReconnect(
 	for i := 0; i < publishersCount; i++ {
 		go func() {
 			for range publishMessage {
-				id := uuid.NewUUID()
+				id := uuid.NewUUID4()
 				msg := message.NewMessage(id, nil)
 
 				for {
@@ -1240,7 +1240,7 @@ func closePubSub(t *testing.T, pub message.Publisher, sub message.Subscriber) {
 }
 
 func generateConsumerGroup(t *testing.T, pubSubConstructor ConsumerGroupPubSubConstructor, topicName string) string {
-	groupName := "cg_" + uuid.NewUUID()
+	groupName := "cg_" + uuid.NewUUID4()
 
 	// create a pubsub to ensure that the consumer group exists
 	// for those providers that require subscription before publishing messages (e.g. Google Cloud PubSub)
@@ -1260,7 +1260,7 @@ func PublishSimpleMessages(t *testing.T, messagesCount int, publisher message.Pu
 	var messagesToPublish []*message.Message
 
 	for i := 0; i < messagesCount; i++ {
-		id := uuid.NewUUID()
+		id := uuid.NewUUID4()
 
 		msg := message.NewMessage(id, nil)
 		messagesToPublish = append(messagesToPublish, msg)
@@ -1292,7 +1292,7 @@ func AddSimpleMessagesParallel(t *testing.T, messagesCount int, publisher messag
 	}
 
 	for i := 0; i < messagesCount; i++ {
-		id := uuid.NewUUID()
+		id := uuid.NewUUID4()
 
 		msg := message.NewMessage(id, nil)
 		messagesToPublish = append(messagesToPublish, msg)

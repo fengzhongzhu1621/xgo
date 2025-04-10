@@ -91,7 +91,7 @@ func TestFanIn(t *testing.T) {
 	for _, topic := range upstreamTopics {
 		go func(topic string) {
 			for i := 0; i < messagesCount; i++ {
-				msg := message.NewMessage(uuid.NewUUID(), []byte(topic))
+				msg := message.NewMessage(uuid.NewUUID4(), []byte(topic))
 				err := pubsub.Publish(topic, msg)
 				require.NoError(t, err)
 

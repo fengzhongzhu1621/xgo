@@ -5,6 +5,11 @@ import (
 	"github.com/google/uuid"
 )
 
+// NewUUID4 returns a new UUID Version 4.
+func NewUUID4() string {
+	return uuid.New().String()
+}
+
 // GetUUIDv4 获取v4版本UUID
 func GetUUIDv4() (string, error) {
 	id, err := uuid.NewRandom()

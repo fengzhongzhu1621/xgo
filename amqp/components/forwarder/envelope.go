@@ -56,7 +56,7 @@ func wrapMessageInEnvelope(destinationTopic string, msg *message.Message) (*mess
 	}
 
 	// 将信封转化为一个信封消息
-	wrappedMsg := message.NewMessage(uuid.NewUUID(), envelopedMessage)
+	wrappedMsg := message.NewMessage(uuid.NewUUID4(), envelopedMessage)
 	wrappedMsg.SetContext(msg.Context())
 
 	return wrappedMsg, nil

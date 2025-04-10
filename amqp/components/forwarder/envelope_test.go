@@ -13,7 +13,7 @@ import (
 )
 
 func TestEnvelope(t *testing.T) {
-	expectedUUID := uuid.NewUUID()
+	expectedUUID := uuid.NewUUID4()
 	expectedPayload := message.Payload("msg content")
 	expectedMetadata := maps.Metadata{"key": "value"}
 	expectedDestinationTopic := "dest_topic"

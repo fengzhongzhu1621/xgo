@@ -45,7 +45,7 @@ func (m ProtobufMarshaler) newUUID() string {
 	}
 
 	// default
-	return uuid.NewUUID()
+	return uuid.NewUUID4()
 }
 
 // Unmarshal unmarshals given watermill's Message into protobuf's message.

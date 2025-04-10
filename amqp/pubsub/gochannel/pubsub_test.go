@@ -51,7 +51,7 @@ func TestPublishSubscribe_not_persistent(t *testing.T) {
 		Config{OutputChannelBuffer: int64(messagesCount)},
 		logging.NewStdLogger(true, true, "[watermill] "),
 	)
-	topicName := "test_topic_" + uuid.NewUUID()
+	topicName := "test_topic_" + uuid.NewUUID4()
 
 	msgs, err := pubSub.Subscribe(context.Background(), topicName)
 	require.NoError(t, err)
@@ -69,7 +69,7 @@ func TestPublishSubscribe_block_until_ack(t *testing.T) {
 		Config{BlockPublishUntilSubscriberAck: true},
 		logging.NewStdLogger(true, true, "[watermill] "),
 	)
-	topicName := "test_topic_" + uuid.NewUUID()
+	topicName := "test_topic_" + uuid.NewUUID4()
 
 	msgs, err := pubSub.Subscribe(context.Background(), topicName)
 	require.NoError(t, err)
@@ -173,7 +173,7 @@ func TestPublishSubscribe_do_not_block_other_subscribers(t *testing.T) {
 		Config{},
 		logging.NewStdLogger(true, true, "[watermill] "),
 	)
-	topicName := "test_topic_" + uuid.NewUUID()
+	topicName := "test_topic_" + uuid.NewUUID4()
 
 	msgsFromSubscriber1, err := pubSub.Subscribe(context.Background(), topicName)
 	require.NoError(t, err)
@@ -231,7 +231,7 @@ func testPublishSubscribeSubRace(t *testing.T) {
 	sentMessages := message.Messages{}
 	go func() {
 		for i := 0; i < messagesCount; i++ {
-			msg := message.NewMessage(uuid.NewUUID(), nil)
+			msg := message.NewMessage(uuid.NewUUID4(), nil)
 			sentMessages = append(sentMessages, msg)
 
 			go func() {

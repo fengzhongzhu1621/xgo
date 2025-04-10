@@ -206,7 +206,7 @@ func (g *GoChannel) Subscribe(ctx context.Context, topic string) (<-chan *messag
 	// 自动创建一个订阅者
 	s := &GoChannelSubscriber{
 		ctx:           ctx,
-		uuid:          uuid.NewUUID(),
+		uuid:          uuid.NewUUID4(),
 		outputChannel: make(chan *message.Message, g.config.OutputChannelBuffer),
 		logger:        g.logger,
 		closing:       make(chan struct{}),
