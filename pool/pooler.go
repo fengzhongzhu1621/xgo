@@ -10,8 +10,7 @@ import (
 )
 
 var (
-	// 连接池关闭错误
-	// ErrClosed performs any operation on the closed client will return this error.
+	// ErrClosed performs any operation on the closed client will return this error. 连接池关闭错误
 	ErrClosed = errors.New("redis: client is closed")
 
 	// ErrPoolTimeout timed out waiting to get a connection from the connection pool.
@@ -313,16 +312,16 @@ func (p *ConnPool) Get(ctx context.Context) (*Conn, error) {
 }
 
 // 预先占用一个空闲连接，分为3个来源
-// 	1. Get()时从空闲连接中获取
-//	2. Get()时如果没有空闲连接，则创建一个新连接
-//	3. 空闲检查时定时调用
+//  1. Get()时从空闲连接中获取
+//  2. Get()时如果没有空闲连接，则创建一个新连接
+//  3. 空闲检查时定时调用
 func (p *ConnPool) getTurn() {
 	p.queue <- struct{}{}
 }
 
 // 释放预先占用的空闲连接
-//	1. 空闲检查定时调用结束时操作
-//	2. Put()中调用
+//  1. 空闲检查定时调用结束时操作
+//  2. Put()中调用
 func (p *ConnPool) freeTurn() {
 	<-p.queue
 }

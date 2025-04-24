@@ -1,12 +1,26 @@
 package pool
 
 import (
+	"encoding/json"
 	"fmt"
 	"sync"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
+
+type Student struct {
+	Name   string
+	Age    int32
+	Remark [1024]byte
+}
+
+var buf, _ = json.Marshal(Student{Name: "bob", Age: 25})
+var studentPool = sync.Pool{
+	New: func() interface{} {
+		return new(Student)
+	},
+}
 
 type Person struct {
 	Name string
@@ -61,4 +75,19 @@ func TestPersonPool(t *testing.T) {
 
 	// 使用完毕后放回池中
 	PersonPool.Put(p1)
+}
+
+func BenchmarkUnmarshal(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		stu := &Student{}
+		json.Unmarshal(buf, stu)
+	}
+}
+
+func BenchmarkUnmarshalWithPool(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		stu := studentPool.Get().(*Student)
+		json.Unmarshal(buf, stu)
+		studentPool.Put(stu)
+	}
 }

@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/duke-git/lancet/v2/random"
+	gofrsUUID "github.com/gofrs/uuid"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 )
@@ -77,6 +78,20 @@ func TestGenerateId(t *testing.T) {
 	assert.Equal(t, s > 0, true)
 }
 
+func TestUUIdV1(t *testing.T) {
+	idV1, _ := uuid.NewUUID()
+	fmt.Println("版本1 UUID:", idV1) // ffe0e9aa-15ba-11f0-a84f-c6eda4bffd12
+}
+
+func TestUUIdV3(t *testing.T) {
+	// 预定义命名空间(DNS)
+	nsDNS := uuid.NameSpaceDNS
+
+	// 生成版本3 UUID(基于MD5)
+	u3 := uuid.NewMD5(nsDNS, []byte("example.com"))
+	fmt.Println("版本3 UUID:", u3)
+}
+
 // TestUUIdV4 Generate a random UUID of version 4 according to RFC 4122.
 // func UUIdV4() (string, error)
 func TestUUIdV4(t *testing.T) {
@@ -88,17 +103,28 @@ func TestUUIdV4(t *testing.T) {
 		fmt.Println(uuid) // c746705a-860f-46cf-a117-ef996fc4defe}
 	}
 
+	{
+		id := uuid.New()
+		fmt.Println("生成的UUID:", id) // 77dd4d61-d08c-4eee-8cd6-9e15a7d3d19d
+	}
+
+	{
+		// 创建版本4 UUID
+		u, _ := gofrsUUID.NewV4()
+		fmt.Println("生成的UUID:", u)
+	}
 }
 
-func TestGoogleUUID(t *testing.T) {
-	// 生成版本4的随机UUID
-	id := uuid.New()
-	fmt.Println("生成的UUID:", id) // 77dd4d61-d08c-4eee-8cd6-9e15a7d3d19d
+func TestUUIdV5(t *testing.T) {
+	// 预定义命名空间(DNS)
+	nsDNS := uuid.NameSpaceDNS
 
-	// 生成版本1的基于时间的UUID
-	idV1, _ := uuid.NewUUID()
-	fmt.Println("版本1 UUID:", idV1) // ffe0e9aa-15ba-11f0-a84f-c6eda4bffd12
+	// 生成版本5 UUID(基于SHA-1)
+	u5 := uuid.NewSHA1(nsDNS, []byte("example.com"))
+	fmt.Println("版本5 UUID:", u5)
+}
 
+func TestGoogleParseUUID(t *testing.T) {
 	// 从字符串解析UUID
 	parsedUUID, err := uuid.Parse("6ba7b810-9dad-11d1-80b4-00c04fd430c8")
 	if err != nil {
