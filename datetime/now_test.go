@@ -3,10 +3,18 @@ package datetime
 import (
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/dromara/carbon/v2"
 	"github.com/duke-git/lancet/v2/datetime"
 )
+
+func TestTimeNow(t *testing.T) {
+	now := time.Now()
+
+	// time.Time类型的值，它包含当前时间的年、月、日、时、分、秒、纳秒以及时区信息。
+	fmt.Println("当前时间:", now) // 2025-04-24 20:54:37.065298 +0800 CST m=+0.005545001
+}
 
 // Return unix timestamp of current time
 //
@@ -79,24 +87,35 @@ func TestGetTodayEndTime(t *testing.T) {
 	// 2023-06-29 23:59:59
 }
 
-// Return timestamp of zero hour (timestamp of 00:00).
-// func GetZeroHourTimestamp() int64
-func TestGetZeroHourTimestamp(t *testing.T) {
-	zeroTime := datetime.GetZeroHourTimestamp()
-	fmt.Println(zeroTime)
+func TestGetTimeStamp(t *testing.T) {
+	{
+		// Return timestamp of zero hour (timestamp of 00:00).
+		// func GetZeroHourTimestamp() int64
+		// 返回当天 00:00:00（午夜零点）的 Unix 时间戳（秒级）。
+		zeroTime := datetime.GetZeroHourTimestamp()
+		fmt.Println(zeroTime)
+	}
 
-	// Output:
-	// 1643299200
-}
+	{
+		// Return timestamp of zero hour (timestamp of 23:59).
+		// func GetNightTimestamp() int64
+		// 返回当天 23:59:59（前一天的最后一秒）的 Unix 时间戳（秒级）。
+		nightTime := datetime.GetNightTimestamp()
+		fmt.Println(nightTime)
+	}
 
-// Return timestamp of zero hour (timestamp of 23:59).
-// func GetNightTimestamp() int64
-func TestGetNightTimestamp(t *testing.T) {
-	nightTime := datetime.GetNightTimestamp()
-	fmt.Println(nightTime)
+	{
 
-	// Output:
-	// 1643385599
+		// TestTimestamp Return current second timestamp.
+		// func Timestamp(timezone ...string) int64
+		// 返回当前时间的 Unix 时间戳（秒级），可指定时区（默认为 UTC 或系统时区）。
+		ts := datetime.Timestamp()
+		fmt.Println(ts)
+	}
+
+	// 1745424000 2025-04-24 00:00:00
+	// 1745510399 2025-04-24 23:59:59
+	// 1745499616 2025-04-24 21:00:16
 }
 
 // func NowDateOrTime(format string, timezone ...string) string
@@ -110,17 +129,6 @@ func TestNowDateOrTime(t *testing.T) {
 	// Output:
 	// 2023-07-26 15:01:30
 	// 2023-07-26 02:01:30
-}
-
-// TestTimestamp Return current second timestamp.
-// func Timestamp(timezone ...string) int64
-func TestTimestamp(t *testing.T) {
-	ts := datetime.Timestamp()
-
-	fmt.Println(ts)
-
-	// Output:
-	// 1690363051
 }
 
 // func TimestampMilli(timezone ...string) int64

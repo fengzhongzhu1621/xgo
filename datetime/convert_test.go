@@ -22,6 +22,7 @@ func TestTimeStampToLocalString(t *testing.T) {
 // func FormatTimeToStr(t time.Time, format string, timezone ...string) string
 func TestFormatTimeToStr(t *testing.T) {
 	{
+		// 字符串转换为 time.Time 格式
 		t1, _ := time.Parse("2006-01-02 15:04:05", "2021-01-02 16:04:08")
 
 		result1 := datetime.FormatTimeToStr(t1, "yyyy-mm-dd hh:mm:ss")

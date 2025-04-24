@@ -32,6 +32,7 @@ func AppLogger() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 		fields := logContextFields(c)
+		// 打印响应日志
 		logger.Info("-", fields...)
 	}
 }
@@ -77,7 +78,7 @@ func logContextFields(c *gin.Context) []zap.Field {
 		zap.String("body", body),
 		zap.Int("status", c.Writer.Status()),
 		zap.Float64("latency", latency),
-		zap.String("request_id", utils.GetRequestID(c)),
+		zap.String("request_id", utils.GetRequestID(c)), // 通过RequestID 中间件生成
 		zap.String("client_id", utils.GetClientID(c)),
 		zap.String("client_ip", c.ClientIP()),
 		zap.Any("error", e),
