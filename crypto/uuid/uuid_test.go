@@ -40,11 +40,11 @@ func testUniqness(t *testing.T, genFunc func() string) {
 
 	// 判断是否产生重复的数据
 	uniqueUUIDs := make(map[string]struct{}, uuidsCount)
-	for uuid := range uuids {
-		if _, ok := uniqueUUIDs[uuid]; ok {
-			t.Error(uuid, " has duplicate")
+	for key := range uuids {
+		if _, ok := uniqueUUIDs[key]; ok {
+			t.Error(key, " has duplicate")
 		}
-		uniqueUUIDs[uuid] = struct{}{}
+		uniqueUUIDs[key] = struct{}{}
 	}
 }
 
@@ -96,11 +96,11 @@ func TestUUIdV3(t *testing.T) {
 // func UUIdV4() (string, error)
 func TestUUIdV4(t *testing.T) {
 	{
-		uuid, err := random.UUIdV4()
+		uuidValue, err := random.UUIdV4()
 		if err != nil {
 			return
 		}
-		fmt.Println(uuid) // c746705a-860f-46cf-a117-ef996fc4defe}
+		fmt.Println(uuidValue) // c746705a-860f-46cf-a117-ef996fc4defe}
 	}
 
 	{
