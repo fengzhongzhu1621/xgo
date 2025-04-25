@@ -89,6 +89,21 @@ func TestGetTodayEndTime(t *testing.T) {
 
 func TestGetTimeStamp(t *testing.T) {
 	{
+		now := time.Now()
+		unix := now.Unix() // 秒级时间戳
+		fmt.Println(unix)
+	}
+
+	{
+
+		// TestTimestamp Return current second timestamp.
+		// func Timestamp(timezone ...string) int64
+		// 返回当前时间的 Unix 时间戳（秒级），可指定时区（默认为 UTC 或系统时区）。
+		ts := datetime.Timestamp()
+		fmt.Println(ts)
+	}
+
+	{
 		// Return timestamp of zero hour (timestamp of 00:00).
 		// func GetZeroHourTimestamp() int64
 		// 返回当天 00:00:00（午夜零点）的 Unix 时间戳（秒级）。
@@ -104,15 +119,7 @@ func TestGetTimeStamp(t *testing.T) {
 		fmt.Println(nightTime)
 	}
 
-	{
-
-		// TestTimestamp Return current second timestamp.
-		// func Timestamp(timezone ...string) int64
-		// 返回当前时间的 Unix 时间戳（秒级），可指定时区（默认为 UTC 或系统时区）。
-		ts := datetime.Timestamp()
-		fmt.Println(ts)
-	}
-
+	// 1745499616 2025-04-24 21:00:16
 	// 1745424000 2025-04-24 00:00:00
 	// 1745510399 2025-04-24 23:59:59
 	// 1745499616 2025-04-24 21:00:16
@@ -153,10 +160,18 @@ func TestTimestampMicro(t *testing.T) {
 
 // func TimestampNano(timezone ...string) int64
 func TestTimestampNano(t *testing.T) {
-	ts := datetime.TimestampNano()
+	{
+		now := time.Now()
+		unixNano := now.UnixNano() // 纳秒级时间戳
+		fmt.Println(unixNano)
+	}
 
-	fmt.Println(ts)
+	{
+		ts := datetime.TimestampNano()
 
-	// Output:
-	// 1690363051331788000
+		fmt.Println(ts)
+
+		// Output:
+		// 1690363051331788000
+	}
 }

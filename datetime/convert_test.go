@@ -5,10 +5,21 @@ import (
 	"testing"
 	"time"
 
+	"github.com/jinzhu/now"
+
 	"github.com/dromara/carbon/v2"
 	"github.com/duke-git/lancet/v2/datetime"
-	"github.com/jinzhu/now"
 )
+
+func TestTimestampToTime(t *testing.T) {
+	// 获取时间戳
+	now := time.Now()
+	unix := now.Unix() // 秒级时间戳
+
+	// 从时间戳恢复时间
+	t1 := time.Unix(unix, 0)
+	fmt.Println("从时间戳恢复:", t1)
+}
 
 // 时间戳转换为本地时间字符串格式
 func TestTimeStampToLocalString(t *testing.T) {
@@ -64,6 +75,18 @@ func TestFormatTimeToStr(t *testing.T) {
 		fmt.Println("格式化后的时间:", formatted)
 	}
 
+	{
+		now := time.Now()
+		// 常用格式（当前时区）
+		fmt.Println(now.Format("2006-01-02"))            // 2025-04-25
+		fmt.Println(now.Format("2006-01-02 15:04:05"))   // 2025-04-25 09:53:38
+		fmt.Println(now.Format("15:04:05"))              // 09:53:38
+		fmt.Println(now.Format("2006年01月02日 15时04分05秒")) // 2025年04月25日 09时53分38秒
+
+		// 预定义格式（当前时区）
+		fmt.Println(now.Format(time.RFC3339)) // 2025-04-25T09:53:38+08:00
+		fmt.Println(now.Format(time.RFC1123)) // Fri, 25 Apr 2025 09:53:38 CST
+	}
 }
 
 // 字符串转换为 time.Time 格式
@@ -77,15 +100,26 @@ func TestFormatStrToTime(t *testing.T) {
 	fmt.Println(result2) // 2021-01-02 00:00:00 +0000 UTC
 	fmt.Println(result3) // 2021-01-02 16:04:08 +0000 UTC
 
-	// 不推荐使用
-	t1, _ := now.Parse("2023-10-05")       // 自动识别日期格式
-	t2, _ := now.Parse("2023/10/05 14:30") // 支持带时间的字符串
-	t3, _ := now.Parse("2023-10-05 14:30")
-	t4, _ := now.Parse("2023-10-05T01:02:03Z04:00")
-	fmt.Println(t1) // 2023-10-05 00:00:00 +0800 CST
-	fmt.Println(t2) // 0001-01-01 00:00:00 +0000 UTC
-	fmt.Println(t3) // 2023-10-05 14:30:00 +0800 CST
-	fmt.Println(t4) // 0001-01-01 00:00:00 +0000 UTC
+	{
+		// 不推荐使用
+		t1, _ := now.Parse("2023-10-05")       // 自动识别日期格式
+		t2, _ := now.Parse("2023/10/05 14:30") // 支持带时间的字符串
+		t3, _ := now.Parse("2023-10-05 14:30")
+		t4, _ := now.Parse("2023-10-05T01:02:03Z04:00")
+		fmt.Println(t1) // 2023-10-05 00:00:00 +0800 CST
+		fmt.Println(t2) // 0001-01-01 00:00:00 +0000 UTC
+		fmt.Println(t3) // 2023-10-05 14:30:00 +0800 CST
+		fmt.Println(t4) // 0001-01-01 00:00:00 +0000 UTC
+	}
+
+	{
+		// 解析自定义格式（默认0时区）
+		t1, _ := time.Parse("2006-01-02", "2023-11-10")
+		fmt.Println(t1) // 2023-11-10 00:00:00 +0000 UTC
+		// 解析RFC3339格式
+		t2, _ := time.Parse(time.RFC3339, "2023-11-10T14:30:45+08:00")
+		fmt.Println(t2) // 2023-11-10 14:30:45 +0800 CST
+	}
 }
 
 // Return unix timestamp of specified time string, t should be "yyyy-mm-dd hh:mm:ss".

@@ -9,7 +9,6 @@ import (
 	"github.com/fengzhongzhu1621/xgo/validator"
 )
 
-// Time TODO
 type Time struct {
 	time.Time `bson:",inline" json:",inline"`
 }

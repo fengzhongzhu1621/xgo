@@ -168,36 +168,60 @@ func TestDurationX(t *testing.T) {
 	}
 }
 
-// 获得两个时间点的差值（秒数）
-// func BetweenSeconds(t1 time.Time, t2 time.Time) int64
-func TestBetweenSeconds(t *testing.T) {
-	today := time.Now()
-	tomorrow := datetime.AddDay(today, 1)
-	yesterday := datetime.AddDay(today, -1)
+// 获得时间差值
+func TestBetween(t *testing.T) {
+	{
+		// 获得两个时间点的差值（秒数）
+		// func BetweenSeconds(t1 time.Time, t2 time.Time) int64
+		today := time.Now()
+		tomorrow := datetime.AddDay(today, 1)
+		yesterday := datetime.AddDay(today, -1)
 
-	result1 := datetime.BetweenSeconds(today, tomorrow)
-	result2 := datetime.BetweenSeconds(today, yesterday)
+		result1 := datetime.BetweenSeconds(today, tomorrow)
+		result2 := datetime.BetweenSeconds(today, yesterday)
 
-	fmt.Println(result1)
-	fmt.Println(result2)
+		fmt.Println(result1)
+		fmt.Println(result2)
 
-	// Output:
-	// 86400
-	// -86400
-}
+		// Output:
+		// 86400
+		// -86400
+	}
 
-// 获得两个时间点的差值（天）
-// func DaysBetween(start, end time.Time) int
-func TestDaysBetween(t *testing.T) {
-	start := time.Date(2024, time.September, 1, 0, 0, 0, 0, time.UTC)
-	end := time.Date(2024, time.September, 10, 0, 0, 0, 0, time.UTC)
+	{
+		// 获得两个时间点的差值（天）
+		// func DaysBetween(start, end time.Time) int
+		start := time.Date(2024, time.September, 1, 0, 0, 0, 0, time.UTC)
+		end := time.Date(2024, time.September, 10, 0, 0, 0, 0, time.UTC)
 
-	result := datetime.DaysBetween(start, end)
+		result := datetime.DaysBetween(start, end)
 
-	fmt.Println(result)
+		fmt.Println(result)
 
-	// Output:
-	// 9
+		// Output:
+		// 9
+	}
+
+	{
+		time1 := time.Date(2023, 1, 1, 0, 0, 0, 0, time.UTC)
+		time2 := time.Date(2023, 1, 2, 0, 0, 0, 0, time.UTC)
+		// 比较两个时间
+		if time1.Before(time2) {
+			fmt.Println("time1在time2之前")
+		}
+		if time2.After(time1) {
+			fmt.Println("time2在time1之后")
+		}
+		if time1.Equal(time1) {
+			fmt.Println("time1等于time1")
+		}
+		// 计算时间差
+		duration := time2.Sub(time1)
+		fmt.Println("时间差:", duration)           // 24h0m0s
+		fmt.Println("小时数:", duration.Hours())   // 24
+		fmt.Println("分钟数:", duration.Minutes()) // 1440
+		fmt.Println("秒数:", duration.Seconds())  // 86400
+	}
 }
 
 // 生成两个时间点之间的日期时间列表
