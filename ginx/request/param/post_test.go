@@ -2,6 +2,7 @@ package param
 
 import (
 	"net/http"
+	"testing"
 
 	"github.com/gin-gonic/gin"
 )
@@ -11,7 +12,7 @@ type User struct {
 	Password string `json:"password"`
 }
 
-func TestPostForm() {
+func TestPostForm(t *testing.T) {
 	router := gin.Default()
 
 	// 使用POST请求并获取参数
@@ -31,7 +32,7 @@ func TestPostForm() {
 	router.Run(":8080")
 }
 
-func TestPostJson() {
+func TestPostJson(t *testing.T) {
 	router := gin.Default()
 
 	// 使用POST请求并获取参数

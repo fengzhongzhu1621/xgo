@@ -2,6 +2,24 @@
 用于指定如何将HTTP请求中的数据绑定到Go结构体的字段上。Gin支持多种类型的数据绑定，包括JSON、XML、表单数据和查询字符串等。
 binding标签通常与ShouldBind系列方法一起使用，例如 ShouldBindJSON、ShouldBindXML、ShouldBindQuery 等。
 
+## ShouldBindJSON
+返回 error，需手动处理；如果需要 自定义错误响应（如返回特定的 JSON 结构），用 ShouldBindJSON
+
+## BindJSON
+终止请求流程，自动返回 HTTP 400，快速开发，无需自定义错误
+```go
+// 使用 BindJSON（自动返回 400）
+func handler1(c *gin.Context) {
+    var user User
+    if err := c.BindJSON(&user); err != nil {
+        return // Gin 自动返回 400
+    }
+    c.JSON(http.StatusOK, gin.H{"user": user})
+}
+```
+
+## ShouldBindQuery
+
 ```go
 // binding:"required"表示该字段在请求中是必须的，而binding:"email"表示该字段的值必须符合电子邮件地址的格式。
 

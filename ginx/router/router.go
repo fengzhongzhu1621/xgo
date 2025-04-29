@@ -10,6 +10,7 @@ func RegisterRouter(cfg *config.Config, router *gin.Engine) {
 	RegisterMetrics(cfg, router)
 	RegisterPprof(cfg, router)
 	RegisterSwagger(cfg, router)
+	RegisterSchedule(cfg, router)
 }
 
 func RegisterRouterGroup(cfg *config.Config, rg *gin.RouterGroup) {
