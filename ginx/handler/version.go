@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/fengzhongzhu1621/xgo/config"
-	"github.com/fengzhongzhu1621/xgo/config/server_option"
 	"github.com/fengzhongzhu1621/xgo/ginx/request/header"
 	"github.com/fengzhongzhu1621/xgo/ginx/serializer"
 	"github.com/fengzhongzhu1621/xgo/ginx/service"
@@ -23,7 +22,6 @@ func Version(c *gin.Context) {
 	runEnv := os.Getenv("RUN_ENV")
 	now := time.Now()
 	c.JSON(http.StatusOK, gin.H{
-		"module":    server_option.GetIdentification(),
 		"version":   version.AppVersion,
 		"commit":    version.GitCommit,
 		"buildTime": version.BuildTime,

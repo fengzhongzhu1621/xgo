@@ -10,7 +10,6 @@ import (
 	"unicode/utf8"
 
 	"github.com/emicklei/go-restful/v3"
-	"github.com/fengzhongzhu1621/xgo/config/server_option"
 	"github.com/fengzhongzhu1621/xgo/network/nethttp"
 	"github.com/mssola/user_agent"
 	"github.com/prometheus/client_golang/prometheus"
@@ -105,16 +104,14 @@ func NewService(conf Config) *Service {
 	register.MustRegister(prometheus.NewGoCollector())
 
 	// add user metrics for api-server
-	if conf.ProcessName == server_option.MODULE_APISERVER {
-		srv.userTotal = prometheus.NewCounterVec(
-			prometheus.CounterOpts{
-				Name: Namespace + "_user_http_request_total",
-				Help: "user http request total.",
-			},
-			[]string{LabelUser, LabelOrigin},
-		)
-		register.MustRegister(srv.userTotal)
-	}
+	srv.userTotal = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: Namespace + "_user_http_request_total",
+			Help: "user http request total.",
+		},
+		[]string{LabelUser, LabelOrigin},
+	)
+	register.MustRegister(srv.userTotal)
 
 	srv.httpHandler = promhttp.InstrumentMetricHandler(
 		registry, promhttp.HandlerFor(registry, promhttp.HandlerOpts{}),
@@ -185,10 +182,9 @@ func (s *Service) HTTPMiddleware(next http.Handler) http.Handler {
 		s.requestTotal.With(s.label(requestTotalLabels...)).Inc()
 
 		// add user metrics for api-server
-		if s.conf.ProcessName == server_option.MODULE_APISERVER {
-			s.userTotal.With(s.label(LabelUser, nethttp.GetUser(r.Header), LabelOrigin,
-				getOrigin(r.Header))).Inc()
-		}
+		s.userTotal.With(s.label(LabelUser, nethttp.GetUser(r.Header), LabelOrigin,
+			getOrigin(r.Header))).Inc()
+
 	})
 }
 
