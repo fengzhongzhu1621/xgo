@@ -40,6 +40,11 @@ func (client *HttpClient) GetClient() *http.Client {
 	return client.httpCli
 }
 
+func (client *HttpClient) GetHeader(key string) string {
+	val, _ := client.header[key]
+	return val
+}
+
 // NewTransPort 创建并返回一个 http.Transport 对象
 func (client *HttpClient) NewTransPort() *http.Transport {
 	return &http.Transport{
@@ -170,11 +175,11 @@ func (client *HttpClient) RequestEx(url, method string, header http.Header, data
 	httpRsp.Header = rsp.Header
 
 	// 读取响应内容
-	rpy, err := io.ReadAll(rsp.Body)
+	body, err := io.ReadAll(rsp.Body)
 	if err != nil {
 		return httpRsp, err
 	}
-	httpRsp.Reply = rpy
+	httpRsp.Reply = body
 
 	return httpRsp, nil
 }
