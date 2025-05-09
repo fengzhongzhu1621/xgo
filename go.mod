@@ -1,8 +1,7 @@
 module github.com/fengzhongzhu1621/xgo
 
 go 1.23.0
-
-toolchain go1.23.2
+toolchain go1.24.1
 
 require (
 	github.com/dustin/go-broadcast v0.0.0-20211018055107-71439988bd91
@@ -107,7 +106,7 @@ require (
 	github.com/prometheus/procfs v0.16.0 // indirect
 	github.com/quic-go/qpack v0.5.1 // indirect
 	github.com/quic-go/quic-go v0.50.1 // indirect
-	github.com/refraction-networking/utls v1.6.7 // indirect
+	github.com/refraction-networking/utls v1.7.0 // indirect
 	github.com/richardlehane/mscfb v1.0.4 // indirect
 	github.com/richardlehane/msoleps v1.0.4 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
