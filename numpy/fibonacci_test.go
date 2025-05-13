@@ -21,3 +21,11 @@ func TestFibonacci(t *testing.T) {
 	// 1
 	// 5
 }
+
+func TestFibonacci2(t *testing.T) {
+	c := make(chan int)
+	go fibonacci(10, c)
+	for num := range c {
+		fmt.Println(num)
+	}
+}
