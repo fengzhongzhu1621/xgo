@@ -3,8 +3,13 @@ package xorm
 import (
 	"fmt"
 	"testing"
+
 	"xorm.io/xorm"
 )
+
+// NOTE:
+// 更新通过engine.Update()实现，可以传入结构指针或map[string]interface{}。对于传入结构体指针的情况，xorm只会更新非空的字段。
+//如果一定要更新空字段，需要使用Cols()方法显示指定更新的列。使用Cols()方法指定列后，即使字段为空也会更新
 
 // updateUserAge 更新单个字段
 func updateUserAge(engine *xorm.Engine, userId int64, newAge int) error {
@@ -68,7 +73,7 @@ func TestXormUpdate(t *testing.T) {
 	}
 
 	// 更新用户名和邮箱
-	err = updateUserDetails(engine, newUser.Id, "张三丰", "zhangsanfeng@example.com")
+	err = updateUserDetails(engine, newUser.Id, "bob", "bob@example.com")
 	if err != nil {
 		fmt.Printf("更新用户详情失败: %v", err)
 	} else {
@@ -76,7 +81,7 @@ func TestXormUpdate(t *testing.T) {
 	}
 
 	// 根据邮箱更新年龄
-	err = updateUserByEmail(engine, "a@example.com", 32)
+	err = updateUserByEmail(engine, "bob@example.com", 32)
 	if err != nil {
 		fmt.Printf("根据邮箱更新用户年龄失败: %v", err)
 	} else {

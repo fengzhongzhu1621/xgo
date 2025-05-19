@@ -60,6 +60,7 @@ type XormUser2 struct {
 	Name string `xorm:"varchar(255) not null unique 'usr_name' comment('NickName')"`
 }
 
+// XormUser3 gdoc
 // CREATE TABLE `xorm_user3` (
 //
 //	`id` bigint NOT NULL AUTO_INCREMENT,
@@ -91,6 +92,7 @@ type XormUser4 struct {
 	UpdatedAt string `xorm:"updated"`
 }
 
+// XormLink godoc
 // CREATE TABLE `xorm_link` (
 //
 //	`id` int NOT NULL AUTO_INCREMENT,

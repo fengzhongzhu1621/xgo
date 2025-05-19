@@ -1,4 +1,4 @@
-package flowctrl
+package ratelimiter
 
 import "github.com/juju/ratelimit"
 
