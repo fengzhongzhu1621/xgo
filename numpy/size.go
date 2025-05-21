@@ -4,6 +4,8 @@ import (
 	"strings"
 	"unicode"
 
+	"github.com/fengzhongzhu1621/xgo/numpy/math"
+
 	"github.com/fengzhongzhu1621/xgo/cast"
 )
 
@@ -44,5 +46,5 @@ func ParseSizeInBytes(sizeStr string) uint {
 		size = 0
 	}
 
-	return SafeMul(uint(size), multiplier)
+	return math.SafeMul(uint(size), multiplier)
 }

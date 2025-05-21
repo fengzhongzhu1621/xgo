@@ -12,6 +12,8 @@ type HS256ClaimsV5 struct {
 	Role   string `json:"role"`
 	// jwt包自带的jwt.RegisteredClaims只包含了官方字段
 	jwt5.RegisteredClaims // 内嵌标准的声明
+
+	// Nonce string`json:"nonce"`// 一次性随机数
 }
 
 // HS256JWTV5Manager JWT（JSON Web Token）管理器
@@ -41,9 +43,9 @@ func (m *HS256JWTV5Manager) Generate(Issuer string, userID string, role string) 
 			IssuedAt:  jwt5.NewNumericDate(time.Now()),
 		},
 	}
-	token := jwt5.NewWithClaims(jwt5.SigningMethodHS256, claims)
 
 	// 对 JWT 进行签名，并返回生成的 JWT 字符串
+	token := jwt5.NewWithClaims(jwt5.SigningMethodHS256, claims)
 	return token.SignedString(m.secretKey)
 }
 

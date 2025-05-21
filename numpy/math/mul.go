@@ -1,4 +1,4 @@
-package numpy
+package math
 
 func SafeMul(a, b uint) uint {
 	c := a * b

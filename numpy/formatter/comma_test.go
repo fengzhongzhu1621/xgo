@@ -1,4 +1,4 @@
-package numpy
+package formatter
 
 import (
 	"fmt"

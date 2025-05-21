@@ -1,4 +1,4 @@
-package numpy
+package math
 
 func Min(x, y int) int {
 	if x < y {

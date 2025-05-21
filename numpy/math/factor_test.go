@@ -1,4 +1,4 @@
-package numpy
+package math
 
 import (
 	"fmt"

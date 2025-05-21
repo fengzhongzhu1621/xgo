@@ -1,4 +1,4 @@
-package numpy
+package compare
 
 import (
 	"fmt"
