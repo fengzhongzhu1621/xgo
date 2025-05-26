@@ -30,7 +30,7 @@
 
 ## 内存限制
 
-具有 2 个 CPU 核心和 100MB RAM 的云环境。每个协程初始约需 2KB 栈空间 100MB RAM 中预留 20MB 给 Go 运行时和系统开销,剩余约 80MB 用于协程 理论上限计算: 最大协程数 = 80MB / 0.002MB (2KB) = 40,000 
+具有 2 个 CPU 核心和 100MB RAM 的云环境。每个协程初始约需 2KB 栈空间 100MB RAM 中预留 20MB 给 Go 运行时和系统开销,剩余约 80MB 用于协程 理论上限计算: 最大协程数 = 80MB / 0.002MB (2KB) = 40,000
 
 ## CPU 限制
 2 个 CPU 核心意味着 Go 运行时只能同时执行 2 个操作系统线程(如果 GOMAXPROCS 设为 2) Go 调度器在这些线程上处理协程,如果数千个协程运行 CPU 密集型任务,上下文切换会增加开销 对于双核实例,实际协程数量通常在 1,000 到 5,000 之间,具体取决于工作负载。
@@ -129,3 +129,21 @@ Goroutine 的调度时机一般有以下几种情况
 * 当前 Goroutine 进行 I/O 操作、channel 操作或者其他系统调用时，调度器会将当前 Goroutine 暂停，将 CPU 的执行权转交给其他 Goroutine。
 * 当前 Goroutine 被阻塞在同步原语（例如 sync.Mutex）时，调度器会将当前 Goroutine 暂停，将 CPU 的执行权转交给其他 Goroutine。
 
+
+# 内核线程绑定
+默认goroutine不会绑定在一个内核线程上，它是调度器自由管理的。调度器可以非常高效地在多个线程上分配运行它们。
+但可以通过runtime.LockOSThread()手动绑定，适用于需要线程一致性的场景，比如调用某些C库或GUI相关操作。
+
+```go
+func main() {
+    runtime.LockOSThread()
+    defer runtime.UnlockOSThread()
+
+    go func() {
+    fmt.Println("这个协程可以在任何线程上执行")
+    }()
+
+    fmt.Println("我绑定在当前线程上了")
+}
+
+```

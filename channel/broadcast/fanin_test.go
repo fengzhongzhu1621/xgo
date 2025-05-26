@@ -1,10 +1,12 @@
-package channel
+package broadcast
 
 import (
 	"context"
 	"fmt"
 	"testing"
 	"time"
+
+	"github.com/fengzhongzhu1621/xgo/channel"
 
 	"github.com/duke-git/lancet/v2/concurrency"
 	"github.com/samber/lo"
@@ -74,8 +76,8 @@ func TestFanIn(t *testing.T) {
 
 	// 创建 3 个只读管道
 	is := assert.New(t)
-	upstreams := CreateChannels[int](3, 10)
-	roupstreams := ChannelsToReadOnly(upstreams)
+	upstreams := channel.CreateChannels[int](3, 10)
+	roupstreams := channel.ChannelsToReadOnly(upstreams)
 	for i := range roupstreams {
 		go func(i int) {
 			upstreams[i] <- 1

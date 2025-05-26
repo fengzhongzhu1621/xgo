@@ -1,9 +1,11 @@
-package channel
+package broadcast
 
 import (
 	"math/rand"
 	"testing"
 	"time"
+
+	"github.com/fengzhongzhu1621/xgo/channel"
 
 	"github.com/fengzhongzhu1621/xgo/tests"
 
@@ -115,9 +117,9 @@ func TestDispatchingStrategyRoundRobin(t *testing.T) {
 	tests.TestWithTimeout(t, 10*time.Millisecond)
 	is := assert.New(t)
 
-	children := CreateChannels[int](3, 2)
-	rochildren := ChannelsToReadOnly(children)
-	defer CloseChannels(children)
+	children := channel.CreateChannels[int](3, 2)
+	rochildren := channel.ChannelsToReadOnly(children)
+	defer channel.CloseChannels(children)
 
 	is.Equal(0, lo.DispatchingStrategyRoundRobin(42, 0, rochildren))
 	is.Equal(1, lo.DispatchingStrategyRoundRobin(42, 1, rochildren))
@@ -132,9 +134,9 @@ func TestDispatchingStrategyRandom(t *testing.T) {
 	// with this seed, the order of random channels are: 1 - 0
 	rand.Seed(14)
 
-	children := CreateChannels[int](2, 2)
-	rochildren := ChannelsToReadOnly(children)
-	defer CloseChannels(children)
+	children := channel.CreateChannels[int](2, 2)
+	rochildren := channel.ChannelsToReadOnly(children)
+	defer channel.CloseChannels(children)
 
 	for i := 0; i < 2; i++ {
 		children[1] <- i
@@ -148,9 +150,9 @@ func TestDispatchingStrategyWeightedRandom(t *testing.T) {
 	tests.TestWithTimeout(t, 10*time.Millisecond)
 	is := assert.New(t)
 
-	children := CreateChannels[int](2, 2)
-	rochildren := ChannelsToReadOnly(children)
-	defer CloseChannels(children)
+	children := channel.CreateChannels[int](2, 2)
+	rochildren := channel.ChannelsToReadOnly(children)
+	defer channel.CloseChannels(children)
 
 	dispatcher := lo.DispatchingStrategyWeightedRandom[int]([]int{0, 42})
 
@@ -166,9 +168,9 @@ func TestDispatchingStrategyFirst(t *testing.T) {
 	tests.TestWithTimeout(t, 10*time.Millisecond)
 	is := assert.New(t)
 
-	children := CreateChannels[int](2, 2)
-	rochildren := ChannelsToReadOnly(children)
-	defer CloseChannels(children)
+	children := channel.CreateChannels[int](2, 2)
+	rochildren := channel.ChannelsToReadOnly(children)
+	defer channel.CloseChannels(children)
 
 	is.Equal(0, lo.DispatchingStrategyFirst(42, 0, rochildren))
 	children[0] <- 0
@@ -182,9 +184,9 @@ func TestDispatchingStrategyLeast(t *testing.T) {
 	tests.TestWithTimeout(t, 10*time.Millisecond)
 	is := assert.New(t)
 
-	children := CreateChannels[int](2, 2)
-	rochildren := ChannelsToReadOnly(children)
-	defer CloseChannels(children)
+	children := channel.CreateChannels[int](2, 2)
+	rochildren := channel.ChannelsToReadOnly(children)
+	defer channel.CloseChannels(children)
 
 	is.Equal(0, lo.DispatchingStrategyLeast(42, 0, rochildren))
 	children[0] <- 0
@@ -202,9 +204,9 @@ func TestDispatchingStrategyMost(t *testing.T) {
 	tests.TestWithTimeout(t, 10*time.Millisecond)
 	is := assert.New(t)
 
-	children := CreateChannels[int](2, 2)
-	rochildren := ChannelsToReadOnly(children)
-	defer CloseChannels(children)
+	children := channel.CreateChannels[int](2, 2)
+	rochildren := channel.ChannelsToReadOnly(children)
+	defer channel.CloseChannels(children)
 
 	is.Equal(0, lo.DispatchingStrategyMost(42, 0, rochildren))
 	children[0] <- 0

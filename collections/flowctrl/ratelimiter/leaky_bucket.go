@@ -1,6 +1,7 @@
 package ratelimiter
 
 import (
+	"fmt"
 	"sync"
 	"time"
 )
@@ -50,4 +51,37 @@ func (lb *LeakyBucket) Allow() bool {
 
 	// 拒绝请求
 	return false
+}
+
+// LeakyBucket2 结构体，包含请求队列
+type LeakyBucket2 struct {
+	queue chan struct{} // 请求队列
+}
+
+func NewLeakyBucket2(capacity int) *LeakyBucket2 {
+	return &LeakyBucket2{
+		queue: make(chan struct{}, capacity),
+	}
+}
+
+// push 将请求放入队列，如果队列满了，返回 false，表示请求被丢弃
+func (lb *LeakyBucket2) push() bool {
+	// 如果通道可以发送，请求被接受
+	select {
+	case lb.queue <- struct{}{}:
+		return true
+	default:
+		return false
+	}
+}
+
+// process 从队列中取出请求并模拟处理过程
+// 启动请求处理循环    go lb.process()
+func (lb *LeakyBucket2) process() {
+	for range lb.queue {
+		// 使用 range 来持续接收队列中的请求，以恒定速率从桶中取出请求进行处理
+		fmt.Println("Request processed at", time.Now().Format("2006-01-02 15:04:05"))
+		// 模拟请求处理时间
+		time.Sleep(100 * time.Millisecond)
+	}
 }
