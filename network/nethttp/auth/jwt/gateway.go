@@ -56,13 +56,13 @@ func VerifyClientAndUsername(jwtToken string, publicKey []byte) (clientID, userN
 
 	appInfo, ok := claims["app"]
 	if !ok {
-		err = ErrAPIGatewayJWTMissingApp
+		err = ErrAPIGatewayJWTAppNotFound
 		return
 	}
 
 	app, ok := appInfo.(map[string]interface{})
 	if !ok {
-		err = ErrAPIGatewayJWTAppInfoParseFail
+		err = ErrAPIGatewayJWTAppInfoNoVerified
 		return
 	}
 
@@ -72,14 +72,9 @@ func VerifyClientAndUsername(jwtToken string, publicKey []byte) (clientID, userN
 		return
 	}
 
-	verified, ok := verifiedRaw.(bool)
-	if !ok {
-		err = ErrAPIGatewayJWTAppInfoVerifiedNotBool
-		return
-	}
-
+	verified, _ := verifiedRaw.(bool)
 	if !verified {
-		err = ErrAPIGatewayJWTAppNotVerified
+		err = ErrAPIGatewayJWTAppInfoNoVerified
 		return
 	}
 
@@ -97,19 +92,19 @@ func VerifyClientAndUsername(jwtToken string, publicKey []byte) (clientID, userN
 
 	usernameMap, ok := claims["user"]
 	if !ok {
-		err = ErrAPIGatewayJWTAppInfoNoUsername
+		err = ErrAPIGatewayJWTAppInfoUserNotFound
 		return
 	}
 
 	usernameSMap, ok := usernameMap.(map[string]interface{})
 	if !ok {
-		err = ErrAPIGatewayJWTAppInfoNoUsername
+		err = ErrAPIGatewayJWTAppInfoUserNotFound
 		return
 	}
 
 	userName, ok = usernameSMap["username"].(string)
 	if !ok {
-		err = ErrAPIGatewayJWTAppInfoNoUsername
+		err = ErrAPIGatewayJWTAppInfoUserNotFound
 		return
 	}
 
