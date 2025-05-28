@@ -8,6 +8,23 @@
 # 滑动窗口计数器算法
 动窗口的思想是将固定窗口拆成更多个小窗口，随着时间的推移，窗口不断的滑动，统计也在不断的变化。窗口拆分的越多，滑动就会越平滑，统计就会越精确，所消耗的资源就会越多。滑动窗口如果只拆为1个窗口，就退化为固定窗口。
 
+```go
+go get github.com/RussellLuo/slidingwindow
+```
+
+方法
+* Allow()：判断是否允许一个新的请求。
+* AllowN(now time.Time, n int64)：判断是否允许  n  个新的请求。
+* SetLimit(newLimit int64)：设置新的请求限制
+
+窗口，包括添加计数、获取计数、重置窗口等
+* LocalWindow：本地窗口，适用于单机应用。
+* SyncWindow：同步窗口，适用于分布式环境。
+
+Synchronizer 负责在多个实例之间同步窗口的状态。
+* BlockingSynchronizer：阻塞式同步器。
+* NonblockingSynchronizer：非阻塞式同步器。
+
 # 漏桶算法
 漏桶算法通过一个固定速率的漏桶完成请求，任何超出桶容量的请求将被拒绝。请求以固定速率从桶中出桶。
 
