@@ -21,7 +21,7 @@ func TestWithTimeout(t *testing.T, timeout time.Duration) {
 		case <-time.After(timeout):
 			t.Errorf("test timed out after %s", timeout)
 			// 立即停止当前测试，并标记为失败。
-			t.FailNow() //nolint:govet,staticcheck
+			t.FailNow()
 		}
 	}()
 }

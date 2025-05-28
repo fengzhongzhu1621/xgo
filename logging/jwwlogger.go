@@ -7,8 +7,8 @@ import (
 )
 
 // Logger is a unified interface for various logging use cases and practices, including:
-// 		- leveled logging
-// 		- structured logging
+//   - leveled logging
+//   - structured logging
 type Logger interface {
 	// Trace logs a Trace event.
 	//
@@ -43,23 +43,23 @@ type Logger interface {
 type JwwLogger struct{}
 
 func (JwwLogger) Trace(msg string, keyvals ...interface{}) {
-	jww.TRACE.Printf(jwwLogMessage(msg, keyvals...))
+	jww.TRACE.Printf(jwwLogMessage(msg, keyvals...)) //vet:ignore
 }
 
 func (JwwLogger) Debug(msg string, keyvals ...interface{}) {
-	jww.DEBUG.Printf(jwwLogMessage(msg, keyvals...))
+	jww.DEBUG.Printf(jwwLogMessage(msg, keyvals...)) //vet:ignore
 }
 
 func (JwwLogger) Info(msg string, keyvals ...interface{}) {
-	jww.INFO.Printf(jwwLogMessage(msg, keyvals...))
+	jww.INFO.Printf(jwwLogMessage(msg, keyvals...)) //vet:ignore
 }
 
 func (JwwLogger) Warn(msg string, keyvals ...interface{}) {
-	jww.WARN.Printf(jwwLogMessage(msg, keyvals...))
+	jww.WARN.Printf(jwwLogMessage(msg, keyvals...)) //vet:ignore
 }
 
 func (JwwLogger) Error(msg string, keyvals ...interface{}) {
-	jww.ERROR.Printf(jwwLogMessage(msg, keyvals...))
+	jww.ERROR.Printf(jwwLogMessage(msg, keyvals...)) //vet:ignore
 }
 
 // 格式化消息，加上参数值.

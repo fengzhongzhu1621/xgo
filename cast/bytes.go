@@ -8,7 +8,7 @@ import (
 // //////////////////////////////////////////////////////////////////////////////////////
 
 // StringToBytes 字符串转换为[]bytes converts string to byte slice without a memory allocation.
-// 效率更高.
+// StringHeader 和 SliceHeader 在 Go 1.20+ 被标记为弃用
 func StringToBytes(s string) (b []byte) {
 	sh := *(*reflect.StringHeader)(unsafe.Pointer(&s))
 	bh := (*reflect.SliceHeader)(unsafe.Pointer(&b))
@@ -31,7 +31,13 @@ func rawStrToBytes(s string) []byte {
 	return []byte(s)
 }
 
-// SafeBytes 字符串转换为字节数组
-func SafeBytes(s string) []byte {
+// SafeStringToBytes 字符串转换为字节数组，标准库方法，安全且高效，推荐
+func SafeStringToBytes(s string) []byte {
 	return []byte(s)
+}
+
+func SafeStringCopyToBytes(s string) []byte {
+	b := make([]byte, len(s))
+	copy(b, s)
+	return b
 }

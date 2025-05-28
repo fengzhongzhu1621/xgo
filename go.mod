@@ -45,8 +45,6 @@ require (
 	cloud.google.com/go/longrunning v0.6.6 // indirect
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/KyleBanks/depth v1.2.1 // indirect
-	github.com/RussellLuo/slidingwindow v0.0.0-20200528002341-535bb99d338b // indirect
-	github.com/VictoriaMetrics/fastcache v1.12.4 // indirect
 	github.com/VividCortex/ewma v1.2.0 // indirect
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
 	github.com/alecthomas/units v0.0.0-20240927000941-0f3dac36c52b // indirect
@@ -55,7 +53,6 @@ require (
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bits-and-blooms/bitset v1.10.0 // indirect
-	github.com/bsm/redislock v0.9.4 // indirect
 	github.com/bytedance/sonic v1.13.2 // indirect
 	github.com/bytedance/sonic/loader v0.2.4 // indirect
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
@@ -92,7 +89,6 @@ require (
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jonboulle/clockwork v0.5.0 // indirect
-	github.com/josharian/intern v1.0.0 // indirect
 	github.com/jtolds/gls v4.20.0+incompatible // indirect
 	github.com/klauspost/compress v1.18.0 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.10 // indirect
@@ -100,7 +96,6 @@ require (
 	github.com/mattn/go-runewidth v0.0.16 // indirect
 	github.com/mfridman/interpolate v0.0.2 // indirect
 	github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826 // indirect
-	github.com/montanaflynn/stats v0.7.1 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/nats-io/nats.go v1.41.1 // indirect
 	github.com/nats-io/nkeys v0.4.10 // indirect
@@ -124,13 +119,11 @@ require (
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/vmihailenco/go-tinylfu v0.2.2 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
-	github.com/wolfogre/go-pprof-practice v0.0.0-20230706085634-23c8f603cac9 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
 	github.com/xdg-go/stringprep v1.0.4 // indirect
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e // indirect
 	github.com/xuri/efp v0.0.0-20250227110027-3491fafc2b79 // indirect
 	github.com/xuri/nfp v0.0.0-20250226145837-86d5fc24b2ba // indirect
-	github.com/youmark/pkcs8 v0.0.0-20240726163527-a2c0da244d78 // indirect
 	github.com/yuin/gopher-lua v1.1.1 // indirect
 	go.opentelemetry.io/auto/sdk v1.1.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.60.0 // indirect
@@ -193,7 +186,9 @@ require (
 
 require (
 	github.com/FZambia/sentinel v1.1.1
+	github.com/RussellLuo/slidingwindow v0.0.0-20200528002341-535bb99d338b
 	github.com/ThreeDotsLabs/watermill v1.4.6
+	github.com/VictoriaMetrics/fastcache v1.12.4
 	github.com/agiledragon/gomonkey/v2 v2.12.0
 	github.com/alecthomas/kingpin v2.2.6+incompatible
 	github.com/alexedwards/argon2id v1.0.0
@@ -205,6 +200,7 @@ require (
 	github.com/bndr/gotabulate v1.1.2
 	github.com/boj/redistore v1.4.1
 	github.com/bruceshao/lockfree v1.1.2
+	github.com/bsm/redislock v0.9.4
 	github.com/bytedance/mockey v1.2.13
 	github.com/cenkalti/backoff/v3 v3.2.2
 	github.com/cheggaaa/pb/v3 v3.1.7
@@ -258,6 +254,7 @@ require (
 	github.com/jinzhu/gorm v1.9.16
 	github.com/jinzhu/now v1.1.5
 	github.com/jmoiron/sqlx v1.4.0
+	github.com/josharian/intern v1.0.0
 	github.com/juju/ratelimit v1.0.2
 	github.com/karlseguin/ccache/v2 v2.0.8
 	github.com/kyokomi/emoji/v2 v2.2.13
@@ -294,10 +291,10 @@ require (
 	github.com/unrolled/secure v1.17.0
 	github.com/vmihailenco/msgpack/v5 v5.4.1
 	github.com/wneessen/niljson v0.1.0
+	github.com/wolfogre/go-pprof-practice v0.0.0-20230706085634-23c8f603cac9
 	github.com/xdg-go/scram v1.1.2
 	github.com/xuri/excelize/v2 v2.9.0
 	go.mongodb.org/mongo-driver v1.17.3
-	go.opentelemetry.io/contrib/instrumentation/github.com/emicklei/go-restful/otelrestful v0.60.0
 	go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin v0.60.0
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.60.0
 	go.opentelemetry.io/otel v1.35.0

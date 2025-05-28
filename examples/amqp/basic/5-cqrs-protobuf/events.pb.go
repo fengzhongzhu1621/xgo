@@ -7,8 +7,8 @@ import (
 	fmt "fmt"
 	math "math"
 
-	proto "github.com/golang/protobuf/proto"
 	timestamp "github.com/golang/protobuf/ptypes/timestamp"
+	proto "google.golang.org/protobuf/proto"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.

@@ -3,11 +3,12 @@ package param
 import (
 	"fmt"
 	"net/http"
+	"testing"
 
 	"github.com/gin-gonic/gin"
 )
 
-func TestParam() {
+func TestParam(t *testing.T) {
 	router := gin.Default()
 
 	// 使用URL参数并获取参数

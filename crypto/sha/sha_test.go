@@ -121,7 +121,7 @@ func TestHmacSha1WithBase64(t *testing.T) {
 }
 
 // func HmacSha256(str, key string) string
-func TestsHmacSha256(t *testing.T) {
+func TestHmacSha256(t *testing.T) {
 	str := "hello"
 	key := "12345"
 

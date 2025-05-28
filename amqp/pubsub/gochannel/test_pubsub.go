@@ -158,7 +158,7 @@ type TestID string
 
 // NewTestID returns a new unique TestID.
 func NewTestID() TestID {
-	return TestID(uuid.NewUUID())
+	return TestID(uuid.NewUUID4())
 }
 
 // TestContext is a collection of values that belong to a single test.
@@ -811,7 +811,7 @@ func TestConsumerGroups(
 		t.Skip("consumer groups are not supported")
 	}
 
-	publisherPub, publisherSub := pubSubConstructor(t, "test_"+uuid.NewUUID())
+	publisherPub, publisherSub := pubSubConstructor(t, "test_"+uuid.NewUUID4())
 	defer closePubSub(t, publisherPub, publisherSub)
 
 	topicName := testTopicName(tCtx.TestID)

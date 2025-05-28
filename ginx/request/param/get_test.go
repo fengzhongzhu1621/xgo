@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func TestQuery() {
+func Query() {
 	router := gin.Default()
 
 	// 使用GET请求并获取参数

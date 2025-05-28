@@ -17,13 +17,13 @@ type Student struct {
 
 type StudentSize struct {
 	Name string `gorm:"size:100;default:''"`
-	Age  int    `gorm:not null"`
+	Age  int    `gorm:"not null"`
 	Id   int
 }
 
 type StudentTimestamp struct {
 	Name     string `gorm:"size:100;default:''"`
-	Age      int    `gorm:not null"`
+	Age      int    `gorm:"not null"`
 	Id       int
 	CreateAt time.Time
 	Join     time.Time `gorm:"type:timestamp"`

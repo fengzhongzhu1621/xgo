@@ -144,7 +144,7 @@ bench:
 	go list ./... | xargs -n1 go test -bench=$(BENCH) -run="^$$" $(BENCH_FLAGS)
 
 vet:
-	go vet
+	go vet ./...
 
 #test-cover-html:
 #	go test -v ./... -coverprofile=coverage.out -covermode=count

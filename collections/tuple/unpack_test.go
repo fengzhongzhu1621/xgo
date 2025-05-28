@@ -12,7 +12,7 @@ func TestUnpack(t *testing.T) {
 	is := assert.New(t)
 
 	{
-		tuple := lo.Tuple2[string, int]{"a", 1}
+		tuple := lo.Tuple2[string, int]{A: "a", B: 1}
 
 		r1, r2 := lo.Unpack2(tuple)
 
@@ -26,7 +26,7 @@ func TestUnpack(t *testing.T) {
 	}
 
 	{
-		tuple := lo.Tuple3[string, int, float64]{"a", 1, 1.0}
+		tuple := lo.Tuple3[string, int, float64]{A: "a", B: 1, C: 1.0}
 
 		r1, r2, r3 := lo.Unpack3(tuple)
 
@@ -42,7 +42,7 @@ func TestUnpack(t *testing.T) {
 	}
 
 	{
-		tuple := lo.Tuple4[string, int, float64, bool]{"a", 1, 1.0, true}
+		tuple := lo.Tuple4[string, int, float64, bool]{A: "a", B: 1, C: 1.0, D: true}
 
 		r1, r2, r3, r4 := lo.Unpack4(tuple)
 
@@ -60,7 +60,7 @@ func TestUnpack(t *testing.T) {
 	}
 
 	{
-		tuple := lo.Tuple5[string, int, float64, bool, string]{"a", 1, 1.0, true, "b"}
+		tuple := lo.Tuple5[string, int, float64, bool, string]{A: "a", B: 1, C: 1.0, D: true, E: "b"}
 
 		r1, r2, r3, r4, r5 := lo.Unpack5(tuple)
 
@@ -80,7 +80,7 @@ func TestUnpack(t *testing.T) {
 	}
 
 	{
-		tuple := lo.Tuple6[string, int, float64, bool, string, int]{"a", 1, 1.0, true, "b", 2}
+		tuple := lo.Tuple6[string, int, float64, bool, string, int]{A: "a", B: 1, C: 1.0, D: true, E: "b", F: 2}
 
 		r1, r2, r3, r4, r5, r6 := lo.Unpack6(tuple)
 
@@ -102,7 +102,7 @@ func TestUnpack(t *testing.T) {
 	}
 
 	{
-		tuple := lo.Tuple7[string, int, float64, bool, string, int, float64]{"a", 1, 1.0, true, "b", 2, 3.0}
+		tuple := lo.Tuple7[string, int, float64, bool, string, int, float64]{A: "a", B: 1, C: 1.0, D: true, E: "b", F: 2, G: 3.0}
 
 		r1, r2, r3, r4, r5, r6, r7 := lo.Unpack7(tuple)
 
@@ -126,7 +126,7 @@ func TestUnpack(t *testing.T) {
 	}
 
 	{
-		tuple := lo.Tuple8[string, int, float64, bool, string, int, float64, bool]{"a", 1, 1.0, true, "b", 2, 3.0, true}
+		tuple := lo.Tuple8[string, int, float64, bool, string, int, float64, bool]{A: "a", B: 1, C: 1.0, D: true, E: "b", F: 2, G: 3.0, H: true}
 
 		r1, r2, r3, r4, r5, r6, r7, r8 := lo.Unpack8(tuple)
 
@@ -152,7 +152,7 @@ func TestUnpack(t *testing.T) {
 	}
 
 	{
-		tuple := lo.Tuple9[string, int, float64, bool, string, int, float64, bool, string]{"a", 1, 1.0, true, "b", 2, 3.0, true, "c"}
+		tuple := lo.Tuple9[string, int, float64, bool, string, int, float64, bool, string]{A: "a", B: 1, C: 1.0, D: true, E: "b", F: 2, G: 3.0, H: true, I: "c"}
 
 		r1, r2, r3, r4, r5, r6, r7, r8, r9 := lo.Unpack9(tuple)
 

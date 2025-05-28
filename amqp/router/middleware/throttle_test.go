@@ -23,7 +23,8 @@ func TestThrottle_Middleware(t *testing.T) {
 	// 每秒10个请求
 	throttle := middleware.NewThrottle(perSecond, testTimeout)
 	// 1秒后超时
-	ctx, _ := context.WithTimeout(context.Background(), testTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), testTimeout)
+	defer cancel()
 
 	producedMessagesChannel := make(chan struct{})
 

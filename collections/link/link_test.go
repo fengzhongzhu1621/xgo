@@ -119,7 +119,7 @@ func TestDeleteValue(t *testing.T) {
 }
 
 // func (link *SinglyLink[T]) Reverse()
-func TestsReverse(t *testing.T) {
+func TestReverse(t *testing.T) {
 	lk := link.NewSinglyLink[int]()
 
 	lk.InsertAtTail(1)

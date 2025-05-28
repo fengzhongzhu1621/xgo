@@ -2,7 +2,7 @@ package header
 
 import "github.com/gin-gonic/gin"
 
-func TestHeaderGet() {
+func HeaderGet() {
 	router := gin.Default()
 
 	// 使用请求头部参数并获取参数

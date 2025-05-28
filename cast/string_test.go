@@ -197,18 +197,6 @@ func BenchmarkBytesConvBytesToStr(b *testing.B) {
 	}
 }
 
-func BenchmarkBytesConvStrToBytesRaw(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		rawStrToBytes(testString)
-	}
-}
-
-func BenchmarkBytesConvStrToBytes(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		StringToBytes(testString)
-	}
-}
-
 func TestToStringE(t *testing.T) {
 	type Key struct {
 		k string

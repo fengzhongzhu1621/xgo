@@ -8,9 +8,9 @@ import (
 
 var sentryOn bool
 
-// SetSentryCaptureSwitch init the sentryEnabled var
-func SetSentryCapture(sentryOn bool) {
-	sentryOn = sentryOn
+// SetSentryCapture init the sentryEnabled var
+func SetSentryCapture(value bool) {
+	sentryOn = value
 }
 
 func EnableSentry() {

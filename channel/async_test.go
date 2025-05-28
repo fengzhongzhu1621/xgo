@@ -102,7 +102,7 @@ func TestAsyncX(t *testing.T) {
 
 		select {
 		case result := <-ch:
-			is.Equal(result, lo.Tuple2[int, string]{10, "Hello"})
+			is.Equal(result, lo.Tuple2[int, string]{A: 10, B: "Hello"})
 		case <-time.After(time.Millisecond):
 			is.Fail("Async2 should not block")
 		}
@@ -120,7 +120,7 @@ func TestAsyncX(t *testing.T) {
 
 		select {
 		case result := <-ch:
-			is.Equal(result, lo.Tuple3[int, string, bool]{10, "Hello", true})
+			is.Equal(result, lo.Tuple3[int, string, bool]{A: 10, B: "Hello", C: true})
 		case <-time.After(time.Millisecond):
 			is.Fail("Async3 should not block")
 		}
@@ -138,7 +138,7 @@ func TestAsyncX(t *testing.T) {
 
 		select {
 		case result := <-ch:
-			is.Equal(result, lo.Tuple4[int, string, bool, float64]{10, "Hello", true, 3.14})
+			is.Equal(result, lo.Tuple4[int, string, bool, float64]{A: 10, B: "Hello", C: true, D: 3.14})
 		case <-time.After(time.Millisecond):
 			is.Fail("Async4 should not block")
 		}
@@ -156,7 +156,7 @@ func TestAsyncX(t *testing.T) {
 
 		select {
 		case result := <-ch:
-			is.Equal(result, lo.Tuple5[int, string, bool, float64, string]{10, "Hello", true, 3.14, "World"})
+			is.Equal(result, lo.Tuple5[int, string, bool, float64, string]{A: 10, B: "Hello", C: true, D: 3.14, E: "World"})
 		case <-time.After(time.Millisecond):
 			is.Fail("Async5 should not block")
 		}
@@ -174,7 +174,7 @@ func TestAsyncX(t *testing.T) {
 
 		select {
 		case result := <-ch:
-			is.Equal(result, lo.Tuple6[int, string, bool, float64, string, int]{10, "Hello", true, 3.14, "World", 100})
+			is.Equal(result, lo.Tuple6[int, string, bool, float64, string, int]{A: 10, B: "Hello", C: true, D: 3.14, E: "World", F: 100})
 		case <-time.After(time.Millisecond):
 			is.Fail("Async6 should not block")
 		}

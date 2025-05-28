@@ -102,3 +102,15 @@ func TestToBytes(t *testing.T) {
 		assert.Equal(t, []byte("[123]"), bs)
 	}
 }
+
+func BenchmarkBytesConvStrToBytesRaw(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		rawStrToBytes(testString)
+	}
+}
+
+func BenchmarkBytesConvStrToBytes(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		StringToBytes(testString)
+	}
+}
