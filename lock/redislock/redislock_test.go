@@ -48,7 +48,7 @@ func TestRedislock(t *testing.T) {
 		fmt.Println("Yay, I still have my lock!")
 	}
 
-	// 续约锁：调用 lock.Refresh() 延长锁的有效期（再延长 100ms）
+	// 续约锁：调用 lock.Refresh() 延长锁的有效期（再延长 100ms），注意不是追加，而是重置
 	// 当调用 lock.Refresh(ctx, newTTL, options) 时，Redis 会更新该锁的过期时间（TTL）为 newTTL。
 	// Refresh 是原子操作，Redis 会确保在更新 TTL 时不会发生竞争条件（即不会出现两个客户端同时修改锁的情况）。
 	if err := lock.Refresh(ctx, 100*time.Millisecond, nil); err != nil {
@@ -62,4 +62,38 @@ func TestRedislock(t *testing.T) {
 	} else if ttl == 0 {
 		fmt.Println("Now, my lock has expired!")
 	}
+}
+
+func TestRedisLockWithRetry(t *testing.T) {
+	// 连接 Redis
+	client := redis.NewClient(&redis.Options{
+		Addr: "127.0.0.1:6379",
+	})
+	defer client.Close()
+
+	// 创建锁客户端
+	locker := redislock.New(client)
+
+	// 配置重试策略（线性退避，每次等待 500ms）
+	opts := &redislock.Options{
+		RetryStrategy: redislock.LinearBackoff(500 * time.Millisecond),
+	}
+
+	ctx := context.Background()
+	// 尝试获取锁（最多重试直到成功或超时）
+	// 如果锁被其他客户端持有，当前客户端不会立即失败，而是按照 500ms 的间隔重试。
+	lock, err := locker.Obtain(ctx, "my-key", 10*time.Second, opts)
+	if err == redislock.ErrNotObtained {
+		// 明确表示未获取到锁（可能因重试次数耗尽或超时）。
+		fmt.Println("无法获取锁！")
+	} else if err != nil {
+		// 其他错误（如 Redis 连接问题）
+		log.Fatalf("获取锁失败: %v", err)
+	}
+	defer lock.Release(ctx) // 确保释放锁
+
+	fmt.Println("成功获取锁！")
+
+	// 模拟业务逻辑
+	time.Sleep(2 * time.Second)
 }
