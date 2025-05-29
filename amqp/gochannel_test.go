@@ -14,7 +14,7 @@ import (
 
 var logger = logging.JwwLogger{}
 
-func TestGochannle(t *testing.T) {
+func TestGoChannel(t *testing.T) {
 	pubSub := gochannel.NewGoChannel(
 		gochannel.Config{},
 		logging.NewStdLogger(false, false, "[watermill] "),
