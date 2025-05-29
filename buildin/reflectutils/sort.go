@@ -9,27 +9,29 @@ import (
 
 // SortKeys sorts a list of map keys, deduplicating keys if necessary.
 // The type of each value must be comparable.
+// 对一组 reflect.Value 类型的值进行排序，并在排序过程中去除重复的键。
 func SortKeys(vs []reflect.Value) []reflect.Value {
 	if len(vs) == 0 {
 		return vs
 	}
 
 	// Sort the map keys.
-	sort.SliceStable(vs, func(i, j int) bool { return isLess(vs[i], vs[j]) })
+	sort.SliceStable(vs, func(i, j int) bool { return IsLess(vs[i], vs[j]) })
 
-	// Deduplicate keys (fails for NaNs).
-	vs2 := vs[:1]
+	// 去重复 Deduplicate keys (fails for NaNs).
+	vs2 := vs[:1] // 初始化一个新的切片 vs2，包含 vs 的第一个元素。
+	// 遍历 vs 中剩余的元素，对于每个元素 v，如果 v 大于 vs2 中最后一个元素，则将其添加到 vs2 中。
 	for _, v := range vs[1:] {
-		if isLess(vs2[len(vs2)-1], v) {
+		if IsLess(vs2[len(vs2)-1], v) { // 排除掉等于的元素
 			vs2 = append(vs2, v)
 		}
 	}
 	return vs2
 }
 
-// isLess is a generic function for sorting arbitrary map keys.
+// IsLess is a generic function for sorting arbitrary map keys.
 // The inputs must be of the same type and must be comparable.
-func isLess(x, y reflect.Value) bool {
+func IsLess(x, y reflect.Value) bool {
 	switch x.Type().Kind() {
 	case reflect.Bool:
 		return !x.Bool() && y.Bool()
@@ -54,21 +56,23 @@ func isLess(x, y reflect.Value) bool {
 	case reflect.String:
 		return x.String() < y.String()
 	case reflect.Array:
+		// 逐个元素比较数组中的元素，如果 x 的某个元素小于 y 的对应元素，则 x 小于 y。
+		// 如果所有元素都相等，则 x 不小于 y。
 		for i := 0; i < x.Len(); i++ {
-			if isLess(x.Index(i), y.Index(i)) {
+			if IsLess(x.Index(i), y.Index(i)) {
 				return true
 			}
-			if isLess(y.Index(i), x.Index(i)) {
+			if IsLess(y.Index(i), x.Index(i)) {
 				return false
 			}
 		}
 		return false
 	case reflect.Struct:
 		for i := 0; i < x.NumField(); i++ {
-			if isLess(x.Field(i), y.Field(i)) {
+			if IsLess(x.Field(i), y.Field(i)) {
 				return true
 			}
-			if isLess(y.Field(i), x.Field(i)) {
+			if IsLess(y.Field(i), x.Field(i)) {
 				return false
 			}
 		}
@@ -80,7 +84,7 @@ func isLess(x, y reflect.Value) bool {
 		}
 		tx, ty := vx.Type(), vy.Type()
 		if tx == ty {
-			return isLess(x.Elem(), y.Elem())
+			return IsLess(x.Elem(), y.Elem())
 		}
 		if tx.Kind() != ty.Kind() {
 			return vx.Kind() < vy.Kind()
@@ -96,6 +100,7 @@ func isLess(x, y reflect.Value) bool {
 		// ordering within a program, but it is obviously not stable.
 		return reflect.ValueOf(vx.Type()).Pointer() < reflect.ValueOf(vy.Type()).Pointer()
 	default:
+		// 这些类型不可比较，函数会抛出 panic。
 		// Must be Func, Map, or Slice; which are not comparable.
 		panic(fmt.Sprintf("%T is not comparable", x.Type()))
 	}
