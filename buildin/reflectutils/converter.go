@@ -23,7 +23,7 @@ type Option struct {
 	Converters  []TypeConverter // 包含多个类型转化器
 }
 
-// converters 将类型转换器转换为具有反射类型的字典
+// TypeConverters 将类型转换器转换为具有反射类型的字典
 func (opt Option) TypeConverters() map[ConverterPair]TypeConverter {
 	var converters = map[ConverterPair]TypeConverter{}
 

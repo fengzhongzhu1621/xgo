@@ -77,7 +77,7 @@ func InspectFuncPC(pc uintptr) *Func {
 
 const _vendor = "/vendor/"
 
-// 将函数的运行时name分割为包名和函数名
+// splitFuncName 将函数的运行时name分割为包名和函数名
 func splitFuncName(function string) (pname string, fname string) {
 	if len(function) == 0 {
 		return

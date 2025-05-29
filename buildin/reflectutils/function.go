@@ -64,11 +64,13 @@ func IsType(t reflect.Type, ft FuncType) bool {
 	return false
 }
 
+// 在函数名中提取最后一个标识符部分，例如从 "mypkg.myMethod" 中提取 "myMethod"。
 var lastIdentRx = regexp.MustCompile(`[_\p{L}][_\p{L}\p{N}]*$`)
 
 // NameOf returns the name of the function value.
+// 从 reflect.Value 提取函数或方法的名称
 func NameOf(v reflect.Value) string {
-	// 获取函数信息
+	// 通过程序计数器（PC）获取对应的 *runtime.Func 对象，该对象包含了函数的名称和其他调试信息。
 	fnc := runtime.FuncForPC(v.Pointer())
 	if fnc == nil {
 		return "<unknown>"
