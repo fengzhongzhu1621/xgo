@@ -13,26 +13,41 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// 将多个通道链接成一个通道，直到取消上下文。
 // Link multiple channels into one channel until cancel the context.
 // func (c *Channel[T]) Bridge(ctx context.Context, chanStream <-chan <-chan T) <-chan T
 func TestBridge(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
+	// 创建一个泛型为int的并发通道实例
 	c := concurrency.NewChannel[int]()
+
+	// 定义一个匿名函数并赋值给变量 genVals。该函数返回一个类型为 <-chan <-chan int> 的通道，即一个只读的双重只读通道（通道的通道）。
 	genVals := func() <-chan <-chan int {
+		// 创建外部通道: 创建一个类型为 <-chan int> 的通道，并将其赋值给变量 out。这个通道用于传输内部的只读通道。
 		out := make(chan (<-chan int))
 		go func() {
+			// 确保在 goroutine 结束时关闭外部通道 out，防止资源泄漏
 			defer close(out)
 			for i := 1; i <= 5; i++ {
 				stream := make(chan int, 1)
 				stream <- i
+				// 关闭 stream 通道，表示不再发送数据
 				close(stream)
-				// 将管道放入管道
+				// 将 stream 通道发送到外部通道 out 中，使得外部可以通过 out 接收内部的 stream 通道。
+				out <- stream
+			}
+			for i := 6; i <= 10; i++ {
+				stream := make(chan int, 1)
+				stream <- i
+				// 关闭 stream 通道，表示不再发送数据
+				close(stream)
+				// 将 stream 通道发送到外部通道 out 中，使得外部可以通过 out 接收内部的 stream 通道。
 				out <- stream
 			}
 		}()
-		// 返回一个管道
+		// 返回外部通道 out，供调用者使用。
 		return out
 	}
 
@@ -40,11 +55,16 @@ func TestBridge(t *testing.T) {
 		fmt.Println(v)
 	}
 	// Output:
-	// 1
 	// 2
-	// 3
+	// 1
 	// 4
+	// 3
 	// 5
+	// 6
+	// 8
+	// 7
+	// 10
+	// 9
 }
 
 // 合并多个输入通道的消息到一个缓冲通道中。输出消息没有优先级。当所有的上游通道到达 EOF 时，下游通道关闭。

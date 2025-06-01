@@ -290,3 +290,118 @@ func TestWordCount(t *testing.T) {
 		})
 	}
 }
+
+// Lines 返回一个迭代器，该迭代器遍历字符串 s 中以换行符结束的行，生成的行包括它们的终止换行符。
+// 如果 s 为空，迭代器将不产生任何行；
+// 如果 s 末尾没有换行符，则最后生成的行将不以换行符结束。该迭代器为一次性使用。
+func TestSplitLines(t *testing.T) {
+	text := `第一行
+第二行
+第三行`
+
+	lines := strings.Lines(text)
+
+	// 打印每一行
+	for line := range lines {
+		fmt.Printf("%q\n", line)
+	}
+
+	// "第一行\n"
+	// "第二行\n"
+	// "第三行"
+}
+
+// SplitSeq 返回一个迭代器，遍历字符串 s 中由分隔符 sep 分隔的所有子字符串。
+// 迭代器生成的字符串与使用 Split(s, sep) 返回的字符串相同，但不构造切片。该迭代器为一次性使用。
+func TestSplitSeq(t *testing.T) {
+	// 使用特定分隔符分割字符串
+	s := "a,b,c,d"
+	fmt.Println("Split string by comma:")
+	for part := range strings.SplitSeq(s, ",") {
+		fmt.Printf("%q\n", part)
+	}
+	// "a"
+	// "b"
+	// "c"
+	// "d"
+
+	// 使用空分隔符分割成字符
+	text := "Hello世界"
+	fmt.Println("\nSplit into characters:")
+	for char := range strings.SplitSeq(text, "") {
+		fmt.Printf("%q\n", char)
+	}
+	// "H"
+	// "e"
+	// "l"
+	// "l"
+	// "o"
+	// "世"
+	// "界"
+}
+
+func TestSplitAfterSeq(t *testing.T) {
+	// 使用分隔符分割(并会保留分隔符)
+	s := "a,b,c,d"
+	fmt.Println("Split string by comma (keeping separators):")
+	for part := range strings.SplitAfterSeq(s, ",") {
+		fmt.Printf("%q\n", part)
+	}
+	// "a,"
+	// "b,"
+	// "c,"
+	// "d"
+}
+
+// SplitSeq 和 SplitAfterSeq 使用指定的分隔符(separator)来分割字符串
+// FieldsSeq 自动使用空白字符(whitespace)作为分隔符，包括空格、制表符、换行符等
+//
+// SplitSeq 和 SplitAfterSeq 会保留空字符串(在连续分隔符之间)
+// FieldsSeq 会忽略连续的空白字符，不会产生空字符串
+// SplitSeq "a  b" 使用 " " 分割会产生: ["a", "", "b"]
+// FieldsSeq "a  b" 会产生: ["a", "b"]
+func TestFieldsSeq(t *testing.T) {
+	// 通过空格分割
+	text := "a b c d"
+	fmt.Println("Split string into fields:")
+	for word := range strings.FieldsSeq(text) {
+		fmt.Printf("%q\n", word)
+	}
+	// "a"
+	// "b"
+	// "c"
+	// "d"
+
+	// 通过多个空格来分割
+	textWithSpaces := "  a   b   c  "
+	fmt.Println("\nSplit string with multiple spaces:")
+	for word := range strings.FieldsSeq(textWithSpaces) {
+		fmt.Printf("%q\n", word)
+	}
+	// "a"
+	// "b"
+	// "c"
+}
+
+func TestFieldsFuncSeq(t *testing.T) {
+	// 使用空格分割 (和FieldsSeq效果类似)
+	text := "a b c  d"
+	fmt.Println("Split on whitespace:")
+	for word := range strings.FieldsFuncSeq(text, unicode.IsSpace) {
+		fmt.Printf("%q\n", word)
+	}
+	// "a"
+	// "b"
+	// "c"
+	// "d"
+
+	// 根据数字切割
+	mixedText := "abc123def456ghi"
+	fmt.Println("\nSplit on digits:")
+	for word := range strings.FieldsFuncSeq(mixedText, unicode.IsDigit) {
+		fmt.Printf("%q\n", word)
+	}
+	// "abc"
+	// "def"
+	// "ghi"
+}
