@@ -1,4 +1,4 @@
-package broadcast
+package channel
 
 import (
 	"context"
@@ -6,14 +6,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/fengzhongzhu1621/xgo/channel"
-
 	"github.com/duke-git/lancet/v2/concurrency"
 	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
 )
 
-// 将多个通道链接成一个通道，直到取消上下文。
+// 将多个通道（<-chan <-chan int）链接成一个通道，直到取消上下文。
 // Link multiple channels into one channel until cancel the context.
 // func (c *Channel[T]) Bridge(ctx context.Context, chanStream <-chan <-chan T) <-chan T
 func TestBridge(t *testing.T) {
@@ -67,7 +65,7 @@ func TestBridge(t *testing.T) {
 	// 9
 }
 
-// 合并多个输入通道的消息到一个缓冲通道中。输出消息没有优先级。当所有的上游通道到达 EOF 时，下游通道关闭。
+// 合并多个输入通道（[]<-chan int）的消息到一个缓冲通道中。输出消息没有优先级。当所有的上游通道到达 EOF 时，下游通道关闭。
 // Merge multiple channels into one channel until cancel the context.
 // func (c *Channel[T]) FanIn(ctx context.Context, channels ...<-chan T) <-chan T
 func TestFanIn(t *testing.T) {
@@ -96,8 +94,8 @@ func TestFanIn(t *testing.T) {
 
 	// 创建 3 个只读管道
 	is := assert.New(t)
-	upstreams := channel.CreateChannels[int](3, 10)
-	roupstreams := channel.ChannelsToReadOnly(upstreams)
+	upstreams := CreateChannels[int](3, 10)
+	roupstreams := ChannelsToReadOnly(upstreams)
 	for i := range roupstreams {
 		go func(i int) {
 			upstreams[i] <- 1
@@ -147,6 +145,7 @@ func TestOr(t *testing.T) {
 	start := time.Now()
 
 	c := concurrency.NewChannel[any]()
+	// 任意一个 chan 关闭后，停止等待
 	<-c.Or(
 		sig(1*time.Second),
 		sig(2*time.Second),
@@ -172,6 +171,7 @@ func TestOrDone(t *testing.T) {
 
 	for v := range c.OrDone(ctx, intStream) {
 		fmt.Println(v)
+		// 上下文取消时，range 不再从 intStream中获取数据了
 		cancel()
 	}
 	// Output:

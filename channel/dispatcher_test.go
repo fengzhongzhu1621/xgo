@@ -1,11 +1,9 @@
-package broadcast
+package channel
 
 import (
 	"math/rand"
 	"testing"
 	"time"
-
-	"github.com/fengzhongzhu1621/xgo/channel"
 
 	"github.com/fengzhongzhu1621/xgo/tests"
 
@@ -15,6 +13,7 @@ import (
 
 // ChannelDispatcher 将信息从输入通道消息分发到 N 个子通道中。当输入通道关闭时，这个关闭事件会被传播到所有的子通道，也就是说，所有的子通道也会被关闭。
 // 这些通道可以有一个固定的缓冲容量，或者当 cap（容量）为 0 时，它们是无缓冲的。
+// 作用：启用多个消费者通道从输入通道消费数据并处理，注意并非广播模式
 
 // 分配策略
 //lo.DispatchingStrategyRoundRobin: 使用轮询策略将消息分发到子通道中。
@@ -38,12 +37,12 @@ func TestChannelDispatcher(t *testing.T) {
 
 	is.Equal(4, len(ch))
 
+	// 创建 5 个子通道，缓存是 10
 	children := lo.ChannelDispatcher(ch, 5, 10, lo.DispatchingStrategyRoundRobin[int])
 	time.Sleep(10 * time.Millisecond)
 
 	// check channels allocation
 	is.Equal(5, len(children))
-
 	is.Equal(10, cap(children[0]))
 	is.Equal(10, cap(children[1]))
 	is.Equal(10, cap(children[2]))
@@ -54,7 +53,7 @@ func TestChannelDispatcher(t *testing.T) {
 	is.Equal(1, len(children[1]))
 	is.Equal(1, len(children[2]))
 	is.Equal(1, len(children[3]))
-	is.Equal(0, len(children[4]))
+	is.Equal(0, len(children[4])) // 空闲一个通道
 
 	// check channels content
 	is.Equal(0, len(ch))
@@ -80,6 +79,7 @@ func TestChannelDispatcher(t *testing.T) {
 	// is.Equal(msg4, 0)
 	// is.Nil(children[4])
 
+	// 关闭输入通道
 	// check it is closed
 	close(ch)
 	time.Sleep(10 * time.Millisecond)
@@ -112,14 +112,15 @@ func TestChannelDispatcher(t *testing.T) {
 	is.Equal(0, cap(children[0]))
 }
 
+// 测试分配策略
 func TestDispatchingStrategyRoundRobin(t *testing.T) {
 	t.Parallel()
 	tests.TestWithTimeout(t, 10*time.Millisecond)
 	is := assert.New(t)
 
-	children := channel.CreateChannels[int](3, 2)
-	rochildren := channel.ChannelsToReadOnly(children)
-	defer channel.CloseChannels(children)
+	children := CreateChannels[int](3, 2)
+	rochildren := ChannelsToReadOnly(children)
+	defer CloseChannels(children)
 
 	is.Equal(0, lo.DispatchingStrategyRoundRobin(42, 0, rochildren))
 	is.Equal(1, lo.DispatchingStrategyRoundRobin(42, 1, rochildren))
@@ -168,9 +169,9 @@ func TestDispatchingStrategyFirst(t *testing.T) {
 	tests.TestWithTimeout(t, 10*time.Millisecond)
 	is := assert.New(t)
 
-	children := channel.CreateChannels[int](2, 2)
-	rochildren := channel.ChannelsToReadOnly(children)
-	defer channel.CloseChannels(children)
+	children := CreateChannels[int](2, 2)
+	rochildren := ChannelsToReadOnly(children)
+	defer CloseChannels(children)
 
 	is.Equal(0, lo.DispatchingStrategyFirst(42, 0, rochildren))
 	children[0] <- 0
@@ -184,9 +185,9 @@ func TestDispatchingStrategyLeast(t *testing.T) {
 	tests.TestWithTimeout(t, 10*time.Millisecond)
 	is := assert.New(t)
 
-	children := channel.CreateChannels[int](2, 2)
-	rochildren := channel.ChannelsToReadOnly(children)
-	defer channel.CloseChannels(children)
+	children := CreateChannels[int](2, 2)
+	rochildren := ChannelsToReadOnly(children)
+	defer CloseChannels(children)
 
 	is.Equal(0, lo.DispatchingStrategyLeast(42, 0, rochildren))
 	children[0] <- 0
@@ -204,9 +205,9 @@ func TestDispatchingStrategyMost(t *testing.T) {
 	tests.TestWithTimeout(t, 10*time.Millisecond)
 	is := assert.New(t)
 
-	children := channel.CreateChannels[int](2, 2)
-	rochildren := channel.ChannelsToReadOnly(children)
-	defer channel.CloseChannels(children)
+	children := CreateChannels[int](2, 2)
+	rochildren := ChannelsToReadOnly(children)
+	defer CloseChannels(children)
 
 	is.Equal(0, lo.DispatchingStrategyMost(42, 0, rochildren))
 	children[0] <- 0

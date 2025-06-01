@@ -39,6 +39,8 @@ func TestGenerate(t *testing.T) {
 	defer cancel()
 
 	c := concurrency.NewChannel[int]()
+
+	// 创建一个带有上下文的管道
 	intStream := c.Generate(ctx, 1, 2, 3)
 
 	fmt.Println(<-intStream)
