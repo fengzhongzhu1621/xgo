@@ -11,6 +11,10 @@ import (
 
 // Split one chanel into two channels, until cancel the context.
 // func (c *Channel[T]) Tee(ctx context.Context, in <-chan T) (<-chan T, <-chan T)
+//
+// 注意：和 FanOut 的不同之处，Tee 尝试同时向out1和out2发送数据（使用select语句），但是因为 ch1,cha2是阻塞的，
+// 如果只消费了 cha1，则 Tee 中 select 的实现会因为 cha2 没有消费而阻塞
+// 只有从 ch1 和 cha2 同时消费完了一个数据后，生成者才会写入下一个数据
 func TestTee(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
