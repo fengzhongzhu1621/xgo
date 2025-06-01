@@ -28,17 +28,6 @@ func TestExample(t *testing.T) {
 	assert.Equal(t, reflect.TypeOf(x), reflect.TypeOf(float64(0)))
 }
 
-func TestElemSetFloat(t *testing.T) {
-	var x float64 = 3.14
-
-	// Elem(): 它允许你访问指针指向的值或接口包含的值。
-	// 接受一个 reflect.Value 类型的参数，并返回一个新的 reflect.Value，表示指针指向的值或接口包含的值。
-	// 如果传入的值不是指针或接口类型，Elem() 函数将引发 panic。
-	v := reflect.ValueOf(&x).Elem() // 返回给定值的值
-	v.SetFloat(3.1415926)
-	fmt.Println("x: ", v) // x:  3.1415926
-}
-
 type Person struct {
 	Name string `json:"name"`
 	Age  int    `json:"age"`
