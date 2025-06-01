@@ -1,8 +1,8 @@
-# binding 标签
+# 1. binding 标签
 用于指定如何将HTTP请求中的数据绑定到Go结构体的字段上。Gin支持多种类型的数据绑定，包括JSON、XML、表单数据和查询字符串等。
 binding标签通常与ShouldBind系列方法一起使用，例如 ShouldBindJSON、ShouldBindXML、ShouldBindQuery 等。
 
-## ShouldBindJSON
+## 1.1 ShouldBindJSON
 返回 error，需手动处理；如果需要 自定义错误响应（如返回特定的 JSON 结构），用 ShouldBindJSON
 
 ## BindJSON
@@ -18,7 +18,7 @@ func handler1(c *gin.Context) {
 }
 ```
 
-## ShouldBindQuery
+## 1.2 ShouldBindQuery
 
 ```go
 // binding:"required"表示该字段在请求中是必须的，而binding:"email"表示该字段的值必须符合电子邮件地址的格式。
@@ -36,7 +36,10 @@ validate:"email"：表示该字段必须是合法的邮箱格式
 
 ```
 
-# validate 标签
+## 1.3 ShouldBindXML
+
+
+# 2. validate 标签
 验证通常在数据绑定之后进行，以确保绑定的数据是有效的。
 用于数据验证，它通常与验证库（如go-playground/validator.v9）一起使用，以确保结构体字段的值满足特定的条件。
 validate标签可以指定各种验证规则，例如字段长度、数值范围、正则表达式匹配等。

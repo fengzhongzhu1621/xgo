@@ -27,16 +27,24 @@ type User2 struct {
 func TestUser2(t *testing.T) {
 	user := &User2{
 		Username: "username_1",
-		Age:      18,
-		Email:    "username_1@example.com",
+		Age:      140,
+		Email:    "username_1",
 	}
 
 	err := validatorer.Struct(user)
 	if err != nil {
 		// 判断是否是 validator 第三方库的校验错误
 		if validationErrors, ok := err.(validator.ValidationErrors); ok {
+			// Key: 'User2.Age' Error:Field validation for 'Age' failed on the 'lte' tag
+			// Key: 'User2.Email' Error:Field validation for 'Email' failed on the 'email' tag
 			fmt.Println(validationErrors)
 		}
+		// 获取校验错误并打印
+		for _, err := range err.(validator.ValidationErrors) {
+			fmt.Printf("Field '%s' failed validation, rule '%s'\n", err.Field(), err.Tag())
+		}
+		// Field 'Age' failed validation, rule 'lte'
+		// Field 'Email' failed validation, rule 'email'
 	} else {
 		fmt.Println("Validation passed")
 	}
