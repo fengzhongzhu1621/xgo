@@ -55,6 +55,7 @@ require (
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bits-and-blooms/bitset v1.10.0 // indirect
+	github.com/brianvoe/gofakeit/v6 v6.28.0 // indirect
 	github.com/bytedance/sonic v1.13.2 // indirect
 	github.com/bytedance/sonic/loader v0.2.4 // indirect
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
@@ -78,7 +79,7 @@ require (
 	github.com/go-viper/mapstructure/v2 v2.2.1 // indirect
 	github.com/goccy/go-json v0.10.5 // indirect
 	github.com/golang/snappy v1.0.0 // indirect
-	github.com/google/cel-go v0.25.0 // indirect
+	github.com/google/brotli/go/cbrotli v1.1.0 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/google/pprof v0.0.0-20250403155104-27863c87afa6 // indirect
 	github.com/google/s2a-go v0.1.9 // indirect
@@ -119,7 +120,6 @@ require (
 	github.com/rs/zerolog v1.33.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/sagikazarmark/locafero v0.9.0 // indirect
-	github.com/satmihir/fair v0.1.0-alpha // indirect
 	github.com/sethvargo/go-retry v0.3.0 // indirect
 	github.com/smarty/assertions v1.15.0 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
@@ -202,6 +202,7 @@ require (
 )
 
 require (
+	github.com/AndresXLP/ravenTree v1.1.0
 	github.com/FZambia/sentinel v1.1.1
 	github.com/RussellLuo/slidingwindow v0.0.0-20200528002341-535bb99d338b
 	github.com/ThreeDotsLabs/watermill v1.4.6
@@ -257,6 +258,7 @@ require (
 	github.com/golang-jwt/jwt/v5 v5.2.2
 	github.com/golang/mock v1.6.0
 	github.com/gomodule/redigo v1.9.2
+	github.com/google/cel-go v0.25.0
 	github.com/google/uuid v1.6.0
 	github.com/gookit/goutil v0.6.18
 	github.com/gorilla/csrf v1.7.2
