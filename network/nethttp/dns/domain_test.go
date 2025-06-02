@@ -5,6 +5,13 @@ import (
 	"testing"
 )
 
+func TestFetchSubdomains(t *testing.T) {
+	domain := "www.example.com"
+
+	subDomains := FetchSubdomains(domain)
+	fmt.Printf("域名: %v\n", subDomains)
+}
+
 func TestResolveDomain(t *testing.T) {
 	// 示例域名
 	domain := "www.example.com"

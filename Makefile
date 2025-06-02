@@ -55,7 +55,7 @@ $(LOCALBIN):
 
 ###############################################################################
 # tools
-.PHONY: golines swag swag_init gofumpt docs mocks sqlc
+.PHONY: golines swag swag_init gofumpt docs mocks sqlc subfinder tools
 
 bin/gotestsum:
 	@mkdir -p bin
@@ -94,13 +94,16 @@ $(GOFUMPT): $(LOCALBIN)
 gowatch:
 	go install github.com/silenceper/gowatch@latest
 
+subfinder:
+    go install github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
+
 mocks:
 	go tool github.com/vektra/mockery/v2 --all --output ./mocks
 
 sqlc:
 	go tool github.com/kyleconroy/sqlc/cmd/sqlc generate
 
-tools: bin/gotestsum bin/golangci-lint swag golines gofumpt gowatch
+tools: bin/gotestsum bin/golangci-lint swag golines gofumpt gowatch subfinder
 
 ###############################################################################
 # 审计

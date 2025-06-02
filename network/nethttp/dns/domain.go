@@ -2,8 +2,28 @@ package dns
 
 import (
 	"fmt"
+	"log"
 	"net"
+	"os/exec"
+	"strings"
 )
+
+// FetchSubdomains 获取指定域名的子域名列表
+func FetchSubdomains(domain string) []string {
+	cmd := exec.Command("subfinder", "-d", domain, "-silent")
+	out, err := cmd.Output()
+	if err != nil {
+		log.Fatalf("Subfinder error: %v", err)
+	}
+	lines := strings.Split(string(out), "\n")
+	var results []string
+	for _, line := range lines {
+		if strings.TrimSpace(line) != "" {
+			results = append(results, line)
+		}
+	}
+	return results
+}
 
 // ResolveDomain 接受一个域名字符串，返回该域名的第一个IP地址和对应的CNAME记录。
 func ResolveDomain(domain string) (string, string) {
