@@ -1,6 +1,7 @@
 package slice
 
 import (
+	"fmt"
 	"math"
 	"reflect"
 	"sort"
@@ -190,7 +191,6 @@ func TestGroupBy(t *testing.T) {
 		assert.Equal(t, []int{2, 4}, even)
 		assert.Equal(t, []int{1, 3, 5}, odd)
 	}
-
 }
 
 func TestParallelGroupBy(t *testing.T) {
@@ -298,6 +298,30 @@ func TestGroupWith(t *testing.T) {
 				}
 			})
 		}
+	}
+
+	{
+		type Order struct {
+			UserId int64
+			// 其他字段...
+		}
+
+		// 构造测试数据
+		order1 := &Order{UserId: 1}
+		order2 := &Order{UserId: 2}
+		order3 := &Order{UserId: 1}
+		orders := []*Order{order1, order2, order3}
+
+		// 调用被测试函数
+		result := lo.GroupBy(orders, func(item *Order) int64 {
+			return item.UserId
+		})
+		fmt.Printf("%v\n", result) // map[1:[0x140001051c0 0x140001051d0] 2:[0x140001051c8]]
+		assert.Equal(t, 2, len(result))
+		assert.Contains(t, result, int64(1))
+		assert.Contains(t, result, int64(2))
+		assert.Len(t, result[int64(1)], 2)
+		assert.Len(t, result[int64(2)], 1)
 	}
 }
 

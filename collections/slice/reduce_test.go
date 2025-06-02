@@ -66,9 +66,10 @@ func TestReduceBy(t *testing.T) {
 	is := assert.New(t)
 
 	{
-		result1 := lo.Reduce([]int{1, 2, 3, 4}, func(agg int, item int, _ int) int {
-			return agg + item
-		}, 0)
+		result1 := lo.Reduce(
+			[]int{1, 2, 3, 4}, func(agg int, item int, _ int) int {
+				return agg + item
+			}, 0)
 		result2 := lo.Reduce([]int{1, 2, 3, 4}, func(agg int, item int, _ int) int {
 			return agg + item
 		}, 10)
@@ -86,7 +87,7 @@ func TestReduceBy(t *testing.T) {
 		})
 
 		assert.Equal(t, 10, result1)
-		assert.Equal(t, 1234, result2)
+		assert.Equal(t, "1234", result2)
 	}
 }
 

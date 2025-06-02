@@ -153,6 +153,7 @@ func TestStructSliceToMap(t *testing.T) {
 	}
 }
 
+// 把列表转换成Map
 // 遍历结构体数组，转换为指定格式的map
 func TestSliceToMap(t *testing.T) {
 	t.Parallel()
