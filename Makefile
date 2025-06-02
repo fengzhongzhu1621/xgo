@@ -51,7 +51,11 @@ GOTESTSUM_VERSION = 1.12.0
 LOCALBIN ?= $(shell pwd)/bin
 $(LOCALBIN):
 	mkdir -p $(LOCALBIN)
-.PHONY: golines swag gofumpt
+
+
+###############################################################################
+# tools
+.PHONY: golines swag swag_init gofumpt docs mocks sqlc
 
 bin/gotestsum:
 	@mkdir -p bin
@@ -71,8 +75,13 @@ $(SWAG): $(LOCALBIN)
 	GOBIN=$(LOCALBIN) go install github.com/swaggo/swag/cmd/swag@latest
 
 swag_init: $(SWAG)
+	# make gin_server
 	# http://127.0.0.1:8000/swagger/index.html
 	cd ginx && $(LOCALBIN)/swag init --parseDependency --parseDepth=6 --generalInfo ../main/main.go
+
+docs:
+	# go tool
+	cd ginx && go tool github.com/swaggo/swag/cmd/swag init --parseDependency --parseDepth=6 --generalInfo ../main/main.go
 
 golines: $(GOLINES) ## install golines
 $(GOLINES): $(LOCALBIN)
@@ -85,11 +94,24 @@ $(GOFUMPT): $(LOCALBIN)
 gowatch:
 	go install github.com/silenceper/gowatch@latest
 
+mocks:
+	go tool github.com/vektra/mockery/v2 --all --output ./mocks
+
+sqlc:
+	go tool github.com/kyleconroy/sqlc/cmd/sqlc generate
+
 tools: bin/gotestsum bin/golangci-lint swag golines gofumpt gowatch
 
 ###############################################################################
+# 审计
+audit:
+	go tool govulncheck github.com/golang/mock/mockgen
+	go tool govulncheck github.com/swaggo/swag/cmd/swag
+	go tool govulncheck github.com/vektra/mockery/v2
+
+###############################################################################
 # 自定义命令
-.PHONY: build test bench vet coverage check test-race test-cover-html help clear lint fix fmt tidy
+.PHONY: build test bench vet coverage check test-race test-cover-html help clear lint fix fmt tidy mocks sqlc
 # 运行 make 命令而没有指定目标时，默认会执行 help 目标，并打印出帮助信息。
 .DEFAULT_GOAL := help
 help:	# Empty target rule
