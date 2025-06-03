@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package collections
+package once
 
 import (
 	"sync"
@@ -32,7 +32,9 @@ type Once struct {
 
 // Do calls the function f if and only if Do has not been invoked
 // without error for this instance of Once.  In other words, given
-// 	var once Once
+//
+//	var once Once
+//
 // if once.Do(f) is called multiple times, only the first call will
 // invoke f, even if f has a different value in each invocation unless
 // f returns an error.  A new instance of Once is required for each
@@ -41,16 +43,21 @@ type Once struct {
 // Do is intended for initialization that must be run exactly once.  Since f
 // is niladic, it may be necessary to use a function literal to capture the
 // arguments to a function to be invoked by Do:
-// 	err := config.once.Do(func() error { return config.init(filename) })
+//
+//	err := config.once.Do(func() error { return config.init(filename) })
 //
 // sync.Once.Do(f func())是一个挺有趣的东西,能保证once只执行一次，
 // 无论你是否更换once.Do(xx)这里的方法,这个sync.Once块只会执行一次。
 func (o *Once) Do(f func() error) error {
+	// 快速路径（Fast Path）
+	// 大多数情况下，done 已经是 1（函数已执行过），此时直接通过 atomic.LoadUint32 检查并返回，无需加锁，大幅提升性能。
 	if atomic.LoadUint32(&o.done) == 1 {
 		// 1表示已经成功执行过，保证只成功执行一次
 		return nil
 	}
-	// Slow-path.
+
+	// 慢速路径（Slow Path）
+	// 锁的使用被限制在真正需要同步的场景（即首次执行 f 时），减少了锁的开销。
 	o.m.Lock()
 	defer o.m.Unlock()
 	var err error
