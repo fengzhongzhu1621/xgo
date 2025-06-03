@@ -2,7 +2,7 @@ package router
 
 import (
 	"github.com/fengzhongzhu1621/xgo/config"
-	_ "github.com/fengzhongzhu1621/xgo/ginx/docs" // 引入 docs 包
+	_ "github.com/fengzhongzhu1621/xgo/ginx/docs" // 引入 docs 包，以使 swag 自动生成文档
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
