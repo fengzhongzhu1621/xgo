@@ -104,6 +104,8 @@ func TestUUIdV4(t *testing.T) {
 	}
 
 	{
+		// UUID 是随机生成的，不具有时间排序性。
+		// UUID 的生成速度较快，适合高并发环境。
 		id := uuid.New()
 		fmt.Println("生成的UUID:", id) // 77dd4d61-d08c-4eee-8cd6-9e15a7d3d19d
 	}

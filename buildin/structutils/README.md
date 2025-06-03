@@ -51,10 +51,20 @@ func main() {
 
 noCopy 结构体本身是一个空结构体，它实现了 Lock 和 Unlock 方法，这两个方法都是空操作。它没有实际的功能属性。
 
+```
+// Note that it must not be embedded, due to the Lock and Unlock methods.
+type noCopy struct{}
+
+// Lock is a no-op used by -copylocks checker from `go vet`.
+func (*noCopy) Lock()    {}
+func (*noCopy) Unlock()  {}
+```
+
 Go Vet 的 copylocks 检查器会检测到这种错误，并提示我们 "Locks Erroneously Passed by Value"。
 noCopy 结构体通过与 Go Vet 的 copylocks 检查器配合，来阻止开发者错误地通过值传递包含锁的结构体。
 当一个结构体包含 noCopy 类型时，Go Vet 会检查该结构体是否被通过值传递。如果被通过值传递，Go Vet 会发出警告，提醒开发者该结构体不应该被复制。
 
+go vet 的 noCopy 机制是一种防止结构体被拷贝的方法，尤其是那些包含同步原语（如 sync.Mutex 和 sync.WaitGroup）的结构，目的是防止意外的锁拷贝，但这种防止并不是强制性的，是否拷贝需要由开发者检测。
 
 ```go
 type WaitGroup struct {
@@ -88,3 +98,65 @@ func func2() {
 
 ## 引用
 > https://mp.weixin.qq.com/s/cm9kh7KaYbMfwGNIc_vUyg
+
+
+# go1.23.0 builder.go abi.NoEscape
+
+```go
+// A Builder is used to efficiently build a string using [Builder.Write] methods.
+// It minimizes memory copying. The zero value is ready to use.
+// Do not copy a non-zero Builder.
+type Builder struct {
+    // addr stores the address of the Builder to detect copies by value.
+    // It is initialized to nil and set to the Builder's address on first use.
+    addr *Builder // of receiver, to detect copies by value
+
+    // buf is the underlying byte slice that stores the string being built.
+    // External users should never get direct access to this buffer,
+    // since the slice at some point will be converted to a string using unsafe,
+    // also data between len(buf) and cap(buf) might be uninitialized.
+    buf []byte
+}
+
+// copyCheck checks if the Builder has been copied by value.
+// If it has, it panics to prevent incorrect usage.
+func (b *Builder) copyCheck() {
+    if b.addr == nil {
+        // This hack works around a failing of Go's escape analysis
+        // that was causing b to escape and be heap allocated.
+        // See issue 23382.
+        // TODO: once issue 7921 is fixed, this should be reverted to
+        // just "b.addr = b".
+        b.addr = (*Builder)(abi.NoEscape(unsafe.Pointer(b)))
+    } else if b.addr != b {
+        panic("strings: illegal use of non-zero Builder copied by value")
+    }
+}
+
+// Write appends the contents of p to b's buffer.
+// Write always returns len(p), nil.
+func (b *Builder) Write(p []byte) (int, error) {
+    // Check if the Builder has been copied by value.
+    b.copyCheck()
+
+    // Append the data to the buffer.
+    b.buf = append(b.buf, p...)
+
+    // Return the number of bytes written and nil error.
+    return len(p), nil
+}
+
+```
+
+
+1. 如果 addr == nil：
+这是第一次调用 copyCheck()（即 Builder 刚被创建）。
+通过 unsafe.Pointer 获取当前 Builder 的地址，并存储到 addr 中。
+abi.NoEscape 的作用：绕过 Go 的逃逸分析（避免 b 被错误地分配到堆上）。
+2. 如果 addr != b：
+说明 Builder 被复制了（addr 仍然指向原来的 Builder，而不是当前的 Builder）。
+直接 panic，防止错误使用。
+
+* Go 的逃逸分析可能会错误地认为 b 需要分配到堆上（即使它实际上可以留在栈上）。
+* abi.NoEscape 是一个内部函数（Go 运行时提供），用于告诉编译器“这个指针不会逃逸到堆上”，从而优化内存分配。
+* 注意：abi.NoEscape 是 Go 内部 API，普通代码不能直接使用（strings.Builder 是标准库的一部分，可以访问）。
