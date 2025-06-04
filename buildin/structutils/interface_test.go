@@ -42,7 +42,7 @@ func (m *MySQLUserRepository) GetUserByID(id int) (*User3, error) {
 // 它只依赖 UserRepository 接口，符合「面向接口编程」原则；
 // 你可以轻松替换 repo 的实现，而不需要修改 UserService 的代码。
 type UserService struct {
-	repo IUserRepository // 这里就是「在结构体中定义接口」
+	repo IUserRepository // 这里就是「在结构体中定义接口」，依赖注入点 ✅
 }
 
 // UserService 的业务方法
@@ -59,7 +59,7 @@ func (s *UserService) GetUserName(id int) (string, error) {
 func TestStructIncludeInterface(t *testing.T) {
 	// 使用真实数据库实现
 	mysqlRepo := &MySQLUserRepository{}
-	userService := &UserService{repo: mysqlRepo}
+	userService := &UserService{repo: mysqlRepo} // 通过构造函数注入依赖
 
 	name, err := userService.GetUserName(1)
 	if err != nil {

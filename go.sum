@@ -707,6 +707,8 @@ github.com/sagikazarmark/crypt v0.28.0 h1:g5V74hutj/d3fn5Ga3/3GxUjg1k9H0NfSDjDUc
 github.com/sagikazarmark/crypt v0.28.0/go.mod h1:stOy168PraSkc5DJisfihVxPnsXUAVIcIzy/MQh49DA=
 github.com/sagikazarmark/locafero v0.9.0 h1:GbgQGNtTrEmddYDSAH9QLRyfAHY12md+8YFTqyMTC9k=
 github.com/sagikazarmark/locafero v0.9.0/go.mod h1:UBUyz37V+EdMS3hDF3QWIiVr/2dPrx49OMO0Bn0hJqk=
+github.com/samber/do v1.6.0 h1:Jy/N++BXINDB6lAx5wBlbpHlUdl0FKpLWgGEV9YWqaU=
+github.com/samber/do v1.6.0/go.mod h1:DWqBvumy8dyb2vEnYZE7D7zaVEB64J45B0NjTlY/M4k=
 github.com/samber/lo v1.49.1 h1:4BIFyVfuQSEpluc7Fua+j1NolZHiEHEpaSEKdsH0tew=
 github.com/samber/lo v1.49.1/go.mod h1:dO6KHFzUKXgP8LDhU0oI8d2hekjXnGOu0DB8Jecxd6o=
 github.com/sean-/seed v0.0.0-20170313163322-e2103e2c3529 h1:nn5Wsu0esKSJiIVhscUtVbo7ada43DJhG55ua/hjS5I=
