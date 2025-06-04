@@ -82,6 +82,8 @@ require (
 	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/google/pprof v0.0.0-20250403155104-27863c87afa6 // indirect
 	github.com/google/s2a-go v0.1.9 // indirect
+	github.com/google/subcommands v1.2.0 // indirect
+	github.com/google/wire v0.6.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.6 // indirect
 	github.com/gookit/color v1.5.4 // indirect
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
@@ -344,6 +346,7 @@ require (
 
 tool (
 	github.com/golang/mock/mockgen
+	github.com/google/wire/cmd/wire
 	github.com/swaggo/swag/cmd/swag
 	github.com/vektra/mockery/v2
 	golang.org/x/vuln/cmd/govulncheck

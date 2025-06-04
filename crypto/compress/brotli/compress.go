@@ -1,3 +1,6 @@
+//go:build brotli
+// +build brotli
+
 package brotli
 
 import (

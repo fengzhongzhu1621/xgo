@@ -55,7 +55,7 @@ $(LOCALBIN):
 
 ###############################################################################
 # tools
-.PHONY: golines swag swag_init gofumpt docs mocks sqlc subfinder tools
+.PHONY: golines swag swag_init gofumpt docs mocks sqlc subfinder wire_tool tools
 
 bin/gotestsum:
 	@mkdir -p bin
@@ -95,7 +95,7 @@ gowatch:
 	go install github.com/silenceper/gowatch@latest
 
 subfinder:
-    go install github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
+	go install github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
 
 mocks:
 	go tool github.com/vektra/mockery/v2 --all --output ./mocks
@@ -103,7 +103,10 @@ mocks:
 sqlc:
 	go tool github.com/kyleconroy/sqlc/cmd/sqlc generate
 
-tools: bin/gotestsum bin/golangci-lint swag golines gofumpt gowatch subfinder
+wire_tool:
+	go tool github.com/google/wire/cmd/wire
+
+tools: bin/gotestsum bin/golangci-lint swag golines gofumpt gowatch subfinder wire_tool
 
 ###############################################################################
 # 审计
@@ -111,10 +114,11 @@ audit:
 	go tool govulncheck github.com/golang/mock/mockgen
 	go tool govulncheck github.com/swaggo/swag/cmd/swag
 	go tool govulncheck github.com/vektra/mockery/v2
+	go tool govulncheck github.com/google/wire/cmd/wire
 
 ###############################################################################
 # 自定义命令
-.PHONY: build test bench vet coverage check test-race test-cover-html help clear lint fix fmt tidy mocks sqlc
+.PHONY: build test bench vet coverage check test-race test-cover-html help clear lint fix fmt tidy mocks sqlc generate wire
 # 运行 make 命令而没有指定目标时，默认会执行 help 目标，并打印出帮助信息。
 .DEFAULT_GOAL := help
 help:	# Empty target rule
@@ -201,6 +205,12 @@ generate_gomod:
 validate_examples:
 	go run dev/update-examples-deps/main.go
 	go run dev/validate-examples/main.go
+
+generate:
+	go generate ./...
+
+wire:
+	wire ./...
 
 # 安装 go install golang.org/x/tools/cmd/godoc
 godoc:
