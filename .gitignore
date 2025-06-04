@@ -34,6 +34,7 @@ dist/
 # Develop tools
 .idea/
 .vscode/
+.zed/
 .DS_Store
 .envrc
 .coverage.cov

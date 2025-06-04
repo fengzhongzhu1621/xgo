@@ -21,11 +21,22 @@ func GetGlobalConfig() *Config {
 }
 
 // SetCfgFile 设置开发配置文件
-func SetCfgFile() {
+func SetCfgFile() string {
 	_, filename, _, _ := runtime.Caller(0)
 	dir := filepath.Dir(filename)
-	cfgFile = path.Join(dir, "config.yaml")
+	cfgFile := path.Join(dir, "config.yaml")
 	viper.SetConfigFile(cfgFile)
+
+	return cfgFile
+}
+
+// SetCfgFile 设置开发配置文件
+func GetAdminCfgFilePath() string {
+	_, filename, _, _ := runtime.Caller(0)
+	dir := filepath.Dir(filename)
+	adminCfgFilePath := path.Join(dir, "admin.yaml")
+
+	return adminCfgFilePath
 }
 
 // GetCfgFile 获取配置文件
