@@ -1,4 +1,4 @@
-package param
+package request
 
 import (
 	"fmt"

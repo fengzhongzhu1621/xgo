@@ -4,6 +4,7 @@ import (
 	"io"
 	"mime/multipart"
 	"os"
+	"path/filepath"
 )
 
 // SaveUploadedFile uploads the form file to specific dst.
@@ -15,6 +16,10 @@ func SaveUploadedFile(file *multipart.FileHeader, dst string) error {
 		return err
 	}
 	defer src.Close()
+
+	if err = os.MkdirAll(filepath.Dir(dst), 0750); err != nil {
+		return err
+	}
 
 	// 创建目标文件
 	out, err := os.Create(dst)

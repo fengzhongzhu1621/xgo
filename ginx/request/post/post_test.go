@@ -1,4 +1,4 @@
-package param
+package post
 
 import (
 	"net/http"
