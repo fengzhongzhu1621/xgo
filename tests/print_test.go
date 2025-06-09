@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/gookit/goutil/fmtutil"
@@ -21,5 +22,13 @@ func TestPrettyJSON(t *testing.T) {
 		got, err := fmtutil.PrettyJSON(sample)
 		assert.NoError(t, err)
 		assert.Equal(t, want, got)
+		fmt.Println(got)
 	}
+
+	// {
+	//     "a": 1
+	// }
+	// {
+	//     "a": 1
+	// }
 }

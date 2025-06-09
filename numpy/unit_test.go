@@ -1,10 +1,11 @@
-package math
+package numpy
 
 import (
 	"fmt"
 	"testing"
 
 	"github.com/duke-git/lancet/v2/formatter"
+	"github.com/gookit/goutil/fmtutil"
 	"github.com/gookit/goutil/mathutil"
 	"github.com/stretchr/testify/assert"
 )
@@ -70,24 +71,47 @@ func TestParseDecimalBytes(t *testing.T) {
 
 // func ParseBinaryBytes(size string) (uint64, error)
 func TestParseBinaryBytes(t *testing.T) {
-	result1, _ := formatter.ParseBinaryBytes("12")
-	result2, _ := formatter.ParseBinaryBytes("12ki")
-	result3, _ := formatter.ParseBinaryBytes("12 KiB")
-	result4, _ := formatter.ParseBinaryBytes("12.2 kib")
+	{
+		result1, _ := formatter.ParseBinaryBytes("12")
+		result2, _ := formatter.ParseBinaryBytes("12ki")
+		result3, _ := formatter.ParseBinaryBytes("12 KiB")
+		result4, _ := formatter.ParseBinaryBytes("12.2 kib")
 
-	fmt.Println(result1)
-	fmt.Println(result2)
-	fmt.Println(result3)
-	fmt.Println(result4)
+		fmt.Println(result1)
+		fmt.Println(result2)
+		fmt.Println(result3)
+		fmt.Println(result4)
 
-	// Output:
-	// 12
-	// 12288
-	// 12288
-	// 12492
+		// Output:
+		// 12
+		// 12288
+		// 12288
+		// 12492
+	}
+
+	{
+		// 将表示字节大小的人类可读字符串（如 "1GB"、"12mb" 等）转换为对应的无符号整数字节数 (uint64)。
+		// 根据最后一个字符（转换为小写后）确定对应的乘数：
+		// 'k' 或 'K'：1 << 10（1024）
+		// 'm' 或 'M'：1 << 20（1,048,576）
+		// 'g' 或 'G'：1 << 30（1,073,741,824）
+		// 't' 或 'T'：1 << 40（1,099,511,627,776）
+		// 'p' 或 'P'：1 << 50（1,125,899,906,842,624）
+		examples := []string{"1GB", "512MB", "1024", "2TB", "invalid", "3.5PB"}
+		for _, str := range examples {
+			bytes := fmtutil.StringToByte(str)
+			fmt.Printf("ToByteSize(%s) = %d bytes\n", str, bytes)
+		}
+		// ToByteSize(1GB) = 1073741824 bytes
+		// ToByteSize(512MB) = 536870912 bytes
+		// ToByteSize(1024) = 1024 bytes
+		// ToByteSize(2TB) = 2199023255552 bytes
+		// ToByteSize(invalid) = 0 bytes
+		// ToByteSize(3.5PB) = 3940649673949184 bytes
+	}
 }
 
-func TestDataSize(t *testing.T) {
+func TestSizeToString(t *testing.T) {
 	tests := []struct {
 		args uint64
 		want string
@@ -101,5 +125,7 @@ func TestDataSize(t *testing.T) {
 
 	for _, tt := range tests {
 		assert.Equal(t, tt.want, mathutil.DataSize(tt.args))
+		// SizeToString 是 DataSize 的别名
+		assert.Equal(t, tt.want, fmtutil.SizeToString(tt.args))
 	}
 }

@@ -4,16 +4,12 @@ import (
 	"fmt"
 	"html/template"
 	"math/rand"
-	"reflect"
 	"testing"
 
-	"github.com/gookit/goutil/byteutil"
-
-	"github.com/gookit/goutil/arrutil"
-
 	"github.com/duke-git/lancet/v2/convertor"
-
 	"github.com/duke-git/lancet/v2/strutil"
+	"github.com/gookit/goutil/arrutil"
+	"github.com/gookit/goutil/byteutil"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -34,17 +30,6 @@ type fu struct {
 
 func (x fu) Error() string {
 	return x.val
-}
-
-// TestLancetStringToBytes 将字符串转换为字节切片而无需进行内存分配。
-// func StringToBytes(str string) (b []byte)
-func TestLancetStringToBytes(t *testing.T) {
-	result1 := strutil.StringToBytes("abc")
-	result2 := reflect.DeepEqual(result1, []byte{'a', 'b', 'c'})
-
-	// [97 98 99]
-	fmt.Println(result1)
-	assert.Equal(t, true, result2)
 }
 
 // func ToChar(s string) []string
@@ -105,6 +90,35 @@ func TestAnyToString(t *testing.T) {
 		is.Equal("[a, b]", arrutil.AnyToString([]string{"a", "b"}))
 		is.Equal("", arrutil.AnyToString("invalid"))
 	}
+
+	{
+		is := assert.New(t)
+
+		ss, err := arrutil.ToStrings([]int{1, 2})
+		is.Nil(err)
+		is.Equal(`[]string{"1", "2"}`, fmt.Sprintf("%#v", ss))
+
+		ss = arrutil.MustToStrings([]int{1, 2})
+		is.Equal(`[]string{"1", "2"}`, fmt.Sprintf("%#v", ss))
+
+		ss = arrutil.MustToStrings([]any{1, 2})
+		is.Equal(`[]string{"1", "2"}`, fmt.Sprintf("%#v", ss))
+
+		ss = arrutil.SliceToStrings([]any{1, 2})
+		is.Equal(`[]string{"1", "2"}`, fmt.Sprintf("%#v", ss))
+
+		ss, err = arrutil.ToStrings("b")
+		is.Nil(err)
+		is.Equal(`[]string{"b"}`, fmt.Sprintf("%#v", ss))
+
+		is.Empty(arrutil.AnyToStrings(234))
+		is.Panics(func() {
+			arrutil.MustToStrings(234)
+		})
+
+		_, err = arrutil.ToStrings([]any{[]int{1}, nil})
+		is.Error(err)
+	}
 }
 
 // TestLancetBytesToString 将字节切片转换为字符串而无需进行内存分配。
@@ -131,41 +145,28 @@ func TestBytesToString(t *testing.T) {
 		assert.Equal(t, "123", byteutil.String([]byte("123")))
 		assert.Equal(t, "123", byteutil.ToString([]byte("123")))
 	}
+
+	{
+		// func DecodeByte(data []byte, target any) error
+		var result string
+		byteData := []byte{6, 12, 0, 3, 97, 98, 99}
+
+		err := convertor.DecodeByte(byteData, &result)
+		if err != nil {
+			return
+		}
+
+		fmt.Println(result)
+
+		// Output:
+		// abc
+	}
 }
 
 func TestTruncateBytesToString(t *testing.T) {
 	content := []byte("Hello, world!")
 	truncatedStr := TruncateBytesToString(content, 5)
 	assert.Equal(t, "Hello", string(truncatedStr))
-}
-
-func TestToStrings(t *testing.T) {
-	is := assert.New(t)
-
-	ss, err := arrutil.ToStrings([]int{1, 2})
-	is.Nil(err)
-	is.Equal(`[]string{"1", "2"}`, fmt.Sprintf("%#v", ss))
-
-	ss = arrutil.MustToStrings([]int{1, 2})
-	is.Equal(`[]string{"1", "2"}`, fmt.Sprintf("%#v", ss))
-
-	ss = arrutil.MustToStrings([]any{1, 2})
-	is.Equal(`[]string{"1", "2"}`, fmt.Sprintf("%#v", ss))
-
-	ss = arrutil.SliceToStrings([]any{1, 2})
-	is.Equal(`[]string{"1", "2"}`, fmt.Sprintf("%#v", ss))
-
-	ss, err = arrutil.ToStrings("b")
-	is.Nil(err)
-	is.Equal(`[]string{"b"}`, fmt.Sprintf("%#v", ss))
-
-	is.Empty(arrutil.AnyToStrings(234))
-	is.Panics(func() {
-		arrutil.MustToStrings(234)
-	})
-
-	_, err = arrutil.ToStrings([]any{[]int{1}, nil})
-	is.Error(err)
 }
 
 func TestSliceToString(t *testing.T) {

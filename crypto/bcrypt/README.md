@@ -9,12 +9,15 @@ bcrypt是一个由美国计算机科学家尼尔斯·普罗沃斯（Niels Provos
 除了对数据进行加密，默认情况下，bcrypt在删除数据之前将使用随机数据三次覆盖原始输入文件，以阻挠可能会获得计算机数据的人恢复数据的尝试。
 如果您不想使用此功能，可设置禁用此功能。
 
+https://pkg.go.dev/golang.org/x/crypto/bcrypt
+
+https://www.usenix.org/legacy/event/usenix99/provos/provos.pdf
+
 # 不可逆性
 bcrypt就是一种加盐的单向Hash，不可逆的加密算法，同一种明文（plaintext），每次加密后的密文都不一样，而且不可反向破解生成明文，破解难度很大。
 生成的密文是60位的，比MD5更安全，但加密更慢。
 
-
-# cost
+# cost 开销
 ```golang
 const (
         // 传递给GenerateFromPassword的最小允许开销

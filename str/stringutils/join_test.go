@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/duke-git/lancet/v2/strutil"
+	"github.com/gookit/goutil/fmtutil"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -17,4 +18,10 @@ func TestConcat(t *testing.T) {
 	assert.Equal(t, "Hello World!", result1)
 	assert.Equal(t, "Go Language", result2)
 	assert.Equal(t, "An apple a day，keeps the doctor away", result3)
+}
+
+func TestArgsWithSpaces(t *testing.T) {
+	args := []interface{}{"Hello", 123, true, 45.67}
+	result := fmtutil.ArgsWithSpaces(args)
+	assert.Equal(t, "Hello 123 true 45.67", result)
 }

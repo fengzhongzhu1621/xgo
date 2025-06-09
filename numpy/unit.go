@@ -1,5 +1,12 @@
 package numpy
 
+// data size
+const (
+	OneKByte = 1024
+	OneMByte = 1024 * 1024
+	OneGByte = 1024 * 1024 * 1024
+)
+
 // const定义常量时可以不指定类型，这种常量被称为无类型的常量，它的值可以超出正常数值的表示范围，可以相互进行的运算。
 // 只是不能赋值给超过其类型表示范围的普通变量
 // 后面ZB和YB都已经超出了uint64的表示范围。直接使用时，如fmt.Println(ZB)编译器会自动将其转为int类型，
