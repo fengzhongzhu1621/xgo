@@ -7,6 +7,14 @@ import (
 	"time"
 )
 
+var localRand = rand.New(rand.NewSource(time.Now().UnixNano()))
+
+func RandomIntn(n int) int {
+	number := localRand.Intn(n)
+
+	return number
+}
+
 // RandomInt 生成一个指定范围的随机整数 [min, max)
 func RandomInt(min, max int) int {
 	// crand.Int 是一个生成随机数的函数，它使用加密安全的随机数生成器（CSPRNG）
