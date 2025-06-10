@@ -1,4 +1,4 @@
-package env
+package godotenv
 
 import (
 	"bufio"
@@ -283,7 +283,7 @@ func Read(filenames ...string) (envMap map[string]string, err error) {
 }
 
 // 从字符串中解析环境变量到字典中
-//Unmarshal reads an env file from a string, returning a map of keys and values.
+// Unmarshal reads an env file from a string, returning a map of keys and values.
 func Unmarshal(str string) (envMap map[string]string, err error) {
 	return Parse(strings.NewReader(str))
 }

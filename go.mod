@@ -63,6 +63,7 @@ require (
 	github.com/boyter/go-string v1.0.5 // indirect
 	github.com/bytedance/sonic v1.13.2 // indirect
 	github.com/bytedance/sonic/loader v0.2.4 // indirect
+	github.com/caarlos0/env/v9 v9.0.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/chigopher/pathlib v0.19.1 // indirect
 	github.com/cloudflare/circl v1.6.1 // indirect

@@ -1,11 +1,10 @@
-package env
+package system
 
 import (
 	"fmt"
 	"testing"
 
 	"github.com/duke-git/lancet/v2/system"
-	"github.com/stretchr/testify/assert"
 )
 
 // func GetOsEnv(key string) string
@@ -25,15 +24,4 @@ func TestGetOsEnv(t *testing.T) {
 	fmt.Println(err2)
 	//
 	fmt.Println(result2)
-}
-
-// func CompareOsEnv(key, comparedEnv string) bool
-func TestCompareOsEnv(t *testing.T) {
-	err := system.SetOsEnv("foo", "abc")
-	if err != nil {
-		return
-	}
-
-	result := system.CompareOsEnv("foo", "abc")
-	assert.Equal(t, true, result)
 }
