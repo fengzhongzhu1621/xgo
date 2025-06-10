@@ -46,6 +46,7 @@ require (
 	cloud.google.com/go/pubsub v1.48.1 // indirect
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/KyleBanks/depth v1.2.1 // indirect
+	github.com/Rhymond/go-money v1.0.15 // indirect
 	github.com/RichardKnop/logging v0.0.0-20190827224416-1a693bdd4fae // indirect
 	github.com/RichardKnop/machinery/v2 v2.0.13 // indirect
 	github.com/VividCortex/ewma v1.2.0 // indirect
