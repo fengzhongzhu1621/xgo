@@ -20,6 +20,7 @@ func (r *RandomBalance) Add(addrs ...string) error {
 	}
 	r.mu.Lock()
 	defer r.mu.Unlock()
+
 	r.rss = append(r.rss, addrs...)
 	return nil
 }

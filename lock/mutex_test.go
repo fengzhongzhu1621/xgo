@@ -1,4 +1,4 @@
-package channel
+package lock
 
 import (
 	"sync"
@@ -51,7 +51,7 @@ func TestSynchronize(t *testing.T) {
 		})
 		is.True(mu.TryLock())
 
-		Try0(func() {
+		lo.Try0(func() {
 			mu.Unlock()
 		})
 	}
