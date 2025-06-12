@@ -9,7 +9,7 @@ import (
 )
 
 // Helper function min to calculate the minimum of two lengths
-func min[T int](a, b T) T {
+func min2[T int](a, b T) T {
 	if a < b {
 		return a
 	}

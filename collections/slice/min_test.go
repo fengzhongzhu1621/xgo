@@ -1,6 +1,8 @@
 package slice
 
 import (
+	"fmt"
+	"math"
 	"testing"
 	"time"
 
@@ -12,6 +14,26 @@ import (
 func TestMin(t *testing.T) {
 	t.Parallel()
 	is := assert.New(t)
+
+	{
+		// min 函数中的参数，如果有浮点型参数，则所有参数都会转换为浮点型参数作比较
+		// 浮点型参数-0.0 和 0.0 作为参数，-0.0 小于 0.0；负无穷大，小于任意其它数值；正无穷大，大于任意其它数值。
+		c := min(1, 2.0, 3)
+		fmt.Printf("%T\t%v\n", c, c) // float64 1
+	}
+
+	{
+		// min 和 max 的任意参数是 NaN[1]，则返回结果是 NaN ("not-a-number") 值。
+		m := min(3.14, math.NaN(), 1.0)
+		fmt.Println(m) // NaN
+	}
+
+	{
+		// 如果 min 函数的入参为字符串类型的参数，则按照字典序返回最小的字符串，如果有空字符串，则返回空字符串。
+		// 逐个字节比较，得出最小/最大的字符串，参数可以交换和组合。
+		t1 := min("", "foo", "bar")
+		fmt.Println(t1) // ""
+	}
 
 	{
 		result1 := lo.Min([]int{1, 2, 3})
