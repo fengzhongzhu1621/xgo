@@ -70,8 +70,5 @@ func ToBoolE(i interface{}) (bool, error) {
 
 // IntToBool int64 转 bool
 func IntToBool(i int64) bool {
-	if i > 0 {
-		return true
-	}
-	return false
+	return i > 0
 }

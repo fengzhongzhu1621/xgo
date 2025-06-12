@@ -18,7 +18,7 @@ func LoadX509Cert(caFile string) (*x509.CertPool, error) {
 	// 创建一个新的 CertPool
 	certPool := x509.NewCertPool()
 	// 将 CA 证书添加到 CertPool
-	if ok := certPool.AppendCertsFromPEM(caCert); ok != true {
+	if ok := certPool.AppendCertsFromPEM(caCert); !ok {
 		return nil, fmt.Errorf("append ca cert failed")
 	}
 

@@ -67,7 +67,7 @@ func ExtractRequestIDFromContext(ctx context.Context) string {
 	}
 	rid := ctx.Value(constant.ContextRequestIDField)
 	ridValue, ok := rid.(string)
-	if ok == true {
+	if ok {
 		return ridValue
 	}
 	return ""

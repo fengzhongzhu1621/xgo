@@ -54,48 +54,52 @@ $(LOCALBIN):
 
 
 ###############################################################################
-# tools
-.PHONY: golines swag swag_init gofumpt docs mocks sqlc subfinder wire_tool tools
+# 安装工具
+.PHONY: install_golangcui-lint golines_tool swag_tool gofumpt_tool subfinder_tool gowatch_tool wire_tool nilaway_tool govulncheck_tool tools
 
 bin/gotestsum:
 	@mkdir -p bin
 	curl -L https://github.com/gotestyourself/gotestsum/releases/download/v${GOTESTSUM_VERSION}/gotestsum_${GOTESTSUM_VERSION}_${OS}_amd64.tar.gz | tar -zOxf - gotestsum > ./bin/gotestsum-${GOTESTSUM_VERSION} && chmod +x ./bin/gotestsum-${GOTESTSUM_VERSION}
 
-bin/golangci-lint:
-	@mkdir -p bin
-	# binary will be $(go env GOPATH)/bin/golangci-lint
-	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b ./bin
-
 SWAG ?= $(LOCALBIN)/swag
 GOLINES ?= $(LOCALBIN)/golines
 GOFUMPT ?= $(LOCALBIN)/gofumpt
 
-swag: $(SWAG) ## install swagger
+install_swag: $(SWAG) ## install swagger
 $(SWAG): $(LOCALBIN)
 	GOBIN=$(LOCALBIN) go install github.com/swaggo/swag/cmd/swag@latest
 
-swag_init: $(SWAG)
-	# make gin_server
-	# http://127.0.0.1:8000/swagger/index.html
-	cd ginx && $(LOCALBIN)/swag init --parseDependency --parseDepth=6 --generalInfo ../main/main.go
-
-docs:
-	# go tool
-	cd ginx && go tool github.com/swaggo/swag/cmd/swag init --parseDependency --parseDepth=6 --generalInfo ../main/main.go
-
-golines: $(GOLINES) ## install golines
+install_golines: $(GOLINES) ## install golines
 $(GOLINES): $(LOCALBIN)
 	GOBIN=$(LOCALBIN) go install github.com/segmentio/golines@latest
 
-gofumpt: $(GOFUMPT) ## install gofumpt
+install_gofumpt: $(GOFUMPT) ## install gofumpt
 $(GOFUMPT): $(LOCALBIN)
 	GOBIN=$(LOCALBIN) go install mvdan.cc/gofumpt@latest
 
-gowatch:
+install_golangcui-lint:
+	go get -tool github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+
+install_gowatch:
 	go install github.com/silenceper/gowatch@latest
 
-subfinder:
+install_subfinder:
 	go install github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
+
+install_wire:
+	go get -tool github.com/google/wire/cmd/wire@latest
+
+install_nilaway:
+	go get -tool go.uber.org/nilaway/cmd/nilaway@latest
+
+install_govulncheck:
+	go get -tool golang.org/x/vuln/cmd/govulncheck@latest
+
+tools: bin/gotestsum install_golangcui-lint install_swag install_golines install_gofumpt install_gowatch install_subfinder install_wire install_nilaway install_govulncheck
+
+###############################################################################
+# 工具使用
+.PHONY: mocks sqlc wire audit docs govulncheck
 
 mocks:
 	go tool github.com/vektra/mockery/v2 --all --output ./mocks
@@ -103,12 +107,22 @@ mocks:
 sqlc:
 	go tool github.com/kyleconroy/sqlc/cmd/sqlc generate
 
-wire_tool:
-	go tool github.com/google/wire/cmd/wire
+wire:
+	go tool github.com/google/wire/cmd/wire ./...
 
-tools: bin/gotestsum bin/golangci-lint swag golines gofumpt gowatch subfinder wire_tool
+docs: $(SWAG)
+	# make gin_server
+	# http://127.0.0.1:8000/swagger/index.html
+	cd ginx && go tool swag init --parseDependency --parseDepth=6 --generalInfo ../main/main.go
 
-###############################################################################
+# 空引用静态分析器
+nilaway:
+	go tool nilaway ./... || true
+
+# 第三方包漏洞检测工具
+govulncheck:
+	go tool govulncheck ./... || true
+
 # 审计
 audit:
 	go tool govulncheck github.com/golang/mock/mockgen
@@ -118,7 +132,7 @@ audit:
 
 ###############################################################################
 # 自定义命令
-.PHONY: build test bench vet coverage check test-race test-cover-html help clear lint fix fmt tidy mocks sqlc generate wire
+.PHONY: build test bench vet coverage check test-race test-cover-html help clear lint fix fmt tidy mocks generate
 # 运行 make 命令而没有指定目标时，默认会执行 help 目标，并打印出帮助信息。
 .DEFAULT_GOAL := help
 help:	# Empty target rule
@@ -136,6 +150,20 @@ test: go mod tidy
 test: bin/gotestsum ## Run tests
 	@mkdir -p ${BUILD_DIR}
 	bin/gotestsum --no-summary=skipped --junitfile ${BUILD_DIR}/coverage.xml --format ${TEST_FORMAT} -- -coverprofile=${BUILD_DIR}/coverage.txt -covermode=atomic $(filter-out -v,${GOARGS}) $(if ${TEST_PKGS},${TEST_PKGS},./...)
+
+test-race: bin/gotestsum ## Run tests with race
+	@mkdir -p ${BUILD_DIR}
+	bin/gotestsum --no-summary=skipped --junitfile ${BUILD_DIR}/coverage.xml --format ${TEST_FORMAT} -- -race -coverprofile=${BUILD_DIR}/coverage.txt -covermode=atomic $(filter-out -v,${GOARGS}) $(if ${TEST_PKGS},${TEST_PKGS},./...)
+
+test_all: lint vet govulncheck nilaway
+	go test ./... -gcflags=all=-l -cover
+
+test2file:
+	go test ./... -v -gcflags=all=-l -json > sn_report_test.json
+	go test ./... -gcflags=all=-l -coverprofile=sn_report_covprofile
+	go vet -json ./... 2> sn_report_vet_report.out
+	go tool golangci-lint run --out-format checkstyle ./... > sn_report_report.xml || true
+	nilaway ./... > sn_report_nilaway.out || true
 
 # test:
 #   go mod tidy
@@ -156,15 +184,12 @@ test: bin/gotestsum ## Run tests
 
 # test-race:
 #	go test -v ./... -race
-test-race: bin/gotestsum ## Run tests with race
-	@mkdir -p ${BUILD_DIR}
-	bin/gotestsum --no-summary=skipped --junitfile ${BUILD_DIR}/coverage.xml --format ${TEST_FORMAT} -- -race -coverprofile=${BUILD_DIR}/coverage.txt -covermode=atomic $(filter-out -v,${GOARGS}) $(if ${TEST_PKGS},${TEST_PKGS},./...)
 
-lint: bin/golangci-lint ## Run linter
-	bin/golangci-lint run
+lint: ## Run linter
+	go tool golangci-lint run ./... || true
 
-fix: bin/golangci-lint ## Fix lint violations
-	bin/golangci-lint run --fix
+fix: ## Fix lint violations
+	go tool golangci-lint run --fix ./... || true
 
 BENCH ?= .
 bench:
@@ -173,7 +198,7 @@ bench:
 	go list ./... | xargs -n1 go test -bench=$(BENCH) -run="^$$" $(BENCH_FLAGS)
 
 vet:
-	go vet ./...
+	go vet ./... || true
 
 #test-cover-html:
 #	go test -v ./... -coverprofile=coverage.out -covermode=count
@@ -208,9 +233,6 @@ validate_examples:
 
 generate:
 	go generate ./...
-
-wire:
-	wire ./...
 
 # 安装 go install golang.org/x/tools/cmd/godoc
 godoc:

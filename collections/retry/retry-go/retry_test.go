@@ -53,9 +53,5 @@ func TestDoWithData(t *testing.T) {
 		},
 	)
 
-	if err != nil {
-		// 处理错误
-	}
-
 	fmt.Println(string(body))
 }

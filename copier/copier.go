@@ -116,7 +116,7 @@ func copier(toValue interface{}, fromValue interface{}, opt reflectutils.Option)
 			fromCopy.Set(from.Elem())
 			to.Set(fromCopy.Convert(to.Type()))
 		}
-		return
+		return nil
 	}
 
 	if from.Kind() != reflect.Slice && fromType.Kind() == reflect.Map && toType.Kind() == reflect.Map {
@@ -162,7 +162,7 @@ func copier(toValue interface{}, fromValue interface{}, opt reflectutils.Option)
 				toValue = toValue.Addr()
 			}
 		}
-		return
+		return nil
 	}
 
 	if from.Kind() == reflect.Slice && to.Kind() == reflect.Slice {

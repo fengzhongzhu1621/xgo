@@ -12,7 +12,6 @@ func TestEmpty(t *testing.T) {
 	t.Parallel()
 	is := assert.New(t)
 
-	//nolint:unused
 	type test struct{}
 
 	is.Empty(lo.Empty[string]())

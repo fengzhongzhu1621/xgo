@@ -80,10 +80,7 @@ func (vp *viperParser) getStringSlice(path string) []string {
 func (vp *viperParser) isConfigIntType(path string) bool {
 	val := vp.parser.GetString(path)
 	_, err := strconv.Atoi(val)
-	if err != nil {
-		return false
-	}
-	return true
+	return err == nil
 }
 
 func (vp *viperParser) isConfigBoolType(path string) bool {

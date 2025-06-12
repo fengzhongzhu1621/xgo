@@ -41,7 +41,7 @@ func (client *HttpClient) GetClient() *http.Client {
 }
 
 func (client *HttpClient) GetHeader(key string) string {
-	val, _ := client.header[key]
+	val := client.header[key]
 	return val
 }
 

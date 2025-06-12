@@ -10,10 +10,10 @@ import (
 // Create the rsa public and private key file in current directory.
 // func GenerateRsaKey(keySize int, priKeyFile, pubKeyFile string) error
 //
-// Encrypt data with public key file useing ras algorithm.
+// Encrypt data with public key file using ras algorithm.
 // func RsaEncrypt(data []byte, pubKeyFileName string) []byte
 //
-// Decrypt data with private key file useing ras algorithm.
+// Decrypt data with private key file using ras algorithm.
 // func RsaDecrypt(data []byte, privateKeyFileName string) []byte
 func TestRsaEncrypt(t *testing.T) {
 	err := cryptor.GenerateRsaKey(4096, "rsa_private.pem", "rsa_public.pem")

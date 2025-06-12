@@ -113,7 +113,8 @@ func TestUniqueByComparator(t *testing.T) {
 	})
 
 	caseInsensitiveStrings := slice.UniqueByComparator([]string{"apple", "banana", "Apple", "cherry", "Banana", "date"}, func(item string, other string) bool {
-		return strings.ToLower(item) == strings.ToLower(other)
+		// return strings.ToLower(item) == strings.ToLower(other)
+		return strings.EqualFold(item, other)
 	})
 
 	assert.Equal(t, []int{1, 2, 3, 4, 5, 6}, uniqueNums)
@@ -144,9 +145,7 @@ func TestUniqueByField(t *testing.T) {
 		{ID: 1, Name: "c"},
 	}
 
-	result, err := slice.UniqueByField(users, "ID")
-	if err != nil {
-	}
+	result, _ := slice.UniqueByField(users, "ID")
 	assert.Equal(t, []User{
 		{ID: 1, Name: "a"},
 		{ID: 2, Name: "b"},

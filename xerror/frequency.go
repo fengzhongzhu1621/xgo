@@ -41,10 +41,7 @@ func (e *errFrequency) IsErrAlwaysAppear(err error) bool {
 
 	// 如果当前跟踪的错误与传入的错误相同，并且当前时间已经超过结束时间，返回 true
 	if e.err != nil && e.err.Error() == err.Error() {
-		if time.Now().After(e.endTime) {
-			return true
-		}
-		return false
+		return time.Now().After(e.endTime)
 	}
 
 	e.err = err

@@ -43,15 +43,15 @@ type Logger interface {
 type JwwLogger struct{}
 
 func (JwwLogger) Trace(msg string, keyvals ...interface{}) {
-	jww.TRACE.Printf(jwwLogMessage(msg, keyvals...)) //vet:ignore
+	jww.TRACE.Printf(jwwLogMessage(msg, keyvals...)) //nolint:govet
 }
 
 func (JwwLogger) Debug(msg string, keyvals ...interface{}) {
-	jww.DEBUG.Printf(jwwLogMessage(msg, keyvals...)) //vet:ignore
+	jww.DEBUG.Printf(jwwLogMessage(msg, keyvals...)) //nolint:govet
 }
 
 func (JwwLogger) Info(msg string, keyvals ...interface{}) {
-	jww.INFO.Printf(jwwLogMessage(msg, keyvals...)) //vet:ignore
+	jww.INFO.Printf(jwwLogMessage(msg, keyvals...)) //nolint:govet
 }
 
 func (JwwLogger) Warn(msg string, keyvals ...interface{}) {
