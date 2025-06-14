@@ -76,6 +76,22 @@ func TestSortBy(t *testing.T) {
 	}
 
 	{
+		numbers := []int{5, 3, 8, 1}
+
+		// 降序排序
+		sort.Slice(numbers, func(i, j int) bool {
+			return numbers[i] > numbers[j]
+		})
+		fmt.Println("降序:", numbers) // 输出: [8 5 3 1]
+
+		// 升序排序
+		sort.Slice(numbers, func(i, j int) bool {
+			return numbers[i] < numbers[j]
+		})
+		fmt.Println("升序:", numbers) // 输出: [1 3 5 8]
+	}
+
+	{
 		numbers := []int{1, 4, 3, 2, 5}
 
 		slice.SortBy(numbers, func(a, b int) bool {

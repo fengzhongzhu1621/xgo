@@ -1,0 +1,14 @@
+package: anyofallofoneof
+# 通常约定以 .gen.go 后缀标记自动生成的文件
+output: anyofallofoneof.gen.go
+# 控制是否生成模型（Models）相关的代码。
+generate:
+  # true 表示启用模型生成，可能是根据输入（如 OpenAPI/Swagger、Protobuf 等）生成对应的 Go 结构体。
+  models: true
+  # 生成 Gin 框架的服务器代码。
+  gin-server: true
+# 配置代码生成的附加选项
+output-options:
+  # NOTE that this is only required for the `Unreferenced` type
+  # 跳过对未引用（Unreferenced）类型的清理（Prune）操作。为了避免误删未显式引用的类型。
+  skip-prune: true

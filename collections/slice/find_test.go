@@ -2,6 +2,7 @@ package slice
 
 import (
 	"fmt"
+	"sort"
 	"testing"
 
 	"github.com/araujo88/lambda-go/pkg/predicate"
@@ -186,6 +187,29 @@ func TestIndexOf(t *testing.T) {
 	{
 		assert.Equal(t, 1, arrutil.IndexOf(3, []int{2, 3, 4}))
 		assert.Equal(t, -1, arrutil.IndexOf(5, []int{2, 3, 4}))
+	}
+
+	{
+		// 在已排序的切片中查找满足条件的最小索引 i，使得 a[i] >= x（即第一个不小于 x 的元素）。
+		// 如果 x 存在，则返回其索引；否则返回第一个大于 x 的元素的索引（或 len(a) 表示未找到）。
+		// 注意：如果元素没在slice里面，方法会返回slice的长度，而不是-1.
+		//
+		// 已排好序
+		a := []int{1, 3, 6, 10, 15, 21, 28, 36, 45, 55}
+		x := 6
+
+		// 使用 sort.Search 在升序切片 a 中查找 x
+		// 返回满足 a[i] >= x 的最小索引 i
+		i := sort.Search(len(a), func(i int) bool {
+			return a[i] >= x
+		})
+
+		// 检查是否找到 x
+		if i < len(a) && a[i] == x {
+			fmt.Printf("found %d at index %d in %v\n", x, i, a)
+		} else {
+			fmt.Printf("%d not found in %v\n", x, a)
+		}
 	}
 }
 

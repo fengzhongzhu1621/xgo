@@ -156,7 +156,7 @@ func TestParallelPartitionBy(t *testing.T) {
 	result1 := parallel.PartitionBy([]int{-2, -1, 0, 1, 2, 3, 4, 5}, oddEven)
 	result2 := parallel.PartitionBy([]int{}, oddEven)
 
-	// order
+	// order 第二个参数，定义是升序还是降序
 	sort.Slice(result1, func(i, j int) bool {
 		return result1[i][0] < result1[j][0]
 	})

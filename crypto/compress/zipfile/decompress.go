@@ -19,7 +19,7 @@ func ExtractFromZip(zipFile, path string, w io.Writer) (err error) {
 	// 用于打开 ZIP 文件并返回一个 *zip.Reader 类型的值
 	cf, err := zip.OpenReader(zipFile)
 	if err != nil {
-		return
+		return nil
 	}
 	defer cf.Close()
 
@@ -28,7 +28,7 @@ func ExtractFromZip(zipFile, path string, w io.Writer) (err error) {
 	// 读取匹配规则
 	patterns, err := dkignore.ReadIgnore(rd)
 	if err != nil {
-		return
+		return nil
 	}
 
 	// 遍历压缩包中的文件
@@ -45,11 +45,14 @@ func ExtractFromZip(zipFile, path string, w io.Writer) (err error) {
 			return
 		}
 		defer rc.Close()
+
 		// 复制文件内容
 		_, err = io.Copy(w, rc)
 		if err != nil {
 			return
 		}
+
+		// 只处理一个文件
 		return
 	}
 

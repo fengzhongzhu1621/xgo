@@ -55,7 +55,7 @@ $(LOCALBIN):
 
 ###############################################################################
 # 安装工具
-.PHONY: install_golangcui-lint golines_tool swag_tool gofumpt_tool subfinder_tool gowatch_tool wire_tool nilaway_tool govulncheck_tool tools
+.PHONY: install_golangcui-lint golines_tool swag_tool gofumpt_tool subfinder_tool gowatch_tool wire_tool nilaway_tool govulncheck_tool install_oapi-codegen tools
 
 bin/gotestsum:
 	@mkdir -p bin
@@ -86,16 +86,24 @@ install_gowatch:
 install_subfinder:
 	go install github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
 
+# 安装依赖注入生成器
 install_wire:
 	go get -tool github.com/google/wire/cmd/wire@latest
 
+# 安装空引用静态分析器
 install_nilaway:
 	go get -tool go.uber.org/nilaway/cmd/nilaway@latest
 
+# 安装第三方包漏洞检测工具
 install_govulncheck:
 	go get -tool golang.org/x/vuln/cmd/govulncheck@latest
 
-tools: bin/gotestsum install_golangcui-lint install_swag install_golines install_gofumpt install_gowatch install_subfinder install_wire install_nilaway install_govulncheck
+# go语言模版代码生成器
+install_oapi-codegen:
+	go get -tool github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest
+
+
+tools: bin/gotestsum install_golangcui-lint install_swag install_golines install_gofumpt install_gowatch install_subfinder install_wire install_nilaway install_govulncheck install_oapi-codegen
 
 ###############################################################################
 # 工具使用
@@ -186,7 +194,19 @@ test2file:
 #	go test -v ./... -race
 
 lint: ## Run linter
+	# 会以彩色终端输出（如果支持）显示检查结果，包括错误、警告和建议的修复方式。
+	# 这是开发时最常用的模式，适合在本地快速检查代码问题。
+	# 默认情况下，golangci-lint 会一直运行直到完成所有检查（适合本地开发，代码量通常可控）。
+	# --fast：跳过耗时检查（如 unused），加速本地 lint。
 	go tool golangci-lint run ./... || true
+
+lint-ci:
+	# CI/CD 环境使用
+	# 强制将结果输出为纯文本格式到标准输出（stdout）
+	# 这是为了兼容 CI 系统（如 GitHub Actions、GitLab CI）的日志收集机制，避免因彩色输出或特殊格式导致日志解析失败。
+	# 超时能防止因 lint 耗时过长阻塞流水线。
+	# 禁用缓存，确保 CI 中每次都是全新检查。
+	go tool golangci-lint run ./... --no-cache --output.text.path=stdout --timeout=5m
 
 fix: ## Fix lint violations
 	go tool golangci-lint run --fix ./... || true
