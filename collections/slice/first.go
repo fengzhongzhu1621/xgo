@@ -1,4 +1,4 @@
-package stringutils
+package slice
 
 // FirstNotEmptyString return the first string in slice strs that is not empty
 func FirstNotEmptyString(strs ...string) string {
