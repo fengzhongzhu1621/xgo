@@ -437,26 +437,26 @@ func TestParseInputMapping(t *testing.T) {
 	assert.Equal(t, expected, parsed)
 }
 
-func TestSplitString(t *testing.T) {
+func TestSplitStringRespectingQuotes(t *testing.T) {
 	var src string
 	var expected, result []string
 	var err error
 
 	src = "1,2,3"
 	expected = []string{"1", "2", "3"}
-	result = SplitStringEx(src, ',')
+	result = SplitStringRespectingQuotes(src, ',')
 	require.NoError(t, err)
 	assert.Equal(t, expected, result)
 
 	src = `"1,2",3`
 	expected = []string{`"1,2"`, "3"}
-	result = SplitStringEx(src, ',')
+	result = SplitStringRespectingQuotes(src, ',')
 	require.NoError(t, err)
 	assert.Equal(t, expected, result)
 
 	src = `1,"2,3",`
 	expected = []string{"1", `"2,3"`, ""}
-	result = SplitStringEx(src, ',')
+	result = SplitStringRespectingQuotes(src, ',')
 	require.NoError(t, err)
 	assert.Equal(t, expected, result)
 }
