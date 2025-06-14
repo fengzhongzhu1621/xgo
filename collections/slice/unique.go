@@ -1,4 +1,4 @@
-package numpy
+package slice
 
 // RemoveDuplicatesInt64 去重整型数组
 func RemoveDuplicatesInt64(numbers []int64) []int64 {
@@ -15,22 +15,4 @@ func RemoveDuplicatesInt64(numbers []int64) []int64 {
 		}
 	}
 	return result
-}
-
-// Chunk 将整型数组按指定长度分组
-func Chunk(slice []int64, chunkSize int) [][]int64 {
-	var (
-		chunks [][]int64
-	)
-	for i := 0; i < len(slice); i += chunkSize {
-		end := i + chunkSize
-
-		if end > len(slice) {
-			end = len(slice)
-		}
-
-		chunks = append(chunks, slice[i:end])
-	}
-
-	return chunks
 }

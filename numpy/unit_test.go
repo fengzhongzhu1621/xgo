@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/duke-git/lancet/v2/formatter"
+	"github.com/dustin/go-humanize"
 	"github.com/gookit/goutil/fmtutil"
 	"github.com/gookit/goutil/mathutil"
 	"github.com/stretchr/testify/assert"
@@ -33,21 +34,48 @@ func TestDecimalBytes(t *testing.T) {
 // 返回以二进制（基数为1024）标准下人类可读的字节大小。精度参数指定小数点后的位数，默认为4位。
 // func BinaryBytes(size float64, precision ...int) string
 func TestBinaryBytes(t *testing.T) {
-	result1 := formatter.BinaryBytes(1024)
-	result2 := formatter.BinaryBytes(1024 * 1024)
-	result3 := formatter.BinaryBytes(1234567)
-	result4 := formatter.BinaryBytes(1234567, 2)
+	{
+		result1 := formatter.BinaryBytes(1024)
+		result2 := formatter.BinaryBytes(1024 * 1024)
+		result3 := formatter.BinaryBytes(1234567)
+		result4 := formatter.BinaryBytes(1234567, 2)
 
-	fmt.Println(result1)
-	fmt.Println(result2)
-	fmt.Println(result3)
-	fmt.Println(result4)
+		fmt.Println(result1) // 1KiB
+		fmt.Println(result2) // 1MiB
+		fmt.Println(result3) // 1.1774MiB
+		fmt.Println(result4) // 1.18MiB
+	}
 
-	// Output:
-	// 1KiB
-	// 1MiB
-	// 1.1774MiB
-	// 1.18MiB
+	{
+		result1 := humanize.Bytes(1024)
+		result2 := humanize.Bytes(1024 * 1024)
+		result3 := humanize.Bytes(1234567)
+		result4 := humanize.Bytes(1234567)
+
+		fmt.Println(result1) // 1.0 kB
+		fmt.Println(result2) // 1.0 MB
+		fmt.Println(result3) // 1.2 MB
+		fmt.Println(result4) // 1.2 MB
+	}
+
+	{
+		tests := []struct {
+			args uint64
+			want string
+		}{
+			{346, "346B"},
+			{3467, "3.39K"},
+			{346778, "338.65K"},
+			{12346778, "11.77M"},
+			{1200346778, "1.12G"},
+		}
+
+		for _, tt := range tests {
+			assert.Equal(t, tt.want, mathutil.DataSize(tt.args))
+			// SizeToString 是 DataSize 的别名
+			assert.Equal(t, tt.want, fmtutil.SizeToString(tt.args))
+		}
+	}
 }
 
 // func ParseDecimalBytes(size string) (uint64, error)
@@ -108,24 +136,5 @@ func TestParseBinaryBytes(t *testing.T) {
 		// ToByteSize(2TB) = 2199023255552 bytes
 		// ToByteSize(invalid) = 0 bytes
 		// ToByteSize(3.5PB) = 3940649673949184 bytes
-	}
-}
-
-func TestSizeToString(t *testing.T) {
-	tests := []struct {
-		args uint64
-		want string
-	}{
-		{346, "346B"},
-		{3467, "3.39K"},
-		{346778, "338.65K"},
-		{12346778, "11.77M"},
-		{1200346778, "1.12G"},
-	}
-
-	for _, tt := range tests {
-		assert.Equal(t, tt.want, mathutil.DataSize(tt.args))
-		// SizeToString 是 DataSize 的别名
-		assert.Equal(t, tt.want, fmtutil.SizeToString(tt.args))
 	}
 }
