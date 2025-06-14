@@ -147,8 +147,16 @@ help:	# Empty target rule
 
 check: test-race vet
 
+build_main:
+	go build -o main main/main.go
+	upx -9 main/main
+
 build:
 	go build -v ./...
+
+build_small:
+	# -ldflags="-s -w" 会去除符号表和调试信息
+	go build -v -ldflags="-s -w" ./...
 
 # gotestsum 是一个用于格式化和汇总 Go 测试输出的工具。它可以将 go test 的输出转换为更易读的格式，并且可以生成 JSON、JUnit XML 等格式的报告。
 test: TEST_FORMAT ?= short
