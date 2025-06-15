@@ -1,4 +1,4 @@
-package file
+package upload
 
 import (
 	"io"
@@ -17,6 +17,7 @@ func SaveUploadedFile(file *multipart.FileHeader, dst string) error {
 	}
 	defer src.Close()
 
+	// 创建目录
 	if err = os.MkdirAll(filepath.Dir(dst), 0750); err != nil {
 		return err
 	}
@@ -28,6 +29,7 @@ func SaveUploadedFile(file *multipart.FileHeader, dst string) error {
 	}
 	defer out.Close()
 
+	// 写文件
 	_, err = io.Copy(out, src)
 	return err
 }

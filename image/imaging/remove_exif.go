@@ -1,4 +1,4 @@
-package upload
+package imaging
 
 import (
 	"fmt"
