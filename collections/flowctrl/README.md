@@ -51,3 +51,46 @@ Synchronizer 负责在多个实例之间同步窗口的状态。
 
 # 客户端限流
 
+# golang.org/x/time/rate
+是 Go 语言官方提供的一个限流库，用于在程序中限制特定操作的速率。该库使用了令牌桶算法，可以通过设置一个速率限制r（即每秒可以执行的操作数）和一个容量b（即令牌桶的大小）来控制操作的速率。
+
+* Allow(l Limit) bool
+该方法用于检查是否可以处理一个事件（或一个令牌），返回一个布尔值。如果令牌桶中有足够的令牌以满足要求，则返回true；否则返回false。
+* AllowN(l Limit, n int) bool
+该方法与Allow方法类似，但可以同时处理n个事件（或令牌），返回一个布尔值。如果令牌桶中有足够的令牌以满足要求，则返回true；否则返回false。
+
+* Burst() int
+该方法返回令牌桶的容量，即最大的令牌数量。
+
+* Limit() Limit
+该方法返回令牌桶的限制速率。
+
+* Reserve(l Limit) *Reservation
+该方法返回一个Reservation对象。Reservation对象表示一个持续时间段，表示一个事件（或令牌）的预订。使用该对象可以等待预订的时间段，然后再处理事件（或令牌）。
+
+* ReserveN(l Limit, n int) *Reservation
+该方法与Reserve方法类似，但可以同时预订n个事件（或令牌）。返回一个Reservation对象。(具体不再重复，代码可参考Reserve)
+
+* SetBurst(b int)
+用于动态设置令牌桶的容量，即最大的令牌数量。
+
+* SetBurstAt(t time.Time, b int)
+用于在给定的时间设置令牌桶的容量。
+
+* SetLimit(l Limit)
+动态设置令牌桶的限制速率。
+
+* SetLimitAt(t time.Time, l Limit)
+用于在给定的时间设置令牌桶的限制速率。
+
+* Tokens() float64
+返回令牌桶中当前的令牌数量。
+
+* TokensAt(t time.Time) float64
+返回在给定的时间令牌桶中的令牌数量。
+
+* Wait(t time.Time) bool
+等待直到指定的时间t再处理事件（或令牌）。返回一个布尔值，如果在指定的时间段内有足够的令牌，则返回true；否则返回false。
+
+* WaitN(t time.Time, n int) bool
+与Wait方法类似，但可以同时等待n个事件（或令牌）。返回一个布尔值，如果在指定的时间段内有足够的令牌，则返回true；否则返回false。
