@@ -2,6 +2,8 @@ package validator
 
 import (
 	"errors"
+	"fmt"
+	"io"
 	"mime/multipart"
 	"path/filepath"
 	"runtime"
@@ -9,7 +11,7 @@ import (
 	"unicode/utf8"
 
 	"github.com/fengzhongzhu1621/xgo/crypto/randutils"
-
+	"github.com/h2non/filetype"
 	"github.com/samber/lo"
 )
 
@@ -58,32 +60,31 @@ func IsPathValid(storagePath, path string) bool {
 		return false
 	}
 
-	// 2. 检查路径是否包含非法 Unicode 字符
-	// 检查字符串是否是合法的 UTF-8 编码，但它不会拒绝包含 \u0000（空字符）的字符串，
-	// 因为 \u0000 本身是合法的 Unicode 码点（尽管在文件路径中通常不允许）。
-	if !utf8.ValidString(path) {
-		return false
-	}
-	// 检查是否包含空字符 (\u0000)
+	// 2. 检查是否包含空字符 (\u0000)
 	if strings.ContainsRune(path, '\x00') {
 		return false
 	}
 
-	// 3. 解析相对路径（相对于 storagePath）
+	// 3. 检查路径是否包含非法 Unicode 字符（可选，如果仍然需要）
+	if !utf8.ValidString(path) {
+		return false
+	}
+
+	// 4. 解析相对路径（相对于 storagePath）
 	relPath, err := filepath.Rel(storagePath, path)
 	if err != nil {
 		return false
 	}
 
-	// 4. 规范化路径（去除 ./ 和 ../）
+	// 5. 规范化路径（去除 ./ 和 ../）
 	relPath = filepath.Clean(relPath)
 
-	// 5. 检查路径穿越（更严格的方式）
+	// 6. 检查路径穿越（更严格的方式）
 	if strings.HasPrefix(relPath, "../") || relPath == ".." {
 		return false
 	}
 
-	// 6. 检查非法字符（跨平台）
+	// 7. 检查非法字符（跨平台）
 	illegalChars := `~$&*|<>?"'` // 基础非法字符
 	if runtime.GOOS == "windows" {
 		illegalChars += `:\/` // Windows 额外禁止的字符
@@ -92,7 +93,7 @@ func IsPathValid(storagePath, path string) bool {
 		return false
 	}
 
-	// 7. 检查保留文件名（跨平台）
+	// 8. 检查保留文件名（跨平台）
 	base := filepath.Base(relPath)
 	switch strings.ToUpper(base) {
 	case "CON", "PRN", "AUX", "NUL",
@@ -103,11 +104,47 @@ func IsPathValid(storagePath, path string) bool {
 		return false // Linux/Unix 保留文件名
 	}
 
-	// 8. 检查路径是否试图逃逸 storagePath（双重验证）
+	// 9. 检查路径是否试图逃逸 storagePath（双重验证）
 	absPath := filepath.Join(storagePath, relPath)
 	if !strings.HasPrefix(absPath, filepath.Clean(storagePath)+string(filepath.Separator)) {
 		return false
 	}
 
 	return true
+}
+
+// ValidateFileType 使用 filetype 库检测 MIME 类型
+func ValidateFileType(file io.ReadSeeker, allowedMimeTypes map[string]bool) error {
+	// 读取前 261 字节用于类型检测（filetype 库的推荐大小）
+	buf := make([]byte, 261)
+	n, err := file.Read(buf)
+	if err != nil && err != io.EOF {
+		return fmt.Errorf("读取文件头失败: %w", err)
+	}
+
+	if n == 0 {
+		return fmt.Errorf("文件为空，无法检测 MIME 类型")
+	}
+
+	kind, err := filetype.Match(buf[:n])
+	if err != nil {
+		return fmt.Errorf("MIME 类型检测失败: %w", err)
+	}
+
+	if kind == filetype.Unknown {
+		return fmt.Errorf("未知的文件类型")
+	}
+
+	// 检查 MIME 类型是否在允许的列表中，注意区分大小写
+	mimeType := kind.MIME.Value
+	if !allowedMimeTypes[mimeType] {
+		return fmt.Errorf("不允许的文件类型: %s", mimeType)
+	}
+
+	// 重置文件指针到开头
+	if _, err := file.Seek(0, io.SeekStart); err != nil {
+		return fmt.Errorf("重置文件指针失败: %w", err)
+	}
+
+	return nil
 }
