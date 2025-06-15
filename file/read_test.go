@@ -13,6 +13,7 @@ import (
 
 // Return string of file content.
 // func ReadFileToString(path string) (string, error)
+// 根据文件路径读取文件（一次性读取）
 func TestReadFileToString(t *testing.T) {
 	fname := "./test.txt"
 	fileutil.CreateFile(fname)
@@ -34,6 +35,7 @@ func TestReadFileToString(t *testing.T) {
 
 // Read file line by line, and return slice of lines
 // func ReadFileByLine(path string)([]string, error)
+// 文件按行读取
 func TestReadFileByLine(t *testing.T) {
 	fname := "./test.txt"
 	fileutil.CreateFile(fname)
