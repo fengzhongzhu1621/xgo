@@ -6,6 +6,10 @@
 
 package wire
 
+import (
+	"github.com/google/wire"
+)
+
 // Injectors from wire.go:
 
 func InitMission(name string) Mission {
@@ -14,3 +18,28 @@ func InitMission(name string) Mission {
 	mission := NewMission(player, monster)
 	return mission
 }
+
+func InitializeServer(dsn string) *Server {
+	database := NewDatabase(dsn)
+	server := NewServer(database)
+	return server
+}
+
+// InitializeService 使用 ProviderSet 创建 Service 实例
+func InitializeService() (*Service, error) {
+	iDatabase := _wireMySQLDatabaseValue
+	service := NewService(iDatabase)
+	return service, nil
+}
+
+var (
+	_wireMySQLDatabaseValue = new(MySQLDatabase)
+)
+
+// wire.go:
+
+// ProviderSet 是所有依赖项的提供者集合
+var ProviderSet = wire.NewSet(
+	NewService,
+	NewMySQLDatabase, wire.InterfaceValue(new(IDatabase), new(MySQLDatabase)),
+)

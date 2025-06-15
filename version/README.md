@@ -45,7 +45,7 @@ import (
     "flag"
     "fmt"
 
-    "github.com/carlmjohnson/versioninfo" // 1. import
+    "github.com/earthboundkid/versioninfo" // 1. import
 )
 
 func main() {
