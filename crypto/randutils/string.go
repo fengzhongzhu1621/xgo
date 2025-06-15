@@ -3,7 +3,6 @@ package randutils
 import (
 	crand "crypto/rand"
 	"encoding/base64"
-	"encoding/hex"
 	"fmt"
 	"math/big"
 	"math/rand"
@@ -76,15 +75,6 @@ func GenerateSecureToken(length int) (string, error) {
 	}
 
 	return base64.URLEncoding.EncodeToString(b), nil
-}
-
-// GenerateRandomFileName 生成随机文件名
-func GenerateRandomFileName(ext string) (string, error) {
-	bytes := make([]byte, 16)
-	if _, err := rand.Read(bytes); err != nil {
-		return "", err
-	}
-	return hex.EncodeToString(bytes) + ext, nil
 }
 
 func GenerateRandomPassword(length int) (string, error) {
