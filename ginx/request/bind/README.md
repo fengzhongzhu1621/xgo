@@ -16,6 +16,12 @@ func handler1(c *gin.Context) {
     }
     c.JSON(http.StatusOK, gin.H{"user": user})
 }
+
+if err := c.BindJSON(&requestBody); err != nil {
+    c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+    return
+}
+
 ```
 
 ## 1.2 ShouldBindQuery

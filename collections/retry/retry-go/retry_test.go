@@ -38,7 +38,7 @@ func TestDo(t *testing.T) {
 func TestDoWithData(t *testing.T) {
 	url := "http://example.com"
 
-	body, err := retry.DoWithData(
+	body, _ := retry.DoWithData(
 		func() ([]byte, error) {
 			resp, err := http.Get(url)
 			if err != nil {
