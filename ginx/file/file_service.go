@@ -11,6 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"golang.org/x/sys/unix"
 
+	"github.com/fengzhongzhu1621/xgo/file"
 	"github.com/fengzhongzhu1621/xgo/validator"
 )
 
@@ -158,4 +159,9 @@ func (fs *FileService) ZeroCopyDownload(w http.ResponseWriter, filePath string) 
 	// 如果不支持 Hijacker，则回退到普通复制
 	http.ServeContent(w, nil, stat.Name(), stat.ModTime(), file)
 	return nil
+}
+
+// bufferedCopy 使用缓冲池中的缓冲区进行数据拷贝
+func (fs *FileService) bufferedCopy(dst io.Writer, src io.Reader) (int64, error) {
+	return file.BufferedCopy(dst, src)
 }

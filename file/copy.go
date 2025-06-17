@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"sync"
 
 	"github.com/fengzhongzhu1621/xgo/validator"
 )
@@ -115,4 +116,24 @@ func _copy(src, dest string, fileInfo os.FileInfo) error {
 	}
 	// 如果源文件是普通文件
 	return CopyFile(src, dest, fileInfo)
+}
+
+// 定义缓冲池大小
+const bufferSize = 32 * 1024 // 32KB
+
+// 定义全局缓冲池
+var bufPool = sync.Pool{
+	New: func() interface{} {
+		return make([]byte, bufferSize)
+	},
+}
+
+// bufferedCopy 使用缓冲池中的缓冲区进行数据拷贝
+func BufferedCopy(dst io.Writer, src io.Reader) (int64, error) {
+	// 从缓冲池中获取缓冲区
+	buf := bufPool.Get().([]byte)
+
+	defer bufPool.Put(buf)
+
+	return io.CopyBuffer(dst, src, buf)
 }
