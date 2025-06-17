@@ -4,7 +4,11 @@ import (
 	"fmt"
 	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
+
+type S struct{}
 
 func TestNew(t *testing.T) {
 	// p 是一个 *Person 类型的指针。
@@ -21,6 +25,18 @@ func TestNew(t *testing.T) {
 
 	// 所以 newP 是一个新的 *Person 类型的指针，指向一个零值的 Person（即 Name 和 Age 都是零值）。
 	fmt.Println(reflect.ValueOf(newP).IsNil()) // 输出: false
+
+	i := New(3)
+	require.Equal(t, reflect.Ptr, reflect.TypeOf(i).Kind())
+	require.Equal(t, reflect.Int, reflect.TypeOf(i).Elem().Kind())
+
+	s := New(S{})
+	require.Equal(t, reflect.Ptr, reflect.TypeOf(s).Kind())
+	require.Equal(t, reflect.TypeOf(S{}), reflect.TypeOf(s).Elem())
+
+	s = New(&S{})
+	require.Equal(t, reflect.Ptr, reflect.TypeOf(s).Kind())
+	require.Equal(t, reflect.TypeOf(S{}), reflect.TypeOf(s).Elem())
 }
 
 type Service interface {
