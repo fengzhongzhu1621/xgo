@@ -23,7 +23,7 @@ t := reflect.TypeOf(value)  // value 可以是任意类型的值
 ```
 
 ## reflect.Kind 类型的枚举 reflect.Int, reflect.Struct
-表示一个类型的底层基础类别（如 int、struct、ptr、slice 等），是一种更抽象的分类。
+是一个枚举类型，表示一个类型的底层基础类别（如 int、struct、ptr、slice 等），是一种更抽象的分类。
 Go 中所有的类型，无论是基本类型（如 int、string）、复合类型（如 struct、slice）、还是引用类型（如 map、chan），最终都可以归类为某一种 Kind。
 
 ```go
