@@ -1,4 +1,11 @@
 # 引导套件
+go install github.com/onsi/ginkgo/v2/ginkgo@latest
+
+```
+. "github.com/onsi/ginkgo/v2"
+. "github.com/onsi/gomega"
+```
+
 ```
 ginkgo bootstrap
 ```
