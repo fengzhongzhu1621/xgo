@@ -137,3 +137,40 @@ func TestAddYear(t *testing.T) {
 		fmt.Println("一年后:", oneYearLater)
 	}
 }
+
+func TestNextMonthFirstDay(t *testing.T) {
+	now := time.Now()
+	fmt.Println("当前时间:", now)
+
+	{
+		// 1. 计算下个月的当前日期
+		nextMonthSameDay := now.AddDate(0, 1, 0)
+
+		// 2. 用 time.Date 构造下个月 1 号
+		nextMonthFirstDay := time.Date(
+			nextMonthSameDay.Year(),
+			nextMonthSameDay.Month(),
+			1,          // 设置为 1 号
+			0, 0, 0, 0, // 时间部分设为 00:00:00.000
+			now.Location(), // 保持原时区
+		)
+
+		fmt.Println("下个月 1 号:", nextMonthFirstDay)
+	}
+
+	{
+		// 1. 计算下个月 1 号
+		nextMonthFirstDay := now.AddDate(0, 1, -now.Day()+1)
+
+		// 2. 确保时间是 00:00:00.000
+		nextMonthFirstDay = time.Date(
+			nextMonthFirstDay.Year(),
+			nextMonthFirstDay.Month(),
+			1,
+			0, 0, 0, 0,
+			now.Location(),
+		)
+
+		fmt.Println("下个月 1 号:", nextMonthFirstDay)
+	}
+}
