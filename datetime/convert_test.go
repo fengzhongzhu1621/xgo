@@ -76,16 +76,18 @@ func TestFormatTimeToStr(t *testing.T) {
 	}
 
 	{
+		// 原生实现
 		now1 := time.Now()
 		// 常用格式（当前时区）
 		fmt.Println(now1.Format("2006-01-02"))            // 2025-04-25
+		fmt.Println(now1.Format("20060102"))              // 2025-04-25
 		fmt.Println(now1.Format("2006-01-02 15:04:05"))   // 2025-04-25 09:53:38
 		fmt.Println(now1.Format("15:04:05"))              // 09:53:38
 		fmt.Println(now1.Format("2006年01月02日 15时04分05秒")) // 2025年04月25日 09时53分38秒
 
 		// 预定义格式（当前时区）
-		fmt.Println(now1.Format(time.RFC3339)) // 2025-04-25T09:53:38+08:00
-		fmt.Println(now1.Format(time.RFC1123)) // Fri, 25 Apr 2025 09:53:38 CST
+		fmt.Println("RFC3339: " + now1.Format(time.RFC3339)) // 2025-04-25T09:53:38+08:00
+		fmt.Println("RFC1123: " + now1.Format(time.RFC1123)) // Fri, 25 Apr 2025 09:53:38 CST
 	}
 }
 
