@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package trpc.helloworld;
+package trpc.examples.helloworld;
 option go_package="github.com/fengzhongzhu1621/xgo/trpc/trpcprotocol/helloworld";
 
 

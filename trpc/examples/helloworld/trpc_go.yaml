@@ -3,8 +3,8 @@ global:  # Global configuration.
   env_name: test  # Environment name for non-production environments.
 
 server:  # Server configuration.
-  app: yourAppName  # Application name for the business.
-  server: Greeter  # Process server name.
+  app: examples  # Application name for the business.
+  server: helloworld  # Process server name.
   bin_path: /usr/local/trpc/bin/  # Path to binary executable files and framework configuration files.
   conf_path: /usr/local/trpc/conf/  # Path to business configuration files.
   data_path: /usr/local/trpc/data/  # Path to business data files.
@@ -12,7 +12,7 @@ server:  # Server configuration.
     - simpledebuglog
     - recovery  # Intercept panics from business processing goroutines created by the framework.
   service:  # Services provided by the business, can have multiple.
-    - name: trpc.helloworld.Greeter  # Route name for the service.
+    - name: trpc.examples.helloworld.Greeter  # Route name for the service.
       ip: 127.0.0.1  # Service listening IP address, can use placeholder ${ip}. Use either ip or nic, ip takes priority.
       # nic: eth0
       port: 8000  # Service listening port, can use placeholder ${port}.
@@ -27,7 +27,7 @@ client:  # Backend configuration for client calls.
   filter:  # List of interceptors for all backend function calls.
     - simpledebuglog
   service:  # Configuration for individual backends.
-    - name: trpc.helloworld.Greeter  # Service name for the backend.
+    - name: trpc.examples.helloworld.Greeter  # Service name for the backend.
       namespace: Development  # Environment for the backend.
       network: tcp  # Network type for the backend: tcp or udp (configuration takes priority).
       protocol: trpc  # Application layer protocol: trpc or http.
