@@ -64,3 +64,20 @@ func TestSynchronize(t *testing.T) {
 		})
 	}
 }
+
+// BenchmarkMutex vs BenchmarkRWMutex
+func BenchmarkMutex(b *testing.B) {
+	var mu sync.Mutex
+	for i := 0; i < b.N; i++ {
+		mu.Lock()
+		mu.Unlock()
+	}
+}
+
+func BenchmarkRWMutex(b *testing.B) {
+	var rwmu sync.RWMutex
+	for i := 0; i < b.N; i++ {
+		rwmu.RLock()
+		rwmu.RUnlock()
+	}
+}

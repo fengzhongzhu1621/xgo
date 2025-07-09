@@ -4,6 +4,8 @@
 go install github.com/golang/mock/mockgen@latest
 ```
 
+如果第三方包没有采用接口设计，gomock就无法应用了，此时可以采用另外一个mock 框架gomonkey。
+
 ## 生成 mock 文件
 
 ```
@@ -64,8 +66,8 @@ go generate ./...
 ```go
 m.EXPECT().Get(gomock.Eq("Tom")).Return(0, errors.New("not exist"))
 m.EXPECT().Get(gomock.Any()).Return(630, nil)
-m.EXPECT().Get(gomock.Not("Sam")).Return(0, nil) 
-m.EXPECT().Get(gomock.Nil()).Return(0, errors.New("nil")) 
+m.EXPECT().Get(gomock.Not("Sam")).Return(0, nil)
+m.EXPECT().Get(gomock.Nil()).Return(0, errors.New("nil"))
 ```
 
 ### 返回值
@@ -93,7 +95,7 @@ m.EXPECT().Get(gomock.Any()).DoAndReturn(func(key string) (int, error) {
 * MaxTimes() 最大次数。
 * MinTimes() 最小次数。
 * AnyTimes() 任意次数（包括 0 次）。
-  
+
 ```go
 mockRepo.EXPECT().Create(gomock.Any(), gomock.Any()).Return(nil).Times(1)
 mockRepo.EXPECT().Create(gomock.Any(), gomock.Any()).Return(nil).AnyTimes()

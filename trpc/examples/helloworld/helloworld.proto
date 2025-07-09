@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package trpc.helloworld;
+option go_package="github.com/fengzhongzhu1621/xgo/trpc/trpcprotocol/helloworld";
+
+
+service Greeter {
+    rpc SayHello (HelloRequest) returns (HelloReply) {}
+}
+
+message HelloRequest {
+    string msg = 1;
+}
+
+message HelloReply {
+    string msg = 1;
+}

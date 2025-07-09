@@ -223,6 +223,7 @@ BENCH ?= .
 bench:
 # 	go test -run=nonthingplease -benchmem -bench=. $(shell go list ./... | grep -v /vendor/)
 #	go test -v ./... -test.bench -test.benchmem
+#	go test -bench=. -benchmem
 	go list ./... | xargs -n1 go test -bench=$(BENCH) -run="^$$" $(BENCH_FLAGS)
 
 vet:
