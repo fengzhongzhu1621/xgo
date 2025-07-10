@@ -1,4 +1,5 @@
 build:
+	go mod tidy
 	go build -o trpc.examples.helloworld.Greeter
 
 run: build

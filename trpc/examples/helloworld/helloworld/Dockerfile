@@ -1,5 +1,5 @@
 # 第一阶段：构建阶段
-FROM golang:1.24.4-alpine AS builder
+FROM golang:1.24.5-alpine AS builder
 WORKDIR /app
 COPY . .
 RUN go build -o trpc.examples.helloworld.Greeter .
