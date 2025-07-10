@@ -20,19 +20,6 @@ server: # Server configuration.
       protocol: trpc # Application layer protocol: trpc or http.
       timeout: 1000 # Maximum processing time for requests in milliseconds.
 
-client: # Backend configuration for client calls.
-  timeout: 1000 # Maximum processing time for all backends.
-  namespace: Development # Environment for all backends.
-  filter: # List of interceptors for all backend function calls.
-    - simpledebuglog
-  service: # Configuration for individual backends.
-    - name: trpc.examples.helloworld.Greeter # Service name for the backend.
-      namespace: Development # Environment for the backend.
-      network: tcp # Network type for the backend: tcp or udp (configuration takes priority).
-      protocol: trpc # Application layer protocol: trpc or http.
-      target: ip://127.0.0.1:8000 # Service address for requests.
-      timeout: 1000 # Maximum processing time for requests.
-
 plugins: # Plugin configuration.
   log: # Log configuration.
     default: # Default log configuration, supports multiple outputs.

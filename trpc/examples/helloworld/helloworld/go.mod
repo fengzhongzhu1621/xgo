@@ -3,6 +3,7 @@ module trpc.app.Greeter
 go 1.24.5
 
 require (
+	github.com/fengzhongzhu1621/xgo/trpc/trpcprotocol/helloworld v0.0.0-20250710152102-cc849d41fe79
 	go.uber.org/mock v0.5.2
 	trpc.group/trpc-go/trpc-filter/debuglog v1.0.0
 	trpc.group/trpc-go/trpc-filter/recovery v1.0.0

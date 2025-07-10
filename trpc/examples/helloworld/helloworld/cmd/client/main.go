@@ -13,7 +13,7 @@ import (
 
 func callGreeterSayHello() {
 	proxy := pb.NewGreeterClientProxy(
-		client.WithTarget("ip://127.0.0.1:8000"),
+		client.WithTarget("ip://127.0.0.1:8001"),
 		client.WithProtocol("trpc"),
 	)
 	ctx := trpc.BackgroundContext()
