@@ -102,6 +102,8 @@ install_govulncheck:
 install_oapi-codegen:
 	go get -tool github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest
 
+install_trpc:
+	go install trpc.group/trpc-go/trpc-cmdline/trpc@latest
 
 tools: bin/gotestsum install_golangcui-lint install_swag install_golines install_gofumpt install_gowatch install_subfinder install_wire install_nilaway install_govulncheck install_oapi-codegen
 

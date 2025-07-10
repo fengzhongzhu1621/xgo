@@ -1,6 +1,6 @@
 module trpc.app.Greeter
 
-go 1.24.4
+go 1.24.5
 
 replace github.com/fengzhongzhu1621/xgo/trpc/trpcprotocol/helloworld => ./stub/github.com/fengzhongzhu1621/xgo/trpc/trpcprotocol/helloworld
 
