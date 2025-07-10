@@ -65,3 +65,6 @@ assets_vfsdata.go
 
 *.log
 xgo
+
+# trpc
+.trpc-ui.pid
