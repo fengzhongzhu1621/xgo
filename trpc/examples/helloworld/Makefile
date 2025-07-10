@@ -9,4 +9,7 @@ all:
 	trpc create -p helloworld.proto
 
 
+build:
+	go build
+
 .PHONY: rpconly all

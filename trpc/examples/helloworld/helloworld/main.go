@@ -9,10 +9,7 @@ import (
 )
 
 func main() {
-	// 创建一个服务对象，底层会自动读取服务配置及初始化插件，
-	// 必须放在 main 函数首行，业务初始化逻辑必须放在 NewServer 后面
 	s := trpc.NewServer()
-
 	pb.RegisterGreeterService(s.Service("trpc.examples.helloworld.Greeter"), &greeterImpl{})
 	if err := s.Serve(); err != nil {
 		log.Fatal(err)
