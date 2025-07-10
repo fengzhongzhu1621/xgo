@@ -7,6 +7,7 @@ go mod init github.com/fengzhongzhu1621/xgo/trpc/examples/helloworld
 ```sh
 # 生成完整工程
 trpc create -p helloworld.proto
+go mod tidy
 # 只生成 rpcstub，常用于已经创建工程以后更新协议字段时，重新生成桩代码
 trpc create -p helloworld.proto --rpconly
 # 使用 http 协议

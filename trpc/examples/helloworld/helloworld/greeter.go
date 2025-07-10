@@ -15,5 +15,7 @@ func (s *greeterImpl) SayHello(
 	req *pb.HelloRequest,
 ) (*pb.HelloReply, error) {
 	rsp := &pb.HelloReply{}
+
+	// 调用下游服务错误的时，如果返回 error，rsp 的内容将不再被返回
 	return rsp, nil
 }
