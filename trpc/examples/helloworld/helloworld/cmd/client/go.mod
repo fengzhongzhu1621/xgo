@@ -2,8 +2,9 @@ module github.com/fengzhongzhu1621/xgo/trpc/examples/helloworld/helloworld/cmd/c
 
 go 1.24.5
 
+replace github.com/fengzhongzhu1621/xgo/trpc/trpcprotocol/helloworld => ../../../../../trpcprotocol/helloworld
+
 require (
-	github.com/fengzhongzhu1621/xgo/trpc/trpcprotocol/helloworld v0.0.0-20250710152102-cc849d41fe79
 	trpc.group/trpc-go/trpc-filter/debuglog v1.0.0
 	trpc.group/trpc-go/trpc-go v0.0.0-20230824091938-4699a10e2f35
 )

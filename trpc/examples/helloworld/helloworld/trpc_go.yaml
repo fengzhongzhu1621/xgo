@@ -38,8 +38,8 @@ plugins: # Plugin configuration.
   auth: # trpc.group/trpc-go/trpc-filter/validation
     validation:
       enable_error_log: true
-      server_validate_err_code: 100101
-      client_validate_err_code: 100102
+      server_validate_err_code: 51 # customize the error codes
+      client_validate_err_code: 151 # customize the error codes
   log: # Log configuration.
     default: # Default log configuration, supports multiple outputs.
       - writer: console # Console standard output (default).

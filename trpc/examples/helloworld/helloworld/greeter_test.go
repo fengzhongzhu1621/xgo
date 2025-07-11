@@ -2,14 +2,17 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"reflect"
 	"testing"
 
+	"github.com/fengzhongzhu1621/xgo/tests"
 	pb "github.com/fengzhongzhu1621/xgo/trpc/trpcprotocol/helloworld"
 	"github.com/stretchr/testify/assert"
 	gomock "go.uber.org/mock/gomock"
 	_ "trpc.group/trpc-go/trpc-filter/validation"
 	trpc "trpc.group/trpc-go/trpc-go"
+	"trpc.group/trpc-go/trpc-go/client"
 )
 
 func Test_greeterImpl_SayHello(t *testing.T) {
@@ -66,6 +69,7 @@ func Test_greeterImpl_SayHello(t *testing.T) {
 	}
 }
 
+// 测试无法连接服务端
 func TestHelloworld(t *testing.T) {
 	proxy := pb.NewGreeterClientProxy()
 
@@ -78,12 +82,24 @@ func TestHelloworld(t *testing.T) {
 }
 
 func TestValidate(t *testing.T) {
-	proxy := pb.NewGreeterClientProxy()
+	proxy := pb.NewGreeterClientProxy(
+		client.WithTarget("ip://127.0.0.1:8001"),
+		client.WithProtocol("trpc"),
+	)
 
 	req := &pb.HelloRequest{
 		Msg: "",
 	}
 	rsp, err := proxy.SayHello(trpc.BackgroundContext(), req)
 	assert.NotNil(t, err)
+	// 错误类型：*errs.Error，错误信息：type:business, code:51, msg:invalid HelloRequest.Msg: value length must be at least 1 runes
+	fmt.Printf("错误类型：%T，错误信息：%v\n", err, err)
+	// {
+	// 	"Type": 2,
+	// 	"Code": 51,
+	// 	"Msg": "invalid HelloRequest.Msg: value length must be at least 1 runes",
+	// 	"Desc": ""
+	// }
+	tests.PrintStruct(err)
 	assert.Nil(t, rsp)
 }

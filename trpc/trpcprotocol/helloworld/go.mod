@@ -1,11 +1,13 @@
 module github.com/fengzhongzhu1621/xgo/trpc/trpcprotocol/helloworld
 
-go 1.22
+go 1.23
 
 toolchain go1.24.5
 
 require (
-	github.com/golang/mock v1.6.0
+	github.com/envoyproxy/protoc-gen-validate v1.2.1
+	github.com/golang/protobuf v1.5.0
+	go.uber.org/mock v0.5.2
 	google.golang.org/protobuf v1.36.6
 	trpc.group/trpc-go/trpc-go v1.0.3
 )
@@ -13,9 +15,9 @@ require (
 require (
 	github.com/BurntSushi/toml v0.3.1 // indirect
 	github.com/andybalholm/brotli v1.0.4 // indirect
-	github.com/envoyproxy/protoc-gen-validate v1.2.1 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/go-playground/form/v4 v4.2.0 // indirect
+	github.com/golang/mock v1.6.0 // indirect
 	github.com/golang/snappy v0.0.3 // indirect
 	github.com/google/flatbuffers v2.0.0+incompatible // indirect
 	github.com/hashicorp/errwrap v1.0.0 // indirect

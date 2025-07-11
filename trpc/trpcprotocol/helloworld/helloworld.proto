@@ -14,6 +14,7 @@ syntax = "proto3";
 
 package trpc.examples.helloworld;
 option go_package="github.com/fengzhongzhu1621/xgo/trpc/trpcprotocol/helloworld";
+import "validate/validate.proto";
 
 service Greeter {
     rpc SayHello (HelloRequest) returns (HelloReply) {}
@@ -26,3 +27,13 @@ message HelloRequest {
 message HelloReply {
     string msg = 1;
 }
+
+// message SearchRequest {
+//   string query = 1 [(validate.rules).string = {
+//     pattern:   "([A-Za-z]+) ([A-Za-z]+)*$",
+//     max_bytes: 50,
+//   }];
+//   string email_1= 2 [(validate.rules).string.alphabets = true];
+//   string email_2= 3 [(validate.rules).string.alphanums = true];
+//   string email_3= 4 [(validate.rules).string.lowercase = true];
+// }

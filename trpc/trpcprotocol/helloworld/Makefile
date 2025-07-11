@@ -3,6 +3,7 @@ rpconly:
 		-p helloworld.proto \
 		--rpconly \
 		--nogomod \
-		--mock=false \
+		--mock=true \
+		--validate=true \
 
 .PHONY: rpconly
