@@ -1,7 +1,8 @@
 # mockgen
 
 ```go
-go install github.com/golang/mock/mockgen@latest
+go install go.uber.org/mock/mockgen@latest
+go get go.uber.org/mock/gomock
 ```
 
 如果第三方包没有采用接口设计，gomock就无法应用了，此时可以采用另外一个mock 框架gomonkey。

@@ -7,3 +7,6 @@ run: build
 
 docker:
 	docker build -t trpc.examples.helloworld.greeter:latest .
+
+generate:
+	go generate ./...

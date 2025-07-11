@@ -303,7 +303,6 @@ require (
 	mvdan.cc/gofumpt v0.7.0 // indirect
 	mvdan.cc/unparam v0.0.0-20240528143540-8a5130ca722f // indirect
 	sigs.k8s.io/yaml v1.3.0 // indirect
-	trpc.group/trpc-go/trpc-filter v0.0.0-20240424084610-09b4b20ec3b9 // indirect
 	xorm.io/builder v0.3.13 // indirect
 )
 
@@ -508,7 +507,7 @@ require (
 )
 
 tool (
-	github.com/golang/mock/mockgen
+	go.uber.org/mock/mockgen
 	github.com/golangci/golangci-lint/cmd/golangci-lint
 	github.com/google/wire/cmd/wire
 	github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen

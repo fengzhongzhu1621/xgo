@@ -1,6 +1,7 @@
 # 初始化项目
 ```sh
 go mod init github.com/fengzhongzhu1621/xgo/trpc/examples/helloworld
+go get github.com/envoyproxy/protoc-gen-validate/validate
 ```
 
 # 生成工程

@@ -6,25 +6,37 @@ import (
 	"testing"
 
 	pb "github.com/fengzhongzhu1621/xgo/trpc/trpcprotocol/helloworld"
-	"go.uber.org/mock/gomock"
-	_ "trpc.group/trpc-go/trpc-go/http"
+	"github.com/stretchr/testify/assert"
+	gomock "go.uber.org/mock/gomock"
+	_ "trpc.group/trpc-go/trpc-filter/validation"
+	trpc "trpc.group/trpc-go/trpc-go"
 )
-
-//go:generate go mod tidy
-//go:generate mockgen -destination=stub/github.com/fengzhongzhu1621/xgo/trpc/trpcprotocol/helloworld/helloworld_mock.go -package=helloworld -self_package=github.com/fengzhongzhu1621/xgo/trpc/trpcprotocol/helloworld --source=stub/github.com/fengzhongzhu1621/xgo/trpc/trpcprotocol/helloworld/helloworld.trpc.go
 
 func Test_greeterImpl_SayHello(t *testing.T) {
 	// Start writing mock logic.
+	// 使用 GreeterService 的 mock 服务
 	ctrl := gomock.NewController(t)
+	// 确保在测试结束时调用 Finish()，它会检查是否有未验证的 Mock 期望（expectation），如果没有被调用会报错。
 	defer ctrl.Finish()
 	greeterService := pb.NewMockGreeterService(ctrl)
-	var inorderClient []*gomock.Call
+
+	// 定义一个切片，用于存放按顺序执行的 Mock 调用（InOrder 机制）。
+	// 但目前这个切片是空的，所以 gomock.InOrder(inorderClient...) 实际上没有起到任何作用。
+	var inorderClient []any
+
 	// Expected behavior.
+	// gomock.Any()：表示对参数不做具体限制，可以是任意值。
+	// .AnyTimes()：表示这个方法可以被调用任意次数（0 次或多次）。
 	m := greeterService.EXPECT().SayHello(gomock.Any(), gomock.Any()).AnyTimes()
+
+	// 允许你在 Mock 方法被调用时执行自定义逻辑，并返回指定的值。
 	m.DoAndReturn(func(ctx context.Context, req *pb.HelloRequest) (*pb.HelloReply, error) {
+		// 在 Mock GreeterService 的 SayHello 方法时，内部又调用了 greeterImpl 的 SayHello 方法。
+		// 这实际上是在用真实实现替代了 Mock，失去了 Mock 的意义。
 		s := &greeterImpl{}
 		return s.SayHello(ctx, req)
 	})
+	// 用于确保多个 Mock 调用按照指定顺序执行。
 	gomock.InOrder(inorderClient...)
 
 	// Start writing unit test logic.
@@ -52,4 +64,26 @@ func Test_greeterImpl_SayHello(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestHelloworld(t *testing.T) {
+	proxy := pb.NewGreeterClientProxy()
+
+	req := &pb.HelloRequest{
+		Msg: "trpc-go-client",
+	}
+	rsp, err := proxy.SayHello(trpc.BackgroundContext(), req)
+	assert.NotNil(t, err)
+	assert.Nil(t, rsp)
+}
+
+func TestValidate(t *testing.T) {
+	proxy := pb.NewGreeterClientProxy()
+
+	req := &pb.HelloRequest{
+		Msg: "",
+	}
+	rsp, err := proxy.SayHello(trpc.BackgroundContext(), req)
+	assert.NotNil(t, err)
+	assert.Nil(t, rsp)
 }

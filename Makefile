@@ -135,7 +135,7 @@ govulncheck:
 
 # 审计
 audit:
-	go tool govulncheck github.com/golang/mock/mockgen
+	go tool govulncheck go.uber.org/mock/mockgen
 	go tool govulncheck github.com/swaggo/swag/cmd/swag
 	go tool govulncheck github.com/vektra/mockery/v2
 	go tool govulncheck github.com/google/wire/cmd/wire

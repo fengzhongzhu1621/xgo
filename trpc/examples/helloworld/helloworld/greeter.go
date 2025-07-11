@@ -6,6 +6,7 @@ import (
 	pb "github.com/fengzhongzhu1621/xgo/trpc/trpcprotocol/helloworld"
 )
 
+// greeterImpl GreeterService接口的实现
 type greeterImpl struct {
 	pb.UnimplementedGreeter
 }
