@@ -14,14 +14,14 @@ syntax = "proto3";
 
 package trpc.examples.helloworld;
 option go_package="github.com/fengzhongzhu1621/xgo/trpc/trpcprotocol/helloworld";
-
+import "validate/validate.proto";
 
 service Greeter {
     rpc SayHello (HelloRequest) returns (HelloReply) {}
 }
 
 message HelloRequest {
-    string msg = 1;
+    string msg = 1 [(validate.rules).string.min_len = 1];
 }
 
 message HelloReply {
