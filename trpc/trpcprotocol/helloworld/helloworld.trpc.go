@@ -12,6 +12,7 @@ import (
 	"trpc.group/trpc-go/trpc-go/client"
 	"trpc.group/trpc-go/trpc-go/codec"
 	_ "trpc.group/trpc-go/trpc-go/http"
+	"trpc.group/trpc-go/trpc-go/restful"
 	"trpc.group/trpc-go/trpc-go/server"
 )
 
@@ -109,6 +110,305 @@ func RegisterGreeterHttpService(s server.Service, svr GreeterHttpService) {
 	}
 }
 
+// Messaging1RestfulService defines service.
+type Messaging1RestfulService interface {
+	GetMessage(ctx context.Context, req *GetMessageRequest1) (*Message1, error)
+}
+
+func Messaging1RestfulService_GetMessage_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &GetMessageRequest1{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(Messaging1RestfulService).GetMessage(ctx, reqbody.(*GetMessageRequest1))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+// Messaging1RestfulServer_ServiceDesc descriptor for server.RegisterService.
+var Messaging1RestfulServer_ServiceDesc = server.ServiceDesc{
+	ServiceName: "trpc.examples.helloworld.Messaging1Restful",
+	HandlerType: ((*Messaging1RestfulService)(nil)),
+	Methods: []server.Method{
+		{
+			Name: "/trpc.examples.helloworld.Messaging1Restful/GetMessage",
+			Func: Messaging1RestfulService_GetMessage_Handler,
+			Bindings: []*restful.Binding{{
+				Name:  "/trpc.examples.helloworld.Messaging1Restful/GetMessage",
+				Input: func() restful.ProtoMessage { return new(GetMessageRequest1) },
+				Filter: func(svc interface{}, ctx context.Context, reqbody interface{}) (interface{}, error) {
+					return svc.(Messaging1RestfulService).GetMessage(ctx, reqbody.(*GetMessageRequest1))
+				},
+				HTTPMethod:   "GET",
+				Pattern:      restful.Enforce("/v1/{name=messages/*}"),
+				Body:         nil,
+				ResponseBody: nil,
+			}},
+		},
+	},
+}
+
+// RegisterMessaging1RestfulService registers service.
+func RegisterMessaging1RestfulService(s server.Service, svr Messaging1RestfulService) {
+	if err := s.Register(&Messaging1RestfulServer_ServiceDesc, svr); err != nil {
+		panic(fmt.Sprintf("Messaging1Restful register error:%v", err))
+	}
+}
+
+// Messaging2RestfulService defines service.
+type Messaging2RestfulService interface {
+	GetMessage(ctx context.Context, req *GetMessageRequest2) (*Message2, error)
+}
+
+func Messaging2RestfulService_GetMessage_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &GetMessageRequest2{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(Messaging2RestfulService).GetMessage(ctx, reqbody.(*GetMessageRequest2))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+// Messaging2RestfulServer_ServiceDesc descriptor for server.RegisterService.
+var Messaging2RestfulServer_ServiceDesc = server.ServiceDesc{
+	ServiceName: "trpc.examples.helloworld.Messaging2Restful",
+	HandlerType: ((*Messaging2RestfulService)(nil)),
+	Methods: []server.Method{
+		{
+			Name: "/trpc.examples.helloworld.Messaging2Restful/GetMessage",
+			Func: Messaging2RestfulService_GetMessage_Handler,
+			Bindings: []*restful.Binding{{
+				Name:  "/trpc.examples.helloworld.Messaging2Restful/GetMessage",
+				Input: func() restful.ProtoMessage { return new(GetMessageRequest2) },
+				Filter: func(svc interface{}, ctx context.Context, reqbody interface{}) (interface{}, error) {
+					return svc.(Messaging2RestfulService).GetMessage(ctx, reqbody.(*GetMessageRequest2))
+				},
+				HTTPMethod:   "GET",
+				Pattern:      restful.Enforce("/v1/messages/{message_id}"),
+				Body:         nil,
+				ResponseBody: nil,
+			}},
+		},
+	},
+}
+
+// RegisterMessaging2RestfulService registers service.
+func RegisterMessaging2RestfulService(s server.Service, svr Messaging2RestfulService) {
+	if err := s.Register(&Messaging2RestfulServer_ServiceDesc, svr); err != nil {
+		panic(fmt.Sprintf("Messaging2Restful register error:%v", err))
+	}
+}
+
+// Messaging3RestfulService defines service.
+type Messaging3RestfulService interface {
+	UpdateMessage(ctx context.Context, req *UpdateMessageRequest3) (*Message3, error)
+}
+
+func Messaging3RestfulService_UpdateMessage_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &UpdateMessageRequest3{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(Messaging3RestfulService).UpdateMessage(ctx, reqbody.(*UpdateMessageRequest3))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+// requestBodyMessaging3RestfulServiceUpdateMessageRESTfulPath0 POST: /v1/messages/{message_id}
+type requestBodyMessaging3RestfulServiceUpdateMessageRESTfulPath0 struct{}
+
+func (requestBodyMessaging3RestfulServiceUpdateMessageRESTfulPath0) Locate(message restful.ProtoMessage) interface{} {
+	x := message.(*UpdateMessageRequest3)
+	return &x.Message
+}
+
+func (requestBodyMessaging3RestfulServiceUpdateMessageRESTfulPath0) Body() string {
+	return "message"
+}
+
+// Messaging3RestfulServer_ServiceDesc descriptor for server.RegisterService.
+var Messaging3RestfulServer_ServiceDesc = server.ServiceDesc{
+	ServiceName: "trpc.examples.helloworld.Messaging3Restful",
+	HandlerType: ((*Messaging3RestfulService)(nil)),
+	Methods: []server.Method{
+		{
+			Name: "/trpc.examples.helloworld.Messaging3Restful/UpdateMessage",
+			Func: Messaging3RestfulService_UpdateMessage_Handler,
+			Bindings: []*restful.Binding{{
+				Name:  "/trpc.examples.helloworld.Messaging3Restful/UpdateMessage",
+				Input: func() restful.ProtoMessage { return new(UpdateMessageRequest3) },
+				Filter: func(svc interface{}, ctx context.Context, reqbody interface{}) (interface{}, error) {
+					return svc.(Messaging3RestfulService).UpdateMessage(ctx, reqbody.(*UpdateMessageRequest3))
+				},
+				HTTPMethod:   "POST",
+				Pattern:      restful.Enforce("/v1/messages/{message_id}"),
+				Body:         requestBodyMessaging3RestfulServiceUpdateMessageRESTfulPath0{},
+				ResponseBody: nil,
+			}},
+		},
+	},
+}
+
+// RegisterMessaging3RestfulService registers service.
+func RegisterMessaging3RestfulService(s server.Service, svr Messaging3RestfulService) {
+	if err := s.Register(&Messaging3RestfulServer_ServiceDesc, svr); err != nil {
+		panic(fmt.Sprintf("Messaging3Restful register error:%v", err))
+	}
+}
+
+// Messaging4RestfulService defines service.
+type Messaging4RestfulService interface {
+	UpdateMessage(ctx context.Context, req *Message4) (*Message4, error)
+}
+
+func Messaging4RestfulService_UpdateMessage_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &Message4{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(Messaging4RestfulService).UpdateMessage(ctx, reqbody.(*Message4))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+// requestBodyMessaging4RestfulServiceUpdateMessageRESTfulPath0 POST: /v1/messages/{message_id}
+type requestBodyMessaging4RestfulServiceUpdateMessageRESTfulPath0 struct{}
+
+func (requestBodyMessaging4RestfulServiceUpdateMessageRESTfulPath0) Locate(message restful.ProtoMessage) interface{} {
+	x := message.(*Message4)
+	return x
+}
+
+func (requestBodyMessaging4RestfulServiceUpdateMessageRESTfulPath0) Body() string {
+	return "*"
+}
+
+// Messaging4RestfulServer_ServiceDesc descriptor for server.RegisterService.
+var Messaging4RestfulServer_ServiceDesc = server.ServiceDesc{
+	ServiceName: "trpc.examples.helloworld.Messaging4Restful",
+	HandlerType: ((*Messaging4RestfulService)(nil)),
+	Methods: []server.Method{
+		{
+			Name: "/trpc.examples.helloworld.Messaging4Restful/UpdateMessage",
+			Func: Messaging4RestfulService_UpdateMessage_Handler,
+			Bindings: []*restful.Binding{{
+				Name:  "/trpc.examples.helloworld.Messaging4Restful/UpdateMessage",
+				Input: func() restful.ProtoMessage { return new(Message4) },
+				Filter: func(svc interface{}, ctx context.Context, reqbody interface{}) (interface{}, error) {
+					return svc.(Messaging4RestfulService).UpdateMessage(ctx, reqbody.(*Message4))
+				},
+				HTTPMethod:   "POST",
+				Pattern:      restful.Enforce("/v1/messages/{message_id}"),
+				Body:         requestBodyMessaging4RestfulServiceUpdateMessageRESTfulPath0{},
+				ResponseBody: nil,
+			}},
+		},
+	},
+}
+
+// RegisterMessaging4RestfulService registers service.
+func RegisterMessaging4RestfulService(s server.Service, svr Messaging4RestfulService) {
+	if err := s.Register(&Messaging4RestfulServer_ServiceDesc, svr); err != nil {
+		panic(fmt.Sprintf("Messaging4Restful register error:%v", err))
+	}
+}
+
+// Messaging5RestfulService defines service.
+type Messaging5RestfulService interface {
+	GetMessage(ctx context.Context, req *GetMessageRequest5) (*Message5, error)
+}
+
+func Messaging5RestfulService_GetMessage_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &GetMessageRequest5{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(Messaging5RestfulService).GetMessage(ctx, reqbody.(*GetMessageRequest5))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+// Messaging5RestfulServer_ServiceDesc descriptor for server.RegisterService.
+var Messaging5RestfulServer_ServiceDesc = server.ServiceDesc{
+	ServiceName: "trpc.examples.helloworld.Messaging5Restful",
+	HandlerType: ((*Messaging5RestfulService)(nil)),
+	Methods: []server.Method{
+		{
+			Name: "/trpc.examples.helloworld.Messaging5Restful/GetMessage",
+			Func: Messaging5RestfulService_GetMessage_Handler,
+			Bindings: []*restful.Binding{{
+				Name:  "/trpc.examples.helloworld.Messaging5Restful/GetMessage",
+				Input: func() restful.ProtoMessage { return new(GetMessageRequest5) },
+				Filter: func(svc interface{}, ctx context.Context, reqbody interface{}) (interface{}, error) {
+					return svc.(Messaging5RestfulService).GetMessage(ctx, reqbody.(*GetMessageRequest5))
+				},
+				HTTPMethod:   "GET",
+				Pattern:      restful.Enforce("/v1/messages/{message_id}"),
+				Body:         nil,
+				ResponseBody: nil,
+			}, {
+				Name:  "/trpc.examples.helloworld.Messaging5Restful/GetMessage",
+				Input: func() restful.ProtoMessage { return new(GetMessageRequest5) },
+				Filter: func(svc interface{}, ctx context.Context, reqbody interface{}) (interface{}, error) {
+					return svc.(Messaging5RestfulService).GetMessage(ctx, reqbody.(*GetMessageRequest5))
+				},
+				HTTPMethod:   "GET",
+				Pattern:      restful.Enforce("/v1/users/{user_id}/messages/{message_id}"),
+				Body:         nil,
+				ResponseBody: nil,
+			}},
+		},
+	},
+}
+
+// RegisterMessaging5RestfulService registers service.
+func RegisterMessaging5RestfulService(s server.Service, svr Messaging5RestfulService) {
+	if err := s.Register(&Messaging5RestfulServer_ServiceDesc, svr); err != nil {
+		panic(fmt.Sprintf("Messaging5Restful register error:%v", err))
+	}
+}
+
 // START --------------------------------- Default Unimplemented Server Service --------------------------------- START
 
 type UnimplementedGreeter struct{}
@@ -121,6 +421,36 @@ type UnimplementedGreeterHttp struct{}
 
 func (s *UnimplementedGreeterHttp) SayHello(ctx context.Context, req *HelloRequest) (*HelloReply, error) {
 	return nil, errors.New("rpc SayHello of service GreeterHttp is not implemented")
+}
+
+type UnimplementedMessaging1Restful struct{}
+
+func (s *UnimplementedMessaging1Restful) GetMessage(ctx context.Context, req *GetMessageRequest1) (*Message1, error) {
+	return nil, errors.New("rpc GetMessage of service Messaging1Restful is not implemented")
+}
+
+type UnimplementedMessaging2Restful struct{}
+
+func (s *UnimplementedMessaging2Restful) GetMessage(ctx context.Context, req *GetMessageRequest2) (*Message2, error) {
+	return nil, errors.New("rpc GetMessage of service Messaging2Restful is not implemented")
+}
+
+type UnimplementedMessaging3Restful struct{}
+
+func (s *UnimplementedMessaging3Restful) UpdateMessage(ctx context.Context, req *UpdateMessageRequest3) (*Message3, error) {
+	return nil, errors.New("rpc UpdateMessage of service Messaging3Restful is not implemented")
+}
+
+type UnimplementedMessaging4Restful struct{}
+
+func (s *UnimplementedMessaging4Restful) UpdateMessage(ctx context.Context, req *Message4) (*Message4, error) {
+	return nil, errors.New("rpc UpdateMessage of service Messaging4Restful is not implemented")
+}
+
+type UnimplementedMessaging5Restful struct{}
+
+func (s *UnimplementedMessaging5Restful) GetMessage(ctx context.Context, req *GetMessageRequest5) (*Message5, error) {
+	return nil, errors.New("rpc GetMessage of service Messaging5Restful is not implemented")
 }
 
 // END --------------------------------- Default Unimplemented Server Service --------------------------------- END
@@ -191,6 +521,176 @@ func (c *GreeterHttpClientProxyImpl) SayHello(ctx context.Context, req *HelloReq
 	callopts = append(callopts, c.opts...)
 	callopts = append(callopts, opts...)
 	rsp := &HelloReply{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+// Messaging1RestfulClientProxy defines service client proxy
+type Messaging1RestfulClientProxy interface {
+	GetMessage(ctx context.Context, req *GetMessageRequest1, opts ...client.Option) (rsp *Message1, err error)
+}
+
+type Messaging1RestfulClientProxyImpl struct {
+	client client.Client
+	opts   []client.Option
+}
+
+var NewMessaging1RestfulClientProxy = func(opts ...client.Option) Messaging1RestfulClientProxy {
+	return &Messaging1RestfulClientProxyImpl{client: client.DefaultClient, opts: opts}
+}
+
+func (c *Messaging1RestfulClientProxyImpl) GetMessage(ctx context.Context, req *GetMessageRequest1, opts ...client.Option) (*Message1, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/trpc.examples.helloworld.Messaging1Restful/GetMessage")
+	msg.WithCalleeServiceName(Messaging1RestfulServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("examples")
+	msg.WithCalleeServer("helloworld")
+	msg.WithCalleeService("Messaging1Restful")
+	msg.WithCalleeMethod("GetMessage")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &Message1{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+// Messaging2RestfulClientProxy defines service client proxy
+type Messaging2RestfulClientProxy interface {
+	GetMessage(ctx context.Context, req *GetMessageRequest2, opts ...client.Option) (rsp *Message2, err error)
+}
+
+type Messaging2RestfulClientProxyImpl struct {
+	client client.Client
+	opts   []client.Option
+}
+
+var NewMessaging2RestfulClientProxy = func(opts ...client.Option) Messaging2RestfulClientProxy {
+	return &Messaging2RestfulClientProxyImpl{client: client.DefaultClient, opts: opts}
+}
+
+func (c *Messaging2RestfulClientProxyImpl) GetMessage(ctx context.Context, req *GetMessageRequest2, opts ...client.Option) (*Message2, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/trpc.examples.helloworld.Messaging2Restful/GetMessage")
+	msg.WithCalleeServiceName(Messaging2RestfulServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("examples")
+	msg.WithCalleeServer("helloworld")
+	msg.WithCalleeService("Messaging2Restful")
+	msg.WithCalleeMethod("GetMessage")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &Message2{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+// Messaging3RestfulClientProxy defines service client proxy
+type Messaging3RestfulClientProxy interface {
+	UpdateMessage(ctx context.Context, req *UpdateMessageRequest3, opts ...client.Option) (rsp *Message3, err error)
+}
+
+type Messaging3RestfulClientProxyImpl struct {
+	client client.Client
+	opts   []client.Option
+}
+
+var NewMessaging3RestfulClientProxy = func(opts ...client.Option) Messaging3RestfulClientProxy {
+	return &Messaging3RestfulClientProxyImpl{client: client.DefaultClient, opts: opts}
+}
+
+func (c *Messaging3RestfulClientProxyImpl) UpdateMessage(ctx context.Context, req *UpdateMessageRequest3, opts ...client.Option) (*Message3, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/trpc.examples.helloworld.Messaging3Restful/UpdateMessage")
+	msg.WithCalleeServiceName(Messaging3RestfulServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("examples")
+	msg.WithCalleeServer("helloworld")
+	msg.WithCalleeService("Messaging3Restful")
+	msg.WithCalleeMethod("UpdateMessage")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &Message3{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+// Messaging4RestfulClientProxy defines service client proxy
+type Messaging4RestfulClientProxy interface {
+	UpdateMessage(ctx context.Context, req *Message4, opts ...client.Option) (rsp *Message4, err error)
+}
+
+type Messaging4RestfulClientProxyImpl struct {
+	client client.Client
+	opts   []client.Option
+}
+
+var NewMessaging4RestfulClientProxy = func(opts ...client.Option) Messaging4RestfulClientProxy {
+	return &Messaging4RestfulClientProxyImpl{client: client.DefaultClient, opts: opts}
+}
+
+func (c *Messaging4RestfulClientProxyImpl) UpdateMessage(ctx context.Context, req *Message4, opts ...client.Option) (*Message4, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/trpc.examples.helloworld.Messaging4Restful/UpdateMessage")
+	msg.WithCalleeServiceName(Messaging4RestfulServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("examples")
+	msg.WithCalleeServer("helloworld")
+	msg.WithCalleeService("Messaging4Restful")
+	msg.WithCalleeMethod("UpdateMessage")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &Message4{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+// Messaging5RestfulClientProxy defines service client proxy
+type Messaging5RestfulClientProxy interface {
+	GetMessage(ctx context.Context, req *GetMessageRequest5, opts ...client.Option) (rsp *Message5, err error)
+}
+
+type Messaging5RestfulClientProxyImpl struct {
+	client client.Client
+	opts   []client.Option
+}
+
+var NewMessaging5RestfulClientProxy = func(opts ...client.Option) Messaging5RestfulClientProxy {
+	return &Messaging5RestfulClientProxyImpl{client: client.DefaultClient, opts: opts}
+}
+
+func (c *Messaging5RestfulClientProxyImpl) GetMessage(ctx context.Context, req *GetMessageRequest5, opts ...client.Option) (*Message5, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/trpc.examples.helloworld.Messaging5Restful/GetMessage")
+	msg.WithCalleeServiceName(Messaging5RestfulServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("examples")
+	msg.WithCalleeServer("helloworld")
+	msg.WithCalleeService("Messaging5Restful")
+	msg.WithCalleeMethod("GetMessage")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &Message5{}
 	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
 		return nil, err
 	}
