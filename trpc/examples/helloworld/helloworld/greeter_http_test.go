@@ -18,7 +18,7 @@ func Test_greeterHttpImpl_SayHello(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 	greeterHttpService := pb.NewMockGreeterHttpService(ctrl)
-	var inorderClient []*gomock.Call
+	var inorderClient []any
 	// Expected behavior.
 	m := greeterHttpService.EXPECT().SayHello(gomock.Any(), gomock.Any()).AnyTimes()
 	m.DoAndReturn(func(ctx context.Context, req *pb.HelloRequest) (*pb.HelloReply, error) {
