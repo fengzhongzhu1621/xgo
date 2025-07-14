@@ -29,4 +29,29 @@ type NilString struct {
 可以自动处理JSON字段的序列化和反序列化，将 null JSON值转换为Go语言中的 nil 或零值，反之亦然。
 
 
+## MarshalIndent
+带缩进和换行的结构化 JSON，易于阅读
 
+```go
+func MarshalIndent(v interface{}, prefix string, indent string) ([]byte, error)
+
+prefix: 每行输出的前缀（通常为空字符串或特定符号，如 "> "）
+indent: 每个嵌套层级的缩进字符串（常用空格或制表符 \t）
+```
+
+输出示例
+```go
+jsonData, err := json.MarshalIndent(p, "", "  ")
+```
+
+```json
+{
+  "name": "Alice",
+  "age": 30,
+  "hobbies": [
+    "reading",
+    "hiking"
+  ]
+}
+
+```

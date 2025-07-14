@@ -9,11 +9,6 @@ import (
 	"trpc.group/trpc-go/trpc-go/log"
 )
 
-func init() {
-	// 注册拦截器
-	filter.Register(pluginName, ServerFilterWithOptions(defaultOptions), ClientFilterWithOptions(defaultOptions))
-}
-
 // ServerFilter automatically validates the req input parameters during server-side RPC invocation.
 // Deprecated: Use ServerFilterWithOptions instead.
 func ServerFilter(opts ...Option) filter.ServerFilter {

@@ -5,10 +5,6 @@ import (
 	"trpc.group/trpc-go/trpc-go/plugin"
 )
 
-func init() {
-	plugin.Register(pluginName, &ValidationPlugin{})
-}
-
 // ValidationPlugin implements the trpc validation plugin.
 type ValidationPlugin struct{} //nolint:revive
 

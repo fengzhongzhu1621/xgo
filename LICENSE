@@ -78,3 +78,5 @@ The text of each license is also included at licenses/LICENSE-[project].txt.
     (Apache 2.0 license) ini v1.63.2 (https://github.com/go-ini/ini)
     (Apache 2.0 license) carbon v0.2.2 (https://github.com/uniplaces/carbon)
     (Apache 2.0 license) go-utils v1.0.0 (https://github.com/trpc-ecosystem/go-utils)
+    (Apache 2.0 license) go-filter v1.0.1 (https://github.com/trpc-ecosystem/go-filter)
+    (Apache 2.0 license) trpc-go v1.0.3 (https://github.com/trpc-group/trpc-go)
