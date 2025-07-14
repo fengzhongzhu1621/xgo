@@ -420,6 +420,7 @@ require (
 	github.com/golang-cz/devslog v0.0.11
 	github.com/golang-jwt/jwt/v4 v4.5.2
 	github.com/golang-jwt/jwt/v5 v5.2.2
+	github.com/golang/mock v1.4.4
 	github.com/gomodule/redigo v1.9.2
 	github.com/google/brotli/go/cbrotli v1.1.0
 	github.com/google/cel-go v0.25.0
