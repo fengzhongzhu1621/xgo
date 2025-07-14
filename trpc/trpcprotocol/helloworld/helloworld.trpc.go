@@ -46,6 +46,10 @@ var GreeterServer_ServiceDesc = server.ServiceDesc{
 	HandlerType: ((*GreeterService)(nil)),
 	Methods: []server.Method{
 		{
+			Name: "/cgi-bin/hello",
+			Func: GreeterService_SayHello_Handler,
+		},
+		{
 			Name: "/trpc.examples.helloworld.Greeter/SayHello",
 			Func: GreeterService_SayHello_Handler,
 		},
@@ -90,7 +94,7 @@ var NewGreeterClientProxy = func(opts ...client.Option) GreeterClientProxy {
 func (c *GreeterClientProxyImpl) SayHello(ctx context.Context, req *HelloRequest, opts ...client.Option) (*HelloReply, error) {
 	ctx, msg := codec.WithCloneMessage(ctx)
 	defer codec.PutBackMessage(msg)
-	msg.WithClientRPCName("/trpc.examples.helloworld.Greeter/SayHello")
+	msg.WithClientRPCName("/cgi-bin/hello")
 	msg.WithCalleeServiceName(GreeterServer_ServiceDesc.ServiceName)
 	msg.WithCalleeApp("examples")
 	msg.WithCalleeServer("helloworld")
