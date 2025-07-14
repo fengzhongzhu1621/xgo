@@ -22,7 +22,7 @@ server: # Server configuration.
   conf_path: /usr/local/trpc/conf/ # Path to business configuration files.
   data_path: /usr/local/trpc/data/ # Path to business data files.
   filter: # List of interceptors for all service handler functions.
-    - simpledebuglog
+    - pjsondebuglog
     - validation # trpc.group/trpc-go/trpc-filter/validation
     - recovery # Intercept panics from business processing goroutines created by the framework.
   service: # Services provided by the business, can have multiple.
@@ -42,6 +42,10 @@ server: # Server configuration.
       timeout: 1000 # Maximum processing time for requests in milliseconds.
 
 plugins: # Plugin configuration.
+  tracing:
+    debuglog:
+      log_type: prettyjson
+      enable_color: true
   auth: # trpc.group/trpc-go/trpc-filter/validation
     validation:
       enable_error_log: true

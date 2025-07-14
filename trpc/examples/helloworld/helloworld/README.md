@@ -4,6 +4,7 @@ http
 
 ```sh
 curl -X POST -d '{"msg":"hello"}' -H "Content-Type:application/json" "http://127.0.0.1:8002/trpc.examples.helloworld.GreeterHttp/SayHello" -v
+curl -X POST -d '{"msg":""}' -H "Content-Type:application/json" "http://127.0.0.1:8002/trpc.examples.helloworld.GreeterHttp/SayHello" -v
 curl -X POST -d '{"msg":"hello"}' -H "Content-Type:application/json" "http://127.0.0.1:8002/cgi-bin/hello" -v
 ```
 

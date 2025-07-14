@@ -34,6 +34,8 @@ require (
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.26.0 // indirect
 	github.com/goccy/go-json v0.10.5 // indirect
+	github.com/golang/mock v1.6.0 // indirect
+	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/golang/snappy v1.0.0 // indirect
 	github.com/google/flatbuffers v23.5.26+incompatible // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
@@ -69,5 +71,5 @@ require (
 	google.golang.org/protobuf v1.36.6 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	trpc.group/trpc-go/tnet v1.0.1 // indirect
-	trpc.group/trpc/trpc-protocol/pb/go/trpc v1.0.0 // indirect
+	trpc.group/trpc/trpc-protocol/pb/go/trpc v1.0.1 // indirect
 )
