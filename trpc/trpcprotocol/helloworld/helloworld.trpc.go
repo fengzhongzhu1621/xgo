@@ -63,12 +63,64 @@ func RegisterGreeterService(s server.Service, svr GreeterService) {
 	}
 }
 
+// GreeterHttpService defines service.
+type GreeterHttpService interface {
+	SayHello(ctx context.Context, req *HelloRequest) (*HelloReply, error)
+}
+
+func GreeterHttpService_SayHello_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &HelloRequest{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(GreeterHttpService).SayHello(ctx, reqbody.(*HelloRequest))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+// GreeterHttpServer_ServiceDesc descriptor for server.RegisterService.
+var GreeterHttpServer_ServiceDesc = server.ServiceDesc{
+	ServiceName: "trpc.examples.helloworld.GreeterHttp",
+	HandlerType: ((*GreeterHttpService)(nil)),
+	Methods: []server.Method{
+		{
+			Name: "/cgi-bin/hello",
+			Func: GreeterHttpService_SayHello_Handler,
+		},
+		{
+			Name: "/trpc.examples.helloworld.GreeterHttp/SayHello",
+			Func: GreeterHttpService_SayHello_Handler,
+		},
+	},
+}
+
+// RegisterGreeterHttpService registers service.
+func RegisterGreeterHttpService(s server.Service, svr GreeterHttpService) {
+	if err := s.Register(&GreeterHttpServer_ServiceDesc, svr); err != nil {
+		panic(fmt.Sprintf("GreeterHttp register error:%v", err))
+	}
+}
+
 // START --------------------------------- Default Unimplemented Server Service --------------------------------- START
 
 type UnimplementedGreeter struct{}
 
 func (s *UnimplementedGreeter) SayHello(ctx context.Context, req *HelloRequest) (*HelloReply, error) {
 	return nil, errors.New("rpc SayHello of service Greeter is not implemented")
+}
+
+type UnimplementedGreeterHttp struct{}
+
+func (s *UnimplementedGreeterHttp) SayHello(ctx context.Context, req *HelloRequest) (*HelloReply, error) {
+	return nil, errors.New("rpc SayHello of service GreeterHttp is not implemented")
 }
 
 // END --------------------------------- Default Unimplemented Server Service --------------------------------- END
@@ -99,6 +151,40 @@ func (c *GreeterClientProxyImpl) SayHello(ctx context.Context, req *HelloRequest
 	msg.WithCalleeApp("examples")
 	msg.WithCalleeServer("helloworld")
 	msg.WithCalleeService("Greeter")
+	msg.WithCalleeMethod("SayHello")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &HelloReply{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+// GreeterHttpClientProxy defines service client proxy
+type GreeterHttpClientProxy interface {
+	SayHello(ctx context.Context, req *HelloRequest, opts ...client.Option) (rsp *HelloReply, err error)
+}
+
+type GreeterHttpClientProxyImpl struct {
+	client client.Client
+	opts   []client.Option
+}
+
+var NewGreeterHttpClientProxy = func(opts ...client.Option) GreeterHttpClientProxy {
+	return &GreeterHttpClientProxyImpl{client: client.DefaultClient, opts: opts}
+}
+
+func (c *GreeterHttpClientProxyImpl) SayHello(ctx context.Context, req *HelloRequest, opts ...client.Option) (*HelloReply, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/cgi-bin/hello")
+	msg.WithCalleeServiceName(GreeterHttpServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("examples")
+	msg.WithCalleeServer("helloworld")
+	msg.WithCalleeService("GreeterHttp")
 	msg.WithCalleeMethod("SayHello")
 	msg.WithSerializationType(codec.SerializationTypePB)
 	callopts := make([]client.Option, 0, len(c.opts)+len(opts))

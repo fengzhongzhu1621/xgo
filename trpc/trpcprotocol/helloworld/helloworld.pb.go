@@ -135,6 +135,8 @@ const file_helloworld_proto_rawDesc = "" +
 	"HelloReply\x12\x10\n" +
 	"\x03msg\x18\x01 \x01(\tR\x03msg2w\n" +
 	"\aGreeter\x12l\n" +
+	"\bSayHello\x12&.trpc.examples.helloworld.HelloRequest\x1a$.trpc.examples.helloworld.HelloReply\"\x12\x8a\xb5\x18\x0e/cgi-bin/hello2{\n" +
+	"\vGreeterHttp\x12l\n" +
 	"\bSayHello\x12&.trpc.examples.helloworld.HelloRequest\x1a$.trpc.examples.helloworld.HelloReply\"\x12\x8a\xb5\x18\x0e/cgi-bin/helloB>Z<github.com/fengzhongzhu1621/xgo/trpc/trpcprotocol/helloworldb\x06proto3"
 
 var (
@@ -156,9 +158,11 @@ var file_helloworld_proto_goTypes = []any{
 }
 var file_helloworld_proto_depIdxs = []int32{
 	0, // 0: trpc.examples.helloworld.Greeter.SayHello:input_type -> trpc.examples.helloworld.HelloRequest
-	1, // 1: trpc.examples.helloworld.Greeter.SayHello:output_type -> trpc.examples.helloworld.HelloReply
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
+	0, // 1: trpc.examples.helloworld.GreeterHttp.SayHello:input_type -> trpc.examples.helloworld.HelloRequest
+	1, // 2: trpc.examples.helloworld.Greeter.SayHello:output_type -> trpc.examples.helloworld.HelloReply
+	1, // 3: trpc.examples.helloworld.GreeterHttp.SayHello:output_type -> trpc.examples.helloworld.HelloReply
+	2, // [2:4] is the sub-list for method output_type
+	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -177,7 +181,7 @@ func file_helloworld_proto_init() {
 			NumEnums:      0,
 			NumMessages:   2,
 			NumExtensions: 0,
-			NumServices:   1,
+			NumServices:   2,
 		},
 		GoTypes:           file_helloworld_proto_goTypes,
 		DependencyIndexes: file_helloworld_proto_depIdxs,

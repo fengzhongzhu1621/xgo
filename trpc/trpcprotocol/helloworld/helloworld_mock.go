@@ -56,6 +56,45 @@ func (mr *MockGreeterServiceMockRecorder) SayHello(ctx, req any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SayHello", reflect.TypeOf((*MockGreeterService)(nil).SayHello), ctx, req)
 }
 
+// MockGreeterHttpService is a mock of GreeterHttpService interface.
+type MockGreeterHttpService struct {
+	ctrl     *gomock.Controller
+	recorder *MockGreeterHttpServiceMockRecorder
+	isgomock struct{}
+}
+
+// MockGreeterHttpServiceMockRecorder is the mock recorder for MockGreeterHttpService.
+type MockGreeterHttpServiceMockRecorder struct {
+	mock *MockGreeterHttpService
+}
+
+// NewMockGreeterHttpService creates a new mock instance.
+func NewMockGreeterHttpService(ctrl *gomock.Controller) *MockGreeterHttpService {
+	mock := &MockGreeterHttpService{ctrl: ctrl}
+	mock.recorder = &MockGreeterHttpServiceMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockGreeterHttpService) EXPECT() *MockGreeterHttpServiceMockRecorder {
+	return m.recorder
+}
+
+// SayHello mocks base method.
+func (m *MockGreeterHttpService) SayHello(ctx context.Context, req *HelloRequest) (*HelloReply, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SayHello", ctx, req)
+	ret0, _ := ret[0].(*HelloReply)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SayHello indicates an expected call of SayHello.
+func (mr *MockGreeterHttpServiceMockRecorder) SayHello(ctx, req any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SayHello", reflect.TypeOf((*MockGreeterHttpService)(nil).SayHello), ctx, req)
+}
+
 // MockGreeterClientProxy is a mock of GreeterClientProxy interface.
 type MockGreeterClientProxy struct {
 	ctrl     *gomock.Controller
@@ -98,4 +137,48 @@ func (mr *MockGreeterClientProxyMockRecorder) SayHello(ctx, req any, opts ...any
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]any{ctx, req}, opts...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SayHello", reflect.TypeOf((*MockGreeterClientProxy)(nil).SayHello), varargs...)
+}
+
+// MockGreeterHttpClientProxy is a mock of GreeterHttpClientProxy interface.
+type MockGreeterHttpClientProxy struct {
+	ctrl     *gomock.Controller
+	recorder *MockGreeterHttpClientProxyMockRecorder
+	isgomock struct{}
+}
+
+// MockGreeterHttpClientProxyMockRecorder is the mock recorder for MockGreeterHttpClientProxy.
+type MockGreeterHttpClientProxyMockRecorder struct {
+	mock *MockGreeterHttpClientProxy
+}
+
+// NewMockGreeterHttpClientProxy creates a new mock instance.
+func NewMockGreeterHttpClientProxy(ctrl *gomock.Controller) *MockGreeterHttpClientProxy {
+	mock := &MockGreeterHttpClientProxy{ctrl: ctrl}
+	mock.recorder = &MockGreeterHttpClientProxyMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockGreeterHttpClientProxy) EXPECT() *MockGreeterHttpClientProxyMockRecorder {
+	return m.recorder
+}
+
+// SayHello mocks base method.
+func (m *MockGreeterHttpClientProxy) SayHello(ctx context.Context, req *HelloRequest, opts ...client.Option) (*HelloReply, error) {
+	m.ctrl.T.Helper()
+	varargs := []any{ctx, req}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "SayHello", varargs...)
+	ret0, _ := ret[0].(*HelloReply)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SayHello indicates an expected call of SayHello.
+func (mr *MockGreeterHttpClientProxyMockRecorder) SayHello(ctx, req any, opts ...any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]any{ctx, req}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SayHello", reflect.TypeOf((*MockGreeterHttpClientProxy)(nil).SayHello), varargs...)
 }

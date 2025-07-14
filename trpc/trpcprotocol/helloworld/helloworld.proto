@@ -23,6 +23,12 @@ service Greeter {
     }
 }
 
+service GreeterHttp {
+    rpc SayHello (HelloRequest) returns (HelloReply) {
+        option (trpc.alias) = "/cgi-bin/hello";
+    }
+}
+
 message HelloRequest {
     string msg = 1 [(validate.rules).string.min_len = 1];
 }
