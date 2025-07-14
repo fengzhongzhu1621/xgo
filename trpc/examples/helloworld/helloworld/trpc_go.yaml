@@ -44,8 +44,8 @@ server: # Server configuration.
 plugins: # Plugin configuration.
   tracing:
     debuglog:
-      log_type: prettyjson
-      enable_color: true
+      log_type: json
+      enable_color: false
   auth: # trpc.group/trpc-go/trpc-filter/validation
     validation:
       enable_error_log: true

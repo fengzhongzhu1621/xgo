@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 
 	pb "github.com/fengzhongzhu1621/xgo/trpc/trpcprotocol/helloworld"
@@ -34,6 +35,10 @@ func (s *greeterHttpImpl) SayHello(ctx context.Context, req *pb.HelloRequest) (*
 		Msg: "Hello, World!",
 	}
 
+	// 默认打包序列化方式和请求时的“Content-Type”保持一致
+	// msg := trpc.Message(ctx)
+	// msg.WithSerializationType(codec.SerializationTypeJSON)
+
 	// 为响应报文设置 Cookie
 	cookie := &http.Cookie{Name: "admin", Value: "admin", HttpOnly: false}
 	http.SetCookie(head.Response, cookie)
@@ -42,4 +47,39 @@ func (s *greeterHttpImpl) SayHello(ctx context.Context, req *pb.HelloRequest) (*
 	head.Response.Header().Add("reply", "for test")
 
 	return rsp, nil
+}
+
+type Response struct {
+	Result  bool            `json:"result"`
+	Code    int32           `json:"code"`
+	Message string          `json:"message"`
+	Data    json.RawMessage `json:"data"`
+}
+
+// 自定义返回数据处理函数
+func init() {
+	thttp.DefaultServerCodec.RspHandler = func(w http.ResponseWriter, r *http.Request, rspbody []byte) error {
+		if len(rspbody) == 0 {
+			return nil
+		}
+		bs, err := json.Marshal(&Response{Result: true, Code: 0, Message: "OK", Data: rspbody})
+		if err != nil {
+			return err
+		}
+		_, err = w.Write(bs)
+		return err
+	}
+}
+
+// 自定义错误处理函数
+func init() {
+	thttp.DefaultServerCodec.ErrHandler = func(w http.ResponseWriter, r *http.Request, e *errs.Error) {
+		// 填充指定格式错误信息到 HTTP Body
+		bs, err := json.Marshal(&Response{Result: false, Code: int32(e.Code), Message: e.Msg})
+		if err != nil {
+			return
+		}
+		_, err = w.Write(bs)
+		//w.Write([]byte(fmt.Sprintf(`{"retcode": %d, "retmsg": "%s"}`, e.Code, e.Msg)))
+	}
 }
