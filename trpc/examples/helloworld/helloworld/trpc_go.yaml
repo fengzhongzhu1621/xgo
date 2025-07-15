@@ -40,6 +40,11 @@ server: # Server configuration.
       network: tcp # Network listening type: tcp or udp.
       protocol: http # Application layer protocol: trpc or http.
       timeout: 1000 # Maximum processing time for requests in milliseconds.
+    - name: trpc.examples.time.local # service 的路由名称，本地定时器
+      port: 1000 # 服务监听端口 可使用占位符 ${port}
+      network: "*/5 * * * * ?startAtOnce=1" # 复用 network 字段来设置任务的调度策略
+      protocol: timer # 设置服务类型为定时器服务
+      timeout: 1000 # 请求最长处理时间 单位 毫秒
 
 plugins: # Plugin configuration.
   tracing:

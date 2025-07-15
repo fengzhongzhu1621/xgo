@@ -9,8 +9,10 @@ replace github.com/fengzhongzhu1621/xgo/trpc/trpcprotocol/helloworld => ../../..
 require (
 	github.com/fengzhongzhu1621/xgo v0.0.0-00010101000000-000000000000
 	github.com/fengzhongzhu1621/xgo/trpc/trpcprotocol/helloworld v0.0.0-00010101000000-000000000000
+	github.com/silenceper/log v0.0.0-20171204144354-e5ac7fa8a76a
 	github.com/stretchr/testify v1.10.0
 	go.uber.org/mock v0.5.2
+	trpc.group/trpc-go/trpc-database/timer v1.0.0
 	trpc.group/trpc-go/trpc-filter/debuglog v1.0.0
 	trpc.group/trpc-go/trpc-filter/recovery v1.0.0
 	trpc.group/trpc-go/trpc-filter/validation v1.0.1
@@ -52,6 +54,7 @@ require (
 	github.com/pelletier/go-toml/v2 v2.2.4 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
+	github.com/robfig/cron v1.2.0 // indirect
 	github.com/spf13/cast v1.7.1 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect

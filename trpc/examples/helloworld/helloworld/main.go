@@ -2,6 +2,7 @@ package main
 
 import (
 	pb "github.com/fengzhongzhu1621/xgo/trpc/trpcprotocol/helloworld"
+	"trpc.group/trpc-go/trpc-database/timer"
 	_ "trpc.group/trpc-go/trpc-filter/debuglog"
 	_ "trpc.group/trpc-go/trpc-filter/recovery"
 	_ "trpc.group/trpc-go/trpc-filter/validation"
@@ -21,6 +22,8 @@ func main() {
 	// trpc.examples.helloworld.Greeter trpc_go.yaml中配置的路由标识
 	pb.RegisterGreeterService(s.Service("trpc.examples.helloworld.Greeter"), &greeterImpl{})
 	pb.RegisterGreeterHttpService(s.Service("trpc.examples.helloworld.GreeterHttp"), &greeterHttpImpl{})
+
+	timer.RegisterHandlerService(s.Service("trpc.examples.time.local"), handleLocalTimer)
 
 	// 泛 HTTP 标准服务
 	// 1. URL 注册模式
