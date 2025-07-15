@@ -79,6 +79,7 @@ func (p *Plugin) Setup(name string, configDec plugin.Decoder) error {
 	}
 
 	// register server and client filter
+	// 只注册了 debuglog 过滤器
 	filter.Register(pluginName, ServerFilter(serverOpt...), ClientFilter(clientOpt...))
 
 	return nil

@@ -6,7 +6,7 @@ client: # Backend configuration for client calls.
   timeout: 1000 # Maximum processing time for all backends.
   namespace: Development # Environment for all backends.
   filter: # List of interceptors for all backend function calls.
-    - simpledebuglog
+    - pjsondebuglog
   service: # Configuration for individual backends.
     - name: trpc.examples.helloworld.Greeter # Service name for the backend.
       namespace: Development # Environment for the backend.

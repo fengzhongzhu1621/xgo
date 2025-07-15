@@ -18,11 +18,13 @@ func callGreeterSayHello() {
 	)
 	ctx := trpc.BackgroundContext()
 	// Example usage of unary client.
-	reply, err := proxy.SayHello(ctx, &pb.HelloRequest{})
+	reply, err := proxy.SayHello(ctx, &pb.HelloRequest{
+		Msg: "hello",
+	})
 	if err != nil {
 		log.Fatalf("err: %v", err)
 	}
-	log.Debugf("simple  rpc   receive: %+v", reply)
+	log.Debugf("simple rpc receive: %+v", reply)
 }
 
 func main() {
