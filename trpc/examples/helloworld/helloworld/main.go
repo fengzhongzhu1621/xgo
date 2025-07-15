@@ -23,7 +23,13 @@ func main() {
 	pb.RegisterGreeterService(s.Service("trpc.examples.helloworld.Greeter"), &greeterImpl{})
 	pb.RegisterGreeterHttpService(s.Service("trpc.examples.helloworld.GreeterHttp"), &greeterHttpImpl{})
 
-	timer.RegisterHandlerService(s.Service("trpc.examples.time.local"), handleLocalTimer)
+	// 注册本地定时器服务
+	timer.RegisterHandlerService(s.Service("trpc.examples.helloworld.time_local"), handleLocalTimer)
+
+	// 注册调度策略
+	timer.RegisterScheduler("use_redis", &scheduler{})
+	// 注册分布式互斥定时器服务
+	timer.RegisterHandlerService(s.Service("trpc.examples.helloworld.time_distributed"), handleDistributedTimer)
 
 	// 泛 HTTP 标准服务
 	// 1. URL 注册模式
