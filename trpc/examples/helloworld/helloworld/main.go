@@ -50,7 +50,7 @@ func main() {
 	// kafka.RegisterKafkaConsumerService(s, &Consumer{})
 	// The parameter of s.Service should be the same as the name of the service in
 	// the configuration file. The configuration is loaded based on this parameter.
-	kafka.RegisterKafkaConsumerService(s.Service("trpc.examples.helloworld.kafka-consumer-1"), &Consumer{})
+	kafka.RegisterKafkaConsumerService(s.Service("trpc.examples.helloworld.kafka-consumer-1"), &KafkaConsumer{})
 
 	kafka.RegisterBatchHandlerService(s.Service("trpc.examples.helloworld.kafka-consumer-2"), kafkaBatchHandle)
 

@@ -68,10 +68,10 @@ func handleKafkaProducer(ctx context.Context) error {
 }
 
 // Consumer is the consumer
-type Consumer struct{}
+type KafkaConsumer struct{}
 
 // Handle handle function
-func (Consumer) Handle(ctx context.Context, msg *sarama.ConsumerMessage) error {
+func (KafkaConsumer) Handle(ctx context.Context, msg *sarama.ConsumerMessage) error {
 	if rawContext, ok := kafka.GetRawSaramaContext(ctx); ok {
 		log.Infof("InitialOffset:%d", rawContext.Claim.InitialOffset())
 	}
@@ -107,5 +107,7 @@ func kafkaBatchHandle(ctx context.Context, msgArray []*sarama.ConsumerMessage) e
 		log.Infof("[consume][topic]%v\t[partition]%v\t[offset]%v\t[key]%v\t[value]%v",
 			v.Topic, v.Partition, v.Offset, string(v.Key), string(v.Value))
 	}
+
+	// 返回nil才会确认消费成功
 	return nil
 }
