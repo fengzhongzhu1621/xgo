@@ -15,9 +15,12 @@ client: # Backend configuration for client calls.
       protocol: trpc # Application layer protocol: trpc or http.
       target: ip://127.0.0.1:8001 # Service address for requests.
     - name: trpc.kafka.producer.service
+      # 注意：使用单词topic
       target: kafka://127.0.0.1:9092?topic=quickstart-events # 生产者的 partitioner 参数默认为 random
       # target: kafka://ip1:port1?clientid=xxx&partitioner=hash
-      # target: kafka://127.0.0.1:9092?clientid=test_producer&partitioner=hash&topic=test_topic
+      # target: kafka://127.0.0.1:9092?clientid=test_producer&partitioner=hash&topic=quickstart-events
+      # target: kafka://127.0.0.1:9092?topic=quickstart-events&async=1 # 异步发送需要开启 async=1
+      # target: kafka://127.0.0.1:9092?clientid=test_producer&partitioner=hash&topic=test&compression=none
       # timeout: 200 # kafka 全局的生产者配置 timeout 配置，默认 2s
 server: # Server configuration.
   app: examples # Application name for the business.
@@ -59,17 +62,28 @@ server: # Server configuration.
       network: "*/5 * * * * ?startAtOnce=1" # 复用 network 字段来设置任务的调度策略
       protocol: timer # 设置服务类型为定时器服务
       timeout: 1000 # 请求最长处理时间 单位 毫秒
+    - name: trpc.examples.helloworld.kafka-consumer-1
+      # 注意：
+      # 1. 使用单词topics，不是topic
+      # 2. version默认使用 sarama.V1_1_1_0，需要根据kafka的版本自行修改，否则会报错 kafka server transport: Consume get error:EOF
+      address: 127.0.0.1:9092?topics=quickstart-events&group=quickstart-group@version=4.0.0.0
+      # address: 127.0.0.1:9092?topics=test&group=batch_test&batch=5&batchFlush=1000
+      protocol: kafka
+      timeout: 1000
 
 plugins: # Plugin configuration.
   tracing:
-    debuglog:
+    debuglog: # trpc.group/trpc-go/trpc-filter/debuglog
       log_type: json
       enable_color: false
-  auth: # trpc.group/trpc-go/trpc-filter/validation
-    validation:
+  auth:
+    validation: # trpc.group/trpc-go/trpc-filter/validation
       enable_error_log: true
       server_validate_err_code: 51 # customize the error codes
       client_validate_err_code: 151 # customize the error codes
+  database:
+    kafka:
+      rewrite_log: false # 默认是false，配置为true时，sarama 包的日志以 info 级别重定向到 trpc 的 log 文件中
   log: # Log configuration.
     default: # Default log configuration, supports multiple outputs.
       - writer: console # Console standard output (default).
