@@ -12,8 +12,10 @@ client: # Backend configuration for client calls.
       namespace: Development # Environment for the backend.
       network: tcp # Network type for the backend: tcp or udp (configuration takes priority).
       protocol: trpc # Application layer protocol: trpc or http.
-      target: ip://127.0.0.1:8001 # Service address for requests.
+      target: ip://127.0.0.1:8001 # Service address for requests. ip、dns
       timeout: 1000 # Maximum processing time for requests.
+      serialization: 0 # 序列化方式 0-pb 1-jce 2-json 3-flatbuffer
+      compression: 1 # 压缩方式 0-不压缩 1-gzip 2-snappy 3-zlib
 
 plugins: # Plugin configuration.
   log: # Log configuration.

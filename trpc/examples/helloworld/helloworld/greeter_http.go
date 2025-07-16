@@ -31,13 +31,26 @@ func (s *greeterHttpImpl) SayHello(ctx context.Context, req *pb.HelloRequest) (*
 
 	log.InfoContextf(ctx, "Msg: %s, reqHead: %s, cookie is: %s", req.Msg, reqHead, cookieStr)
 
-	rsp := &pb.HelloReply{
-		Msg: "Hello, World!",
-	}
-
 	// 默认打包序列化方式和请求时的“Content-Type”保持一致
 	// msg := trpc.Message(ctx)
 	// msg.WithSerializationType(codec.SerializationTypeJSON)
+
+	// 服务内调用 client
+	// 创建一个客户端调用代理，该操作很轻量不会创建连接，可以每次请求创建，也可以全局初始化一个 proxy
+	// proxy 不要每次创建，这里只是演示
+	proxy := pb.NewGreeterClientProxy(
+	//client.WithTarget("ip://127.0.0.1:8001"),
+	//client.WithProtocol("trpc"),
+	)
+	reply, err := proxy.SayHello(ctx, &pb.HelloRequest{
+		Msg: "hello",
+	})
+	if err != nil {
+		log.Fatalf("err: %v", err)
+	}
+	rsp := &pb.HelloReply{
+		Msg: "NewGreeterClientProxy: " + reply.Msg,
+	}
 
 	// 为响应报文设置 Cookie
 	cookie := &http.Cookie{Name: "admin", Value: "admin", HttpOnly: false}

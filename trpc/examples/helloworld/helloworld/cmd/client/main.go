@@ -7,14 +7,13 @@ import (
 	pb "github.com/fengzhongzhu1621/xgo/trpc/trpcprotocol/helloworld"
 	_ "trpc.group/trpc-go/trpc-filter/debuglog"
 	trpc "trpc.group/trpc-go/trpc-go"
-	"trpc.group/trpc-go/trpc-go/client"
 	"trpc.group/trpc-go/trpc-go/log"
 )
 
 func callGreeterSayHello() {
 	proxy := pb.NewGreeterClientProxy(
-		client.WithTarget("ip://127.0.0.1:8001"),
-		client.WithProtocol("trpc"),
+	// client.WithTarget("ip://127.0.0.1:8001"),
+	// client.WithProtocol("trpc"),
 	)
 	ctx := trpc.BackgroundContext()
 	// Example usage of unary client.

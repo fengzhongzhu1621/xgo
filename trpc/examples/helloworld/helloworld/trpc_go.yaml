@@ -17,10 +17,18 @@ client: # Backend configuration for client calls.
     - name: trpc.kafka.producer.service
       # 注意：使用单词topic
       target: kafka://127.0.0.1:9092?topic=quickstart-events # 生产者的 partitioner 参数默认为 random
-      # target: kafka://ip1:port1?clientid=xxx&partitioner=hash
+      # 生产时同一用户需要有序，如何配置；客户端增加参数partitioner，可选 random（默认），roundrobin，hash（按 key 分区）
+      # target: kafka://ip1:port1,ip2:port2?clientid=xxx&partitioner=hash
       # target: kafka://127.0.0.1:9092?clientid=test_producer&partitioner=hash&topic=quickstart-events
-      # target: kafka://127.0.0.1:9092?topic=quickstart-events&async=1 # 异步发送需要开启 async=1
+      # 异步发送需要开启 async=1
+      # target: kafka://127.0.0.1:9092?topic=quickstart-events&async=1
+      # 默认启用了 gzip 压缩，优先考虑在 target 上加上参数compression=none
       # target: kafka://127.0.0.1:9092?clientid=test_producer&partitioner=hash&topic=test&compression=none
+      # target: kafka://ip1:port1,ip2:port2?topic=YOUR_TOPIC&clientid=xxx&compression=xxx
+      # 北极星接入，不支持动态变更，如果北极星 IP 有变更，需要重启服务才能生效。如果需要获取所有北极星节点，需要关注 Q14
+      # target: kafka://YOUR_SERVICE_NAME?topic=YOUR_TOPIC&clientid=xxx&compression=xxx&discover=polaris&namespace=Development
+      # 透传 trpc 元数据
+      # target: kafka://11.135.87.176:9092?clientid=test_producer&partitioner=hash&topic=test_topic&trpcMeta=true
       # timeout: 200 # kafka 全局的生产者配置 timeout 配置，默认 2s
 server: # Server configuration.
   app: examples # Application name for the business.
@@ -32,6 +40,11 @@ server: # Server configuration.
     - debuglog
     - validation # trpc.group/trpc-go/trpc-filter/validation
     - recovery # Intercept panics from business processing goroutines created by the framework.
+  # 关闭服务器时的最短等待时间（以毫秒为单位），用于完成服务注销，用于优雅退出和优雅重启。此期间会存在消费者继续拉取消息的情况。
+  close_wait_time: 1000
+  # 关闭服务器时的最长等待时间（以毫秒为单位），用于完成所有请求的处理，用于优雅退出和优雅重启。
+  # 如果消费者处理时间较长，无法达到优雅退出时关闭 consumer group 的效果，可以适当调大这个值
+  max_close_wait_time: 2000
   service: # Services provided by the business, can have multiple.
     - name: trpc.examples.helloworld.Greeter # Route name for the service.
       ip: 127.0.0.1 # Service listening IP address, can use placeholder ${ip}. Use either ip or nic, ip takes priority.
@@ -68,7 +81,21 @@ server: # Server configuration.
       # 2. 下载最新的saram，version默认使用 sarama.V1_1_1_0，需要根据kafka的版本自行修改，否则会报错 kafka server transport: Consume get error:EOF
       address: 127.0.0.1:9092?topics=quickstart-events&group=quickstart-group
       # address: 127.0.0.1:9092?topics=test&group=batch_test&batch=5&batchFlush=1000
+      # kafka consumer broker address，version 如果不设置则为 1.1.1.0，部分 ckafka 需要指定 0.10.2.0
+      # 优先检查 brokers 是否可达，然后检查支持的 kafka 客户端版本，尝试在配置文件 address 中加上参数例如version=0.10.2.0
+      # address: ip1:port1,ip2:port2?topics=topic1,topic2&group=xxx&version=x.x.x.x
+      # 北极星接入，不支持动态变更，如果北极星 IP 有变更，需要重启服务才能生效。如果需要获取所有北极星节点，需要关注 Q14
+      # address: YOUR_SERVICE_NAME?topics=topic1,topic2&group=xxx&version=x.x.x.x&discover=polaris&namespace=Development
+      # 同一消费者组的客户端重分组策略不一样，可修改参数strategy，可选：sticky(默认)，range，roundrobin
+      # address: ip1:port1,ip2:port2?topics=topic1,topic2&group=xxx&strategy=range
+      # 支持账号和密码
+      # address: ip1:port1,ip2:port2?topics=topic1,topic2&mechanism=SCRAM-SHA-512&user={user}&password={password}
+      # 指定 SASL 协议版本
+      # address: ip1:port1,ip2:port2?topics=topic1,topic2&mechanism=SCRAM-SHA-512&user=${user}&password=${password}&sasl_version=1
+      # 透传 trpc 元数据
+      # address: 11.135.87.176:9092?topics=test_topic&group=test_group&trpcMeta=true
       protocol: kafka
+      # 请求最长处理时间 单位 毫秒
       timeout: 1000
     - name: trpc.examples.helloworld.kafka-consumer-2
       # batch=5: 控制批量消费的消息数量上限，每个批次处理的最大消息条数为 5 条，当消费者累积达到 5 条消息时，会立即触发批量处理逻辑
@@ -78,6 +105,11 @@ server: # Server configuration.
       protocol: kafka
 
 plugins: # Plugin configuration.
+  selector:
+    # polaris:
+    #   service_router:
+    #     # 服务端北极星寻址获取所有节点
+    #     # need_return_all_nodes: true
   tracing:
     debuglog: # trpc.group/trpc-go/trpc-filter/debuglog
       log_type: json

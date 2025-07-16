@@ -39,6 +39,7 @@ func main() {
 	// 注册一个本地定时服务，模拟生产者向kafka发送数据
 	timer.RegisterHandlerService(s.Service("trpc.examples.helloworld.kafka_produer"), handleKafkaProducer)
 
+	// 需要配置自己的参数
 	// If you're using a custom address configuration,
 	// configure it before starting the server.
 	/*
@@ -46,10 +47,29 @@ func main() {
 		cfg.ClientID = "newClientID"
 		kafka.RegisterAddrConfig("address", cfg)
 	*/
+
+	// 如何注入自定义配置 (远端配置)
+	// 在trpc_go.yaml中配置fake_address，然后配合kafka.RegisterAddrConfig方法注入 trpc_go.yaml配置如下
+	// address: fake_address
+	//
+	// 在服务启动前，注入自定义配置
+	// func main() {
+	//   s := trpc.NewServer()
+	//   // 使用自定义 addr，需在启动 server 前注入
+	//   cfg := kafka.GetDefaultConfig()
+	//   cfg.Brokers = []string{"127.0.0.1:9092"}
+	//   cfg.Topics = []string{"test_topic"}
+	//   kafka.RegisterAddrConfig("fake_address", cfg)
+	//   kafka.RegisterKafkaConsumerService(s, &Consumer{})
+	//   s.Serve()
+	// }
+
 	// default service name is trpc.kafka.consumer.service
 	// kafka.RegisterKafkaConsumerService(s, &Consumer{})
 	// The parameter of s.Service should be the same as the name of the service in
 	// the configuration file. The configuration is loaded based on this parameter.
+	// 启动多个消费者的情况，可以配置多个 service，然后这里任意匹配 kafka.RegisterHandlerService(s.Service("name"), handle)，
+	// 没有指定 name 的情况，代表所有 service 共用同一个 handler
 	kafka.RegisterKafkaConsumerService(s.Service("trpc.examples.helloworld.kafka-consumer-1"), &KafkaConsumer{})
 
 	kafka.RegisterBatchHandlerService(s.Service("trpc.examples.helloworld.kafka-consumer-2"), kafkaBatchHandle)
