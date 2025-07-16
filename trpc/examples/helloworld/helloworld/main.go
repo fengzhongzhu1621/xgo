@@ -31,6 +31,9 @@ func main() {
 	// 注册分布式互斥定时器服务
 	timer.RegisterHandlerService(s.Service("trpc.examples.helloworld.time_distributed"), handleDistributedTimer)
 
+	// 注册一个本地定时服务，模拟生产者向kafka发送数据
+	timer.RegisterHandlerService(s.Service("trpc.examples.helloworld.kafka_produer"), handleKafkaProducer)
+
 	// 泛 HTTP 标准服务
 	// 1. URL 注册模式
 	// func HandleFunc(pattern string, handler func(w http.ResponseWriter, r *http.Request) error)
