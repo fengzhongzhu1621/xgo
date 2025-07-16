@@ -52,6 +52,8 @@ func main() {
 	// the configuration file. The configuration is loaded based on this parameter.
 	kafka.RegisterKafkaConsumerService(s.Service("trpc.examples.helloworld.kafka-consumer-1"), &Consumer{})
 
+	kafka.RegisterBatchHandlerService(s.Service("trpc.examples.helloworld.kafka-consumer-2"), kafkaBatchHandle)
+
 	// 泛 HTTP 标准服务
 	// 1. URL 注册模式
 	// func HandleFunc(pattern string, handler func(w http.ResponseWriter, r *http.Request) error)

@@ -59,10 +59,10 @@ func handleKafkaProducer(ctx context.Context) error {
 	log.Infof("partition=%d, offset=%d, err=%v, key=%s, value=%s", partition, offset, err, key3, value3)
 
 	// asynchronous producing
-	// key4 := "key4"
-	// value4 := "value4"
-	// err = proxy.AsyncSendMessage(ctx, topic, []byte(key4), []byte(value4))
-	// log.Infof("partition=%d, offset=%d, err=%v, key=%s, value=%s", partition, offset, err, key4, value4)
+	key4 := "key4"
+	value4 := "value4"
+	err = proxy.AsyncSendMessage(ctx, topic, []byte(key4), []byte(value4))
+	log.Infof("partition=%d, offset=%d, err=%v, key=%s, value=%s", partition, offset, err, key4, value4)
 
 	return nil
 }
@@ -97,5 +97,15 @@ func (Consumer) Handle(ctx context.Context, msg *sarama.ConsumerMessage) error {
 	// 建议：由业务逻辑实现者自行重试，重试失败后放到失败队列单独处理，或者触发告警通知；业务代码自行处理错误重试，无论何种情况不要将任何错误返回给框架
 	// 消费者业务逻辑尽量不要耗时太长，耗时超过阈值会触发超时异常，也会返回nil值，导致重复消费
 	//
+	return nil
+}
+
+// Handle handle function
+func kafkaBatchHandle(ctx context.Context, msgArray []*sarama.ConsumerMessage) error {
+	log.Infof("len(msgArray) = %d", len(msgArray))
+	for _, v := range msgArray {
+		log.Infof("[consume][topic]%v\t[partition]%v\t[offset]%v\t[key]%v\t[value]%v",
+			v.Topic, v.Partition, v.Offset, string(v.Key), string(v.Value))
+	}
 	return nil
 }
