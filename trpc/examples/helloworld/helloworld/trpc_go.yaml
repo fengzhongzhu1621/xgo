@@ -9,7 +9,7 @@ client: # Backend configuration for client calls.
     - debuglog
     - validation # trpc.group/trpc-go/trpc-filter/validation
   service: # Configuration for individual backends.
-    - name: trpc.examples.helloworld.Greeter # Service name for the backend.
+    - name: trpc.examples.helloworld.Greeter # Service name for the backend. trpc.{app}.{server}.{service}
       namespace: Development # Environment for the backend.
       network: tcp # Network type for the backend: tcp or udp (configuration takes priority).
       protocol: trpc # Application layer protocol: trpc or http.
@@ -30,6 +30,17 @@ client: # Backend configuration for client calls.
       # 透传 trpc 元数据
       # target: kafka://11.135.87.176:9092?clientid=test_producer&partitioner=hash&topic=test_topic&trpcMeta=true
       # timeout: 200 # kafka 全局的生产者配置 timeout 配置，默认 2s
+    - name: trpc.mysql.server.service # 注意 app 的值必须是 mysql
+      # Reference: https://github.com/go-sql-driver/mysql?tab=readme-ov-file#dsn-data-source-name
+      # target: dsn://root:my-secret-pw@tcp(127.0.0.1:3306)/my_database?charset=utf8mb4&parseTime=True
+      # target: gorm+polaris://root:xxx@tcp(${polaris_name})/my_database?parseTime=True
+      target: dsn://root:@tcp(127.0.0.1:3306)/xgo?charset=utf8mb4&parseTime=True
+    - name: trpc.mysql.xgo.read
+      target: dsn://root:@tcp(127.0.0.1:3306)/xgo?charset=utf8mb4&parseTime=True
+      timeout: 1000
+    - name: trpc.mysql.xgo.write
+      target: dsn://root:@tcp(127.0.0.1:3306)/xgo?charset=utf8mb4&parseTime=True
+
 server: # Server configuration.
   app: examples # Application name for the business.
   server: helloworld # Process server name.
@@ -46,7 +57,7 @@ server: # Server configuration.
   # 如果消费者处理时间较长，无法达到优雅退出时关闭 consumer group 的效果，可以适当调大这个值
   max_close_wait_time: 2000
   service: # Services provided by the business, can have multiple.
-    - name: trpc.examples.helloworld.Greeter # Route name for the service.
+    - name: trpc.examples.helloworld.Greeter # Route name for the service. trpc.{app}.{server}.{service}
       ip: 127.0.0.1 # Service listening IP address, can use placeholder ${ip}. Use either ip or nic, ip takes priority.
       # nic: eth0
       port: 8001 # Service listening port, can use placeholder ${port}.
@@ -122,6 +133,32 @@ plugins: # Plugin configuration.
   database:
     kafka:
       rewrite_log: false # 默认是false，配置为true时，sarama 包的日志以 info 级别重定向到 trpc 的 log 文件中
+      # max_request_size: 104857600 # global maximum request body size
+      # max_response_size: 104857600 # global maximum response body size
+    gorm:
+      # Configuration effective for all gorm clients
+      max_idle: 20 # Maximum idle connections (default 10)，该值小于 0，则不保留任何空闲连接。
+      max_open: 100 # Maximum active connections (default 10000，该值小于 0，则打开的连接数没有限制。
+      max_lifetime: 180000 # Maximum connection lifetime in milliseconds (default 3min)，该值小于 0，则连接不会因连接时间而关闭。
+      driver_name: mysql # Driver used for connection, empty by default, import corresponding driver if needed
+      # 所有数据库连接默认的日志配置
+      logger:
+        # 慢查询阈值，单位 ms
+        slow_threshold: 200 # Slow query threshold in milliseconds, 0 means no slow query logging (default 0)，0 表示不打印慢查询指令（默认为 0）
+        # 日志是否着色
+        colorful: false # Whether to print colorful logs (default false)
+        # 是否忽略记录不存在的错误
+        ignore_record_not_found_error: false # Whether to ignore record not found errors (default false)，是否忽略查询记录为空的错误
+        # 1: Silent, 2: Error, 3: Warn, 4: Info
+        log_level: 4 # Log level: 1:Silent, 2:Error, 3:Warn, 4:Info (default no logging)
+        max_sql_size: 100 # Maximum SQL statement length for truncation, 0 means no limit (default 0)，截断 sql 指令最大长度，0 表示不限制
+      service:
+        # Configuration effective for trpc.mysql.server.service client
+        - name: trpc.mysql.server.service
+          max_idle: 10 # Maximum idle connections (default 10)
+          max_open: 50 # Maximum active connections (default 10000)
+          max_lifetime: 180000 # Maximum connection lifetime in milliseconds (default 3min)
+          driver_name: mysql # Driver used for connection, empty by default, import corresponding driver if needed
   log: # Log configuration.
     default: # Default log configuration, supports multiple outputs.
       - writer: console # Console standard output (default).

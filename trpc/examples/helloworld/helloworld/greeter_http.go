@@ -52,6 +52,8 @@ func (s *greeterHttpImpl) SayHello(ctx context.Context, req *pb.HelloRequest) (*
 		Msg: "NewGreeterClientProxy: " + reply.Msg,
 	}
 
+	handleGormMysql(ctx, req)
+
 	// 为响应报文设置 Cookie
 	cookie := &http.Cookie{Name: "admin", Value: "admin", HttpOnly: false}
 	http.SetCookie(head.Response, cookie)
