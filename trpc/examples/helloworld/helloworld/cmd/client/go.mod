@@ -8,6 +8,7 @@ require (
 	github.com/fengzhongzhu1621/xgo/trpc/trpcprotocol/helloworld v0.0.0-00010101000000-000000000000
 	trpc.group/trpc-go/trpc-filter/debuglog v1.0.0
 	trpc.group/trpc-go/trpc-go v1.0.3
+	trpc.group/trpc/trpc-protocol/pb/go/trpc v1.0.1
 )
 
 require (
@@ -43,5 +44,4 @@ require (
 	google.golang.org/protobuf v1.36.6 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	trpc.group/trpc-go/tnet v1.0.1 // indirect
-	trpc.group/trpc/trpc-protocol/pb/go/trpc v1.0.1 // indirect
 )
