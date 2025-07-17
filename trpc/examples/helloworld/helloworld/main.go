@@ -10,12 +10,18 @@ import (
 	trpc "trpc.group/trpc-go/trpc-go"
 
 	// thttp "trpc.group/trpc-go/trpc-go/http"
+	"trpc.group/trpc-go/trpc-go/admin"
 	"trpc.group/trpc-go/trpc-go/log"
 )
 
 func init() {
 	// 开启trace级别的日志 或 使用环境变量设置 export TRPC_LOG_TRACE=1
 	// log.EnableTrace()
+}
+
+func init() {
+	// 注册自定义命令
+	admin.HandleFunc("/cmds/custom", customAdminCmd)
 }
 
 func main() {

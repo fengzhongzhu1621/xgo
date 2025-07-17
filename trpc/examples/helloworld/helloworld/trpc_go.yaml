@@ -117,6 +117,12 @@ server: # Server configuration.
       # 如果未达到 batch.size 的数量阈值，但时间达到 1 秒间隔，也会强制刷新处理当前批次。即若 1 秒内未满 5 条，则处理已累积的消息
       address: 127.0.0.1:9092?topics=quickstart-events&group=quickstart-batch-group&batch=5&batchFlush=1000
       protocol: kafka
+  admin:
+    ip: 127.0.0.1 # admin 的 ip，配置网卡 nic 也可以
+    port: 11014 # admin 的 port，必须同时配置这里的 ip port 才会启动 admin
+    read_timeout: 3000 # ms. 请求读取超时时间，防止慢客户端
+    # 默认配置下，获取 profile/trace 的时间最长为 60s，可以通过配置 admin 的 write_timeout 来调大时间。
+    write_timeout: 60000 # ms. 处理的超时时间，同时控制了获取 pprof/{profile,trace} 的最长时间，默认为 60s
 
 plugins: # Plugin configuration.
   selector:
