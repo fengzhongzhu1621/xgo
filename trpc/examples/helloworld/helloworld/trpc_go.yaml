@@ -14,6 +14,9 @@ client: # Backend configuration for client calls.
       network: tcp # Network type for the backend: tcp or udp (configuration takes priority).
       protocol: trpc # Application layer protocol: trpc or http.
       target: ip://127.0.0.1:8001 # Service address for requests.
+      method: # method 级别配置
+        SayHello:
+          timeout: 300
     - name: trpc.kafka.producer.service
       # 注意：使用单词topic
       target: kafka://127.0.0.1:9092?topic=quickstart-events # 生产者的 partitioner 参数默认为 random
@@ -167,7 +170,19 @@ plugins: # Plugin configuration.
         level: info # Log level for local file rolling logs.
         writer_config:
           filename: ./trpc.log # Path to store local file rolling logs.
-          max_size: 10 # Maximum size of local file rolling logs in MB.
-          max_backups: 10 # Maximum number of log files.
-          max_age: 7 # Maximum number of days to keep logs.
-          compress: false # Whether to compress log files.
+          roll_type: "size" # size / time (default size)
+          write_mode: 2 # 日志写入模式，1-同步，2-异步，3-极速 (异步丢弃), 不配置默认异步模式
+          max_size: 100 # Maximum size of local file rolling logs in MB. 日志文件最大大小（单位 MB），为 0 表示不按大小滚动
+          max_backups: 10 # Maximum number of log files. 日志最大文件数，为 0 表示不删除多余文件
+          max_age: 7 # Maximum number of days to keep logs. 日志最大保留时间（单位 天），为 0 表示不清理旧文件
+          compress: false # Whether to compress log files. 日志文件是否压缩，默认不压缩
+          time_unit: day # 滚动时间间隔，支持：minute/hour/day/month/year
+        formatter: json # 标准输出日志的格式
+        formatter_config:
+          time_fmt: 2006-01-02 15:04:05 # 日志时间格式。"2006-01-02 15:04:05"为常规时间格式，"seconds"为秒级时间戳，"milliseconds"为毫秒时间戳，"nanoseconds"为纳秒时间戳
+          time_key: Time # 日志时间字段名称，不填默认"T"，填 "none" 可禁用此字段
+          level_key: Level # 日志级别字段名称，不填默认"L"，填 "none" 可禁用此字段
+          name_key: Name # 日志名称字段名称，不填默认"N"，填 "none" 可禁用此字段
+          caller_key: Caller # 日志调用方字段名称，不填默认"C"，填 "none" 可禁用此字段
+          message_key: Message # 日志消息体字段名称，不填默认"M"，填 "none" 可禁用此字段
+          stacktrace_key: StackTrace # 日志堆栈字段名称，不填默认"S"，填 "none" 可禁用此字段

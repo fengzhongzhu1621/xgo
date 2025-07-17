@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/IBM/sarama"
-	"github.com/fengzhongzhu1621/xgo/tests"
 	"trpc.group/trpc-go/trpc-database/kafka"
 	"trpc.group/trpc-go/trpc-go/log"
 )
@@ -93,8 +92,8 @@ func (KafkaConsumer) Handle(ctx context.Context, msg *sarama.ConsumerMessage) er
 	if rawContext, ok := kafka.GetRawSaramaContext(ctx); ok {
 		log.Infof("InitialOffset:%d", rawContext.Claim.InitialOffset())
 	}
-	// log.Infof("get kafka message: %+v", msg)
-	log.Infof("get kafka message: %s", tests.ToString(msg))
+	log.Infof("get kafka message: %+v", msg)
+	// log.Infof("get kafka message: %s", tests.ToString(msg))
 
 	// {
 	// 	"Headers": [],

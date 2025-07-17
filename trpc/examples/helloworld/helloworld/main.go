@@ -13,7 +13,20 @@ import (
 	"trpc.group/trpc-go/trpc-go/log"
 )
 
+func init() {
+	// 开启trace级别的日志 或 使用环境变量设置 export TRPC_LOG_TRACE=1
+	// log.EnableTrace()
+}
+
 func main() {
+	// 注册自定义日志插件
+	// 注意：plugin.Register 要在 trpc.NewServer 之前执行
+	// plugin.Register("customlog", log.DefaultLogFactory)
+	// 设置 ctx 的 Logger 为 custom
+	// trpc.Message(ctx).WithLogger(log.Get("customlog"))
+	// 使用 Context 类型的日志接口
+	// log.InfoContext(ctx, "custom log msg")
+
 	// 创建一个服务对象，底层会自动读取服务配置及初始化插件，
 	// 必须放在 main 函数首行，
 	// 业务初始化逻辑必须放在 NewServer 后面

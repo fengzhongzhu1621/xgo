@@ -10,7 +10,6 @@ require (
 	github.com/IBM/sarama v1.45.2
 	github.com/fengzhongzhu1621/xgo v0.0.0-00010101000000-000000000000
 	github.com/fengzhongzhu1621/xgo/trpc/trpcprotocol/helloworld v0.0.0-00010101000000-000000000000
-	github.com/silenceper/log v0.0.0-20171204144354-e5ac7fa8a76a
 	github.com/stretchr/testify v1.10.0
 	go.uber.org/mock v0.5.2
 	trpc.group/trpc-go/trpc-database/gorm v1.0.0
