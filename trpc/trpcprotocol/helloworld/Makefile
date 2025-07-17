@@ -1,3 +1,5 @@
+.DEFAULT_GOAL := rpconly
+
 rpconly:
 	trpc create \
 		-p helloworld.proto \
@@ -6,4 +8,7 @@ rpconly:
 		--mock=true \
 		--validate=true \
 
-.PHONY: rpconly
+apidocs:
+	trpc apidocs -p helloworld.proto
+
+.PHONY: rpconly apidocs

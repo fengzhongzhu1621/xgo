@@ -27,9 +27,20 @@ curl "http://127.0.0.1:11014/version" | jq
 curl "http://127.0.0.1:11014/cmds/loglevel?logger=default&output=0" | jq
 // 框架配置
 curl "http://127.0.0.1:11014/cmds/config" | jq
+
 // 自定义命令
 curl "http://127.0.0.1:11014/cmds/custom" | jq
 ```
+
+```
+// 健康检查
+curl "http://127.0.0.1:11014/is_healthy/"
+```
+| HTTP 状态码 | 服务状态 |
+|-------------|----------|
+| 200         | 健康     |
+| 404         | 未知     |
+| 503         | 不健康   |
 
 
 ## pprof
@@ -46,5 +57,3 @@ go tool pprof profile.out
 curl "http://127.0.0.1:11014/debug/pprof/trace?seconds=20" > trace.out
 go tool trace trace.out
 ```
-
-# 指定 ProfilerTagger
