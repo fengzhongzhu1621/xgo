@@ -43,6 +43,11 @@ client: # Backend configuration for client calls.
       timeout: 1000
     - name: trpc.mysql.xgo.write
       target: dsn://root:@tcp(127.0.0.1:3306)/xgo?charset=utf8mb4&parseTime=True
+    - name: trpc.redis.test.redis # The service name of the backend service.
+      target: redis://:@127.0.0.1:6379 # Request service address format： redis://<user>:<password>@<host>:<port>/<db_number>, for details, please refer to：https://github.com/go-redis/redis/blob/v8.8.2/options.go#L189
+      # target: redis://127.0.0.1:6379/0?is_proxy=false&pool_size=88&min_idle_conns=10
+      # target: polaris://trpc.gamecenter.trpcproxy.TRPCProxy?is_proxy=true
+      timeout: 10000
 
 server: # Server configuration.
   app: examples # Application name for the business.
@@ -179,7 +184,7 @@ plugins: # Plugin configuration.
           roll_type: "size" # size / time (default size)
           write_mode: 2 # 日志写入模式，1-同步，2-异步，3-极速 (异步丢弃), 不配置默认异步模式
           max_size: 100 # Maximum size of local file rolling logs in MB. 日志文件最大大小（单位 MB），为 0 表示不按大小滚动
-          max_backups: 10 # Maximum number of log files. 日志最大文件数，为 0 表示不删除多余文件
+          max_backups: 2 # Maximum number of log files. 日志最大文件数，为 0 表示不删除多余文件
           max_age: 7 # Maximum number of days to keep logs. 日志最大保留时间（单位 天），为 0 表示不清理旧文件
           compress: false # Whether to compress log files. 日志文件是否压缩，默认不压缩
           time_unit: day # 滚动时间间隔，支持：minute/hour/day/month/year

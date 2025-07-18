@@ -12,7 +12,7 @@ func ServerFilter(opts ...Option) filter.ServerFilter {
 	for _, opt := range opts {
 		opt(o)
 	}
-	return func(ctx context.Context, req interface{}, handler filter.ServerHandleFunc) (rsp interface{}, err error) {
+	return func(ctx context.Context, req any, handler filter.ServerHandleFunc) (rsp any, err error) {
 		defer func() {
 			if r := recover(); r != nil {
 				err = o.rh(ctx, r)
