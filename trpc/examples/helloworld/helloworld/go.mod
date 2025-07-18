@@ -20,6 +20,7 @@ require (
 	trpc.group/trpc-go/trpc-filter/recovery v1.0.0
 	trpc.group/trpc-go/trpc-filter/validation v1.0.1
 	trpc.group/trpc-go/trpc-go v1.0.3
+	trpc.group/trpc/trpc-protocol/pb/go/trpc v1.0.1
 )
 
 require (
@@ -136,5 +137,4 @@ require (
 	gorm.io/gorm v1.25.12 // indirect
 	trpc.group/trpc-go/tnet v1.0.1 // indirect
 	trpc.group/trpc-go/trpc-selector-dsn v1.0.0 // indirect
-	trpc.group/trpc/trpc-protocol/pb/go/trpc v1.0.1 // indirect
 )
