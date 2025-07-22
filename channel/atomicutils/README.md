@@ -1,3 +1,7 @@
+# atomic.Value
+v.Store(c) - 写操作，将原始的变量c存放到一个atomic.Value类型的v里。
+c := v.Load() - 读操作，从线程安全的v中读取上一步存放的内容。
+
 # 增减操作
 
 ```go
