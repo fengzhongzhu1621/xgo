@@ -1,6 +1,0 @@
-CREATE TABLE example.posts (
-    id VARCHAR(36) NOT NULL PRIMARY KEY,
-    title VARCHAR(255) NOT NULL DEFAULT '',
-    content TEXT NOT NULL,
-    author VARCHAR(255) NOT NULL DEFAULT ''
-);
