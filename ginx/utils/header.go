@@ -4,7 +4,6 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/fengzhongzhu1621/xgo/db/db"
 	"github.com/fengzhongzhu1621/xgo/network/constant"
 	"github.com/fengzhongzhu1621/xgo/network/nethttp"
 	"github.com/rs/xid"
@@ -24,10 +23,6 @@ func NewHeader(header http.Header) http.Header {
 	nethttp.SetLanguage(newHeader, nethttp.GetLanguage(header))
 
 	nethttp.SetAppCode(newHeader, nethttp.GetAppCode(header))
-
-	db.SetTXId(newHeader, db.GetTXId(header))
-
-	db.SetTXTimeout(newHeader, db.GetTXTimeout(header))
 
 	if nethttp.IsReqFromWeb(header) {
 		nethttp.SetReqFromWeb(newHeader)
