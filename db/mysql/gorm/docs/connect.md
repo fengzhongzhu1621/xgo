@@ -1,4 +1,4 @@
-# 连接配置
+# DSN
 
 https://github.com/go-sql-driver/mysql#dsn-data-source-name
 
@@ -23,6 +23,7 @@ db, err := gorm.Open(mysql.New(mysql.Config{
 * DontSupportRenameColumn
 * SkipInitializeWithVersion
 
+# 连接池
 GORM 使用 database/sql 来维护连接池
 
 ```go
@@ -34,4 +35,20 @@ sqlDB.SetMaxIgleConns(10)
 sqlDB.SetMaxOpenConns(100)
 // SetConnMaxLifetime 设置了可以重新使用连接的最大时间。
 sqlDB.SetConnMaxLifetime(time.Hour)
+```
+
+# QueryFields
+```go
+db, err := gorm.Open(sqlite.Open("gorm.db"), &gorm.Config{
+  QueryFields: true,
+})
+
+// 当 QueryFields 被设置为 true 时，此行为默认进行
+db.Find(&user)
+// SQL: SELECT `users`.`name`, `users`.`age`, ... FROM `users`
+
+// 开启 QueryFields 并使用会话模式（Session mode）
+db.Session(&gorm.Session{QueryFields: true}).Find(&user)
+// SQL: SELECT `users`.`name`, `users`.`age`, ... FROM `users`
+
 ```

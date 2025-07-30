@@ -164,6 +164,15 @@ IsDel     soft_delete.DeletedAt `gorm:"softDelete:,DeletedAtField:DeletedAt"` //
 IsDel     soft_delete.DeletedAt `gorm:"softDelete:nano,DeletedAtField:DeletedAt"` // use `unix nano second`
 ```
 
+# 外键
+```go
+Company   Company `gorm:"foreignKey:CompanyRefer"`
+Company   Company `gorm:"references:Code"` // 使用 Code 作为引用
+Company   Company `gorm:"references:CompanyID"` // 使用 Company.CompanyID 作为引用
+Company   Company `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+```
+
+
 | 标签名                  | 说明                                                                                                                                                                                                                                                                                                                                 |
 |-------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `column`                | 指定 db 列名                                                                                                                                                                                                                                                                                                                        |

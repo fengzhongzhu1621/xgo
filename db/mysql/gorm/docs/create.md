@@ -311,37 +311,8 @@ db.Clauses(clause.OnConflict{
 // INSERT INTO `users` *** ON DUPLICATE KEY UPDATE `name`=VALUES(name),`age`=VALUES(age), ...; MySQL
 ```
 
-# 创建钩子
-
-## SkipHooks
-想跳过Hooks方法，可以使用SkipHooks会话模式
+# IGNORE
 ```go
-DB.Session(&gorm.Session{SkipHooks: true}).Create(&user)
-DB.Session(&gorm.Session{SkipHooks: true}).Create(&users)
-DB.Session(&gorm.Session{SkipHooks: true}).CreateInBatches(users, 100)
+db.Clauses(clause.Insert{Modifier: "IGNORE"}).Create(&user)
+// INSERT IGNORE INTO users (name,age...) VALUES ("jinzhu",18...);
 ```
-
-## BeforeSave
-
-## BeforeCreate
-```go
-func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
-  u.UUID = uuid.New()
-
-    if u.Role == "admin" {
-        return errors.New("invalid role")
-    }
-    return
-}
-
-// 通过钩子方法来设置默认字段
-func (p *Pet) BeforeCreate(tx *gorm.DB) (err error) {
-    if p.Name == "" {
-        p.Name = "cat"
-    }
-}
-```
-
-## AfterSave
-
-## AfterCreate
