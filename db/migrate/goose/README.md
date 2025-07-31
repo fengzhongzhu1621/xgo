@@ -28,6 +28,7 @@ goose -dir ./migrations create add_users_table sql
 goose -dir ./migrations create rename_root go
 goose -dir ./migrations create add_user_not_tx go
 ```
+
 # 4. 执行迁移
 ## 4.1 运行迁移
 up 命令会执行 migrations 目录中的所有待执行的迁移。
@@ -49,7 +50,7 @@ goose -dir ./migrations mysql "root:@tcp(127.0.0.1:3306)/xgo?parseTime=True&loc=
 ```
 
 ## 4.3 查看迁移历史
-```shell
+```sh
 goose -dir ./migrations mysql "root:@tcp(127.0.0.1:3306)/xgo?parseTime=True&loc=Local" down status
 ```
 
@@ -57,3 +58,20 @@ goose -dir ./migrations mysql "root:@tcp(127.0.0.1:3306)/xgo?parseTime=True&loc=
 # 版本控制
 goose 会在数据库中创建一个版本表（通常名为 goose_db_version），它存储了数据库的当前版本。
 当你运行迁移时，goose 会检查此表以确定哪些迁移已经执行过，并按顺序执行未执行的迁移。
+
+# 环境变量
+```sh
+export GOOSE_DRIVER=DRIVER
+export GOOSE_DBSTRING=DBSTRING
+export GOOSE_MIGRATION_DIR=MIGRATION_DIR
+export GOOSE_TABLE=TABLENAME
+```
+
+```sh
+//Via .env files with corresponding variables. .env file example:
+
+GOOSE_DRIVER=postgres
+GOOSE_DBSTRING=postgres://admin:admin@localhost:5432/admin_db
+GOOSE_MIGRATION_DIR=./migrations
+GOOSE_TABLE=custom.goose_migrations
+```
