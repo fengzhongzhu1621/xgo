@@ -1,5 +1,5 @@
 build:
-	go build -o goose-custom *.go
+	go build -o goose-custom
 	chmod +x goose-custom
 
 run: build
