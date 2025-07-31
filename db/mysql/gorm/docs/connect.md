@@ -23,10 +23,23 @@ db, err := gorm.Open(mysql.New(mysql.Config{
 * DontSupportRenameColumn
 * SkipInitializeWithVersion
 
-# 连接池
-GORM 使用 database/sql 来维护连接池
+# *sql.DB
+```go
+// 获取通用数据库对象 sql.DB，然后使用其提供的功能
+sqlDB, err := db.DB()
+
+// Ping
+sqlDB.Ping()
+
+// Close
+sqlDB.Close()
+
+// 返回数据库统计信息
+sqlDB.Stats()
+```
 
 ```go
+// 连接池 GORM 使用 database/sql 来维护连接池
 sqlDB, err := db.DB()
 
 // SetMaxIdleConns 设置空闲连接池中连接的最大数量。
@@ -51,4 +64,18 @@ db.Find(&user)
 db.Session(&gorm.Session{QueryFields: true}).Find(&user)
 // SQL: SELECT `users`.`name`, `users`.`age`, ... FROM `users`
 
+```
+
+# TranslateError 方言转换错误
+当启用TranslateError时，GORM可以返回与所使用的数据库方言相关的特定错误，GORM将数据库特有的错误转换为其自己的通用错误。
+
+```go
+db, err := gorm.Open(postgres.Open(postgresDSN), &gorm.Config{TranslateError: true})
+```
+
+# Logger
+```go
+db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+	Logger: logger.Default.LogMode(logger.Info), // 输出详细日志
+})
 ```

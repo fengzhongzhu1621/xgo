@@ -43,6 +43,52 @@ type Model struct {
 * 每当记录更新时，自动更新为当前时间。
 * 用于软删除（将记录标记为已删除，而实际上并未从数据库中删除）。
 
+# 主键
+```go
+type User struct {
+  ID   string // 默认情况下，名为 `ID` 的字段会作为表的主键
+  Name string
+}
+```
+
+```go
+// 可以通过标签 primaryKey 将其它字段设为主键
+// 将 `UUID` 设为主键
+type Animal struct {
+  ID     int64
+  UUID   string `gorm:"primaryKey"`
+  Name   string
+  Age    int64
+}
+```
+
+默认情况下，整型 PrioritizedPrimaryField 启用了 AutoIncrement，要禁用它，您需要为整型字段关闭 autoIncrement
+```go
+type Product struct {
+  CategoryID uint64 `gorm:"primaryKey;autoIncrement:false"`
+  TypeID     uint64 `gorm:"primaryKey;autoIncrement:false"`
+}
+```
+
+# 命名策略
+```go
+type User struct {
+  ID        uint      // 列名是 `id`
+  Name      string    // 列名是 `name`
+  Birthday  time.Time // 列名是 `birthday`
+  CreatedAt time.Time // 列名是 `created_at`
+}
+```
+
+```go
+// 使用 column 标签或 命名策略 来覆盖列名
+type Animal struct {
+  AnimalID int64     `gorm:"column:beast_id"`         // 将列名设为 `beast_id`
+  Birthday time.Time `gorm:"column:day_of_the_beast"` // 将列名设为 `day_of_the_beast`
+  Age      int64     `gorm:"column:age_of_the_beast"` // 将列名设为 `age_of_the_beast`
+}
+```
+
 # 权限控制
 
 使用 GORM Migrator 创建表时，不会创建被忽略的字段
@@ -76,6 +122,82 @@ type User struct {
   Updated   int64 `gorm:"autoUpdateTime:milli"` // 使用时间戳毫秒数填充更新时间
   Created   int64 `gorm:"autoCreateTime"`      // 使用时间戳秒数填充创建时间
 }
+```
+
+# 复数表名
+GORM 使用结构体名的 蛇形命名 作为表名。对于结构体 User，根据约定，其表名为 users
+
+注意： TableName 不支持动态变化，它会被缓存下来以便后续使用。想要使用动态表名，你可以使用 Scopes
+
+```go
+type Tabler interface {
+    TableName() string
+}
+
+// TableName 会将 User 的表名重写为 `profiles`
+func (User) TableName() string {
+  return "profiles"
+}
+```
+
+# CreatedAt
+对于有 CreatedAt 字段的模型，创建记录时，如果该字段值为零值，则将该字段的值设为当前时间
+
+```go
+db.Create(&user) // 将 `CreatedAt` 设为当前时间
+
+user2 := User{Name: "jinzhu", CreatedAt: time.Now()}
+db.Create(&user2) // user2 的 `CreatedAt` 不会被修改
+```
+
+```go
+// 想要修改该值，您可以使用 `Update`
+db.Model(&user).Update("CreatedAt", time.Now())
+你可以通过将 autoCreateTime 标签置为 false 来禁用时间戳追踪，例如：
+
+type User struct {
+  CreatedAt time.Time `gorm:"autoCreateTime:false"`
+}
+```
+
+# UpdatedAt
+对于有 UpdatedAt 字段的模型，更新记录时，将该字段的值设为当前时间。创建记录时，如果该字段值为零值，则将该字段的值设为当前时间
+
+```go
+db.Save(&user) // 将 `UpdatedAt` 设为当前时间
+
+db.Model(&user).Update("name", "jinzhu") // 会将 `UpdatedAt` 设为当前时间
+
+db.Model(&user).UpdateColumn("name", "jinzhu") // `UpdatedAt` 不会被修改
+
+user2 := User{Name: "jinzhu", UpdatedAt: time.Now()}
+db.Create(&user2) // 创建记录时，user2 的 `UpdatedAt` 不会被修改
+
+user3 := User{Name: "jinzhu", UpdatedAt: time.Now()}
+db.Save(&user3) // 更新时，user3 的 `UpdatedAt` 会修改为当前时间
+```
+
+```go
+可以通过将 autoUpdateTime 标签置为 false 来禁用时间戳追踪，例如：
+
+type User struct {
+  UpdatedAt time.Time `gorm:"autoUpdateTime:false"`
+}
+```
+
+# size
+```go
+Email        string  `gorm:"default:'xx@x.com';size:32"`
+BizType     string `gorm:"size:32"`
+Env         string `gorm:"size:32;index"`
+Text string `gorm:"type:text"`
+CheckLine string `gorm:"type:longtext"` // 映射为 LONGTEXT
+Content string `gorm:"type:text;not null;default:'待编辑'"`
+```
+
+# comment
+```go
+Age          uint8   `gorm:"default:0;comment:'user age'"`
 ```
 
 # 嵌入结构体
@@ -123,6 +245,11 @@ type Blog struct {
 
 # 标签
 
+## 字段名
+```go
+AnimalID int64     `gorm:"column:beast_id"`         // 将列名设为 `beast_id`
+```
+
 ## primarykey
 ```go
 ID        uint `gorm:"primarykey"`
@@ -131,6 +258,96 @@ ID        uint `gorm:"primarykey"`
 ## index
 ```go
 DeletedAt DeletedAt `gorm:"index"`
+Name3     string    `gorm:"index:,sort:desc,collate:utf8,type:btree,length:10"`
+```
+
+```go
+type User struct {
+    Name  string `gorm:"index"`
+    Name2 string `gorm:"index:idx_name,unique"`
+    Name3 string `gorm:"index:,sort:desc,collate:utf8,type:btree,length:10,where:name3 != 'jinzhu'"`
+    Name4 string `gorm:"uniqueIndex"`
+    Age   int64  `gorm:"index:,class:FULLTEXT,comment:hello \\, world,where:age > 10"`
+    Age2  int64  `gorm:"index:,expression:ABS(age)"`
+}
+
+// MySQL 选项
+type User struct {
+    Name string `gorm:"index:,class:FULLTEXT,option:WITH PARSER ngram INVISIBLE"`
+}
+
+// PostgreSQL 选项
+type User struct {
+    Name string `gorm:"index:,option:CONCURRENTLY"`
+}
+```
+
+uniqueIndex 标签的作用与 index 类似，它等效于 index:,unique
+```go
+Refer    uint      `gorm:"index:,unique"`
+Name     string    `gorm:"unique;not null;size:32"`
+Name2     string   `gorm:"index:idx_name,unique"`
+
+type User struct {
+    Name1 string `gorm:"uniqueIndex"`
+    Name2 string `gorm:"uniqueIndex:idx_name,sort:desc"`
+}
+```
+
+两个字段使用同一个索引名将创建复合索引
+```go
+// create composite index `idx_member` with columns `name`, `number`
+type User struct {
+    Name   string `gorm:"index:idx_member"`
+    Number string `gorm:"index:idx_member"`
+}
+```
+
+使用 priority 指定顺序，默认优先级值是 10，如果优先级值相同，则顺序取决于模型结构体字段的顺序
+```go
+type User struct {
+    Name   string `gorm:"index:idx_member"`
+    Number string `gorm:"index:idx_member"`
+}
+// column order: name, number
+
+type User struct {
+    Name   string `gorm:"index:idx_member,priority:2"`
+    Number string `gorm:"index:idx_member,priority:1"`
+}
+// column order: number, name
+
+type User struct {
+    Name   string `gorm:"index:idx_member,priority:12"`
+    Number string `gorm:"index:idx_member"`
+}
+// column order: number, name
+```
+
+一个字段接受多个 index、uniqueIndex 标签，这会在一个字段上创建多个索引
+```go
+type UserIndex struct {
+    OID          int64  `gorm:"index:idx_id;index:idx_oid,unique"`
+    MemberNumber string `gorm:"index:idx_id"`
+}
+```
+
+共享复合索引，通过命名策略生成索引名称
+```go
+type Foo struct {
+  IndexA int `gorm:"index:,unique,composite:myname"`
+  IndexB int `gorm:"index:,unique,composite:myname"`
+}
+
+type Bar0 struct {
+  Foo
+}
+
+type Bar1 struct {
+  Foo
+}
+// 复合索引的名称分别是 idx_bar0_myname 和 idx_bar1_myname。
+// 复合 只能在指定索引名称时使用。
 ```
 
 ## default
@@ -154,6 +371,13 @@ Author  Author `gorm:"embedded"`
 Author  Author `gorm:"embedded;embeddedPrefix:author_"`
 ```
 
+## 序列化
+```go
+Name        []byte                 `gorm:"serializer:json"`
+JobInfo     Job                    `gorm:"type:bytes;serializer:gob"`
+CreatedTime int64                  `gorm:"serializer:unixtime;type:time"` // 将 int 作为日期时间存储到数据库中
+```
+
 ## softDelete
 ```go
 DeletedAt soft_delete.DeletedAt `gorm:"softDelete:milli"`
@@ -170,6 +394,13 @@ Company   Company `gorm:"foreignKey:CompanyRefer"`
 Company   Company `gorm:"references:Code"` // 使用 Code 作为引用
 Company   Company `gorm:"references:CompanyID"` // 使用 Company.CompanyID 作为引用
 Company   Company `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+CreditCard CreditCard `gorm:"foreignKey:UserName;references:Name"`
+Languages []Language `gorm:"many2many:user_languages;"`
+LocaleTags []Tag `gorm:"many2many:locale_blog_tags;ForeignKey:id,locale;References:id"`
+SharedTags []Tag `gorm:"many2many:shared_blog_tags;ForeignKey:id;References:id"`
+Toys []Toy `gorm:"polymorphic:Owner;"`
+Toys []Toy `gorm:"polymorphic:Owner;"`
+Toys []Toy `gorm:"polymorphicType:Kind;polymorphicId:OwnerID;polymorphicValue:master"`
 ```
 
 

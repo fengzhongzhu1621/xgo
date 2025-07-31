@@ -1,3 +1,39 @@
+# 错误
+## ErrRecordNotFound
+当使用First、Last、Take等方法未找到记录时，GORM会返回ErrRecordNotFound。
+
+```go
+if err := db.Where("name = ?", "jinzhu").First(&user).Error; err != nil {
+  // 处理错误...
+}
+
+if result := db.Where("name = ?", "jinzhu").First(&user); result.Error != nil {
+  // 处理错误...
+}
+
+err := db.First(&user, 100).Error
+if errors.Is(err, gorm.ErrRecordNotFound) {
+  // 处理未找到记录的错误...
+}
+```
+
+# 临时指定表名
+
+使用 Table 方法临时指定表名
+
+```go
+// 根据 User 的字段创建 `deleted_users` 表
+db.Table("deleted_users").AutoMigrate(&User{})
+
+// 从另一张表查询数据
+var deletedUsers []User
+db.Table("deleted_users").Find(&deletedUsers)
+// SELECT * FROM deleted_users;
+
+db.Table("deleted_users").Where("name = ?", "jinzhu").Delete(&User{})
+// DELETE FROM deleted_users WHERE name = 'jinzhu';
+```
+
 # 获取一条记录
 
 First and Last 方法会按主键排序找到第一条记录和最后一条记录 (分别)。 只有在目标 struct 是指针或者通过 db.Model() 指定 model 时，该方法才有效。 此外，如果相关 model 没有定义主键，那么将按 model 的第一个字段进行排序。
@@ -290,6 +326,21 @@ type APIUser struct {
 // 在查询时，GORM 会自动选择 `id `, `name` 字段
 db.Model(&User{}).Limit(10).Find(&APIUser{})
 // SQL: SELECT `id`, `name` FROM `users` LIMIT 10
+```
+
+# 聚合
+```go
+var count int64
+// 统计年龄大于20的用户数量
+db.Model(&User{}).Where("age > ?", 20).Count(&count)
+
+var sum float64
+// 计算所有订单的总价
+db.Model(&Order{}).Select("sum(price)").Scan(&sum)
+
+var avg float64
+// 计算所有用户的平均年龄
+db.Model(&User{}).Select("avg(age)").Scan(&avg)
 ```
 
 # Scan

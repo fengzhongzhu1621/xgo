@@ -37,3 +37,99 @@ db.Scopes(AmountGreaterThan1000, PaidWithCod).Find(&orders)
 //使用 scopes 来寻找所有的 具有特定状态且金额大于1000的订单
 db.Scopes(AmountGreaterThan1000, OrderStatus([]string{"paid", "shipped"})).Find(&orders)
 ```
+
+# 分页
+```go
+func Paginate(r *http.Request) func(db *gorm.DB) *gorm.DB {
+  return func (db *gorm.DB) *gorm.DB {
+    q := r.URL.Query()
+    page, _ := strconv.Atoi(q.Get("page"))
+    if page <= 0 {
+      page = 1
+    }
+
+    pageSize, _ := strconv.Atoi(q.Get("page_size"))
+    switch {
+    case pageSize > 100:
+      pageSize = 100
+    case pageSize <= 0:
+      pageSize = 10
+    }
+
+    offset := (page - 1) * pageSize
+    return db.Offset(offset).Limit(pageSize)
+  }
+}
+
+db.Scopes(Paginate(r)).Find(&users)
+db.Scopes(Paginate(r)).Find(&articles)
+```
+
+# 动态表
+
+```go
+func UserTable(user User) func (tx *gorm.DB) *gorm.DB {
+  return func (tx *gorm.DB) *gorm.DB {
+    if user.Admin {
+      return tx.Table("admin_users")
+    }
+
+    return tx.Table("users")
+  }
+}
+
+db.Scopes(UserTable(user)).Create(&user)
+```
+
+```go
+func TableOfYear(user *User, year int) func(db *gorm.DB) *gorm.DB {
+  return func(db *gorm.DB) *gorm.DB {
+        tableName := user.TableName() + strconv.Itoa(year)
+        return db.Table(tableName)
+  }
+}
+
+DB.Scopes(TableOfYear(user, 2019)).Find(&users)
+// SELECT * FROM users_2019;
+
+DB.Scopes(TableOfYear(user, 2020)).Find(&users)
+// SELECT * FROM users_2020;
+
+// Table form different database
+func TableOfOrg(user *User, dbName string) func(db *gorm.DB) *gorm.DB {
+  return func(db *gorm.DB) *gorm.DB {
+        tableName := dbName + "." + user.TableName()
+        return db.Table(tableName)
+  }
+}
+
+DB.Scopes(TableOfOrg(user, "org1")).Find(&users)
+// SELECT * FROM org1.users;
+
+DB.Scopes(TableOfOrg(user, "org2")).Find(&users)
+// SELECT * FROM org2.users;
+```
+
+# 更新
+```go
+func CurOrganization(r *http.Request) func(db *gorm.DB) *gorm.DB {
+  return func (db *gorm.DB) *gorm.DB {
+    org := r.Query("org")
+
+    if org != "" {
+      var organization Organization
+      if db.Session(&Session{}).First(&organization, "name = ?", org).Error == nil {
+        return db.Where("org_id = ?", organization.ID)
+      }
+    }
+
+    db.AddError("invalid organization")
+    return db
+  }
+}
+
+db.Model(&article).Scopes(CurOrganization(r)).Update("Name", "name 1")
+// UPDATE articles SET name = "name 1" WHERE org_id = 111
+db.Scopes(CurOrganization(r)).Delete(&Article{})
+// DELETE FROM articles WHERE org_id = 111
+```

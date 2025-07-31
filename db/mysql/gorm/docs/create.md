@@ -1,18 +1,55 @@
-# Generics API
+# 错误
+
+## mysql.MySQLError
 ```go
-user := User{Name: "Jinzhu", Age: 18, Birthday: time.Now()}
+import (
+    "github.com/go-sql-driver/mysql"
+    "gorm.io/gorm"
+)
 
-// Create a single record
-ctx := context.Background()
-err := gorm.G[User](db).Create(ctx, &user) // pass pointer of data to Create
-
-// Create with result
-result := gorm.WithResult()
-err := gorm.G[User](db, result).Create(ctx, &user)
-user.ID             // returns inserted data's primary key
-result.Error        // returns error
-result.RowsAffected // returns inserted records count
+result := db.Create(&newRecord)
+if result.Error != nil {
+    if mysqlErr, ok := result.Error.(*mysql.MySQLError); ok {
+        switch mysqlErr.Number {
+        case 1062: // MySQL中表示重复条目的代码
+            // 处理重复条目
+        // 为其他特定错误代码添加案例
+        default:
+            // 处理其他错误
+        }
+    } else {
+        // 处理非MySQL错误或未知错误
+    }
+}
 ```
+
+## 方言转换错误
+当启用TranslateError时，GORM可以返回与所使用的数据库方言相关的特定错误，GORM将数据库特有的错误转换为其自己的通用错误。
+
+```go
+db, err := gorm.Open(postgres.Open(postgresDSN), &gorm.Config{TranslateError: true})
+```
+
+### ErrDuplicatedKey
+当插入操作违反唯一约束时，会发生此错误
+
+```go
+result := db.Create(&newRecord)
+if errors.Is(result.Error, gorm.ErrDuplicatedKey) {
+    // 处理重复键错误...
+}
+```
+
+### ErrForeignKeyViolated
+当违反外键约束时，会遇到此错误
+
+```go
+result := db.Create(&newRecord)
+if errors.Is(result.Error, gorm.ErrForeignKeyViolated) {
+    // 处理外键违规错误...
+}
+```
+
 
 # 通过数据的指针来创建
 ```go
@@ -78,6 +115,32 @@ db.Select("Name", "Age", "CreatedAt").Create(&user)
 
 db.Omit("Name", "Age", "CreatedAt").Create(&user)
 // INSERT INTO `users` (`birthday`,`updated_at`) VALUES ("2020-01-01 00:00:00.000", "2020-07-04 11:05:21.775")
+
+// 创建用户时跳过字段“BillingAddress”
+db.Omit("BillingAddress").Create(&user)
+
+// 创建用户时跳过全部关联关系
+db.Omit(clause.Associations).Create(&user)
+
+// 跳过更新"Languages"关联
+db.Omit("Languages.*").Create(&user)
+
+// 跳过创建 'Languages' 关联及其引用
+db.Omit("Languages").Create(&user)
+
+user := User{
+  Name:            "jinzhu",
+  BillingAddress:  Address{Address1: "Billing Address - Address 1", Address2: "addr2"},
+  ShippingAddress: Address{Address1: "Shipping Address - Address 1", Address2: "addr2"},
+}
+
+// 创建用户和他的账单地址,邮寄地址,只包括账单地址指定的字段
+db.Select("BillingAddress.Address1", "BillingAddress.Address2").Create(&user)
+// SQL: 只使用地址1和地址2来创建用户和账单地址
+
+// 创建用户和账单地址,邮寄地址,但不包括账单地址的指定字段
+db.Omit("BillingAddress.Address2", "BillingAddress.CreatedAt").Create(&user)
+// SQL: 创建用户和账单地址,省略'地址2'和创建时间字段
 ```
 
 # 根据 Map 创建
@@ -135,38 +198,6 @@ db.Create(&User{
   Location: Location{X: 100, Y: 100},
 })
 // INSERT INTO `users` (`name`,`location`) VALUES ("jinzhu",ST_PointFromText("POINT(100 100)"))
-```
-
-# 关联创建
-创建关联数据时，如果关联值非零，这些关联会被upsert，并且它们的Hooks方法也会被调用。
-
-```go
-type CreditCard struct {
-  gorm.Model
-  Number   string
-  UserID   uint
-}
-
-type User struct {
-  gorm.Model
-  Name       string
-  CreditCard CreditCard
-}
-
-db.Create(&User{
-  Name: "jinzhu",
-  CreditCard: CreditCard{Number: "411111111111"},
-})
-// INSERT INTO `users` ...
-// INSERT INTO `credit_cards` ...
-```
-
-Omit方法来跳过关联更新
-```go
-db.Omit("CreditCard").Create(&user)
-
-// skip all associations
-db.Omit(clause.Associations).Create(&user)
 ```
 
 # 默认值

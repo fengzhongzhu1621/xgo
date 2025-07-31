@@ -1,4 +1,4 @@
-# 多对一
+# 声明
 ```go
 // `User` 属于 `Company`，`CompanyID` 是外键
 type User struct {
