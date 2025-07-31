@@ -51,7 +51,7 @@ goose -dir ./migrations mysql "root:@tcp(127.0.0.1:3306)/xgo?parseTime=True&loc=
 
 ## 4.3 查看迁移历史
 ```sh
-goose -dir ./migrations mysql "root:@tcp(127.0.0.1:3306)/xgo?parseTime=True&loc=Local" down status
+goose -dir ./migrations mysql "root:@tcp(127.0.0.1:3306)/xgo?parseTime=True&loc=Local" status
 ```
 
 

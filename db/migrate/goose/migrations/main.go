@@ -1,4 +1,4 @@
-package goose
+package main
 
 import (
 	"context"
@@ -16,7 +16,9 @@ var (
 )
 
 func main() {
-	flags.Parse(os.Args[1:])
+	if err := flags.Parse(os.Args[1:]); err != nil {
+		log.Fatalf("goose: failed to parse flags: %v", err)
+	}
 	args := flags.Args()
 
 	if len(args) < 3 {
@@ -24,9 +26,9 @@ func main() {
 		return
 	}
 
-	dbString, command := args[1], args[2]
+	dbstring, command := args[1], args[2]
 
-	db, err := goose.OpenDBWithDriver("mysql", dbString)
+	db, err := goose.OpenDBWithDriver("mysql", dbstring)
 	if err != nil {
 		log.Fatalf("goose: failed to open DB: %v", err)
 	}

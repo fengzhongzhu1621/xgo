@@ -1,4 +1,4 @@
-package migrations
+package main
 
 import (
 	"context"
@@ -14,7 +14,7 @@ func init() {
 
 func getUserID(db *sql.DB, username string) (int, error) {
 	var id int
-	err := db.QueryRow("SELECT id FROM users WHERE username = $1", username).Scan(&id)
+	err := db.QueryRow("SELECT id FROM users WHERE username = ?", username).Scan(&id)
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return 0, err
 	}
@@ -28,8 +28,8 @@ func upAddUserNotTx(ctx context.Context, db *sql.DB) error {
 		return err
 	}
 	if id == 0 {
-		query := "INSERT INTO users (username, name, surname) VALUES ($1, $2, $3)"
-		if _, err := db.ExecContext(ctx, query, "jamesbond", "James", "Bond"); err != nil {
+		query := "INSERT INTO users (username) VALUES (?)"
+		if _, err := db.ExecContext(ctx, query, "jamesbond"); err != nil {
 			return err
 		}
 	}
