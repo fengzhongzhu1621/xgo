@@ -7,6 +7,7 @@ db.AutoMigrate(&User{}, &Product{}, &Order{})
 
 // 创建表时添加后缀
 db.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(&User{})
+db.Set("gorm:table_options", "CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci").AutoMigrate(&User{})
 ```
 
 ```go

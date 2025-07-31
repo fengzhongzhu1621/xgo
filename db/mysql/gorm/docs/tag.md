@@ -185,21 +185,6 @@ type User struct {
 }
 ```
 
-# size
-```go
-Email        string  `gorm:"default:'xx@x.com';size:32"`
-BizType     string `gorm:"size:32"`
-Env         string `gorm:"size:32;index"`
-Text string `gorm:"type:text"`
-CheckLine string `gorm:"type:longtext"` // 映射为 LONGTEXT
-Content string `gorm:"type:text;not null;default:'待编辑'"`
-```
-
-# comment
-```go
-Age          uint8   `gorm:"default:0;comment:'user age'"`
-```
-
 # 嵌入结构体
 * 对于匿名字段，GORM 会将其字段包含在父结构体中
 * 对于正常的结构体字段，可以通过标签 embedded 将其嵌入
@@ -350,6 +335,29 @@ type Bar1 struct {
 // 复合 只能在指定索引名称时使用。
 ```
 
+## size
+```go
+Email        string  `gorm:"default:'xx@x.com';size:32"`
+BizType     string `gorm:"size:32"`
+Env         string `gorm:"size:32;index"`
+```
+
+## type
+```go
+Text string `gorm:"type:text"`
+CheckLine string `gorm:"type:longtext"` // 映射为 LONGTEXT
+Content string `gorm:"type:text;not null;default:'待编辑'"`
+Sno       int64          `gorm:"column:sno;type:int;primaryKey" json:"sno"`
+Score     float32        `gorm:"column:score;type:float;not null" json:"score"`
+Cname     string         `gorm:"column:cname;type:varchar(255);not null" json:"cname"`
+CreatedAt time.Time      `gorm:"column:created_at;type:datetime;not null" json:"created_at"`
+```
+
+## comment
+```go
+Age          uint8   `gorm:"default:0;comment:'user age'"`
+```
+
 ## default
 ```go
 Name string `gorm:"default:galeone"`
@@ -404,6 +412,19 @@ Toys []Toy `gorm:"polymorphicType:Kind;polymorphicId:OwnerID;polymorphicValue:ma
 ```
 
 
+# mysql 表字段映射
+```go
+Id   int    ->  `id` bigint NOT NULL AUTO_INCREMENT,
+ID   uint   -> `id` bigint unsigned NOT NULL AUTO_INCREMENT
+uint        -> bigint unsigned DEFAULT NULL
+int         -> bigint DEFAULT NULL
+string      -> longtext
+float64     -> double DEFAULT NULL
+optimisticlock.Version -> bigint DEFAULT NULL
+```
+
+
+# 标签参数
 | 标签名                  | 说明                                                                                                                                                                                                                                                                                                                                 |
 |-------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `column`                | 指定 db 列名                                                                                                                                                                                                                                                                                                                        |

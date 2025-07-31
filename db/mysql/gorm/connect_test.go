@@ -1,4 +1,4 @@
-package gorm_2
+package gorm
 
 import (
 	"log"
@@ -9,6 +9,13 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
+
+// CREATE TABLE `Student` (
+//   `name` longtext,
+//   `age` bigint DEFAULT NULL,
+//   `id` bigint NOT NULL AUTO_INCREMENT,
+//   PRIMARY KEY (`id`)
+// ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
 
 type Student struct {
 	Name string

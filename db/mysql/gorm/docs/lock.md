@@ -27,3 +27,18 @@ db.Clauses(clause.Locking{
 }).Find(&users)
 // SQL: SELECT * FROM `users` FOR UPDATE NOWAIT
 ```
+
+# 乐观锁
+1. 在 table 中增加一列，用于记录此行数据的版本号
+2. 更新数据前，先读取当前数据行的版本号
+3. 更新时，对 UPDATE 语句作两处调整
+    * WHERE 语句中加入版本号的比较条件，确保只有当前版本号与数据库中的版本号一致时才执行更新
+    ```
+    WHERE ... and version = [current version]
+    ```
+
+    * UPDATE 语句中递增版本号以保证每次更新后版本号都会变化
+    ```
+    UPDATE set  ..., version = version + 1
+    ```
+4. SQL 执行以后需要检查更新行数是否为0，如果为0则说明有更新冲突，需要重试直到成功为止
