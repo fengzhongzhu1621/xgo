@@ -1,4 +1,5 @@
 # AutoMigrate
+AutoMigrate 会创建表、缺失的外键、约束、列和索引。出于保护您数据的目的，它 不会 删除未使用的列。
 
 ```go
 db.AutoMigrate(&User{})
