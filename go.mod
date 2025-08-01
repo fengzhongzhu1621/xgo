@@ -306,7 +306,6 @@ require (
 	mvdan.cc/gofumpt v0.7.0 // indirect
 	mvdan.cc/unparam v0.0.0-20240528143540-8a5130ca722f // indirect
 	sigs.k8s.io/yaml v1.3.0 // indirect
-	trpc.group/trpc-go/tnet v1.0.1 // indirect
 	trpc.group/trpc/trpc-protocol/pb/go/trpc v1.0.0 // indirect
 	xorm.io/builder v0.3.13 // indirect
 )
@@ -359,7 +358,7 @@ require (
 	github.com/Rhymond/go-money v1.0.15
 	github.com/RussellLuo/slidingwindow v0.0.0-20200528002341-535bb99d338b
 	github.com/ThreeDotsLabs/watermill v1.4.6
-	github.com/VictoriaMetrics/fastcache v1.12.5
+	github.com/VictoriaMetrics/fastcache v1.12.4
 	github.com/agiledragon/gomonkey/v2 v2.12.0
 	github.com/alecthomas/kingpin v2.2.6+incompatible
 	github.com/alexedwards/argon2id v1.0.0
@@ -506,6 +505,7 @@ require (
 	gorm.io/plugin/optimisticlock v1.1.3
 	logur.dev/adapter/logrus v0.5.0
 	logur.dev/logur v0.17.0
+	trpc.group/trpc-go/tnet v1.0.1
 	trpc.group/trpc-go/trpc-go v1.0.3
 	xorm.io/core v0.7.3
 	xorm.io/xorm v1.3.9
