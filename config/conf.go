@@ -1,7 +1,7 @@
 package config
 
 import (
-	"github.com/fengzhongzhu1621/xgo/config/flagutils"
+	flagutils "github.com/fengzhongzhu1621/xgo/config/pflag"
 	kafka "github.com/fengzhongzhu1621/xgo/db/kafka"
 	"github.com/fengzhongzhu1621/xgo/db/mysql"
 	redis "github.com/fengzhongzhu1621/xgo/db/redis/client"
