@@ -43,11 +43,11 @@ client: # Backend configuration for client calls.
       timeout: 1000
     - name: trpc.mysql.xgo.write
       target: dsn://root:@tcp(127.0.0.1:3306)/xgo?charset=utf8mb4&parseTime=True
-    - name: trpc.redis.test.redis # The service name of the backend service.
-      target: redis://:@127.0.0.1:6379 # Request service address format： redis://<user>:<password>@<host>:<port>/<db_number>, for details, please refer to：https://github.com/go-redis/redis/blob/v8.8.2/options.go#L189
-      # target: redis://127.0.0.1:6379/0?is_proxy=false&pool_size=88&min_idle_conns=10
-      # target: polaris://trpc.gamecenter.trpcproxy.TRPCProxy?is_proxy=true
-      timeout: 10000
+    # - name: trpc.redis.test.redis # The service name of the backend service.
+    #   target: redis://:@127.0.0.1:6379 # Request service address format： redis://<user>:<password>@<host>:<port>/<db_number>, for details, please refer to：https://github.com/go-redis/redis/blob/v8.8.2/options.go#L189
+    #   # target: redis://127.0.0.1:6379/0?is_proxy=false&pool_size=88&min_idle_conns=10
+    #   # target: polaris://trpc.gamecenter.trpcproxy.TRPCProxy?is_proxy=true
+    #   timeout: 10000
 
 server: # Server configuration.
   app: examples # Application name for the business.

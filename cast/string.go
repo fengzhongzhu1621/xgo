@@ -3,6 +3,7 @@ package cast
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"html/template"
 	"math/rand"
@@ -188,4 +189,15 @@ func ArrayInt64ToString(A []int64, delim string) string {
 	}
 
 	return buffer.String()
+}
+
+func ToString2(data any) (string, error) {
+	switch v := data.(type) {
+	case string:
+		return v, nil
+	case []byte:
+		return string(v), nil
+	default:
+		return "", errors.New("unsupported type")
+	}
 }

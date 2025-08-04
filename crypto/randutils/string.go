@@ -2,12 +2,35 @@ package randutils
 
 import (
 	crand "crypto/rand"
+	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
 	"math/big"
 	"math/rand"
+	"sync/atomic"
 	"time"
 )
+
+var nonceCounter uint64
+
+func generateRandom(size int) []byte {
+	nonce := atomic.AddUint64(&nonceCounter, 1)
+	b := make([]byte, 13+8+13)
+	rand.Read(b[:13])
+	copy(b[13:21], u64ToBytes(nonce))
+	rand.Read(b[21:])
+	hash := sha256.Sum256(b)
+	return hash[:size]
+}
+
+func u64ToBytes(n uint64) []byte {
+	out := make([]byte, 8)
+	for i := 7; i >= 0; i-- {
+		out[i] = byte(n)
+		n >>= 8
+	}
+	return out
+}
 
 // RandomString 生成一个指定长度的随机字符串
 func RandomString(length int) string {

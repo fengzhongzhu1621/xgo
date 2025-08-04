@@ -1,6 +1,7 @@
 package cast
 
 import (
+	"errors"
 	"reflect"
 	"unsafe"
 )
@@ -40,4 +41,24 @@ func SafeStringCopyToBytes(s string) []byte {
 	b := make([]byte, len(s))
 	copy(b, s)
 	return b
+}
+
+func ToBytes(data any) ([]byte, error) {
+	switch v := data.(type) {
+	case string:
+		return []byte(v), nil
+	case []byte:
+		return v, nil
+	default:
+		return nil, errors.New("unsupported type")
+	}
+}
+
+func U64ToBytes(n uint64) []byte {
+	out := make([]byte, 8)
+	for i := 7; i >= 0; i-- {
+		out[i] = byte(n)
+		n >>= 8
+	}
+	return out
 }
