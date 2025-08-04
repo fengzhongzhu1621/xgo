@@ -1,6 +1,7 @@
 package cast
 
 import (
+	"encoding/hex"
 	"errors"
 	"reflect"
 	"unsafe"
@@ -61,4 +62,13 @@ func U64ToBytes(n uint64) []byte {
 		n >>= 8
 	}
 	return out
+}
+
+func HexToBytes(s string) ([]byte, error) {
+	b := make([]byte, len(s)/2)
+	_, err := hex.Decode(b, []byte(s))
+	if err != nil {
+		return nil, err
+	}
+	return b, nil
 }
