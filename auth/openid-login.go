@@ -40,7 +40,7 @@ func HandleOpenID(loginUrl string, secure bool) {
 		if url, err := openid.RedirectURL(loginUrl,
 			scheme+"://"+r.Host+"/-/openidcallback?next="+nextUrl, ""); err == nil {
 			// 重定向到 openid 回调链接
-			http.Redirect(w, r, url, 303)
+			http.Redirect(w, r, url, http.StatusSeeOther)
 		} else {
 			log.Println("Should not got error here:", err)
 		}
@@ -48,7 +48,11 @@ func HandleOpenID(loginUrl string, secure bool) {
 
 	// 注册登录链接路由
 	http.HandleFunc("/-/openidcallback", func(w http.ResponseWriter, r *http.Request) {
-		id, err := openid.Verify("http://"+r.Host+r.URL.String(), staticserver.DiscoveryCache, staticserver.NonceStore)
+		id, err := openid.Verify(
+			"http://"+r.Host+r.URL.String(),
+			staticserver.DiscoveryCache,
+			staticserver.NonceStore,
+		)
 		if err != nil {
 			io.WriteString(w, "Authentication check failed.")
 			return
@@ -74,7 +78,7 @@ func HandleOpenID(loginUrl string, secure bool) {
 		if nextUrl == "" {
 			nextUrl = "/"
 		}
-		http.Redirect(w, r, nextUrl, 302)
+		http.Redirect(w, r, nextUrl, http.StatusFound)
 	})
 
 	// 获得登录用户信息
@@ -111,6 +115,6 @@ func HandleOpenID(loginUrl string, secure bool) {
 		if nextUrl == "" {
 			nextUrl = r.Referer()
 		}
-		http.Redirect(w, r, nextUrl, 302)
+		http.Redirect(w, r, nextUrl, http.StatusFound)
 	})
 }

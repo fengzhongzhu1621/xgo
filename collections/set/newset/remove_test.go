@@ -11,7 +11,7 @@ func Test_RemoveSet(t *testing.T) {
 		t.Error("RemoveSet should only have 2 items in the set")
 	}
 
-	if !(a.Contains(6) && a.Contains(1)) {
+	if !a.Contains(6) || !a.Contains(1) {
 		t.Error("RemoveSet should have only items 6 and 1 in the set")
 	}
 

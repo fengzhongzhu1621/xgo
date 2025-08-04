@@ -5,10 +5,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jinzhu/now"
-
 	"github.com/dromara/carbon/v2"
 	"github.com/duke-git/lancet/v2/datetime"
+	"github.com/jinzhu/now"
 )
 
 func TestTimestampToTime(t *testing.T) {

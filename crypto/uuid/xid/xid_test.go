@@ -16,7 +16,7 @@ func TestNew(t *testing.T) {
 func TestMeta(t *testing.T) {
 	guid := xid.New()
 	// [38 36 79]
-	fmt.Println(guid.Machine()) // 获取机器 ID
+	fmt.Println(string(guid.Machine())) // 获取机器 ID
 	// 27393
 	fmt.Println(guid.Pid()) // 获取进程 ID
 	// 2025-02-26 14:06:38 +0800 CST

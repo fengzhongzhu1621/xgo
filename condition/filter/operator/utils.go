@@ -39,12 +39,20 @@ func parseStringValues(value1, value2 interface{}) (string, string, error) {
 func parseTimeValues(value1, value2 interface{}) (time.Time, time.Time, error) {
 	val1, err := cast.ConvToTime(value1)
 	if err != nil {
-		return time.Time{}, time.Time{}, fmt.Errorf("parse input value(%+v) failed, err: %v", value1, err)
+		return time.Time{}, time.Time{}, fmt.Errorf(
+			"parse input value(%+v) failed, err: %v",
+			value1,
+			err,
+		)
 	}
 
 	val2, err := cast.ConvToTime(value2)
 	if err != nil {
-		return time.Time{}, time.Time{}, fmt.Errorf("parse rule value(%+v) failed, err: %v", value2, err)
+		return time.Time{}, time.Time{}, fmt.Errorf(
+			"parse rule value(%+v) failed, err: %v",
+			value2,
+			err,
+		)
 	}
 
 	return val1, val2, nil

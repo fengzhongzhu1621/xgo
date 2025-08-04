@@ -1,11 +1,8 @@
 package channel
 
-var (
-	ReallyCrash = true
-)
+var ReallyCrash = true
 
 func logPanic(r interface{}) {
-
 }
 
 // 全局默认的Panic处理

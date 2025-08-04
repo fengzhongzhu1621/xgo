@@ -32,5 +32,4 @@ func TestSyncTable(t *testing.T) {
 	dbClient.SyncTable(new(XormApp))
 	dbClient.SyncTable(new(XormOperation))
 	dbClient.SyncTable(new(XormTraffic))
-
 }

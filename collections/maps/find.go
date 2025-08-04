@@ -6,8 +6,6 @@ import (
 	"strings"
 )
 
-
-
 var ErrInvalidPathType = errors.New("paths's type must one of (string, []string)")
 
 // GetItems 根据路径从字典中取值
@@ -38,7 +36,6 @@ func getItems(obj map[string]interface{}, paths []string) (interface{}, error) {
 	}
 	return nil, fmt.Errorf("key %s, val not map[string]interface{} type", paths[0])
 }
-
 
 // Get 若指定值不存在，则返回默认值
 func Get(obj map[string]interface{}, paths interface{}, defVal interface{}) interface{} {

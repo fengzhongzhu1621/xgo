@@ -6,7 +6,6 @@ import (
 	"testing"
 
 	"github.com/duke-git/lancet/v2/fileutil"
-
 	"github.com/stretchr/testify/assert"
 )
 

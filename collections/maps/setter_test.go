@@ -68,7 +68,7 @@ func TestSetDeepMapValue(t *testing.T) {
 	t.Parallel()
 
 	t.Run("KeyNotExists", func(t *testing.T) {
-		var src = map[string]interface{}{
+		src := map[string]interface{}{
 			"A": 1,
 			"b": 2,
 		}
@@ -87,7 +87,7 @@ func TestSetDeepMapValue(t *testing.T) {
 	})
 
 	t.Run("KeyExists", func(t *testing.T) {
-		var src = map[string]interface{}{
+		src := map[string]interface{}{
 			"a": map[string]interface{}{
 				"b": map[string]interface{}{},
 			},

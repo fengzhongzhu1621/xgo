@@ -18,7 +18,7 @@ func SanitizedName(filename string) string {
 	filename = pathutils.SlashAndCleanPath(filename)
 
 	// 去掉开头的 /
-	filename = strings.TrimLeft(strings.Replace(filename, `\`, "/", -1), `/`)
+	filename = strings.TrimLeft(strings.ReplaceAll(filename, `\`, "/"), `/`)
 
 	return filename
 }

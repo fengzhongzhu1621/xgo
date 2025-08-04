@@ -42,5 +42,4 @@ func TestTransaction(t *testing.T) {
 
 	createStudent(db, &stu)
 	transactionalUpdate(db, stu.Id, "foo")
-
 }

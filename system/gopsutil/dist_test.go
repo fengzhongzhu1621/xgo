@@ -39,5 +39,4 @@ func TestGetDiskPartitions(t *testing.T) {
 		// 			"inodesUsedPercent": 0.00942749015391215
 		// }
 	}
-
 }

@@ -13,7 +13,12 @@ import (
 // Code is based on the function with the same name in tha main package.
 // shadow: 摊平后的结果
 // m：需要摊平的数组.
-func FlattenAndMergeMap(shadow map[string]interface{}, m map[string]interface{}, prefix string, delimiter string) map[string]interface{} {
+func FlattenAndMergeMap(
+	shadow map[string]interface{},
+	m map[string]interface{},
+	prefix string,
+	delimiter string,
+) map[string]interface{} {
 	if shadow != nil && prefix != "" && shadow[prefix] != nil {
 		// prefix is shadowed => nothing more to flatten
 		return shadow
@@ -29,9 +34,9 @@ func FlattenAndMergeMap(shadow map[string]interface{}, m map[string]interface{},
 	for k, val := range m {
 		// 获得完整的key
 		fullKey := prefix + k
-		switch val.(type) {
+		switch val := val.(type) {
 		case map[string]interface{}:
-			m2 = val.(map[string]interface{})
+			m2 = val
 		case map[interface{}]interface{}:
 			m2 = cast.ToStringMap(val)
 		default:
@@ -49,7 +54,11 @@ func FlattenAndMergeMap(shadow map[string]interface{}, m map[string]interface{},
 // MergeFlatMap merges the given maps, excluding values of the second map
 // shadowed by values from the first map.
 // 合并字典的key， value不可并；如果key重复，不合并到源字典.
-func MergeFlatMap(shadow map[string]bool, src map[string]interface{}, keyDelim string) map[string]bool {
+func MergeFlatMap(
+	shadow map[string]bool,
+	src map[string]interface{},
+	keyDelim string,
+) map[string]bool {
 	// scan keys
 outer:
 	for k := range src {
@@ -142,7 +151,12 @@ func hasMergeableFields(dst reflect.Value) (exported bool) {
 // Traverses recursively both values, assigning src's fields values to dst.
 // The map argument tracks comparisons that have already been seen, which allows
 // short circuiting on recursive types.
-func deepMerge(dst, src reflect.Value, visited map[uintptr]*visit, depth int, config *Config) (err error) {
+func deepMerge(
+	dst, src reflect.Value,
+	visited map[uintptr]*visit,
+	depth int,
+	config *Config,
+) (err error) {
 	overwrite := config.Overwrite
 	typeCheck := config.TypeCheck
 	overwriteWithEmptySrc := config.overwriteWithEmptyValue
@@ -249,9 +263,16 @@ func deepMerge(dst, src reflect.Value, visited map[uintptr]*visit, depth int, co
 						dstSlice = reflect.ValueOf(dstElement.Interface())
 					}
 
-					if (!reflectutils.IsEmptyValue(src) || overwriteWithEmptySrc || overwriteSliceWithEmptySrc) && (overwrite || reflectutils.IsEmptyValue(dst)) && !config.AppendSlice && !sliceDeepCopy {
+					if (!reflectutils.IsEmptyValue(src) || overwriteWithEmptySrc || overwriteSliceWithEmptySrc) &&
+						(overwrite || reflectutils.IsEmptyValue(dst)) &&
+						!config.AppendSlice &&
+						!sliceDeepCopy {
 						if typeCheck && srcSlice.Type() != dstSlice.Type() {
-							return fmt.Errorf("cannot override two slices with different type (%s, %s)", srcSlice.Type(), dstSlice.Type())
+							return fmt.Errorf(
+								"cannot override two slices with different type (%s, %s)",
+								srcSlice.Type(),
+								dstSlice.Type(),
+							)
 						}
 						dstSlice = srcSlice
 					} else if config.AppendSlice {
@@ -281,11 +302,13 @@ func deepMerge(dst, src reflect.Value, visited map[uintptr]*visit, depth int, co
 					dst.SetMapIndex(key, dstSlice)
 				}
 			}
-			if dstElement.IsValid() && !reflectutils.IsEmptyValue(dstElement) && (reflect.TypeOf(srcElement.Interface()).Kind() == reflect.Map || reflect.TypeOf(srcElement.Interface()).Kind() == reflect.Slice) {
+			if dstElement.IsValid() && !reflectutils.IsEmptyValue(dstElement) &&
+				(reflect.TypeOf(srcElement.Interface()).Kind() == reflect.Map || reflect.TypeOf(srcElement.Interface()).Kind() == reflect.Slice) {
 				continue
 			}
 
-			if srcElement.IsValid() && ((srcElement.Kind() != reflect.Ptr && overwrite) || !dstElement.IsValid() || reflectutils.IsEmptyValue(dstElement)) {
+			if srcElement.IsValid() &&
+				((srcElement.Kind() != reflect.Ptr && overwrite) || !dstElement.IsValid() || reflectutils.IsEmptyValue(dstElement)) {
 				if dst.IsNil() {
 					dst.Set(reflect.MakeMap(dst.Type()))
 				}
@@ -296,7 +319,10 @@ func deepMerge(dst, src reflect.Value, visited map[uintptr]*visit, depth int, co
 		if !dst.CanSet() {
 			break
 		}
-		if (!reflectutils.IsEmptyValue(src) || overwriteWithEmptySrc || overwriteSliceWithEmptySrc) && (overwrite || reflectutils.IsEmptyValue(dst)) && !config.AppendSlice && !sliceDeepCopy {
+		if (!reflectutils.IsEmptyValue(src) || overwriteWithEmptySrc || overwriteSliceWithEmptySrc) &&
+			(overwrite || reflectutils.IsEmptyValue(dst)) &&
+			!config.AppendSlice &&
+			!sliceDeepCopy {
 			dst.Set(src)
 		} else if config.AppendSlice {
 			if src.Type() != dst.Type() {
@@ -362,7 +388,8 @@ func deepMerge(dst, src reflect.Value, visited map[uintptr]*visit, depth int, co
 			break
 		}
 	default:
-		mustSet := (reflectutils.IsEmptyValue(dst) || overwrite) && (!reflectutils.IsEmptyValue(src) || overwriteWithEmptySrc)
+		mustSet := (reflectutils.IsEmptyValue(dst) || overwrite) &&
+			(!reflectutils.IsEmptyValue(src) || overwriteWithEmptySrc)
 		if mustSet {
 			if dst.CanSet() {
 				dst.Set(src)

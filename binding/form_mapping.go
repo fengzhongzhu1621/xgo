@@ -19,7 +19,12 @@ type setOptions struct {
 
 // setter tries to set value on a walking by fields of a struct.
 type setter interface {
-	TrySet(value reflect.Value, field reflect.StructField, key string, opt setOptions) (isSetted bool, err error)
+	TrySet(
+		value reflect.Value,
+		field reflect.StructField,
+		key string,
+		opt setOptions,
+	) (isSetted bool, err error)
 }
 
 // 定义表单对象.
@@ -31,7 +36,12 @@ var _ setter = formSource(nil)
 var emptyField = reflect.StructField{}
 
 // TrySet tries to set a value by request's form source (like map[string][]string).
-func (form formSource) TrySet(value reflect.Value, field reflect.StructField, tagValue string, opt setOptions) (isSetted bool, err error) {
+func (form formSource) TrySet(
+	value reflect.Value,
+	field reflect.StructField,
+	tagValue string,
+	opt setOptions,
+) (isSetted bool, err error) {
 	return setByForm(value, field, form, tagValue, opt)
 }
 
@@ -52,12 +62,17 @@ func mapForm(ptr interface{}, form map[string][]string) error {
 	return mapFormByTag(ptr, form, "form")
 }
 
-func mapping(value reflect.Value, field reflect.StructField, setter setter, tag string) (bool, error) {
+func mapping(
+	value reflect.Value,
+	field reflect.StructField,
+	setter setter,
+	tag string,
+) (bool, error) {
 	if field.Tag.Get(tag) == "-" { // just ignoring this field
 		return false, nil
 	}
 
-	var vKind = value.Kind()
+	vKind := value.Kind()
 
 	if vKind == reflect.Ptr {
 		var isNew bool
@@ -106,7 +121,12 @@ func mapping(value reflect.Value, field reflect.StructField, setter setter, tag 
 	return false, nil
 }
 
-func tryToSetValue(value reflect.Value, field reflect.StructField, setter setter, tag string) (bool, error) {
+func tryToSetValue(
+	value reflect.Value,
+	field reflect.StructField,
+	setter setter,
+	tag string,
+) (bool, error) {
 	var tagValue string
 	var setOpt setOptions
 
@@ -135,7 +155,13 @@ func tryToSetValue(value reflect.Value, field reflect.StructField, setter setter
 }
 
 // 根据表单的值填充对象.
-func setByForm(value reflect.Value, field reflect.StructField, form map[string][]string, tagValue string, opt setOptions) (isSetted bool, err error) {
+func setByForm(
+	value reflect.Value,
+	field reflect.StructField,
+	form map[string][]string,
+	tagValue string,
+	opt setOptions,
+) (isSetted bool, err error) {
 	// 获得表单的值
 	vs, ok := form[tagValue]
 	if !ok && !opt.isDefaultExists {

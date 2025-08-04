@@ -5,7 +5,6 @@ import (
 	"sync"
 
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
-
 	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
 )
@@ -28,7 +27,10 @@ func NewMultiplier(constructor Constructor, subscribersCount int) message.Subscr
 	}
 }
 
-func (s *multiplier) Subscribe(ctx context.Context, topic string) (msgs <-chan *message.Message, err error) {
+func (s *multiplier) Subscribe(
+	ctx context.Context,
+	topic string,
+) (msgs <-chan *message.Message, err error) {
 	defer func() {
 		if err != nil {
 			if closeErr := s.Close(); closeErr != nil {

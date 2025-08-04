@@ -15,12 +15,13 @@ func redisGetKey(key string) (string, error) {
 
 	val, err := rdb.Get(ctx, key).Result()
 	if err != nil {
-		if err == redisV9.Nil {
+		switch err {
+		case redisV9.Nil:
 			return "", nil
 			// DeadlineExceeded是Context返回的错误。当上下文的截止日期过去时发生错误。
-		} else if err == context.DeadlineExceeded {
+		case context.DeadlineExceeded:
 			return "", fmt.Errorf("获取值超时")
-		} else {
+		default:
 			return "", fmt.Errorf("获取值失败: %v", err)
 		}
 	}

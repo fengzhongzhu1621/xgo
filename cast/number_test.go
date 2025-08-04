@@ -4,11 +4,9 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/gogf/gf/v2/util/gconv"
-
-	"github.com/gookit/goutil/arrutil"
-
 	"github.com/duke-git/lancet/v2/convertor"
+	"github.com/gogf/gf/v2/util/gconv"
+	"github.com/gookit/goutil/arrutil"
 	"github.com/stretchr/testify/assert"
 )
 

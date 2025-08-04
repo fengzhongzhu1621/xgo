@@ -21,7 +21,9 @@ func Test_SetIsSubset(t *testing.T) {
 	b.Add(72)
 
 	if b.IsSubset(a) {
-		t.Error("set b should not be a subset of set a because it contains 72 which is not in the set of a")
+		t.Error(
+			"set b should not be a subset of set a because it contains 72 which is not in the set of a",
+		)
 	}
 }
 

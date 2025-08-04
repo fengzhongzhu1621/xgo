@@ -37,7 +37,12 @@ func TestSecurityProvider(t *testing.T) {
 	}
 
 	// 创建一个HTTP请求
-	req, err := http.NewRequestWithContext(context.Background(), "GET", "https://api.example.com/data", nil)
+	req, err := http.NewRequestWithContext(
+		context.Background(),
+		"GET",
+		"https://api.example.com/data",
+		nil,
+	)
 	if err != nil {
 		fmt.Println("Request Creation Error:", err)
 		return

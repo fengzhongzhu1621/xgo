@@ -5,13 +5,12 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/pkg/errors"
-
 	. "github.com/fengzhongzhu1621/xgo/amqp/message"
 	. "github.com/fengzhongzhu1621/xgo/amqp/publisher"
 	"github.com/fengzhongzhu1621/xgo/buildin"
 	"github.com/fengzhongzhu1621/xgo/channel"
 	"github.com/fengzhongzhu1621/xgo/logging"
+	"github.com/pkg/errors"
 )
 
 // NoPublishHandlerFunc is HandlerFunc alternative, which doesn't produce any messages.
@@ -136,7 +135,10 @@ func (r *Router) AddPlugin(p ...RouterPlugin) {
 // The first decorator is the innermost, i.e. calls the original publisher.
 // 添加生产者装饰器
 func (r *Router) AddPublisherDecorators(dec ...PublisherDecorator) {
-	r.logger.Debug("Adding publisher decorators", logging.LogFields{"count": fmt.Sprintf("%d", len(dec))})
+	r.logger.Debug(
+		"Adding publisher decorators",
+		logging.LogFields{"count": fmt.Sprintf("%d", len(dec))},
+	)
 
 	r.publisherDecorators = append(r.publisherDecorators, dec...)
 }
@@ -145,7 +147,10 @@ func (r *Router) AddPublisherDecorators(dec ...PublisherDecorator) {
 // The first decorator is the innermost, i.e. calls the original subscriber.
 // 添加消费者装饰器
 func (r *Router) AddSubscriberDecorators(dec ...SubscriberDecorator) {
-	r.logger.Debug("Adding subscriber decorators", logging.LogFields{"count": fmt.Sprintf("%d", len(dec))})
+	r.logger.Debug(
+		"Adding subscriber decorators",
+		logging.LogFields{"count": fmt.Sprintf("%d", len(dec))},
+	)
 
 	r.subscriberDecorators = append(r.subscriberDecorators, dec...)
 }
@@ -259,7 +264,14 @@ func (r *Router) AddNoPublisherHandler(
 		return nil, handlerFunc(msg)
 	}
 
-	return r.AddHandler(handlerName, subscribeTopic, subscriber, "", DisabledPublisher{}, handlerFuncAdapter)
+	return r.AddHandler(
+		handlerName,
+		subscribeTopic,
+		subscriber,
+		"",
+		DisabledPublisher{},
+		handlerFuncAdapter,
+	)
 }
 
 // Run runs all plugins and handlers and starts subscribing to provided topics.
@@ -427,7 +439,11 @@ func (r *Router) closeWhenAllHandlersStopped() {
 		return
 	}
 
-	r.logger.Error("All handlers stopped, closing router", errors.New("all router handlers stopped"), nil)
+	r.logger.Error(
+		"All handlers stopped, closing router",
+		errors.New("all router handlers stopped"),
+		nil,
+	)
 	// 强制关闭路由
 	if err := r.Close(); err != nil {
 		r.logger.Error("Cannot close router", err, nil)

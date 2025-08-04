@@ -25,7 +25,11 @@ func TestJsonMarshal(t *testing.T) {
 	}
 
 	if string(ruleJson) != string(exprJson) {
-		t.Errorf("expression marshal result %s is not equal to rule marshal result %s", exprJson, ruleJson)
+		t.Errorf(
+			"expression marshal result %s is not equal to rule marshal result %s",
+			exprJson,
+			ruleJson,
+		)
 		return
 	}
 }
@@ -47,7 +51,11 @@ func TestJsonMarshalNil(t *testing.T) {
 	}
 
 	if string(ruleJson) != string(exprJson) {
-		t.Errorf("expression marshal result %s is not equal to rule marshal result %s", exprJson, ruleJson)
+		t.Errorf(
+			"expression marshal result %s is not equal to rule marshal result %s",
+			exprJson,
+			ruleJson,
+		)
 		return
 	}
 
@@ -62,7 +70,11 @@ func TestJsonMarshalNil(t *testing.T) {
 	}
 
 	if string(ruleJson) != string(exprJson) {
-		t.Errorf("expression marshal result %s is not equal to rule marshal result %s", exprJson, ruleJson)
+		t.Errorf(
+			"expression marshal result %s is not equal to rule marshal result %s",
+			exprJson,
+			ruleJson,
+		)
 		return
 	}
 
@@ -84,7 +96,11 @@ func TestJsonMarshalNil(t *testing.T) {
 	}
 
 	if string(ruleJson) != string(exprJson) {
-		t.Errorf("expression marshal result %s is not equal to rule marshal result %s", exprJson, ruleJson)
+		t.Errorf(
+			"expression marshal result %s is not equal to rule marshal result %s",
+			exprJson,
+			ruleJson,
+		)
 		return
 	}
 }
@@ -125,7 +141,11 @@ func TestBsonMarshal(t *testing.T) {
 	}
 
 	if string(ruleBson) != string(exprBson) {
-		t.Errorf("expression marshal result %s is not equal to rule marshal result %s", exprBson, ruleBson)
+		t.Errorf(
+			"expression marshal result %s is not equal to rule marshal result %s",
+			exprBson,
+			ruleBson,
+		)
 		return
 	}
 }
@@ -147,7 +167,11 @@ func TestBsonMarshalNil(t *testing.T) {
 	}
 
 	if string(ruleBson) != string(exprBson) {
-		t.Errorf("expression marshal result %s is not equal to rule marshal result %s", exprBson, ruleBson)
+		t.Errorf(
+			"expression marshal result %s is not equal to rule marshal result %s",
+			exprBson,
+			ruleBson,
+		)
 		return
 	}
 
@@ -162,7 +186,11 @@ func TestBsonMarshalNil(t *testing.T) {
 	}
 
 	if string(ruleBson) != string(exprBson) {
-		t.Errorf("expression marshal result %s is not equal to rule marshal result %s", exprBson, ruleBson)
+		t.Errorf(
+			"expression marshal result %s is not equal to rule marshal result %s",
+			exprBson,
+			ruleBson,
+		)
 		return
 	}
 
@@ -184,7 +212,11 @@ func TestBsonMarshalNil(t *testing.T) {
 	}
 
 	if string(ruleBson) != string(exprBson) {
-		t.Errorf("expression marshal result %s is not equal to rule marshal result %s", exprBson, ruleBson)
+		t.Errorf(
+			"expression marshal result %s is not equal to rule marshal result %s",
+			exprBson,
+			ruleBson,
+		)
 		return
 	}
 }
@@ -206,5 +238,4 @@ func TestBsonUnmarshal(t *testing.T) {
 		t.Error(err)
 		return
 	}
-
 }

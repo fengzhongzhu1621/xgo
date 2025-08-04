@@ -3,12 +3,10 @@ package middleware_test
 import (
 	"testing"
 
-	"github.com/pkg/errors"
-
-	"github.com/stretchr/testify/assert"
-
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/amqp/router/middleware"
+	"github.com/pkg/errors"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestCorrelationID(t *testing.T) {

@@ -83,9 +83,12 @@ func TestMust(t *testing.T) {
 	is.PanicsWithValue("must: invalid err type 'int', should either be a bool or an error", func() {
 		Must0(0)
 	})
-	is.PanicsWithValue("must: invalid err type 'string', should either be a bool or an error", func() {
-		Must0("error")
-	})
+	is.PanicsWithValue(
+		"must: invalid err type 'string', should either be a bool or an error",
+		func() {
+			Must0("error")
+		},
+	)
 }
 
 func TestMustX(t *testing.T) {
@@ -123,7 +126,13 @@ func TestMustX(t *testing.T) {
 			Must2(1, 2, errors.New("something went wrong"))
 		})
 		is.PanicsWithValue("operation shouldn't fail with foo: something went wrong", func() {
-			Must2(1, 2, errors.New("something went wrong"), "operation shouldn't fail with %s", "foo")
+			Must2(
+				1,
+				2,
+				errors.New("something went wrong"),
+				"operation shouldn't fail with %s",
+				"foo",
+			)
 		})
 	}
 
@@ -136,7 +145,14 @@ func TestMustX(t *testing.T) {
 			Must3(1, 2, 3, errors.New("something went wrong"))
 		})
 		is.PanicsWithValue("operation shouldn't fail with foo: something went wrong", func() {
-			Must3(1, 2, 3, errors.New("something went wrong"), "operation shouldn't fail with %s", "foo")
+			Must3(
+				1,
+				2,
+				3,
+				errors.New("something went wrong"),
+				"operation shouldn't fail with %s",
+				"foo",
+			)
 		})
 	}
 
@@ -150,7 +166,15 @@ func TestMustX(t *testing.T) {
 			Must4(1, 2, 3, 4, errors.New("something went wrong"))
 		})
 		is.PanicsWithValue("operation shouldn't fail with foo: something went wrong", func() {
-			Must4(1, 2, 3, 4, errors.New("something went wrong"), "operation shouldn't fail with %s", "foo")
+			Must4(
+				1,
+				2,
+				3,
+				4,
+				errors.New("something went wrong"),
+				"operation shouldn't fail with %s",
+				"foo",
+			)
 		})
 	}
 
@@ -165,7 +189,16 @@ func TestMustX(t *testing.T) {
 			Must5(1, 2, 3, 4, 5, errors.New("something went wrong"))
 		})
 		is.PanicsWithValue("operation shouldn't fail with foo: something went wrong", func() {
-			Must5(1, 2, 3, 4, 5, errors.New("something went wrong"), "operation shouldn't fail with %s", "foo")
+			Must5(
+				1,
+				2,
+				3,
+				4,
+				5,
+				errors.New("something went wrong"),
+				"operation shouldn't fail with %s",
+				"foo",
+			)
 		})
 	}
 
@@ -181,7 +214,17 @@ func TestMustX(t *testing.T) {
 			Must6(1, 2, 3, 4, 5, 6, errors.New("something went wrong"))
 		})
 		is.PanicsWithValue("operation shouldn't fail with foo: something went wrong", func() {
-			Must6(1, 2, 3, 4, 5, 6, errors.New("something went wrong"), "operation shouldn't fail with %s", "foo")
+			Must6(
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				errors.New("something went wrong"),
+				"operation shouldn't fail with %s",
+				"foo",
+			)
 		})
 	}
 

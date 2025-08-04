@@ -65,12 +65,15 @@ func ParseFlags() error {
 	// 静态服务的标题
 	kingpin.Flag("title", "server title").StringVar(&gcfg.Title)
 	// 路径搜索深度
-	kingpin.Flag("deep-path-max-depth", "set to -1 to not combine dirs").IntVar(&gcfg.DeepPathMaxDepth)
+	kingpin.Flag("deep-path-max-depth", "set to -1 to not combine dirs").
+		IntVar(&gcfg.DeepPathMaxDepth)
 	// 进程启动时是否创建索引
 	kingpin.Flag("no-index", "disable indexing").BoolVar(&gcfg.NoIndex)
 
 	// plistproxy 代理地址
-	kingpin.Flag("plistproxy", "plist proxy when server is not https").Short('p').StringVar(&gcfg.PlistProxy)
+	kingpin.Flag("plistproxy", "plist proxy when server is not https").
+		Short('p').
+		StringVar(&gcfg.PlistProxy)
 	kingpin.Flag("google-tracker-id", "set to empty to disable it").StringVar(&gcfg.GoogleTrackerID)
 
 	// 解析命令行参数

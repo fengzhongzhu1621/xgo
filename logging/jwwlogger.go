@@ -43,23 +43,23 @@ type Logger interface {
 type JwwLogger struct{}
 
 func (JwwLogger) Trace(msg string, keyvals ...interface{}) {
-	jww.TRACE.Printf(jwwLogMessage(msg, keyvals...)) //nolint:govet
+	jww.TRACE.Print(jwwLogMessage(msg, keyvals...)) //nolint:govet
 }
 
 func (JwwLogger) Debug(msg string, keyvals ...interface{}) {
-	jww.DEBUG.Printf(jwwLogMessage(msg, keyvals...)) //nolint:govet
+	jww.DEBUG.Print(jwwLogMessage(msg, keyvals...)) //nolint:govet
 }
 
 func (JwwLogger) Info(msg string, keyvals ...interface{}) {
-	jww.INFO.Printf(jwwLogMessage(msg, keyvals...)) //nolint:govet
+	jww.INFO.Print(jwwLogMessage(msg, keyvals...)) //nolint:govet
 }
 
 func (JwwLogger) Warn(msg string, keyvals ...interface{}) {
-	jww.WARN.Printf(jwwLogMessage(msg, keyvals...)) //vet:ignore
+	jww.WARN.Print("%s", jwwLogMessage(msg, keyvals...)) //vet:ignore
 }
 
 func (JwwLogger) Error(msg string, keyvals ...interface{}) {
-	jww.ERROR.Printf(jwwLogMessage(msg, keyvals...)) //vet:ignore
+	jww.ERROR.Print("%s", jwwLogMessage(msg, keyvals...)) //vet:ignore
 }
 
 // 格式化消息，加上参数值.

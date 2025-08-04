@@ -2,14 +2,13 @@ package tests
 
 import (
 	"bytes"
-	"fmt"
 	"testing"
 	"text/template"
 )
 
 func BenchmarkHello(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		_ = fmt.Sprintf("hello")
+		_ = "hello"
 	}
 }
 
@@ -19,7 +18,7 @@ func BenchmarkHello2(b *testing.B) {
 	// 如果在运行前基准测试需要一些耗时的配置，则可以使用 b.ResetTimer() 先重置定时器
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_ = fmt.Sprintf("hello")
+		_ = "hello"
 	}
 }
 

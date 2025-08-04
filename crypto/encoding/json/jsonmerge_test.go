@@ -33,5 +33,7 @@ func TestJSONMerge(t *testing.T) {
 		return
 	}
 
-	fmt.Println(string(merged)) // {"address":{"city":"Wonderland"},"age":31,"email":"alice@example.com","name":"Alice"}
+	fmt.Println(
+		string(merged),
+	) // {"address":{"city":"Wonderland"},"age":31,"email":"alice@example.com","name":"Alice"}
 }

@@ -14,7 +14,10 @@ func TestDefine(t *testing.T) {
 		mainTemplate   = `{{template "header" .}} {{template "body" .}} {{template "footer" .}}`
 	)
 
-	tmpl := template.Must(template.New("TestDefine").Parse(headerTemplate + footerTemplate + bodyTemplate + mainTemplate))
+	tmpl := template.Must(
+		template.New("TestDefine").
+			Parse(headerTemplate + footerTemplate + bodyTemplate + mainTemplate),
+	)
 
 	data := struct {
 		Title   string

@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/fengzhongzhu1621/xgo/tests"
-
 	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
 )
@@ -16,13 +15,12 @@ import (
 // 作用：启用多个消费者通道从输入通道消费数据并处理，注意并非广播模式
 
 // 分配策略
-//lo.DispatchingStrategyRoundRobin: 使用轮询策略将消息分发到子通道中。
-//lo.DispatchingStrategyRandom: 使用随机策略将消息分发到子通道中。
-//lo.DispatchingStrategyWeightedRandom: 使用加权随机策略将消息分发到子通道中。
-//lo.DispatchingStrategyFirst: 分发消息到第一个非满的子通道中。
-//lo.DispatchingStrategyLeast: 分发消息到最空的子通道中。
-//lo.DispatchingStrategyMost: 分发消息到最满的子通道中。
-
+// lo.DispatchingStrategyRoundRobin: 使用轮询策略将消息分发到子通道中。
+// lo.DispatchingStrategyRandom: 使用随机策略将消息分发到子通道中。
+// lo.DispatchingStrategyWeightedRandom: 使用加权随机策略将消息分发到子通道中。
+// lo.DispatchingStrategyFirst: 分发消息到第一个非满的子通道中。
+// lo.DispatchingStrategyLeast: 分发消息到最空的子通道中。
+// lo.DispatchingStrategyMost: 分发消息到最满的子通道中。
 func TestChannelDispatcher(t *testing.T) {
 	t.Parallel()
 	tests.TestWithTimeout(t, 100*time.Millisecond)

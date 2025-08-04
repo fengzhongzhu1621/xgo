@@ -23,7 +23,8 @@ func (s *HTTPStaticServer) defaultAccessConf() staticserver.AccessConf {
 func (s *HTTPStaticServer) readAccessConf(realPath string) (ac staticserver.AccessConf) {
 	// 获得静态文件的相对路径，先判断静态文件是否在根目录
 	relativePath, err := filepath.Rel(s.Root, realPath)
-	if err != nil || relativePath == "." || relativePath == "" { // actually relativePath is always "." if root == realPath
+	if err != nil || relativePath == "." ||
+		relativePath == "" { // actually relativePath is always "." if root == realPath
 		// 构造默认配置对象
 		ac = s.defaultAccessConf()
 		// 如果静态文件在根目录，则读取根目录的配置文件

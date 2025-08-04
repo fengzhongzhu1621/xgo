@@ -41,7 +41,7 @@ func NewHTTPStaticServer(root string, noIndex bool) *HTTPStaticServer {
 				log.Println("Started making search index")
 				s.makeIndex()
 				log.Printf("Completed search index in %v", time.Since(startTime))
-				//time.Sleep(time.Second * 1)
+				// time.Sleep(time.Second * 1)
 				time.Sleep(time.Minute * 10)
 			}
 		}()

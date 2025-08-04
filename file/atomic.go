@@ -41,7 +41,7 @@ func (f *AtomicFile) Close() error {
 	// 关闭临时文件
 	if err := f.File.Close(); err != nil {
 		// 关闭失败，尝试删除临时文件并返回错误
-		if removeErr := os.Remove(f.File.Name()); removeErr != nil {
+		if removeErr := os.Remove(f.Name()); removeErr != nil {
 			return removeErr
 		}
 		return err

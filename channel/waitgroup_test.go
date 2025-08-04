@@ -8,10 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"golang.org/x/sync/errgroup"
-
 	"github.com/remeh/sizedwaitgroup"
 	"github.com/stretchr/testify/assert"
+	"golang.org/x/sync/errgroup"
 )
 
 // 支持等待超时
@@ -61,7 +60,7 @@ func TestSizedWaitGroup(t *testing.T) {
 // sync.WaitGroup 只负责等待 goroutine 完成，不处理 goroutine 的返回值或错误。
 // errgroup.Group 虽然目前也不能直接处理 goroutine 的返回值，但在 goroutine 返回错误时，可以立即取消其他正在运行的 goroutine，并在 Wait 方法中返回第一个非 nil 的错误。
 func TestErrgroup(t *testing.T) {
-	var urls = []string{
+	urls := []string{
 		"http://www.golang.org/",
 		"http://www.google.com/",
 		"xxx", // 这是一个错误的 URL，会导致任务失败
@@ -96,7 +95,7 @@ func TestErrgroup(t *testing.T) {
 // 等待所有 goroutine 完成并返回第一个错误，如果有错误发生，则立即取消其他正在运行的 goroutine
 // errgroup.WithContext 可以与 context.Context 配合使用，支持在某个 goroutine 出现错误时自动取消其他 goroutine，这样可以更好地控制资源，避免不必要的工作。
 func TestErrGroupWithContext(t *testing.T) {
-	var urls = []string{
+	urls := []string{
 		"http://www.golang.org/",
 		"http://www.google.com/",
 		"xxx", // 这是一个错误的 URL，会导致任务失败

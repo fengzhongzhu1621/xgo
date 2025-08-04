@@ -9,7 +9,7 @@ import (
 
 // NOTE:
 // 更新通过engine.Update()实现，可以传入结构指针或map[string]interface{}。对于传入结构体指针的情况，xorm只会更新非空的字段。
-//如果一定要更新空字段，需要使用Cols()方法显示指定更新的列。使用Cols()方法指定列后，即使字段为空也会更新
+// 如果一定要更新空字段，需要使用Cols()方法显示指定更新的列。使用Cols()方法指定列后，即使字段为空也会更新
 
 // updateUserAge 更新单个字段
 func updateUserAge(engine *xorm.Engine, userId int64, newAge int) error {
@@ -25,7 +25,9 @@ func updateUserAge(engine *xorm.Engine, userId int64, newAge int) error {
 
 // updateUserDetails 更新多个字段
 func updateUserDetails(engine *xorm.Engine, userId int64, newName string, newEmail string) error {
-	affected, err := engine.ID(userId).Cols("Name", "Email").Update(&XormUser4{Name: newName, Email: newEmail})
+	affected, err := engine.ID(userId).
+		Cols("Name", "Email").
+		Update(&XormUser4{Name: newName, Email: newEmail})
 	if err != nil {
 		return err
 	}

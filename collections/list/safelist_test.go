@@ -49,7 +49,7 @@ func TestSafeListLastIndexOf(t *testing.T) {
 func TestSafeListIndexOfFunc(t *testing.T) {
 	l := list.NewCopyOnWriteList([]int{1, 2, 3})
 
-	fmt.Println(l.IndexOfFunc(func(a int) bool { return a == 1 })) //0
+	fmt.Println(l.IndexOfFunc(func(a int) bool { return a == 1 })) // 0
 	fmt.Println(l.IndexOfFunc(func(a int) bool { return a == 0 })) //-1
 }
 

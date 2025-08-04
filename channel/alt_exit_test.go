@@ -87,7 +87,7 @@ func TestHandler(t *testing.T) {
 
 	// 新建go文件
 	gofile := filepath.Join(tempDir, "gofile.go")
-	if err := ioutil.WriteFile(gofile, testprog, 0666); err != nil {
+	if err := ioutil.WriteFile(gofile, testprog, 0o666); err != nil {
 		t.Fatalf("can't create go file. %q", err)
 	}
 
@@ -126,6 +126,7 @@ package main
 
 import (
 	"`)
+
 var testprogtrailer = []byte(
 	`"
 	"flag"

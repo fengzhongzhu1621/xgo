@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	. "github.com/fengzhongzhu1621/xgo/collections/maps"
-
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -120,7 +119,12 @@ func TestMessage_CopyMetadata(t *testing.T) {
 
 	msg.Metadata.Set("foo", "baz")
 
-	assert.Equal(t, msgCopy.Metadata.Get("foo"), "bar", "did not expect changing source message's metadata to alter copy's metadata")
+	assert.Equal(
+		t,
+		msgCopy.Metadata.Get("foo"),
+		"bar",
+		"did not expect changing source message's metadata to alter copy's metadata",
+	)
 }
 
 func assertAcked(t *testing.T, msg *Message) {

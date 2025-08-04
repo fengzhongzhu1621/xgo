@@ -103,7 +103,6 @@ func GetLocalConnectionIP(host string, port int) (string, error) {
 // Get preferred outbound ip of this machine
 func GetPrivateIP() (ip string, err error) {
 	conn, err := net.Dial("udp", "8.8.8.8:80")
-
 	if err != nil {
 		return "", err
 	}
@@ -118,7 +117,6 @@ func GetPrivateIP() (ip string, err error) {
 
 func GetPublicIP() (ip string, err error) {
 	resp, err := http.Get("https://ifconfig.me/ip")
-
 	if err != nil {
 		return "", err
 	}

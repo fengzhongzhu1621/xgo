@@ -123,5 +123,4 @@ func TestUserOptimisticlock(t *testing.T) {
 	// The Select param is the fields that you want to update or "*".
 	// INSERT INTO `user_optimisticlocks` (`name`,`age`,`version`) VALUES ('',18,1)
 	db.Model(&user).Select("*").Save(&UserOptimisticlock{Age: 18})
-
 }

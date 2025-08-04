@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"net/http"
-
 	// 启用 pprof 性能分析
 	// 向 net/http 的默认 server——DefaultServerMux 中完成了一系列路径及对应 handler 的注册
 	_ "net/http/pprof"

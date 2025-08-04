@@ -25,5 +25,4 @@ func TestInDelta(t *testing.T) {
 	assert.Equal(t, false, result4)
 	assert.Equal(t, false, result5)
 	assert.Equal(t, true, result6)
-
 }

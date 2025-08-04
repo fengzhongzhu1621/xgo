@@ -2,14 +2,13 @@ package xorm
 
 import (
 	"fmt"
-	"golang.org/x/exp/rand"
 	"testing"
+
+	"golang.org/x/exp/rand"
 )
 
 func TestInsertOne(t *testing.T) {
-	var (
-		err error
-	)
+	var err error
 	dbClient := GetDefaultXormDBClient()
 	xormEngine := dbClient.DB
 	defer xormEngine.Close()
@@ -34,7 +33,13 @@ func TestInsertOne(t *testing.T) {
 	// +------------------------------------------------+-------------------+----------+---------------+
 	affected, err := xormEngine.InsertOne(cardM)
 	if affected != 1 || err != nil {
-		panic(fmt.Sprintf("Failed to insert cardM, got (%d) row affected and/or error (%s)", affected, err))
+		panic(
+			fmt.Sprintf(
+				"Failed to insert cardM, got (%d) row affected and/or error (%s)",
+				affected,
+				err,
+			),
+		)
 	} else {
 		fmt.Printf("****** Success, inserted (%d) rows\n", affected)
 	}
@@ -52,7 +57,13 @@ func TestInsertOne(t *testing.T) {
 	// +------------------------------------------------+-------------------+------------+----------+---------------+
 	affected, err = xormEngine.InsertOne(cardS)
 	if affected != 1 || err != nil {
-		panic(fmt.Sprintf("Failed to insert cardS, got (%d) row affected and/or error (%s)", affected, err))
+		panic(
+			fmt.Sprintf(
+				"Failed to insert cardS, got (%d) row affected and/or error (%s)",
+				affected,
+				err,
+			),
+		)
 	}
 }
 

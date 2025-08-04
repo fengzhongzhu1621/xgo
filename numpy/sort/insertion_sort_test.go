@@ -20,7 +20,7 @@ func (pc *peopleAgeComparator) Compare(v1 any, v2 any) int {
 	p1, _ := v1.(people)
 	p2, _ := v2.(people)
 
-	//ascending order
+	// ascending order
 	if p1.Age < p2.Age {
 		return -1
 	} else if p1.Age > p2.Age {

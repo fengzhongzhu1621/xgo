@@ -73,7 +73,6 @@ func getGomods() []string {
 		}
 		return nil
 	})
-
 	if err != nil {
 		panic(err)
 	}

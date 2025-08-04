@@ -15,7 +15,8 @@ import (
 // FindConfigFile Search all configPaths for any config file.
 // Returns the first path that exists (and is a config file).
 func FindConfigFile(fs afero.Fs, configPaths []string, configName string,
-	supportedExts []string, configType string) (string, error) {
+	supportedExts []string, configType string,
+) (string, error) {
 	log.Println("searching for config in paths", "paths", configPaths)
 
 	for _, configPath := range configPaths {
@@ -28,10 +29,15 @@ func FindConfigFile(fs afero.Fs, configPaths []string, configName string,
 }
 
 func searchInPath(fs afero.Fs, configPath string, configName string,
-	supportedExts []string, configType string) (filename string) {
+	supportedExts []string, configType string,
+) (filename string) {
 	log.Println("searching for config in path", "path", configPath)
 	for _, ext := range supportedExts {
-		log.Println("checking if file exists", "file", filepath.Join(configPath, configName+"."+ext))
+		log.Println(
+			"checking if file exists",
+			"file",
+			filepath.Join(configPath, configName+"."+ext),
+		)
 		if b, _ := Exists(fs, filepath.Join(configPath, configName+"."+ext)); b {
 			log.Println("found file", "file", filepath.Join(configPath, configName+"."+ext))
 			return filepath.Join(configPath, configName+"."+ext)

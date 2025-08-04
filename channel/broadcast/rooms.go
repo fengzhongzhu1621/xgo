@@ -98,7 +98,7 @@ func (m *Manager) room(roomid string) broadcast.Broadcaster {
 	return b
 }
 
-///////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////
 // 消息传递.
 func (m *Manager) OpenListener(roomid string) chan interface{} {
 	listener := make(chan interface{})

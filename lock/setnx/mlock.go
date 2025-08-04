@@ -7,10 +7,9 @@ import (
 	"strings"
 	"time"
 
-	log "github.com/sirupsen/logrus"
-
 	"github.com/go-redis/redis/v8"
 	"github.com/rs/xid"
+	log "github.com/sirupsen/logrus"
 )
 
 type mlock struct {
@@ -22,7 +21,12 @@ type mlock struct {
 }
 
 type MLocker interface {
-	MLock(rid string, retryTimes int, expire time.Duration, values ...string) (locked bool, err error)
+	MLock(
+		rid string,
+		retryTimes int,
+		expire time.Duration,
+		values ...string,
+	) (locked bool, err error)
 	MUnlock() error
 	MPartialUnlock(keys []string) error
 }
@@ -36,7 +40,12 @@ func NewMLocker(cache *redis.Client) MLocker {
 	}
 }
 
-func (l *mlock) MLock(rid string, retry int, expire time.Duration, keys ...string) (locked bool, err error) {
+func (l *mlock) MLock(
+	rid string,
+	retry int,
+	expire time.Duration,
+	keys ...string,
+) (locked bool, err error) {
 	if l.isFirst {
 		return false, errors.New("repeat lock")
 	}
@@ -90,9 +99,7 @@ func (l *mlock) MLock(rid string, retry int, expire time.Duration, keys ...strin
 			err := l.cache.Del(context.Background(), pipeRes[true]...).Err()
 			if err != nil {
 				// if del fail, need to del it when unlock
-				for _, v := range pipeRes[true] {
-					delKeys = append(delKeys, v)
-				}
+				delKeys = append(delKeys, pipeRes[true]...)
 				log.Errorf("delete key fail. the key: %v,rid: %s", pipeRes[true], rid)
 			}
 		} else {
@@ -162,7 +169,6 @@ func (l *mlock) MUnlock() error {
 }
 
 func (l *mlock) MPartialUnlock(keys []string) error {
-
 	keysMap := make(map[string]struct{}, 0)
 	for _, key := range l.keys {
 		keysMap[key] = struct{}{}

@@ -5,9 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jinzhu/now"
-
 	"github.com/duke-git/lancet/v2/datetime"
+	"github.com/jinzhu/now"
 )
 
 // 当天零点

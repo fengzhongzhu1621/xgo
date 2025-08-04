@@ -28,7 +28,6 @@ func updateStudent(db *gorm.DB, id int, newName string) {
 	if result.Error != nil {
 		log.Fatal(result.Error)
 	}
-
 }
 
 func batchUpdateStudents(db *gorm.DB, students []Student) {
@@ -55,5 +54,4 @@ func TestUpdate(t *testing.T) {
 
 	db.First(&stu, stu.Id)
 	assert.Equal(t, stu.Name, "bar")
-
 }

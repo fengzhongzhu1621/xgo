@@ -44,7 +44,10 @@ func NewRSAKeyPair(keyLen int) (string, string, error) {
 // param length: >=1024 && <= 16384
 func NewRSAKey(length uint) (*pem.Block, ssh.PublicKey, error) {
 	if length < 1024 || length > 16384 {
-		return nil, nil, fmt.Errorf("key length not supported: %d, supported values are between 1024 and 16384", length)
+		return nil, nil, fmt.Errorf(
+			"key length not supported: %d, supported values are between 1024 and 16384",
+			length,
+		)
 	}
 	// 生成一个RSA私钥
 	privateKey, err := rsa.GenerateKey(rand.Reader, int(length))

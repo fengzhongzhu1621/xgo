@@ -20,7 +20,6 @@ func TestPost(t *testing.T) {
 		ForceContentType("application/json").
 		SetBody(data).
 		Post("https://api.example.com/data")
-
 	if err != nil {
 		fmt.Println("Error:", err)
 		return

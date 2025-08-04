@@ -4,9 +4,8 @@ import (
 	"math"
 	"testing"
 
-	"github.com/samber/lo"
-
 	"github.com/duke-git/lancet/v2/strutil"
+	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
 )
 

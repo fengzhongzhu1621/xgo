@@ -68,7 +68,7 @@ func main() {
 	var hdlr http.Handler = ss
 
 	// 设置日志处理
-	var logger = httpstaticserver.GetLogger()
+	logger := httpstaticserver.GetLogger()
 	hdlr = accesslog.NewLoggingHandler(hdlr, logger)
 
 	// 添加认证处理器
@@ -110,10 +110,11 @@ func main() {
 	// 添加静态资源路由， 从请求的 URL 路径中删除指定的前缀
 	// 将匹配的路径 /-/assets/ -> assets/ 交给 http.FileServer 处理
 	// 例子 http://localhost:8000/-/assets/css/style.css
-	router.PathPrefix("/-/assets/").Handler(http.StripPrefix(gcfg.Prefix+"/-/", http.FileServer(xgo.Assets)))
+	router.PathPrefix("/-/assets/").
+		Handler(http.StripPrefix(gcfg.Prefix+"/-/", http.FileServer(xgo.Assets)))
 	// 添加版本路由
 	// 例子 http://localhost:8000/-/sysinfo
-	var version = httpstaticserver.GetVersion()
+	version := httpstaticserver.GetVersion()
 	router.HandleFunc("/-/sysinfo", func(w http.ResponseWriter, r *http.Request) {
 		data, _ := json.Marshal(map[string]interface{}{
 			"version": version,
@@ -134,7 +135,12 @@ func main() {
 		gcfg.Addr = ":" + gcfg.Addr
 	}
 	_, port, _ := net.SplitHostPort(gcfg.Addr)
-	log.Printf("listening on %s, local address http://%s:%s\n", strconv.Quote(gcfg.Addr), ip.GetLocalIP(), port)
+	log.Printf(
+		"listening on %s, local address http://%s:%s\n",
+		strconv.Quote(gcfg.Addr),
+		ip.GetLocalIP(),
+		port,
+	)
 
 	// 启动服务
 	srv := &http.Server{

@@ -23,7 +23,12 @@ func getStudent(db *gorm.DB, id int) *Student {
 
 func paginateStudents(db *gorm.DB, page, pageSize int) []Student {
 	var activities []Student
-	db.Where("name = ?", "bob").Or("name = ?", "foo").Order("created_at desc").Offset((page - 1) * pageSize).Limit(pageSize).Find(&activities)
+	db.Where("name = ?", "bob").
+		Or("name = ?", "foo").
+		Order("created_at desc").
+		Offset((page - 1) * pageSize).
+		Limit(pageSize).
+		Find(&activities)
 	return activities
 }
 
@@ -46,7 +51,7 @@ func TestQueryConnect(t *testing.T) {
 	createStudent(db, &stu)
 
 	// 查询一条数据
-	var id = stu.Id
+	id := stu.Id
 	row := getStudent(db, id)
 	assert.Equal(t, row.Name, "bob")
 

@@ -92,9 +92,11 @@ func (c FacadeConfig) Validate() error {
 }
 
 func (c FacadeConfig) EventsEnabled() bool {
-	return c.GenerateEventsTopic != nil || c.EventsPublisher != nil || c.EventsSubscriberConstructor != nil
+	return c.GenerateEventsTopic != nil || c.EventsPublisher != nil ||
+		c.EventsSubscriberConstructor != nil
 }
 
 func (c FacadeConfig) CommandsEnabled() bool {
-	return c.GenerateCommandsTopic != nil || c.CommandsPublisher != nil || c.CommandsSubscriberConstructor != nil
+	return c.GenerateCommandsTopic != nil || c.CommandsPublisher != nil ||
+		c.CommandsSubscriberConstructor != nil
 }

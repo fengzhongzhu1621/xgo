@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
-
 	"github.com/stretchr/testify/assert"
 )
 
@@ -36,7 +35,11 @@ func MissingMessages(expected message.Messages, received message.Messages) []str
 
 // AssertAllMessagesReceived checks if all messages were received,
 // ignoring the order and assuming that they are already deduplicated.
-func AssertAllMessagesReceived(t *testing.T, sent message.Messages, received message.Messages) bool {
+func AssertAllMessagesReceived(
+	t *testing.T,
+	sent message.Messages,
+	received message.Messages,
+) bool {
 	sentIDs := sent.IDs()
 	receivedIDs := received.IDs()
 
@@ -81,7 +84,12 @@ func AssertMessagesPayloads(
 }
 
 // AssertMessagesMetadata checks if metadata of all received messages is the same as in expectedValues.
-func AssertMessagesMetadata(t *testing.T, key string, expectedValues map[string]string, received []*message.Message) bool {
+func AssertMessagesMetadata(
+	t *testing.T,
+	key string,
+	expectedValues map[string]string,
+	received []*message.Message,
+) bool {
 	assert.Len(t, received, len(expectedValues))
 
 	ok := true

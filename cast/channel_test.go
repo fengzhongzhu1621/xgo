@@ -5,13 +5,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/samber/lo"
-
-	"github.com/fengzhongzhu1621/xgo/tests"
-
-	"github.com/stretchr/testify/assert"
-
 	"github.com/duke-git/lancet/v2/convertor"
+	"github.com/fengzhongzhu1621/xgo/tests"
+	"github.com/samber/lo"
+	"github.com/stretchr/testify/assert"
 )
 
 // Convert a collection of elements to a read-only channel.

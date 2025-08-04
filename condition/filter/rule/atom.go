@@ -36,9 +36,9 @@ var _ operator.IRuleFactory = new(AtomRule)
 
 // AtomRule is the basic query rule.
 type AtomRule struct {
-	Field    string          `json:"field" bson:"field"`
+	Field    string          `json:"field"    bson:"field"`
 	Operator operator.OpType `json:"operator" bson:"operator"`
-	Value    interface{}     `json:"value" bson:"value"`
+	Value    interface{}     `json:"value"    bson:"value"`
 }
 
 // WithType return the atom rule's type.
@@ -92,11 +92,21 @@ func (ar *AtomRule) validateValueWithType(opt *operator.ExprOption, typ criteria
 	switch ar.Operator {
 	case operator.Object:
 		if typ != criteria.Object && typ != criteria.MapString {
-			return fmt.Errorf("%s is of %s type, should not use operator: %s", ar.Field, typ, ar.Operator)
+			return fmt.Errorf(
+				"%s is of %s type, should not use operator: %s",
+				ar.Field,
+				typ,
+				ar.Operator,
+			)
 		}
 	case operator.Array:
 		if typ != criteria.Array {
-			return fmt.Errorf("%s is of %s type, should not use operator: %s", ar.Field, typ, ar.Operator)
+			return fmt.Errorf(
+				"%s is of %s type, should not use operator: %s",
+				ar.Field,
+				typ,
+				ar.Operator,
+			)
 		}
 	default:
 		// 验证字段类型和需要匹配的值

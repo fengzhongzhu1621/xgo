@@ -9,10 +9,9 @@ import (
 	"runtime/debug"
 	"strings"
 
-	"github.com/pkg/errors"
-
 	"github.com/getsentry/sentry-go"
 	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -49,7 +48,6 @@ const sentryValuesKey = "sentry"
 // Recovery ...
 func Recovery(withSentry bool) gin.HandlerFunc {
 	return func(c *gin.Context) {
-
 		defer func() {
 			// 确保在函数退出时执行panic恢复逻辑
 			if err := recover(); err != nil {

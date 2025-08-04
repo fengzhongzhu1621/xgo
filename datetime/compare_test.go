@@ -12,7 +12,10 @@ import (
 
 // func Min(t1 time.Time, times ...time.Time) time.Time
 func TestMin(t *testing.T) {
-	minTime := datetime.Min(time.Date(2024, time.September, 1, 0, 0, 0, 0, time.UTC), time.Date(2024, time.September, 2, 0, 0, 0, 0, time.UTC))
+	minTime := datetime.Min(
+		time.Date(2024, time.September, 1, 0, 0, 0, 0, time.UTC),
+		time.Date(2024, time.September, 2, 0, 0, 0, 0, time.UTC),
+	)
 
 	fmt.Println(minTime)
 
@@ -22,7 +25,10 @@ func TestMin(t *testing.T) {
 
 // func Max(t1 time.Time, times ...time.Time) time.Time
 func TestMax(t *testing.T) {
-	maxTime := datetime.Max(time.Date(2024, time.September, 1, 0, 0, 0, 0, time.UTC), time.Date(2024, time.September, 2, 0, 0, 0, 0, time.UTC))
+	maxTime := datetime.Max(
+		time.Date(2024, time.September, 1, 0, 0, 0, 0, time.UTC),
+		time.Date(2024, time.September, 2, 0, 0, 0, 0, time.UTC),
+	)
 
 	fmt.Println(maxTime)
 
@@ -32,7 +38,11 @@ func TestMax(t *testing.T) {
 
 // func MaxMin(t1 time.Time, times ...time.Time) (maxTime time.Time, minTime time.Time)
 func TestMaxMin(t *testing.T) {
-	max, min := datetime.MaxMin(time.Date(2024, time.September, 1, 0, 0, 0, 0, time.UTC), time.Date(2024, time.September, 2, 0, 0, 0, 0, time.UTC), time.Date(2024, time.September, 3, 0, 0, 0, 0, time.UTC))
+	max, min := datetime.MaxMin(
+		time.Date(2024, time.September, 1, 0, 0, 0, 0, time.UTC),
+		time.Date(2024, time.September, 2, 0, 0, 0, 0, time.UTC),
+		time.Date(2024, time.September, 3, 0, 0, 0, 0, time.UTC),
+	)
 
 	fmt.Println(max)
 	fmt.Println(min)

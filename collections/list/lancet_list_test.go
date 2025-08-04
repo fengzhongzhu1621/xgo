@@ -17,8 +17,8 @@ import (
 func TestContain(t *testing.T) {
 	li := list.NewList([]int{1, 2, 3})
 
-	fmt.Println(li.Contain(1)) //true
-	fmt.Println(li.Contain(0)) //false
+	fmt.Println(li.Contain(1)) // true
+	fmt.Println(li.Contain(0)) // false
 
 	data := li.Data()
 
@@ -31,8 +31,8 @@ func TestValueOf(t *testing.T) {
 	li := list.NewList([]int{1, 2, 3})
 	v, ok := li.ValueOf(0)
 
-	fmt.Println(*v) //1
-	fmt.Println(ok) //true
+	fmt.Println(*v) // 1
+	fmt.Println(ok) // true
 }
 
 // Returns the index of value in the list. if not found return -1
@@ -40,7 +40,7 @@ func TestValueOf(t *testing.T) {
 func TestIndexOf(t *testing.T) {
 	li := list.NewList([]int{1, 2, 3})
 
-	fmt.Println(li.IndexOf(1)) //0
+	fmt.Println(li.IndexOf(1)) // 0
 	fmt.Println(li.IndexOf(0)) //-1
 }
 
@@ -58,7 +58,7 @@ func TestLastIndexOf(t *testing.T) {
 func TestIndexOfFunc(t *testing.T) {
 	li := list.NewList([]int{1, 2, 3})
 
-	fmt.Println(li.IndexOfFunc(func(a int) bool { return a == 1 })) //0
+	fmt.Println(li.IndexOfFunc(func(a int) bool { return a == 1 })) // 0
 	fmt.Println(li.IndexOfFunc(func(a int) bool { return a == 0 })) //-1
 }
 
@@ -84,9 +84,9 @@ func TestPopFirst(t *testing.T) {
 	li := list.NewList([]int{1, 2, 3})
 	v, ok := li.PopFirst()
 
-	fmt.Println(*v)        //1
-	fmt.Println(ok)        //true
-	fmt.Println(li.Data()) //2, 3
+	fmt.Println(*v)        // 1
+	fmt.Println(ok)        // true
+	fmt.Println(li.Data()) // 2, 3
 }
 
 // func (l *List[T]) PopLast() (*T, bool)
@@ -94,9 +94,9 @@ func TestPopLast(t *testing.T) {
 	li := list.NewList([]int{1, 2, 3})
 	v, ok := li.PopLast()
 
-	fmt.Println(*v)        //3
-	fmt.Println(ok)        //true
-	fmt.Println(li.Data()) //1, 2
+	fmt.Println(*v)        // 3
+	fmt.Println(ok)        // true
+	fmt.Println(li.Data()) // 1, 2
 }
 
 // Delete the value of list at index, if index is not between 0 and length of list data, do nothing
@@ -105,16 +105,16 @@ func TestDeleteAt(t *testing.T) {
 	li := list.NewList([]int{1, 2, 3, 4})
 
 	li.DeleteAt(-1)
-	fmt.Println(li.Data()) //1,2,3,4
+	fmt.Println(li.Data()) // 1,2,3,4
 
 	li.DeleteAt(4)
-	fmt.Println(li.Data()) //1,2,3,4
+	fmt.Println(li.Data()) // 1,2,3,4
 
 	li.DeleteAt(0)
-	fmt.Println(li.Data()) //2,3,4
+	fmt.Println(li.Data()) // 2,3,4
 
 	li.DeleteAt(2)
-	fmt.Println(li.Data()) //2,3
+	fmt.Println(li.Data()) // 2,3
 }
 
 // Insert value into list at index, if index is not between 0 and length of list data, do nothing
@@ -123,16 +123,16 @@ func TestInsertAt(t *testing.T) {
 	li := list.NewList([]int{1, 2, 3})
 
 	li.InsertAt(-1, 0)
-	fmt.Println(li.Data()) //1,2,3
+	fmt.Println(li.Data()) // 1,2,3
 
 	li.InsertAt(4, 0)
-	fmt.Println(li.Data()) //1,2,3
+	fmt.Println(li.Data()) // 1,2,3
 
 	li.InsertAt(3, 4)
-	fmt.Println(li.Data()) //1,2,3,4
+	fmt.Println(li.Data()) // 1,2,3,4
 
 	li.InsertAt(2, 4)
-	fmt.Println(li.Data()) //1,2,4,3,4
+	fmt.Println(li.Data()) // 1,2,4,3,4
 }
 
 // Update value of list at index, index should between 0 and list size - 1
@@ -141,13 +141,13 @@ func TestUpdateAt(t *testing.T) {
 	li := list.NewList([]int{1, 2, 3})
 
 	li.UpdateAt(-1, 0)
-	fmt.Println(li.Data()) //1,2,3
+	fmt.Println(li.Data()) // 1,2,3
 
 	li.UpdateAt(2, 4)
-	fmt.Println(li.Data()) //1,2,4
+	fmt.Println(li.Data()) // 1,2,4
 
 	li.UpdateAt(3, 5)
-	fmt.Println(li.Data()) //1,2,4
+	fmt.Println(li.Data()) // 1,2,4
 }
 
 // Compare a list to another list, use reflect.DeepEqual on every element
@@ -157,8 +157,8 @@ func TestEqual(t *testing.T) {
 	li2 := list.NewList([]int{1, 2, 3, 4})
 	li3 := list.NewList([]int{1, 2, 3})
 
-	fmt.Println(li1.Equal(li2)) //true
-	fmt.Println(li1.Equal(li3)) //false
+	fmt.Println(li1.Equal(li2)) // true
+	fmt.Println(li1.Equal(li3)) // false
 }
 
 // func (l *List[T]) IsEmpty() bool
@@ -166,8 +166,8 @@ func TestIsEmpty(t *testing.T) {
 	li1 := list.NewList([]int{1, 2, 3})
 	li2 := list.NewList([]int{})
 
-	fmt.Println(li1.IsEmpty()) //false
-	fmt.Println(li2.IsEmpty()) //true
+	fmt.Println(li1.IsEmpty()) // false
+	fmt.Println(li2.IsEmpty()) // true
 }
 
 // func (l *List[T]) Clear()
@@ -193,14 +193,14 @@ func TestMerge(t *testing.T) {
 	li2 := list.NewList([]int{4, 5, 6})
 	li3 := li1.Merge(li2)
 
-	fmt.Println(li3.Data()) //1, 2, 3, 4, 4, 5, 6
+	fmt.Println(li3.Data()) // 1, 2, 3, 4, 4, 5, 6
 }
 
 // func (l *List[T]) Size() int
 func TestSize(t *testing.T) {
 	li := list.NewList([]int{1, 2, 3, 4})
 
-	fmt.Println(li.Size()) //4
+	fmt.Println(li.Size()) // 4
 }
 
 // func (l *List[T]) Cap() int
@@ -217,7 +217,7 @@ func TestSwap(t *testing.T) {
 	li := list.NewList([]int{1, 2, 3, 4})
 	li.Swap(0, 3)
 
-	fmt.Println(li.Data()) //4, 2, 3, 1
+	fmt.Println(li.Data()) // 4, 2, 3, 1
 }
 
 // func (l *List[T]) Reverse()
@@ -225,7 +225,7 @@ func TestReverse(t *testing.T) {
 	li := list.NewList([]int{1, 2, 3, 4})
 	li.Reverse()
 
-	fmt.Println(li.Data()) //4, 3, 2, 1
+	fmt.Println(li.Data()) // 4, 3, 2, 1
 }
 
 // func (l *List[T]) Unique()
@@ -233,7 +233,7 @@ func TestUnique(t *testing.T) {
 	li := list.NewList([]int{1, 2, 2, 3, 4})
 	li.Unique()
 
-	fmt.Println(li.Data()) //1,2,3,4
+	fmt.Println(li.Data()) // 1,2,3,4
 }
 
 // func (l *List[T]) Union(other *List[T]) *List[T]
@@ -242,7 +242,7 @@ func TestUnion(t *testing.T) {
 	li2 := list.NewList([]int{4, 5, 6})
 	li3 := li1.Union(li2)
 
-	fmt.Println(li3.Data()) //1,2,3,4,5,6
+	fmt.Println(li3.Data()) // 1,2,3,4,5,6
 }
 
 // func (l *List[T]) Intersection(other *List[T]) *List[T]
@@ -251,7 +251,7 @@ func TestIntersection(t *testing.T) {
 	li2 := list.NewList([]int{4, 5, 6})
 	li3 := li1.Intersection(li2)
 
-	fmt.Println(li3.Data()) //4
+	fmt.Println(li3.Data()) // 4
 }
 
 // func (l *List[T]) Difference(other *List[T]) *List[T]
@@ -261,7 +261,7 @@ func TestDifference(t *testing.T) {
 
 	list3 := list1.Difference(list2)
 
-	fmt.Println(list3.Data()) //3
+	fmt.Println(list3.Data()) // 3
 }
 
 // func (l *List[T]) SymmetricDifference(other *List[T]) *List[T]
@@ -271,7 +271,7 @@ func TestSymmetricDifference(t *testing.T) {
 
 	list3 := list1.SymmetricDifference(list2)
 
-	fmt.Println(list3.Data()) //3, 4
+	fmt.Println(list3.Data()) // 3, 4
 }
 
 // TestRetainAll 仅保留此列表中包含在给定列表中的元素。
@@ -290,9 +290,9 @@ func TestRetainAll(t *testing.T) {
 	list2.RetainAll(retain1)
 	list3.RetainAll(retain2)
 
-	fmt.Println(list1.Data()) //1, 2
-	fmt.Println(list2.Data()) //2, 3
-	fmt.Println(list3.Data()) //1, 2
+	fmt.Println(list1.Data()) // 1, 2
+	fmt.Println(list2.Data()) // 2, 3
+	fmt.Println(list3.Data()) // 1, 2
 }
 
 // Removes from this list all of its elements that are contained in the given list.
@@ -310,9 +310,9 @@ func TestDeleteAll(t *testing.T) {
 	list2.DeleteAll(del1)
 	list3.DeleteAll(del2)
 
-	fmt.Println(list1.Data()) //2,3,4
-	fmt.Println(list2.Data()) //1,4
-	fmt.Println(list3.Data()) //3,4
+	fmt.Println(list1.Data()) // 2,3,4
+	fmt.Println(list2.Data()) // 1,4
+	fmt.Println(list3.Data()) // 3,4
 }
 
 // func (l *List[T]) ForEach(consumer func(T))
@@ -324,7 +324,7 @@ func TestForEach(t *testing.T) {
 		result = append(result, i)
 	})
 
-	fmt.Println(result) //1,2,3,4
+	fmt.Println(result) // 1,2,3,4
 }
 
 // Returns an iterator over the elements in this list in proper sequence.
@@ -340,7 +340,7 @@ func TestIterator(t *testing.T) {
 		result = append(result, item)
 	}
 
-	fmt.Println(result) //1,2,3,4
+	fmt.Println(result) // 1,2,3,4
 }
 
 // Converts a list to a map based on iteratee function.
@@ -352,7 +352,7 @@ func TestListToMap(t *testing.T) {
 		return n, n > 1
 	})
 
-	fmt.Println(result) //map[int]bool{1: false, 2: true, 3: true, 4: true}
+	fmt.Println(result) // map[int]bool{1: false, 2: true, 3: true, 4: true}
 }
 
 // SubList returns a sub list of the original list between the specified fromIndex, inclusive, and toIndex, exclusive.

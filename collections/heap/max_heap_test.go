@@ -52,8 +52,8 @@ func TestMaxHeapPop(t *testing.T) {
 	}
 	val, ok := maxHeap.Pop()
 
-	fmt.Println(val) //12
-	fmt.Println(ok)  //true
+	fmt.Println(val) // 12
+	fmt.Println(ok)  // true
 }
 
 // func (h *MaxHeap[T]) Peek() (T, bool)
@@ -66,8 +66,8 @@ func TestMaxHeapPeek(t *testing.T) {
 	}
 	val, _ := maxHeap.Peek()
 
-	fmt.Println(val)            //12
-	fmt.Println(maxHeap.Size()) //12
+	fmt.Println(val)            // 12
+	fmt.Println(maxHeap.Size()) // 12
 }
 
 // func (h *MaxHeap[T]) Data() []T
@@ -91,7 +91,7 @@ func TestMaxHeapSize(t *testing.T) {
 		maxHeap.Push(v)
 	}
 
-	fmt.Println(maxHeap.Size()) //3
+	fmt.Println(maxHeap.Size()) // 3
 }
 
 // func (h *MaxHeap[T]) PrintStructure()

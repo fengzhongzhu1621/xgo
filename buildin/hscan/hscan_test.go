@@ -58,10 +58,23 @@ var _ = Describe("Scan", func() {
 		f := func(v uint64) string {
 			return strconv.FormatUint(v, 10) + "1"
 		}
-		keys := i{"int8", "int16", "int32", "int64", "uint8", "uint16", "uint32", "uint64", "float", "float64"}
+		keys := i{
+			"int8",
+			"int16",
+			"int32",
+			"int64",
+			"uint8",
+			"uint16",
+			"uint32",
+			"uint64",
+			"float",
+			"float64",
+		}
 		vals := i{
 			f(math.MaxInt8), f(math.MaxInt16), f(math.MaxInt32), f(math.MaxInt64),
-			f(math.MaxUint8), f(math.MaxUint16), f(math.MaxUint32), strconv.FormatUint(math.MaxUint64, 10) + "1",
+			f(
+				math.MaxUint8,
+			), f(math.MaxUint16), f(math.MaxUint32), strconv.FormatUint(math.MaxUint64, 10) + "1",
 			"13.4028234663852886e+38", "11.79769313486231570e+308",
 		}
 		for k, v := range keys {
@@ -73,10 +86,23 @@ var _ = Describe("Scan", func() {
 		f = func(v uint64) string {
 			return strconv.FormatUint(v, 10)
 		}
-		keys = i{"int8", "int16", "int32", "int64", "uint8", "uint16", "uint32", "uint64", "float", "float64"}
+		keys = i{
+			"int8",
+			"int16",
+			"int32",
+			"int64",
+			"uint8",
+			"uint16",
+			"uint32",
+			"uint64",
+			"float",
+			"float64",
+		}
 		vals = i{
 			f(math.MaxInt8), f(math.MaxInt16), f(math.MaxInt32), f(math.MaxInt64),
-			f(math.MaxUint8), f(math.MaxUint16), f(math.MaxUint32), strconv.FormatUint(math.MaxUint64, 10),
+			f(
+				math.MaxUint8,
+			), f(math.MaxUint16), f(math.MaxUint32), strconv.FormatUint(math.MaxUint64, 10),
 			"3.40282346638528859811704183484516925440e+38", "1.797693134862315708145274237317043567981e+308",
 		}
 		var d data
@@ -158,7 +184,9 @@ var _ = Describe("Scan", func() {
 	It("omits untagged fields", func() {
 		var d data
 
-		Expect(Scan(&d, i{"empty", "omit", "string"}, i{"value", "value", "str!"})).NotTo(HaveOccurred())
+		Expect(
+			Scan(&d, i{"empty", "omit", "string"}, i{"value", "value", "str!"}),
+		).NotTo(HaveOccurred())
 		Expect(d).To(Equal(data{
 			String: "str!",
 		}))

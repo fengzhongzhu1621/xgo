@@ -5,7 +5,6 @@ import (
 
 	"github.com/fengzhongzhu1621/xgo"
 	"github.com/fengzhongzhu1621/xgo/network/constant"
-
 	"github.com/gin-gonic/gin"
 )
 

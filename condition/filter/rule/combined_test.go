@@ -12,9 +12,7 @@ import (
 )
 
 func TestCombinedRuleRuleWithType(t *testing.T) {
-	var rule operator.IRuleFactory
-
-	rule = new(CombinedRule)
+	var rule operator.IRuleFactory = new(CombinedRule)
 	if rule.WithType() != CombinedType {
 		t.Errorf("rule type %s is invalid", rule.WithType())
 		return
@@ -56,7 +54,6 @@ func TestBsonUnmarshalRule(t *testing.T) {
 }
 
 func TestRuleValidate(t *testing.T) {
-
 	// test combined rule validation
 	rule := exampleRule
 
@@ -117,7 +114,6 @@ func TestRuleValidate(t *testing.T) {
 }
 
 func TestRuleFields(t *testing.T) {
-
 	// test combined rule to mongo
 	rule := exampleRule
 	mgo, err := rule.ToMgo(nil)

@@ -47,7 +47,7 @@ func Test_MarshalJSON(t *testing.T) {
 			}...,
 		),
 	)
-	fmt.Println(b) // [91 34 49 34 44 34 116 101 115 116 34 93]
+	fmt.Println(string(b)) // [91 34 49 34 44 34 116 101 115 116 34 93]
 	if err != nil {
 		t.Errorf("Error should be nil: %v", err)
 	}

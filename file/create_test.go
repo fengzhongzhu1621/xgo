@@ -1,7 +1,7 @@
 package file
 
 // Create file in path. return true if create succeed.
-//func CreateFile(path string) bool
+// func CreateFile(path string) bool
 import (
 	"fmt"
 	"testing"

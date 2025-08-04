@@ -102,7 +102,13 @@ func TestHasSuffix(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			result := strings.HasSuffix(tt.s, tt.suffix)
 			if result != tt.expected {
-				t.Errorf("HasSuffix(%q, %q) = %v; expected %v", tt.s, tt.suffix, result, tt.expected)
+				t.Errorf(
+					"HasSuffix(%q, %q) = %v; expected %v",
+					tt.s,
+					tt.suffix,
+					result,
+					tt.expected,
+				)
 			}
 		})
 	}

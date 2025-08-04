@@ -4,9 +4,8 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/fengzhongzhu1621/xgo/numpy/math"
-
 	"github.com/fengzhongzhu1621/xgo/cast"
+	"github.com/fengzhongzhu1621/xgo/numpy/math"
 )
 
 // ParseSizeInBytes converts strings like 1GB or 12 mb into an unsigned integer number of bytes.

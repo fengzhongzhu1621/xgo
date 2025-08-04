@@ -15,10 +15,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/fengzhongzhu1621/xgo/crypto/uuid"
-
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/amqp/subscriber"
+	"github.com/fengzhongzhu1621/xgo/crypto/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -452,14 +451,23 @@ func TestPublishSubscribeInOrder(
 	require.NoError(t, err)
 
 	receivedMessages, all := bulkRead(tCtx, messages, len(messagesToPublish), defaultTimeout)
-	require.True(t, all, "not all messages received (%d of %d)", len(receivedMessages), len(messagesToPublish))
+	require.True(
+		t,
+		all,
+		"not all messages received (%d of %d)",
+		len(receivedMessages),
+		len(messagesToPublish),
+	)
 
 	receivedMessagesByType := map[string][]string{}
 	for _, msg := range receivedMessages {
 		if _, ok := receivedMessagesByType[string(msg.Payload)]; !ok {
 			receivedMessagesByType[string(msg.Payload)] = []string{}
 		}
-		receivedMessagesByType[string(msg.Payload)] = append(receivedMessagesByType[string(msg.Payload)], msg.UUID)
+		receivedMessagesByType[string(msg.Payload)] = append(
+			receivedMessagesByType[string(msg.Payload)],
+			msg.UUID,
+		)
 	}
 
 	require.Equal(t, len(receivedMessagesByType), len(expectedMessages))
@@ -569,7 +577,10 @@ func TestNoAck(
 
 	select {
 	case msg := <-messages:
-		t.Fatalf("messages channel should be blocked since Ack() was not sent, received %s", msg.UUID)
+		t.Fatalf(
+			"messages channel should be blocked since Ack() was not sent, received %s",
+			msg.UUID,
+		)
 	case <-time.After(time.Millisecond * 100):
 		// ok
 	}
@@ -825,8 +836,22 @@ func TestConsumerGroups(
 
 	messagesToPublish := PublishSimpleMessages(t, totalMessagesCount, publisherPub, topicName)
 
-	assertConsumerGroupReceivedMessages(t, tCtx, pubSubConstructor, group1, topicName, messagesToPublish)
-	assertConsumerGroupReceivedMessages(t, tCtx, pubSubConstructor, group2, topicName, messagesToPublish)
+	assertConsumerGroupReceivedMessages(
+		t,
+		tCtx,
+		pubSubConstructor,
+		group1,
+		topicName,
+		messagesToPublish,
+	)
+	assertConsumerGroupReceivedMessages(
+		t,
+		tCtx,
+		pubSubConstructor,
+		group2,
+		topicName,
+		messagesToPublish,
+	)
 }
 
 // TestPublisherClose sends big amount of messages and them run close to ensure that messages are not lost during adding.
@@ -1110,7 +1135,13 @@ func TestReconnect(
 	}
 
 	receivedMessages, allMessages := bulkRead(tCtx, messages, messagesCount, defaultTimeout*4)
-	assert.True(t, allMessages, "not all messages received (has %d of %d)", len(receivedMessages), messagesCount)
+	assert.True(
+		t,
+		allMessages,
+		"not all messages received (has %d of %d)",
+		len(receivedMessages),
+		messagesCount,
+	)
 
 	AssertAllMessagesReceived(t, publishedMessages, receivedMessages)
 
@@ -1137,8 +1168,10 @@ func TestNewSubscriberReceivesOldMessages(
 	}
 	require.NoError(t, sub.Close())
 
-	var publishMessage = func() {
-		publishedMessages = append(publishedMessages, PublishSimpleMessages(t, 1, pub, topicName)...)
+	publishMessage := func() {
+		publishedMessages = append(
+			publishedMessages,
+			PublishSimpleMessages(t, 1, pub, topicName)...)
 	}
 	publishMessage()
 
@@ -1155,7 +1188,7 @@ func TestNewSubscriberReceivesOldMessages(
 		}
 	}()
 
-	var addSubscriber = func() {
+	addSubscriber := func() {
 		pub, sub := pubSubConstructor(t)
 		require.NoError(t, pub.Close())
 
@@ -1169,12 +1202,19 @@ func TestNewSubscriberReceivesOldMessages(
 		})
 	}
 
-	var consumeMessages = func() {
+	consumeMessages := func() {
 		for i, sub := range subscribers {
 			toConsume := len(publishedMessages) - sub.ConsumedMessages
 			receivedMessages, all := bulkRead(tCtx, sub.Msgs, toConsume, defaultTimeout)
 
-			require.True(t, all, "subscriber %d not received all messages (%d/%d)", i, len(receivedMessages), toConsume)
+			require.True(
+				t,
+				all,
+				"subscriber %d not received all messages (%d/%d)",
+				i,
+				len(receivedMessages),
+				toConsume,
+			)
 
 			fmt.Printf("subscriber no %d consumed %d messages\n", i, toConsume)
 			sub.ConsumedMessages += toConsume
@@ -1239,7 +1279,11 @@ func closePubSub(t *testing.T, pub message.Publisher, sub message.Subscriber) {
 	require.NoError(t, err)
 }
 
-func generateConsumerGroup(t *testing.T, pubSubConstructor ConsumerGroupPubSubConstructor, topicName string) string {
+func generateConsumerGroup(
+	t *testing.T,
+	pubSubConstructor ConsumerGroupPubSubConstructor,
+	topicName string,
+) string {
 	groupName := "cg_" + uuid.NewUUID4()
 
 	// create a pubsub to ensure that the consumer group exists
@@ -1256,7 +1300,12 @@ func generateConsumerGroup(t *testing.T, pubSubConstructor ConsumerGroupPubSubCo
 }
 
 // PublishSimpleMessages publishes provided number of simple messages without a payload.
-func PublishSimpleMessages(t *testing.T, messagesCount int, publisher message.Publisher, topicName string) message.Messages {
+func PublishSimpleMessages(
+	t *testing.T,
+	messagesCount int,
+	publisher message.Publisher,
+	topicName string,
+) message.Messages {
 	var messagesToPublish []*message.Message
 
 	for i := 0; i < messagesCount; i++ {
@@ -1274,7 +1323,13 @@ func PublishSimpleMessages(t *testing.T, messagesCount int, publisher message.Pu
 
 // AddSimpleMessagesParallel publishes provided number of simple messages without a payload
 // using the provided number of publishers (goroutines).
-func AddSimpleMessagesParallel(t *testing.T, messagesCount int, publisher message.Publisher, topicName string, publishers int) message.Messages {
+func AddSimpleMessagesParallel(
+	t *testing.T,
+	messagesCount int,
+	publisher message.Publisher,
+	topicName string,
+	publishers int,
+) message.Messages {
 	var messagesToPublish []*message.Message
 	publishMsg := make(chan *message.Message)
 
@@ -1316,7 +1371,11 @@ func assertMessagesChannelClosed(t *testing.T, messages <-chan *message.Message)
 	}
 }
 
-func publishWithRetry(publisher message.Publisher, topic string, messages ...*message.Message) error {
+func publishWithRetry(
+	publisher message.Publisher,
+	topic string,
+	messages ...*message.Message,
+) error {
 	retries := 5
 
 	for {
@@ -1335,7 +1394,12 @@ func publishWithRetry(publisher message.Publisher, topic string, messages ...*me
 	}
 }
 
-func bulkRead(testCtx TestContext, messagesCh <-chan *message.Message, limit int, timeout time.Duration) (receivedMessages message.Messages, all bool) {
+func bulkRead(
+	testCtx TestContext,
+	messagesCh <-chan *message.Message,
+	limit int,
+	timeout time.Duration,
+) (receivedMessages message.Messages, all bool) {
 	start := time.Now()
 
 	defer func() {
@@ -1356,7 +1420,11 @@ func bulkRead(testCtx TestContext, messagesCh <-chan *message.Message, limit int
 	return subscriber.BulkRead(messagesCh, limit, timeout)
 }
 
-func createMultipliedSubscriber(t *testing.T, pubSubConstructor PubSubConstructor, subscribersCount int) message.Subscriber {
+func createMultipliedSubscriber(
+	t *testing.T,
+	pubSubConstructor PubSubConstructor,
+	subscribersCount int,
+) message.Subscriber {
 	return NewMultiplier(
 		func() (message.Subscriber, error) {
 			pub, sub := pubSubConstructor(t)

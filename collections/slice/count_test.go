@@ -3,9 +3,8 @@ package slice
 import (
 	"testing"
 
-	"github.com/samber/lo"
-
 	"github.com/duke-git/lancet/v2/slice"
+	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -93,7 +92,10 @@ func TestFrequency(t *testing.T) {
 		is.Equal(map[int]int{}, lo.CountValues([]int{}))
 		is.Equal(map[int]int{1: 1, 2: 1}, lo.CountValues([]int{1, 2}))
 		is.Equal(map[int]int{1: 1, 2: 2}, lo.CountValues([]int{1, 2, 2}))
-		is.Equal(map[string]int{"": 1, "foo": 1, "bar": 1}, lo.CountValues([]string{"foo", "bar", ""}))
+		is.Equal(
+			map[string]int{"": 1, "foo": 1, "bar": 1},
+			lo.CountValues([]string{"foo", "bar", ""}),
+		)
 		is.Equal(map[string]int{"foo": 1, "bar": 2}, lo.CountValues([]string{"foo", "bar", "bar"}))
 	}
 }

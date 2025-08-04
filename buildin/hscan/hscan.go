@@ -76,9 +76,10 @@ func Struct(dst interface{}) (StructValue, error) {
 // 扫描结构体的所有字段，调用字段类型对应的解码器
 // 在给结构体的字段赋值前，进行扫描校验，将字符串转换为指定类型，如果有一个字段的赋值不符合策略，则停止赋值，返回err
 // Args：
-// 	ds: 结构体指针
-// 	keys: 结构体中字段的tag名数组
-//  vals: 需要给结构体赋值的数组
+//
+//		ds: 结构体指针
+//		keys: 结构体中字段的tag名数组
+//	 vals: 需要给结构体赋值的数组
 func Scan(dst interface{}, keys []interface{}, vals []interface{}) error {
 	if len(keys) != len(vals) {
 		return errors.New("args should have the same number of keys and vals")

@@ -5,13 +5,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/assert"
-
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/amqp/router/middleware"
 	"github.com/fengzhongzhu1621/xgo/logging"
-
 	"github.com/pkg/errors"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestRetry_retry(t *testing.T) {
@@ -196,6 +194,13 @@ func TestRetry_max_interval(t *testing.T) {
 	_, _ = h(message.NewMessage("2", nil))
 
 	for i, delay := range backoffTimes {
-		assert.True(t, delay <= maxInterval, "wait interval %d (%s) exceeds maxInterval (%s)", i, delay, maxInterval)
+		assert.True(
+			t,
+			delay <= maxInterval,
+			"wait interval %d (%s) exceeds maxInterval (%s)",
+			i,
+			delay,
+			maxInterval,
+		)
 	}
 }

@@ -6,11 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/samber/lo"
-
-	"github.com/stretchr/testify/assert"
-
 	"github.com/duke-git/lancet/v2/random"
+	"github.com/samber/lo"
+	"github.com/stretchr/testify/assert"
 )
 
 // Generate random given length string. only contains letter (a-zA-Z)
@@ -39,8 +37,14 @@ func TestRandomRandString(t *testing.T) {
 		is.Equal(100, lo.RuneLength(str3))
 		is.Subset(noneUtf8Charset, []rune(str3))
 
-		is.PanicsWithValue("lo.RandomString: Charset parameter must not be empty", func() { lo.RandomString(100, []rune{}) })
-		is.PanicsWithValue("lo.RandomString: Size parameter must be greater than 0", func() { lo.RandomString(0, lo.LowerCaseLettersCharset) })
+		is.PanicsWithValue(
+			"lo.RandomString: Charset parameter must not be empty",
+			func() { lo.RandomString(100, []rune{}) },
+		)
+		is.PanicsWithValue(
+			"lo.RandomString: Size parameter must be greater than 0",
+			func() { lo.RandomString(0, lo.LowerCaseLettersCharset) },
+		)
 	}
 }
 
@@ -81,7 +85,7 @@ func TestRandNumeral(t *testing.T) {
 // func RandNumeralOrLetter(length int) string
 func TestRandNumeralOrLetter(t *testing.T) {
 	randStr := random.RandNumeralOrLetter(6)
-	fmt.Println(randStr) //0aW7cQ
+	fmt.Println(randStr) // 0aW7cQ
 }
 
 // TestRandSymbolChar Generate a random symbol char of specified length.

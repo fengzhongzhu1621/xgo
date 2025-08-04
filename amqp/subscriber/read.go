@@ -8,7 +8,11 @@ import (
 
 // BulkRead reads provided amount of messages from the provided channel, until a timeout occurrs or the limit is reached.
 // 批量消费消息
-func BulkRead(messagesCh <-chan *message.Message, limit int, timeout time.Duration) (receivedMessages message.Messages, all bool) {
+func BulkRead(
+	messagesCh <-chan *message.Message,
+	limit int,
+	timeout time.Duration,
+) (receivedMessages message.Messages, all bool) {
 MessagesLoop:
 	for len(receivedMessages) < limit {
 		// 从消息队列读消息
@@ -33,7 +37,11 @@ MessagesLoop:
 // BulkReadWithDeduplication reads provided number of messages from the provided channel, ignoring duplicates,
 // until a timeout occurrs or the limit is reached.
 // 批量消费消息，保证当前没有重复的消息，并发送ack信号
-func BulkReadWithDeduplication(messagesCh <-chan *message.Message, limit int, timeout time.Duration) (receivedMessages message.Messages, all bool) {
+func BulkReadWithDeduplication(
+	messagesCh <-chan *message.Message,
+	limit int,
+	timeout time.Duration,
+) (receivedMessages message.Messages, all bool) {
 	receivedIDs := map[string]struct{}{}
 
 MessagesLoop:

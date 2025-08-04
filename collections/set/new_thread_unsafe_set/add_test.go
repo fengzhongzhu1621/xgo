@@ -84,6 +84,7 @@ func TestThreadUnsafeSet_MarshalJSON_Struct(t *testing.T) {
 		t.Errorf("Expected no difference, got: %v", expected.Set.Difference(actual.Set))
 	}
 }
+
 func TestThreadUnsafeSet_UnmarshalJSON_Struct(t *testing.T) {
 	expected := &testStruct{"test", mapset.NewThreadUnsafeSet("a", "b", "c")}
 	actual := &testStruct{}
@@ -96,7 +97,10 @@ func TestThreadUnsafeSet_UnmarshalJSON_Struct(t *testing.T) {
 		t.Errorf("Expected no difference, got: %v", expected.Set.Difference(actual.Set))
 	}
 
-	expectedComplex := mapset.NewThreadUnsafeSet(struct{ Val string }{Val: "a"}, struct{ Val string }{Val: "b"})
+	expectedComplex := mapset.NewThreadUnsafeSet(
+		struct{ Val string }{Val: "a"},
+		struct{ Val string }{Val: "b"},
+	)
 	actualComplex := mapset.NewThreadUnsafeSet[struct{ Val string }]()
 
 	err = actualComplex.UnmarshalJSON([]byte(`[{"Val": "a"}, {"Val": "b"}]`))

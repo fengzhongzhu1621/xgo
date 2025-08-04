@@ -12,7 +12,6 @@ func BackendAuthMiddleware(cfg *config.Config) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 从请求头获取 jwt 的值
 		jwt_token, err := jwt.GetJwtTokenFromHeader(c)
-
 		if err != nil {
 			utils.UnauthorizedJSONResponse(
 				c,
@@ -30,7 +29,6 @@ func BackendAuthMiddleware(cfg *config.Config) gin.HandlerFunc {
 		option.HS256Key = cfg.Auth.JwtToken
 		claims, _ = jwt.NewCustomJwtClaims(&option)
 		jwtclaims, err := claims.ParseHS256JwtToken(jwt_token)
-
 		if err != nil {
 			utils.UnauthorizedJSONResponse(
 				c,

@@ -10,10 +10,9 @@ import (
 	"html/template"
 	"net/http"
 
-	"github.com/fengzhongzhu1621/xgo/validator"
-
 	"github.com/fengzhongzhu1621/xgo/cast"
 	json "github.com/fengzhongzhu1621/xgo/crypto/encoding/json"
+	"github.com/fengzhongzhu1621/xgo/validator"
 )
 
 // JSON contains the given interface object.
@@ -48,9 +47,11 @@ type PureJSON struct {
 	Data interface{}
 }
 
-var jsonContentType = []string{"application/json; charset=utf-8"}
-var jsonpContentType = []string{"application/javascript; charset=utf-8"}
-var jsonAsciiContentType = []string{"application/json"}
+var (
+	jsonContentType      = []string{"application/json; charset=utf-8"}
+	jsonpContentType     = []string{"application/javascript; charset=utf-8"}
+	jsonAsciiContentType = []string{"application/json"}
+)
 
 // Render (JSON) writes data with custom ContentType.
 func (r JSON) Render(w http.ResponseWriter) (err error) {

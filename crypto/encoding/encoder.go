@@ -18,7 +18,9 @@ const (
 	ErrEncoderNotFound = xgo.EncodingError("encoder not found for this format")
 
 	// ErrEncoderFormatAlreadyRegistered is returned when an encoder is already registered for a format.
-	ErrEncoderFormatAlreadyRegistered = xgo.EncodingError("encoder already registered for this format")
+	ErrEncoderFormatAlreadyRegistered = xgo.EncodingError(
+		"encoder already registered for this format",
+	)
 )
 
 // EncoderRegistry can choose an appropriate Encoder based on the provided format

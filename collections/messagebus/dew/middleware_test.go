@@ -57,7 +57,10 @@ func initializeBus() dew.Bus {
 func runMemberScenario(bus dew.Bus) error {
 	// 创建一个带有成员身份的上下文 memberContext（通过 middlewares.AuthContext 设置当前用户为 MemberID）
 	busContext := dew.NewContext(context.Background(), bus)
-	memberContext := middlewares.AuthContext(busContext, &middlewares.CurrentUser{ID: middlewares.MemberID})
+	memberContext := middlewares.AuthContext(
+		busContext,
+		&middlewares.CurrentUser{ID: middlewares.MemberID},
+	)
 
 	// 查询组织详情
 	// 使用 dew.Query 发送一个查询请求 GetOrgDetailsQuery。
@@ -71,7 +74,9 @@ func runMemberScenario(bus dew.Bus) error {
 
 	// 尝试更新组织信息
 	// 使用 dew.Dispatch 发送一个更新操作 UpdateOrgAction。
-	fmt.Println("\n2. Dispatch an action to update the organization profile (should fail for member).")
+	fmt.Println(
+		"\n2. Dispatch an action to update the organization profile (should fail for member).",
+	)
 	_, err = dew.Dispatch(memberContext, &action.UpdateOrgAction{Name: "Foo"})
 	if err == nil {
 		return fmt.Errorf("expected unauthorized error, got nil")
@@ -86,9 +91,14 @@ func runMemberScenario(bus dew.Bus) error {
 
 func runAdminScenario(bus dew.Bus) error {
 	busContext := dew.NewContext(context.Background(), bus)
-	adminContext := middlewares.AuthContext(busContext, &middlewares.CurrentUser{ID: middlewares.AdminID})
+	adminContext := middlewares.AuthContext(
+		busContext,
+		&middlewares.CurrentUser{ID: middlewares.AdminID},
+	)
 
-	fmt.Println("\n3. Dispatch an action to update the organization profile (should succeed for admin).")
+	fmt.Println(
+		"\n3. Dispatch an action to update the organization profile (should succeed for admin).",
+	)
 	err := dew.DispatchMulti(adminContext, dew.NewAction(&action.UpdateOrgAction{Name: "Foo"}))
 	if err != nil {
 		return fmt.Errorf("unexpected error in UpdateOrgAction: %w", err)

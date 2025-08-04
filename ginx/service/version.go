@@ -20,7 +20,10 @@ type versionsConfigService struct {
 var _ types.IVersionsConfigService = (*versionsConfigService)(nil)
 
 // getVersionLogs 格式化语言并获得指定目录下指定版本和语言的版本日志
-func getVersionLogs(rootDir string, language, versionStr string) (latestVer string, versionLogs []*version.VersionLog, err error) {
+func getVersionLogs(
+	rootDir string,
+	language, versionStr string,
+) (latestVer string, versionLogs []*version.VersionLog, err error) {
 	if language == nethttp.WEB_LANGUAGE_CN {
 		language = "zh"
 	} else {
@@ -31,7 +34,9 @@ func getVersionLogs(rootDir string, language, versionStr string) (latestVer stri
 }
 
 // GetVersionContent 获得版本日志内容
-func (s *versionsConfigService) GetVersionContent(param *types.GetVersionContentRequestData) (string, error) {
+func (s *versionsConfigService) GetVersionContent(
+	param *types.GetVersionContentRequestData,
+) (string, error) {
 	var (
 		err         error
 		versionlogs []*version.VersionLog
@@ -59,7 +64,9 @@ func (s *versionsConfigService) GetVersionContent(param *types.GetVersionContent
 }
 
 // ListVersions 获得指定语言的所有的版本记录（不包含版本记录的内容，只包含版本的名称或最新的版本号）
-func (s *versionsConfigService) ListVersions(language string) (*types.ListVersionsResponseData, error) {
+func (s *versionsConfigService) ListVersions(
+	language string,
+) (*types.ListVersionsResponseData, error) {
 	var (
 		err         error
 		versionlogs []*version.VersionLog

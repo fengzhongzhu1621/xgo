@@ -37,9 +37,7 @@ func ReadAssetsContent(name string) string {
 	return string(data)
 }
 
-var (
-	FuncMap template.FuncMap // 定义的模板函数
-)
+var FuncMap template.FuncMap // 定义的模板函数
 
 func init() {
 	// 初始化模板函数

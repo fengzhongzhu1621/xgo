@@ -5,12 +5,10 @@ import (
 	"testing"
 	"time"
 
+	"github.com/duke-git/lancet/v2/datetime"
 	"github.com/gookit/goutil/fmtutil"
 	"github.com/samber/lo"
-
 	"github.com/stretchr/testify/assert"
-
-	"github.com/duke-git/lancet/v2/datetime"
 )
 
 func TestDuration(t *testing.T) {
@@ -51,14 +49,18 @@ func TestDurationX(t *testing.T) {
 	}
 
 	{
-		a, b, result := lo.Duration2(func() (string, string) { time.Sleep(10 * time.Millisecond); return "a", "b" })
+		a, b, result := lo.Duration2(
+			func() (string, string) { time.Sleep(10 * time.Millisecond); return "a", "b" },
+		)
 		is.InEpsilon(10*time.Millisecond, result, float64(2*time.Millisecond))
 		is.Equal("a", a)
 		is.Equal("b", b)
 	}
 
 	{
-		a, b, c, result := lo.Duration3(func() (string, string, string) { time.Sleep(10 * time.Millisecond); return "a", "b", "c" })
+		a, b, c, result := lo.Duration3(
+			func() (string, string, string) { time.Sleep(10 * time.Millisecond); return "a", "b", "c" },
+		)
 		is.InEpsilon(10*time.Millisecond, result, float64(2*time.Millisecond))
 		is.Equal("a", a)
 		is.Equal("b", b)
@@ -66,7 +68,9 @@ func TestDurationX(t *testing.T) {
 	}
 
 	{
-		a, b, c, d, result := lo.Duration4(func() (string, string, string, string) { time.Sleep(10 * time.Millisecond); return "a", "b", "c", "d" })
+		a, b, c, d, result := lo.Duration4(
+			func() (string, string, string, string) { time.Sleep(10 * time.Millisecond); return "a", "b", "c", "d" },
+		)
 		is.InEpsilon(10*time.Millisecond, result, float64(2*time.Millisecond))
 		is.Equal("a", a)
 		is.Equal("b", b)
@@ -88,10 +92,12 @@ func TestDurationX(t *testing.T) {
 	}
 
 	{
-		a, b, c, d, e, f, result := lo.Duration6(func() (string, string, string, string, string, string) {
-			time.Sleep(10 * time.Millisecond)
-			return "a", "b", "c", "d", "e", "f"
-		})
+		a, b, c, d, e, f, result := lo.Duration6(
+			func() (string, string, string, string, string, string) {
+				time.Sleep(10 * time.Millisecond)
+				return "a", "b", "c", "d", "e", "f"
+			},
+		)
 		is.InEpsilon(10*time.Millisecond, result, float64(2*time.Millisecond))
 		is.Equal("a", a)
 		is.Equal("b", b)
@@ -102,10 +108,12 @@ func TestDurationX(t *testing.T) {
 	}
 
 	{
-		a, b, c, d, e, f, g, result := lo.Duration7(func() (string, string, string, string, string, string, string) {
-			time.Sleep(10 * time.Millisecond)
-			return "a", "b", "c", "d", "e", "f", "g"
-		})
+		a, b, c, d, e, f, g, result := lo.Duration7(
+			func() (string, string, string, string, string, string, string) {
+				time.Sleep(10 * time.Millisecond)
+				return "a", "b", "c", "d", "e", "f", "g"
+			},
+		)
 		is.InEpsilon(10*time.Millisecond, result, float64(2*time.Millisecond))
 		is.Equal("a", a)
 		is.Equal("b", b)
@@ -117,10 +125,12 @@ func TestDurationX(t *testing.T) {
 	}
 
 	{
-		a, b, c, d, e, f, g, h, result := lo.Duration8(func() (string, string, string, string, string, string, string, string) {
-			time.Sleep(10 * time.Millisecond)
-			return "a", "b", "c", "d", "e", "f", "g", "h"
-		})
+		a, b, c, d, e, f, g, h, result := lo.Duration8(
+			func() (string, string, string, string, string, string, string, string) {
+				time.Sleep(10 * time.Millisecond)
+				return "a", "b", "c", "d", "e", "f", "g", "h"
+			},
+		)
 		is.InEpsilon(10*time.Millisecond, result, float64(2*time.Millisecond))
 		is.Equal("a", a)
 		is.Equal("b", b)
@@ -133,10 +143,12 @@ func TestDurationX(t *testing.T) {
 	}
 
 	{
-		a, b, c, d, e, f, g, h, i, result := lo.Duration9(func() (string, string, string, string, string, string, string, string, string) {
-			time.Sleep(10 * time.Millisecond)
-			return "a", "b", "c", "d", "e", "f", "g", "h", "i"
-		})
+		a, b, c, d, e, f, g, h, i, result := lo.Duration9(
+			func() (string, string, string, string, string, string, string, string, string) {
+				time.Sleep(10 * time.Millisecond)
+				return "a", "b", "c", "d", "e", "f", "g", "h", "i"
+			},
+		)
 		is.InEpsilon(10*time.Millisecond, result, float64(2*time.Millisecond))
 		is.Equal("a", a)
 		is.Equal("b", b)
@@ -150,10 +162,12 @@ func TestDurationX(t *testing.T) {
 	}
 
 	{
-		a, b, c, d, e, f, g, h, i, j, result := lo.Duration10(func() (string, string, string, string, string, string, string, string, string, string) {
-			time.Sleep(10 * time.Millisecond)
-			return "a", "b", "c", "d", "e", "f", "g", "h", "i", "j"
-		})
+		a, b, c, d, e, f, g, h, i, j, result := lo.Duration10(
+			func() (string, string, string, string, string, string, string, string, string, string) {
+				time.Sleep(10 * time.Millisecond)
+				return "a", "b", "c", "d", "e", "f", "g", "h", "i", "j"
+			},
+		)
 		is.InEpsilon(10*time.Millisecond, result, float64(2*time.Millisecond))
 		is.Equal("a", a)
 		is.Equal("b", b)

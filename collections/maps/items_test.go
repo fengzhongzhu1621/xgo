@@ -103,7 +103,6 @@ func TestMapValues(t *testing.T) {
 		// Output:
 		// map[1:a1 2:b2 3:c3]
 	}
-
 }
 
 // TestTransform Transform a map to another type map.
@@ -175,7 +174,12 @@ func TesEntries(t *testing.T) {
 	}
 }
 
-func mapEntriesTest[I any, O any](t *testing.T, in map[string]I, iteratee func(string, I) (string, O), expected map[string]O) {
+func mapEntriesTest[I any, O any](
+	t *testing.T,
+	in map[string]I,
+	iteratee func(string, I) (string, O),
+	expected map[string]O,
+) {
 	is := assert.New(t)
 	result := lo.MapEntries(in, iteratee)
 	is.Equal(result, expected)
@@ -216,18 +220,33 @@ func TestMapEntries(t *testing.T) {
 		mapEntriesTest(t, map[string]int{"foo": 1, "bar": 2}, func(k string, v int) (string, int) {
 			return k, v
 		}, map[string]int{"foo": 1, "bar": 2})
-		mapEntriesTest(t, map[string]any{"foo": 1, "bar": "2", "ccc": true}, func(k string, v any) (string, any) {
-			return k, v
-		}, map[string]any{"foo": 1, "bar": "2", "ccc": true})
+		mapEntriesTest(
+			t,
+			map[string]any{"foo": 1, "bar": "2", "ccc": true},
+			func(k string, v any) (string, any) {
+				return k, v
+			},
+			map[string]any{"foo": 1, "bar": "2", "ccc": true},
+		)
 	}
 	// ToConstantEntry
 	{
-		mapEntriesTest(t, map[string]any{"foo": 1, "bar": "2", "ccc": true}, func(k string, v any) (string, any) {
-			return "key", "value"
-		}, map[string]any{"key": "value"})
-		mapEntriesTest(t, map[string]any{"foo": 1, "bar": "2", "ccc": true}, func(k string, v any) (string, any) {
-			return "b", 5
-		}, map[string]any{"b": 5})
+		mapEntriesTest(
+			t,
+			map[string]any{"foo": 1, "bar": "2", "ccc": true},
+			func(k string, v any) (string, any) {
+				return "key", "value"
+			},
+			map[string]any{"key": "value"},
+		)
+		mapEntriesTest(
+			t,
+			map[string]any{"foo": 1, "bar": "2", "ccc": true},
+			func(k string, v any) (string, any) {
+				return "b", 5
+			},
+			map[string]any{"b": 5},
+		)
 	}
 
 	//// OverlappingKeys
@@ -243,9 +262,28 @@ func TestMapEntries(t *testing.T) {
 	//}
 	//NormalMappers
 	{
-		mapEntriesTest(t, map[string]string{"foo": "1", "foo2": "2", "Foo": "2", "Foo2": "2", "bar": "2", "ccc": "true"}, func(k string, v string) (string, string) {
-			return k, k + v
-		}, map[string]string{"Foo": "Foo2", "Foo2": "Foo22", "bar": "bar2", "ccc": "ccctrue", "foo": "foo1", "foo2": "foo22"})
+		mapEntriesTest(
+			t,
+			map[string]string{
+				"foo":  "1",
+				"foo2": "2",
+				"Foo":  "2",
+				"Foo2": "2",
+				"bar":  "2",
+				"ccc":  "true",
+			},
+			func(k string, v string) (string, string) {
+				return k, k + v
+			},
+			map[string]string{
+				"Foo":  "Foo2",
+				"Foo2": "Foo22",
+				"bar":  "bar2",
+				"ccc":  "ccctrue",
+				"foo":  "foo1",
+				"foo2": "foo22",
+			},
+		)
 
 		mapEntriesTest(t, map[string]struct {
 			name string

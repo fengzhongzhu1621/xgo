@@ -12,7 +12,11 @@ import (
 )
 
 // TokenAuth 用户身份认证中间件
-func TokenAuth(username string, loginUrl string, getUserInfo func(string) (string, error)) gin.HandlerFunc {
+func TokenAuth(
+	username string,
+	loginUrl string,
+	getUserInfo func(string) (string, error),
+) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 构造重定向地址
 		scheme := lo.Ternary(c.Request.TLS != nil, "https", "http")
@@ -21,7 +25,11 @@ func TokenAuth(username string, loginUrl string, getUserInfo func(string) (strin
 		// 获取token 的值
 		userToken, err := c.Request.Cookie(constant.UserTokenKey)
 		if err != nil {
-			c.HTML(http.StatusUnauthorized, "401.html", gin.H{"loginUrl": fmt.Sprintf("%s?login_url=%s", loginUrl, referUrl)})
+			c.HTML(
+				http.StatusUnauthorized,
+				"401.html",
+				gin.H{"loginUrl": fmt.Sprintf("%s?login_url=%s", loginUrl, referUrl)},
+			)
 			c.Abort()
 			return
 		}

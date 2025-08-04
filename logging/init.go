@@ -3,16 +3,17 @@ package logging
 import (
 	"sync"
 
-	"go.uber.org/zap"
-
 	"github.com/fengzhongzhu1621/xgo/config"
 	"github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 )
 
 var loggerInitOnce sync.Once
 
-var dbLogger *DBLogger
-var appLogger *zap.Logger
+var (
+	dbLogger  *DBLogger
+	appLogger *zap.Logger
+)
 
 func initSystemLogger(cfg *config.LogConfig) {
 	writer, err := GetWriter(cfg.Writer, cfg.Settings)
@@ -62,7 +63,6 @@ func InitLogger(cache bool) {
 		appLogger := NewZapJSONLogger(&logger.Web, cache)
 		dbLogger = &DBLogger{appLogger}
 	})
-
 }
 
 func init() {

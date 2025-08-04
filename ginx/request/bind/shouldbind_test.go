@@ -1,9 +1,10 @@
 package bind
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"testing"
+
+	"github.com/gin-gonic/gin"
 )
 
 // 定义需要绑定请求参数的结构体

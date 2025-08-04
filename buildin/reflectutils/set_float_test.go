@@ -7,7 +7,7 @@ import (
 )
 
 func TestSetFloat(t *testing.T) {
-	var x float64 = 3.14
+	x := 3.14
 
 	// Elem(): 它允许你访问指针指向的值或接口包含的值。
 	// 接受一个 reflect.Value 类型的参数，并返回一个新的 reflect.Value，表示指针指向的值或接口包含的值。

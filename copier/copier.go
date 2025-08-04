@@ -65,7 +65,11 @@ func Copy(toValue interface{}, fromValue interface{}) (err error) {
 }
 
 // CopyWithOption copy with option
-func CopyWithOption(toValue interface{}, fromValue interface{}, opt reflectutils.Option) (err error) {
+func CopyWithOption(
+	toValue interface{},
+	fromValue interface{},
+	opt reflectutils.Option,
+) (err error) {
 	return copier(toValue, fromValue, opt)
 }
 
@@ -108,7 +112,9 @@ func copier(toValue interface{}, fromValue interface{}, opt reflectutils.Option)
 	}
 
 	// Just set it if possible to assign for normal types
-	if from.Kind() != reflect.Slice && from.Kind() != reflect.Struct && from.Kind() != reflect.Map && (from.Type().AssignableTo(to.Type()) || from.Type().ConvertibleTo(to.Type())) {
+	if from.Kind() != reflect.Slice && from.Kind() != reflect.Struct &&
+		from.Kind() != reflect.Map &&
+		(from.Type().AssignableTo(to.Type()) || from.Type().ConvertibleTo(to.Type())) {
 		if !isPtrFrom || !opt.DeepCopy {
 			to.Set(from.Convert(to.Type()))
 		} else {
@@ -119,7 +125,8 @@ func copier(toValue interface{}, fromValue interface{}, opt reflectutils.Option)
 		return nil
 	}
 
-	if from.Kind() != reflect.Slice && fromType.Kind() == reflect.Map && toType.Kind() == reflect.Map {
+	if from.Kind() != reflect.Slice && fromType.Kind() == reflect.Map &&
+		toType.Kind() == reflect.Map {
 		if !fromType.Key().ConvertibleTo(toType.Key()) {
 			return xgo.ErrMapKeyNotMatch
 		}
@@ -135,7 +142,12 @@ func copier(toValue interface{}, fromValue interface{}, opt reflectutils.Option)
 				return err
 			}
 			if !isSet {
-				return fmt.Errorf("%w map, old key: %v, new key: %v", xgo.ErrNotSupported, k.Type(), toType.Key())
+				return fmt.Errorf(
+					"%w map, old key: %v, new key: %v",
+					xgo.ErrNotSupported,
+					k.Type(),
+					toType.Key(),
+				)
 			}
 
 			elemType := toType.Elem()
@@ -251,7 +263,8 @@ func copier(toValue interface{}, fromValue interface{}, opt reflectutils.Option)
 				}
 
 				srcFieldName, destFieldName := getFieldName(name, flgs)
-				if fromField := fieldByNameOrZeroValue(source, srcFieldName); fromField.IsValid() && !shouldIgnore(fromField, opt.IgnoreEmpty) {
+				if fromField := fieldByNameOrZeroValue(source, srcFieldName); fromField.IsValid() &&
+					!shouldIgnore(fromField, opt.IgnoreEmpty) {
 					// process for nested anonymous field
 					destFieldNotSet := false
 					if f, ok := dest.Type().FieldByName(destFieldName); ok {
@@ -326,8 +339,11 @@ func copier(toValue interface{}, fromValue interface{}, opt reflectutils.Option)
 					fromMethod = source.MethodByName(srcFieldName)
 				}
 
-				if fromMethod.IsValid() && fromMethod.Type().NumIn() == 0 && fromMethod.Type().NumOut() == 1 && !shouldIgnore(fromMethod, opt.IgnoreEmpty) {
-					if toField := dest.FieldByName(destFieldName); toField.IsValid() && toField.CanSet() {
+				if fromMethod.IsValid() && fromMethod.Type().NumIn() == 0 &&
+					fromMethod.Type().NumOut() == 1 &&
+					!shouldIgnore(fromMethod, opt.IgnoreEmpty) {
+					if toField := dest.FieldByName(destFieldName); toField.IsValid() &&
+						toField.CanSet() {
 						values := fromMethod.Call([]reflect.Value{})
 						if len(values) >= 1 {
 							set(toField, values[0], opt.DeepCopy, converters)
@@ -392,7 +408,8 @@ func fieldByNameOrZeroValue(source reflect.Value, fieldName string) (value refle
 }
 
 func copyUnexportedStructFields(to, from reflect.Value) {
-	if from.Kind() != reflect.Struct || to.Kind() != reflect.Struct || !from.Type().AssignableTo(to.Type()) {
+	if from.Kind() != reflect.Struct || to.Kind() != reflect.Struct ||
+		!from.Type().AssignableTo(to.Type()) {
 		return
 	}
 
@@ -413,8 +430,10 @@ func shouldIgnore(v reflect.Value, ignoreEmpty bool) bool {
 	return ignoreEmpty && v.IsZero()
 }
 
-var deepFieldsLock sync.RWMutex
-var deepFieldsMap = make(map[reflect.Type][]reflect.StructField)
+var (
+	deepFieldsLock sync.RWMutex
+	deepFieldsMap  = make(map[reflect.Type][]reflect.StructField)
+)
 
 func deepFields(reflectType reflect.Type) []reflect.StructField {
 	deepFieldsLock.RLock()
@@ -449,7 +468,11 @@ func deepFields(reflectType reflect.Type) []reflect.StructField {
 	return res
 }
 
-func set(to, from reflect.Value, deepCopy bool, converters map[reflectutils.ConverterPair]reflectutils.TypeConverter) (bool, error) {
+func set(
+	to, from reflect.Value,
+	deepCopy bool,
+	converters map[reflectutils.ConverterPair]reflectutils.TypeConverter,
+) (bool, error) {
 	if !from.IsValid() {
 		return true, nil
 	}
@@ -547,7 +570,10 @@ func set(to, from reflect.Value, deepCopy bool, converters map[reflectutils.Conv
 }
 
 // lookupAndCopyWithConverter looks up the type pair, on success the TypeConverter Fn func is called to copy src to dst field.
-func lookupAndCopyWithConverter(to, from reflect.Value, converters map[reflectutils.ConverterPair]reflectutils.TypeConverter) (copied bool, err error) {
+func lookupAndCopyWithConverter(
+	to, from reflect.Value,
+	converters map[reflectutils.ConverterPair]reflectutils.TypeConverter,
+) (copied bool, err error) {
 	pair := reflectutils.ConverterPair{
 		SrcType: from.Type(),
 		DstType: to.Type(),

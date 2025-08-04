@@ -16,7 +16,11 @@ func ServerFilter(opts ...Option) filter.ServerFilter {
 
 	// 设置追加的日志格式器
 	nilLogFormat := getLogFormat(debugLevel, o.enableColor, "server request:%s, cost:%s, from:%s%s")
-	errLogFormat := getLogFormat(errorLevel, o.enableColor, "server request:%s, cost:%s, from:%s, err:%s%s")
+	errLogFormat := getLogFormat(
+		errorLevel,
+		o.enableColor,
+		"server request:%s, cost:%s, from:%s, err:%s%s",
+	)
 	deadlineLogFormat := getLogFormat(errorLevel, o.enableColor,
 		"server request:%s, cost:%s, from:%s, err:%s, total timeout:%s%s")
 
@@ -91,7 +95,11 @@ func ClientFilter(opts ...Option) filter.ClientFilter {
 
 	// 设置追加的日志格式器
 	nilLogFormat := getLogFormat(debugLevel, o.enableColor, "client request:%s, cost:%s, to:%s%s")
-	errLogFormat := getLogFormat(errorLevel, o.enableColor, "client request:%s, cost:%s, to:%s, err:%s%s")
+	errLogFormat := getLogFormat(
+		errorLevel,
+		o.enableColor,
+		"client request:%s, cost:%s, to:%s, err:%s%s",
+	)
 
 	return func(ctx context.Context, req, rsp any, handler filter.ClientHandleFunc) (err error) {
 		msg := trpc.Message(ctx)
@@ -118,7 +126,12 @@ func ClientFilter(opts ...Option) filter.ClientFilter {
 
 		if err == nil { // 成功请求
 			o.nilLogLevelFunc(
-				ctx, nilLogFormat, msg.ClientRPCName(), end.Sub(begin), addr, o.logFunc(ctx, req, rsp),
+				ctx,
+				nilLogFormat,
+				msg.ClientRPCName(),
+				end.Sub(begin),
+				addr,
+				o.logFunc(ctx, req, rsp),
 			)
 		} else { // 错误请求
 			o.errLogLevelFunc(

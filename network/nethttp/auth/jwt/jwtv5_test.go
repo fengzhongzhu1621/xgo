@@ -21,9 +21,13 @@ func TestJwtV5GenerateToken(t *testing.T) {
 	// fmt.Println(value)
 
 	// 验证Token
-	token, _ = jwt5.ParseWithClaims(tokenString, &jwt5.MapClaims{}, func(t *jwt5.Token) (interface{}, error) {
-		return key, nil // 返回密钥用于验证
-	})
+	token, _ = jwt5.ParseWithClaims(
+		tokenString,
+		&jwt5.MapClaims{},
+		func(t *jwt5.Token) (interface{}, error) {
+			return key, nil // 返回密钥用于验证
+		},
+	)
 	if claims, ok := token.Claims.(*jwt5.MapClaims); ok && token.Valid {
 		fmt.Println(claims) // &map[exp:1.753765223e+09 user:example]
 	}

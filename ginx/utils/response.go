@@ -12,15 +12,21 @@ import (
 )
 
 var (
-	BadRequestErrorJSONResponse   = NewErrorJSONResponseFunc(xgo.BadRequestError, "bad request")
-	ParamErrorJSONResponse        = NewErrorJSONResponseFunc(xgo.ParamError, "param error")
-	ForbiddenJSONResponse         = NewErrorJSONResponseFunc(xgo.ForbiddenError, "no permission")
-	UnauthorizedJSONResponse      = NewErrorJSONResponseFunc(xgo.UnauthorizedError, "unauthorized")
-	NotFoundJSONResponse          = NewErrorJSONResponseFunc(xgo.NotFoundError, "not found")
-	ConflictJSONResponse          = NewErrorJSONResponseFunc(xgo.ConflictError, "conflict")
-	TooManyRequestsJSONResponse   = NewErrorJSONResponseFunc(xgo.TooManyRequests, "too many requests")
+	BadRequestErrorJSONResponse = NewErrorJSONResponseFunc(xgo.BadRequestError, "bad request")
+	ParamErrorJSONResponse      = NewErrorJSONResponseFunc(xgo.ParamError, "param error")
+	ForbiddenJSONResponse       = NewErrorJSONResponseFunc(xgo.ForbiddenError, "no permission")
+	UnauthorizedJSONResponse    = NewErrorJSONResponseFunc(xgo.UnauthorizedError, "unauthorized")
+	NotFoundJSONResponse        = NewErrorJSONResponseFunc(xgo.NotFoundError, "not found")
+	ConflictJSONResponse        = NewErrorJSONResponseFunc(xgo.ConflictError, "conflict")
+	TooManyRequestsJSONResponse = NewErrorJSONResponseFunc(
+		xgo.TooManyRequests,
+		"too many requests",
+	)
 	SamForbiddenJSONResponse      = NewErrorJSONResponseFunc(xgo.IAMNoPermission, "no permission")
-	StaffUnauthorizedJSONResponse = NewErrorJSONResponseFunc(xgo.StaffUnauthorizedError, "unauthorized")
+	StaffUnauthorizedJSONResponse = NewErrorJSONResponseFunc(
+		xgo.StaffUnauthorizedError,
+		"unauthorized",
+	)
 )
 
 // SetError 在上下文中保存错误信息
@@ -74,9 +80,7 @@ func SuccessJSONResponse(c *gin.Context, data interface{}) {
 
 // SystemErrorJSONResponse 返回系统报错
 func SystemErrorJSONResponse(c *gin.Context, err error) {
-	var (
-		message string
-	)
+	var message string
 	SetError(c, err)
 
 	// 构造错误信息
@@ -91,7 +95,10 @@ func SystemErrorJSONResponse(c *gin.Context, err error) {
 }
 
 // NewErrorJSONResponseFunc 追加自定义错误信息
-func NewErrorJSONResponseFunc(errorCode int, defaultMessage string) func(c *gin.Context, message string) {
+func NewErrorJSONResponseFunc(
+	errorCode int,
+	defaultMessage string,
+) func(c *gin.Context, message string) {
 	return func(c *gin.Context, message string) {
 		msg := defaultMessage
 		if message != "" {

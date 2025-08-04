@@ -71,7 +71,10 @@ func TestEndsWithMongoCond(t *testing.T) {
 		return
 	}
 
-	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{DBLIKE: "a$"}}) {
+	if !reflect.DeepEqual(
+		cond,
+		map[string]interface{}{"test": map[string]interface{}{DBLIKE: "a$"}},
+	) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}
@@ -141,8 +144,10 @@ func TestEndsWithInsensitiveMongoCond(t *testing.T) {
 		return
 	}
 
-	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{DBLIKE: "a$",
-		DBOPTIONS: "i"}}) {
+	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{
+		DBLIKE:    "a$",
+		DBOPTIONS: "i",
+	}}) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}
@@ -213,7 +218,8 @@ func TestNotEndsWithMongoCond(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{
-		DBNot: map[string]interface{}{DBLIKE: "a$"}}}) {
+		DBNot: map[string]interface{}{DBLIKE: "a$"},
+	}}) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}
@@ -284,7 +290,8 @@ func TestNotEndsWithInsensitiveMongoCond(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{
-		DBNot: map[string]interface{}{DBLIKE: "a$", DBOPTIONS: "i"}}}) {
+		DBNot: map[string]interface{}{DBLIKE: "a$", DBOPTIONS: "i"},
+	}}) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}

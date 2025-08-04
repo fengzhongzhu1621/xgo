@@ -182,7 +182,11 @@ func TestDifference(t *testing.T) {
 
 	{
 		data := []string{"a", "b", "c"}
-		result := arrutil.Differences[string](data, []string{"a", "b"}, arrutil.StringEqualsComparer)
+		result := arrutil.Differences[string](
+			data,
+			[]string{"a", "b"},
+			arrutil.StringEqualsComparer,
+		)
 		assert.Equal(t, []string{"c"}, result)
 
 		result = arrutil.Differences[string]([]string{"a", "b"}, data, arrutil.StringEqualsComparer)

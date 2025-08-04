@@ -15,12 +15,14 @@ type Student struct {
 	Remark [1024]byte
 }
 
-var buf, _ = json.Marshal(Student{Name: "bob", Age: 25})
-var studentPool = sync.Pool{
-	New: func() interface{} {
-		return new(Student)
-	},
-}
+var (
+	buf, _      = json.Marshal(Student{Name: "bob", Age: 25})
+	studentPool = sync.Pool{
+		New: func() interface{} {
+			return new(Student)
+		},
+	}
+)
 
 type Person struct {
 	Name string
@@ -48,7 +50,7 @@ func (pp *personPool) Get(name string, age int) (p *Person, err error) {
 
 // Put 在 Put 前要对临时对象做一些清理工作，以免影响下一次复用。
 func (pp *personPool) Put(p *Person) {
-	//归还前需要清理状态
+	// 归还前需要清理状态
 	p.Name = ""
 	p.Age = 0
 

@@ -34,8 +34,10 @@ var serveCmd = &cobra.Command{
 	},
 }
 
-var cfgFile string
-var verbose bool
+var (
+	cfgFile string
+	verbose bool
+)
 
 func TestCobra(t *testing.T) {
 	// 定义全局标志，这些标志对所有子命令都可用
@@ -44,7 +46,8 @@ func TestCobra(t *testing.T) {
 
 	rootCmd.AddCommand(serveCmd)
 
-	serveCmd.Flags().StringVarP(&cfgFile, "config", "c", "", "config file (default is config.yml;required)")
+	serveCmd.Flags().
+		StringVarP(&cfgFile, "config", "c", "", "config file (default is config.yml;required)")
 
 	serveCmd.PersistentFlags().Bool("viper", true, "Use Viper for configuration")
 	serveCmd.MarkFlagRequired("config")

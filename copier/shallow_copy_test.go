@@ -13,7 +13,7 @@ type Config struct {
 }
 
 func TestShallowCopy(t *testing.T) {
-	var src Config = Config{Timeout: 10}
+	src := Config{Timeout: 10}
 	var dst Config
 
 	err := ShallowCopy(&dst, &src)
@@ -25,12 +25,11 @@ func TestShallowCopy(t *testing.T) {
 }
 
 func TestShallowCopy2(t *testing.T) {
-
 	type Data struct {
 		Values []int
 	}
 
-	var src Data = Data{Values: []int{1, 2, 3}}
+	src := Data{Values: []int{1, 2, 3}}
 	var dst Data
 
 	err := ShallowCopy(&dst, &src)

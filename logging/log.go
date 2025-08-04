@@ -51,10 +51,14 @@ type ILogFormatter interface {
 	Format(loggerConfig *LoggerConfig, t time.Time, level LogLevel, message string) error
 }
 
-type DefaultFormatter struct {
-}
+type DefaultFormatter struct{}
 
-func (formatter *DefaultFormatter) Format(loggerConfig *LoggerConfig, t time.Time, level LogLevel, message string) error {
+func (formatter *DefaultFormatter) Format(
+	loggerConfig *LoggerConfig,
+	t time.Time,
+	level LogLevel,
+	message string,
+) error {
 	buf := &loggerConfig.buf
 	*buf = append(*buf, t.Format(DATETIME_DEFAULT_FORMAT)...)
 	// year, month, day := t.Date()

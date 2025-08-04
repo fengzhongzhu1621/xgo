@@ -1,10 +1,9 @@
 package pathutils
 
 import (
-	"testing"
-
 	"os"
 	"path/filepath"
+	"testing"
 
 	"github.com/fengzhongzhu1621/xgo/file/homedir"
 	"github.com/fengzhongzhu1621/xgo/tests"

@@ -11,15 +11,17 @@ import (
 // It can be attached to the router by using `AddMiddleware` method.
 //
 // Example:
-//		func ExampleMiddleware(h message.HandlerFunc) message.HandlerFunc {
-//			return func(message *message.Message) ([]*message.Message, error) {
-//				fmt.Println("executed before handler")
-//				producedMessages, err := h(message)
-//				fmt.Println("executed after handler")
 //
-//				return producedMessages, err
-//			}
+//	func ExampleMiddleware(h message.HandlerFunc) message.HandlerFunc {
+//		return func(message *message.Message) ([]*message.Message, error) {
+//			fmt.Println("executed before handler")
+//			producedMessages, err := h(message)
+//			fmt.Println("executed after handler")
+//
+//			return producedMessages, err
 //		}
+//	}
+//
 // 消息中间件装饰器
 type HandlerMiddleware func(h message.HandlerFunc) message.HandlerFunc
 

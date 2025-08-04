@@ -4,11 +4,10 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/samber/lo"
-	"github.com/stretchr/testify/assert"
-
 	"github.com/duke-git/lancet/v2/slice"
 	"github.com/duke-git/lancet/v2/strutil"
+	"github.com/samber/lo"
+	"github.com/stretchr/testify/assert"
 )
 
 // TestShuffle 打乱给定字符串的字符顺序。Creates an slice of shuffled values.

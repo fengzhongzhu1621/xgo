@@ -135,7 +135,9 @@ func TestObjectMongoCond(t *testing.T) {
 				operator.DBOR: []map[string]interface{}{
 					{
 						operator.DBAND: []map[string]interface{}{{
-							"obj.test1.test2": map[string]interface{}{operator.DBIN: []string{"b", "c"}},
+							"obj.test1.test2": map[string]interface{}{
+								operator.DBIN: []string{"b", "c"},
+							},
 						}},
 					}, {
 						"obj.test3": map[string]interface{}{operator.DBLT: time.Unix(1, 0)},

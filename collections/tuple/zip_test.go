@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/samber/lo"
-
 	"github.com/stretchr/testify/assert"
 )
 

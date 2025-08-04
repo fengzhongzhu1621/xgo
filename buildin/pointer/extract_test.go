@@ -20,5 +20,4 @@ func TestExtractPointer(t *testing.T) {
 
 	fmt.Println(result1) // 1
 	fmt.Println(result2) // 1
-
 }

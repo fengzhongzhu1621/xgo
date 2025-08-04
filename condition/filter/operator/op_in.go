@@ -93,7 +93,12 @@ func (o InOp) Match(value1, value2 interface{}) (bool, error) {
 		case "string":
 			val, ok := item.(string)
 			if !ok {
-				return false, fmt.Errorf("array ele index(%d) type(%T) not matches input type(%s)", i, item, itemType)
+				return false, fmt.Errorf(
+					"array ele index(%d) type(%T) not matches input type(%s)",
+					i,
+					item,
+					itemType,
+				)
 			}
 			if val == value1 {
 				return true, nil
@@ -101,7 +106,12 @@ func (o InOp) Match(value1, value2 interface{}) (bool, error) {
 		case "bool":
 			val, ok := item.(bool)
 			if !ok {
-				return false, fmt.Errorf("array ele index(%d) type(%T) not matches input type(%s)", i, item, itemType)
+				return false, fmt.Errorf(
+					"array ele index(%d) type(%T) not matches input type(%s)",
+					i,
+					item,
+					itemType,
+				)
 			}
 			if val == value1 {
 				return true, nil

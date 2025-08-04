@@ -5,9 +5,10 @@
 package render
 
 import (
-	"github.com/stretchr/testify/assert"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 // TODO unit tests
@@ -160,7 +161,11 @@ func TestRenderAsciiJSON(t *testing.T) {
 	err := (AsciiJSON{data1}).Render(w1)
 
 	assert.NoError(t, err)
-	assert.Equal(t, "{\"lang\":\"GO\\u8bed\\u8a00\",\"tag\":\"\\u003cbr\\u003e\"}", w1.Body.String())
+	assert.Equal(
+		t,
+		"{\"lang\":\"GO\\u8bed\\u8a00\",\"tag\":\"\\u003cbr\\u003e\"}",
+		w1.Body.String(),
+	)
 	assert.Equal(t, "application/json", w1.Header().Get("Content-Type"))
 
 	w2 := httptest.NewRecorder()

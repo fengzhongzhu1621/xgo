@@ -30,12 +30,12 @@ func TestScopes(t *testing.T) {
 	createStudent(db, &stu)
 
 	// 查询一条数据，支持分页
-	var id2 = stu.Id
+	id2 := stu.Id
 	row := getStudent2(db, id2)
 	assert.Equal(t, row.Name, "bob")
 
 	// 查询一条数据，支持分页
-	var id3 = stu.Id
+	id3 := stu.Id
 	row = getStudent3(db, id3)
 	assert.Equal(t, row.Name, "bob")
 }

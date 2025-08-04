@@ -38,6 +38,8 @@ func Test_SetUnion(t *testing.T) {
 
 	g := f.Union(e)
 	if g.Cardinality() != 8 {
-		t.Error("set g should still have 8 elements in it after being unioned with set f that has duplicates")
+		t.Error(
+			"set g should still have 8 elements in it after being unioned with set f that has duplicates",
+		)
 	}
 }

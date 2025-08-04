@@ -35,7 +35,8 @@ func ExtractOpenSSHVersionWithMajorAndMinor(input string) (*SSHVersion, error) {
 		minor, _ := strconv.Atoi(match[2])
 		return &SSHVersion{
 			Major: major,
-			Minor: minor}, nil
+			Minor: minor,
+		}, nil
 	}
 
 	return nil, errors.New("version format error")

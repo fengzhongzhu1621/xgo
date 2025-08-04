@@ -31,7 +31,11 @@ func Test_NewSetFromMapKey_Ints(t *testing.T) {
 	fmt.Println(s) // Set{5, 2}
 
 	if len(m) != s.Cardinality() {
-		t.Errorf("Length of Set is not the same as the map. Expected: %d. Actual: %d", len(m), s.Cardinality())
+		t.Errorf(
+			"Length of Set is not the same as the map. Expected: %d. Actual: %d",
+			len(m),
+			s.Cardinality(),
+		)
 	}
 
 	for k := range m {

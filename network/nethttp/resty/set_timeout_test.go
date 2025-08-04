@@ -17,7 +17,6 @@ func TestSetTimeout(t *testing.T) {
 	resp, err := client.R().
 		SetHeader("Content-Type", "application/json").
 		Get("https://api.example.com/data")
-
 	if err != nil {
 		fmt.Println("Error:", err)
 		return

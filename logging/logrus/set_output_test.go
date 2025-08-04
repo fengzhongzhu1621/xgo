@@ -11,7 +11,7 @@ func TestSetOutputToStdout(t *testing.T) {
 	log := logrus.New()
 
 	// 创建文件输出
-	file, err := os.OpenFile("app.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	file, err := os.OpenFile("app.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o666)
 	if err != nil {
 		log.Fatal("Failed to open log file:", err)
 	}

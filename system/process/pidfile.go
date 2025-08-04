@@ -44,11 +44,11 @@ func WritePid() error {
 	}
 
 	// 创建 pid 文件目录
-	if err := os.MkdirAll(filepath.Dir(pidFile), os.FileMode(0755)); err != nil {
+	if err := os.MkdirAll(filepath.Dir(pidFile), os.FileMode(0o755)); err != nil {
 		return err
 	}
 
-	file, err := file.NewAtomicFile(pidFile, os.FileMode(0644))
+	file, err := file.NewAtomicFile(pidFile, os.FileMode(0o644))
 	if err != nil {
 		return fmt.Errorf("error opening pidFile %s: %s", pidFile, err)
 	}

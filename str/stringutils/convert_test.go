@@ -4,9 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/samber/lo"
-
 	"github.com/duke-git/lancet/v2/strutil"
+	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -45,7 +44,13 @@ func TestCapitalize(t *testing.T) {
 		}
 		for _, tt := range tests {
 			t.Run(tt.name, func(t *testing.T) {
-				assert.Equalf(t, tt.want, lo.Capitalize(tt.args.word), "Capitalize(%v)", tt.args.word)
+				assert.Equalf(
+					t,
+					tt.want,
+					lo.Capitalize(tt.args.word),
+					"Capitalize(%v)",
+					tt.args.word,
+				)
 			})
 		}
 	}

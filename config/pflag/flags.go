@@ -22,8 +22,10 @@ type IFlagValue interface {
 	ValueType() string
 }
 
-var _ IFlagValueSet = (*PFlagValueSet)(nil)
-var _ IFlagValue = (*PFlagValue)(nil)
+var (
+	_ IFlagValueSet = (*PFlagValueSet)(nil)
+	_ IFlagValue    = (*PFlagValue)(nil)
+)
 
 // PFlagValueSet is a wrapper around *pflag.ValueSet
 // that implements IFlagValueSet.

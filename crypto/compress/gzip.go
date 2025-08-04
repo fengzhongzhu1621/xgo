@@ -61,7 +61,7 @@ func IsGZIP(in []byte) bool {
 
 	// 比较输入的字节切片的前两个字节与 gzip 文件头的标识（0x1F, 0x8B）。
 	// 如果相等，说明输入的字股切片是 gzip 根据格式
-	if bytes.Compare(in[:2], []byte{0x1F, 0x8B}) == 0 {
+	if bytes.Equal(in[:2], []byte{0x1F, 0x8B}) {
 		return true
 	}
 	return false

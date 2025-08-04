@@ -3,9 +3,8 @@ package slice
 import (
 	"testing"
 
-	"github.com/samber/lo"
-
 	"github.com/duke-git/lancet/v2/slice"
+	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -133,7 +132,7 @@ func TestUpdateAt(t *testing.T) {
 // func SetToDefaultIf[T any](slice []T, predicate func(T) bool) ([]T, int)
 func TestSetToDefaultIf(t *testing.T) {
 	strs := []string{"a", "b", "a", "c", "d", "a"}
-	modifiedStrs, count := slice.SetToDefaultIf(strs, func(s string) bool { return "a" == s })
+	modifiedStrs, count := slice.SetToDefaultIf(strs, func(s string) bool { return s == "a" })
 
 	assert.Equal(t, []string{"", "b", "", "c", "d", ""}, modifiedStrs)
 	assert.Equal(t, 3, count)

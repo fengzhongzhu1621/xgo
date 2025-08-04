@@ -54,7 +54,12 @@ func ValidateSliceOfBasicType(value interface{}, limit uint) error {
 		}
 
 		if firstItemType != itemType {
-			return fmt.Errorf("array element index(%d) value(%+v) type is not %s", i, item, firstItemType)
+			return fmt.Errorf(
+				"array element index(%d) value(%+v) type is not %s",
+				i,
+				item,
+				firstItemType,
+			)
 		}
 	}
 

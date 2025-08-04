@@ -68,7 +68,10 @@ func (o EndsWithInsensitiveOp) ValidateValue(v interface{}, opt *ExprOption) err
 }
 
 // ToMgo convert the ends with insensitive operator's field and value to a mongo query condition.
-func (o EndsWithInsensitiveOp) ToMgo(field string, value interface{}) (map[string]interface{}, error) {
+func (o EndsWithInsensitiveOp) ToMgo(
+	field string,
+	value interface{},
+) (map[string]interface{}, error) {
 	if len(field) == 0 {
 		return nil, errors.New("field is empty")
 	}
@@ -158,7 +161,10 @@ func (o NotEndsWithInsensitiveOp) Match(value1, value2 interface{}) (bool, error
 }
 
 // ToMgo convert the not ends with insensitive operator's field and value to a mongo query condition.
-func (o NotEndsWithInsensitiveOp) ToMgo(field string, value interface{}) (map[string]interface{}, error) {
+func (o NotEndsWithInsensitiveOp) ToMgo(
+	field string,
+	value interface{},
+) (map[string]interface{}, error) {
 	if len(field) == 0 {
 		return nil, errors.New("field is empty")
 	}

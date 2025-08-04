@@ -39,9 +39,7 @@ func StringsMatch(key string, matchList ...string) bool {
 // StringsMatchObscure 检查 key 是否包含在由 matchList 中的字符串拼接而成的字符串中，且在比较时不区分大小写。
 // 如果 key 是空字符串，则认为它匹配任何内容
 func StringsMatchObscure(key string, matchList ...string) bool {
-	var (
-		t string
-	)
+	var t string
 	if key == "" {
 		return true
 	}
@@ -61,8 +59,8 @@ func SublimeContains(s, substr string) bool {
 		return false
 	}
 
-	var ok = true
-	var i, j = 0, 0
+	ok := true
+	i, j := 0, 0
 	for ; i < len(rsubstr); i++ {
 		found := -1
 		for ; j < len(rs); j++ {

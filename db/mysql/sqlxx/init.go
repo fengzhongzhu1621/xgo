@@ -6,9 +6,7 @@ import (
 	"github.com/fengzhongzhu1621/xgo/db/mysql"
 )
 
-var (
-	DefaultSqlxDBClient *SqlxDBClient
-)
+var DefaultSqlxDBClient *SqlxDBClient
 
 var defaultSqlxDBClientOnce sync.Once
 

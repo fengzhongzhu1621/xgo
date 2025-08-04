@@ -1,7 +1,7 @@
 package function
 
 // 节流（Throttle）创建一个经过节流处理的（所提供的）函数版本。返回的函数保证每个时间间隔最多只会被调用一次。
-//func Throttle(fn func(), interval time.Duration) func()
+// func Throttle(fn func(), interval time.Duration) func()
 import (
 	"fmt"
 	"testing"

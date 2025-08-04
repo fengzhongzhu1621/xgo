@@ -9,9 +9,7 @@ import (
 )
 
 func TestAtomRuleRuleWithType(t *testing.T) {
-	var rule operator.IRuleFactory
-
-	rule = new(AtomRule)
+	var rule operator.IRuleFactory = new(AtomRule)
 	if rule.WithType() != AtomType {
 		t.Errorf("rule type %s is invalid", rule.WithType())
 		return
@@ -71,9 +69,7 @@ func TestAtomRuleValidate(t *testing.T) {
 }
 
 func TestAtomRuleFields(t *testing.T) {
-	var rule operator.IRuleFactory
-
-	rule = &AtomRule{
+	var rule operator.IRuleFactory = &AtomRule{
 		Field:    "test1",
 		Operator: operator.Equal,
 		Value:    1,
@@ -87,12 +83,7 @@ func TestAtomRuleFields(t *testing.T) {
 }
 
 func TestAtomRuleToMgo(t *testing.T) {
-	var (
-		rule operator.IRuleFactory
-	)
-
-	// test atomic rule to mongo
-	rule = &AtomRule{
+	var rule operator.IRuleFactory = &AtomRule{
 		Field:    "test1",
 		Operator: operator.NotIn,
 		Value:    []string{"a", "b", "c"},

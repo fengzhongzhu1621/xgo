@@ -32,7 +32,12 @@ func CreateDeepMap(m map[string]interface{}, keyDelim string) map[string]interfa
 // Traverses recursively both values, assigning src's fields values to dst.
 // The map argument tracks comparisons that have already been seen, which allows
 // short circuiting on recursive types.
-func deepMap(dst, src reflect.Value, visited map[uintptr]*visit, depth int, config *Config) (err error) {
+func deepMap(
+	dst, src reflect.Value,
+	visited map[uintptr]*visit,
+	depth int,
+	config *Config,
+) (err error) {
 	overwrite := config.Overwrite
 	if dst.CanAddr() {
 		addr := dst.UnsafeAddr()
@@ -59,7 +64,8 @@ func deepMap(dst, src reflect.Value, visited map[uintptr]*visit, depth int, conf
 			}
 			fieldName := field.Name
 			fieldName = stringutils.ChangeInitialCase(fieldName, unicode.ToLower)
-			if v, ok := dstMap[fieldName]; !ok || (reflectutils.IsEmptyValue(reflect.ValueOf(v)) || overwrite) {
+			if v, ok := dstMap[fieldName]; !ok ||
+				(reflectutils.IsEmptyValue(reflect.ValueOf(v)) || overwrite) {
 				dstMap[fieldName] = src.Field(i).Interface()
 			}
 		}

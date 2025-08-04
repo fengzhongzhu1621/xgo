@@ -79,9 +79,12 @@ func TestOmitBy(t *testing.T) {
 	is := assert.New(t)
 
 	{
-		r1 := lo.OmitBy(map[string]int{"foo": 1, "bar": 2, "baz": 3}, func(key string, value int) bool {
-			return value%2 == 1
-		})
+		r1 := lo.OmitBy(
+			map[string]int{"foo": 1, "bar": 2, "baz": 3},
+			func(key string, value int) bool {
+				return value%2 == 1
+			},
+		)
 
 		is.Equal(r1, map[string]int{"bar": 2})
 
@@ -115,7 +118,6 @@ func TestOmitBy(t *testing.T) {
 		})
 		fmt.Println(m1) // map[1:a 3:c]
 	}
-
 }
 
 // TestOmitByKeys The opposite of FilterByKeys, extracts all the map elements which keys are not omitted.
@@ -125,7 +127,10 @@ func TestOmitByKeys(t *testing.T) {
 	is := assert.New(t)
 
 	{
-		r1 := lo.OmitByKeys(map[string]int{"foo": 1, "bar": 2, "baz": 3}, []string{"foo", "baz", "qux"})
+		r1 := lo.OmitByKeys(
+			map[string]int{"foo": 1, "bar": 2, "baz": 3},
+			[]string{"foo", "baz", "qux"},
+		)
 
 		is.Equal(r1, map[string]int{"bar": 2})
 

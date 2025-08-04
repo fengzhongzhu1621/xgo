@@ -72,7 +72,8 @@ func (db *SqlxDBClient) Close() {
 
 // NewSqlxDBClient 根据db 配置创建数据库连接对象
 func NewSqlxDBClient(cfg *mysql.Database) *SqlxDBClient {
-	dataSource := fmt.Sprintf("%s:%s@(%s:%d)/%s?charset=%s&parseTime=True&interpolateParams=true&loc=%s",
+	dataSource := fmt.Sprintf(
+		"%s:%s@(%s:%d)/%s?charset=%s&parseTime=True&interpolateParams=true&loc=%s",
 		cfg.User,
 		cfg.Password,
 		cfg.Host,

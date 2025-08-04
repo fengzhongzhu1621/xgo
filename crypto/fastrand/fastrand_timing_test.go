@@ -9,9 +9,11 @@ import (
 )
 
 // BenchSink prevents the compiler from optimizing away benchmark loops.
-var BenchSink uint32
-var BenchSinkInt32 int32
-var BenchSinkInt64 int64
+var (
+	BenchSink      uint32
+	BenchSinkInt32 int32
+	BenchSinkInt64 int64
+)
 
 // 同个随机种子，随机数求和
 func BenchmarkUint32n(b *testing.B) {

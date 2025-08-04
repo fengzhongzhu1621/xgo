@@ -33,7 +33,6 @@ func TestSample(t *testing.T) {
 			intVal1 = arrutil.GetRandomOne(intSlice)
 		}
 	}
-
 }
 
 func TestSamples(t *testing.T) {

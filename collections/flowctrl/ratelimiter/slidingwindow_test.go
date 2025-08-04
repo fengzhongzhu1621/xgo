@@ -19,9 +19,13 @@ func TestSlidingWindow(t *testing.T) {
 	defer stop()
 
 	// 创建一个限制器，限制每分钟最多 100 次请求
-	limiter, _ := slidingwindow.NewLimiter(time.Minute, 100, func() (slidingwindow.Window, slidingwindow.StopFunc) {
-		return window, stop
-	})
+	limiter, _ := slidingwindow.NewLimiter(
+		time.Minute,
+		100,
+		func() (slidingwindow.Window, slidingwindow.StopFunc) {
+			return window, stop
+		},
+	)
 
 	// 测试前100次请求应该被允许
 	for i := 0; i < 100; i++ {

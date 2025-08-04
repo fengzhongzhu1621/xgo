@@ -8,7 +8,7 @@ import (
 
 func TestNew(t *testing.T) {
 	// 创建一个默认的 logger
-	var log = logrus.New()
+	log := logrus.New()
 
 	log.SetLevel(logrus.WarnLevel) // 设置日志级别为 Warn
 

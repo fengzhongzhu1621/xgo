@@ -7,10 +7,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/duke-git/lancet/v2/function"
 	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
-
-	"github.com/duke-git/lancet/v2/function"
 )
 
 // TestDebounce 延迟指定间隔后才执行。（非阻塞）
@@ -193,7 +192,7 @@ func TestDebounceBy(t *testing.T) {
 // Invoke function after delayed time.
 // func Delay(delay time.Duration, fn any, args ...any)
 func TestDelay(t *testing.T) {
-	var print = func(s string) {
+	print := func(s string) {
 		fmt.Println(s)
 	}
 

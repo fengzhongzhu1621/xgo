@@ -45,7 +45,7 @@ func TestBSTreeInsert(t *testing.T) {
 	bstree.Insert(2)
 	bstree.Insert(4)
 
-	fmt.Println(bstree.PreOrderTraverse()) //6, 5, 2, 4, 7
+	fmt.Println(bstree.PreOrderTraverse()) // 6, 5, 2, 4, 7
 }
 
 // func (t *BSTree[T]) Delete(data T)
@@ -58,7 +58,7 @@ func TestBSTreeDelete(t *testing.T) {
 
 	bstree.Delete(4)
 
-	fmt.Println(bstree.PreOrderTraverse()) //2, 5, 6, 7
+	fmt.Println(bstree.PreOrderTraverse()) // 2, 5, 6, 7
 }
 
 // func (t *BSTree[T]) PreOrderTraverse() []T
@@ -69,7 +69,7 @@ func TestBSTreePreOrderTraverse(t *testing.T) {
 	bstree.Insert(2)
 	bstree.Insert(4)
 
-	fmt.Println(bstree.PreOrderTraverse()) //6, 5, 2, 4, 7
+	fmt.Println(bstree.PreOrderTraverse()) // 6, 5, 2, 4, 7
 }
 
 // func (t *BSTree[T]) InOrderTraverse() []T
@@ -80,7 +80,7 @@ func TestBSTreeInOrderTraverse(t *testing.T) {
 	bstree.Insert(2)
 	bstree.Insert(4)
 
-	fmt.Println(bstree.InOrderTraverse()) //2, 4, 5, 6, 7
+	fmt.Println(bstree.InOrderTraverse()) // 2, 4, 5, 6, 7
 }
 
 // func (t *BSTree[T]) PostOrderTraverse() []T
@@ -91,7 +91,7 @@ func TestBSTreePostOrderTraverse(t *testing.T) {
 	bstree.Insert(2)
 	bstree.Insert(4)
 
-	fmt.Println(bstree.PostOrderTraverse()) //5, 2, 4, 7, 6
+	fmt.Println(bstree.PostOrderTraverse()) // 5, 2, 4, 7, 6
 }
 
 // func (t *BSTree[T]) LevelOrderTraverse() []T
@@ -102,7 +102,7 @@ func TestBSTreeLevelOrderTraverse(t *testing.T) {
 	bstree.Insert(2)
 	bstree.Insert(4)
 
-	fmt.Println(bstree.LevelOrderTraverse()) //6, 5, 7, 2, 4
+	fmt.Println(bstree.LevelOrderTraverse()) // 6, 5, 7, 2, 4
 }
 
 // func (t *BSTree[T]) Depth() int
@@ -113,7 +113,7 @@ func TestBSTreeDepth(t *testing.T) {
 	bstree.Insert(2)
 	bstree.Insert(4)
 
-	fmt.Println(bstree.Depth()) //4
+	fmt.Println(bstree.Depth()) // 4
 }
 
 // func (t *BSTree[T]) HasSubTree(subTree *BSTree[T]) bool
@@ -129,8 +129,8 @@ func TestBSTreeHasSubTree(t *testing.T) {
 	subTree.Insert(4)
 	subTree.Insert(6)
 
-	fmt.Println(superTree.HasSubTree(subTree)) //true
-	fmt.Println(subTree.HasSubTree(superTree)) //false
+	fmt.Println(superTree.HasSubTree(subTree)) // true
+	fmt.Println(subTree.HasSubTree(superTree)) // false
 }
 
 // func (t *BSTree[T]) Print()

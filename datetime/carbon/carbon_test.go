@@ -330,7 +330,6 @@ func TestAddHour(t *testing.T) {
 
 	expected, _ := Create(2016, time.August, 5, 11, 0, 0, 0, "UTC")
 	assert.Equal(t, expected, d, "The hour should be equal to 11")
-
 }
 
 func TestAddMinutesZero(t *testing.T) {
@@ -1705,6 +1704,7 @@ func TestDiffInSecondsNil(t *testing.T) {
 
 	assert.EqualValues(t, 0, t1.DiffInSeconds(t1, true))
 }
+
 func TestDiffInSecondsTimeZoneSameTime(t *testing.T) {
 	t1, _ := Create(2016, time.August, 18, 10, 0, 0, 0, "UTC")
 	t2, _ := Create(2016, time.August, 18, 12, 0, 0, 0, "Europe/Madrid")
@@ -1975,8 +1975,8 @@ func TestDiffInMonthsMoreThanTwoYears(t *testing.T) {
 }
 
 func TestDiffInMonthsTwoOverlapingYears(t *testing.T) {
-	t1, _ := Create(2019, 07, 1, 0, 0, 0, 0, time.UTC.String())
-	t2, _ := Create(2021, 07, 24, 0, 0, 0, 0, time.UTC.String())
+	t1, _ := Create(2019, 0o7, 1, 0, 0, 0, 0, time.UTC.String())
+	t2, _ := Create(2021, 0o7, 24, 0, 0, 0, 0, time.UTC.String())
 
 	assert.EqualValues(t, 24, t1.DiffInMonths(t2, true))
 }

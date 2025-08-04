@@ -8,9 +8,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/pkg/errors"
-
 	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -14,7 +14,11 @@ func TestCodec_Encode(t *testing.T) {
 	}
 
 	if encoded != string(b) {
-		t.Fatalf("decoded value does not match the expected one\nactual:   %#v\nexpected: %#v", string(b), encoded)
+		t.Fatalf(
+			"decoded value does not match the expected one\nactual:   %#v\nexpected: %#v",
+			string(b),
+			encoded,
+		)
 	}
 }
 
@@ -30,7 +34,11 @@ func TestCodec_Decode(t *testing.T) {
 		}
 
 		if !reflect.DeepEqual(decoded, v) {
-			t.Fatalf("decoded value does not match the expected one\nactual:   %#v\nexpected: %#v", v, decoded)
+			t.Fatalf(
+				"decoded value does not match the expected one\nactual:   %#v\nexpected: %#v",
+				v,
+				decoded,
+			)
 		}
 	})
 

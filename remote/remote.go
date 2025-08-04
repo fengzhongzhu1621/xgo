@@ -50,7 +50,9 @@ func (rc RemoteConfigProvider) Watch(rp IRemoteProvider) (io.Reader, error) {
 }
 
 // WatchChannel 监听指定路径，返回管道.
-func (rc RemoteConfigProvider) WatchChannel(rp IRemoteProvider) (<-chan *RemoteResponse, chan bool) {
+func (rc RemoteConfigProvider) WatchChannel(
+	rp IRemoteProvider,
+) (<-chan *RemoteResponse, chan bool) {
 	// 创建 key/value 存储客户端
 	cm, err := GetConfigManager(rp)
 	if err != nil {
@@ -79,7 +81,12 @@ func (rc RemoteConfigProvider) WatchChannel(rp IRemoteProvider) (<-chan *RemoteR
 				}
 			}
 		}
-	}(cryptoResponseCh, responsCh, quitwc, quit)
+	}(
+		cryptoResponseCh,
+		responsCh,
+		quitwc,
+		quit,
+	)
 
 	return responsCh, quitwc
 }

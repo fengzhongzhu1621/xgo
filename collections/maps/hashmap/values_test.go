@@ -33,5 +33,5 @@ func TestFilterByValue(t *testing.T) {
 		return value.(int) == 1 || value.(int) == 3
 	})
 
-	fmt.Println(filteredHM.Size()) //2
+	fmt.Println(filteredHM.Size()) // 2
 }

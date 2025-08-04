@@ -52,14 +52,23 @@ func (p *Publisher) Publish(topic string, messages ...*message.Message) error {
 		// 将消息装进信封，消息中的topic和发送topic不一样的
 		envelopedMsg, err := wrapMessageInEnvelope(topic, msg)
 		if err != nil {
-			return errors.Wrapf(err, "cannot wrap message, target topic: '%s', uuid: '%s'", topic, msg.UUID)
+			return errors.Wrapf(
+				err,
+				"cannot wrap message, target topic: '%s', uuid: '%s'",
+				topic,
+				msg.UUID,
+			)
 		}
 
 		envelopedMessages = append(envelopedMessages, envelopedMsg)
 	}
 
 	if err := p.wrappedPublisher.Publish(p.config.ForwarderTopic, envelopedMessages...); err != nil {
-		return errors.Wrapf(err, "cannot publish messages to forwarder topic: '%s'", p.config.ForwarderTopic)
+		return errors.Wrapf(
+			err,
+			"cannot publish messages to forwarder topic: '%s'",
+			p.config.ForwarderTopic,
+		)
 	}
 
 	return nil

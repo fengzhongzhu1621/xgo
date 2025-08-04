@@ -5,7 +5,6 @@ import (
 
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/amqp/router/middleware"
-
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 )
@@ -43,9 +42,13 @@ func TestIgnoreErrors_Middleware(t *testing.T) {
 
 			messagesToProduce := []*message.Message{message.NewMessage("1", nil)}
 
-			producedMessages, err := m.Middleware(func(msg *message.Message) ([]*message.Message, error) {
-				return messagesToProduce, c.TestError
-			})(nil)
+			producedMessages, err := m.Middleware(
+				func(msg *message.Message) ([]*message.Message, error) {
+					return messagesToProduce, c.TestError
+				},
+			)(
+				nil,
+			)
 
 			if c.ShouldBeIgnored {
 				assert.NoError(t, err)

@@ -13,7 +13,11 @@ func Test_Sorted(t *testing.T) {
 		sorted := mapset.Sorted(set)
 		fmt.Println(sorted)
 		if len(sorted) != set.Cardinality() {
-			t.Errorf("Length of slice is not the same as the set. Expected: %d. Actual: %d", set.Cardinality(), len(sorted))
+			t.Errorf(
+				"Length of slice is not the same as the set. Expected: %d. Actual: %d",
+				set.Cardinality(),
+				len(sorted),
+			)
 		}
 
 		if sorted[0] != "apple" {

@@ -7,9 +7,9 @@ import (
 )
 
 func TestOpenRoot(t *testing.T) {
-	var configdir = "../../config"
+	configdir := "../../config"
 
-	_ = os.MkdirAll(configdir, 0755)
+	_ = os.MkdirAll(configdir, 0o755)
 
 	// os.OpenRoot 打开并锁定目录
 	root, err := os.OpenRoot(configdir)
@@ -18,7 +18,7 @@ func TestOpenRoot(t *testing.T) {
 	}
 
 	// root.OpenFile 打开文件， 可以是基于 root 的相对路径
-	f, err := root.OpenFile("config.yaml", os.O_RDONLY, 0644)
+	f, err := root.OpenFile("config.yaml", os.O_RDONLY, 0o644)
 	if err != nil {
 		panic(err)
 	}

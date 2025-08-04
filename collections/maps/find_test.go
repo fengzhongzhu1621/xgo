@@ -168,7 +168,11 @@ func TestGetList(t *testing.T) {
 }
 
 func TestGetMap(t *testing.T) {
-	assert.Equal(t, map[string]interface{}{"app": "nginx"}, GetMap(deploySpec, "selector.matchLabels"))
+	assert.Equal(
+		t,
+		map[string]interface{}{"app": "nginx"},
+		GetMap(deploySpec, "selector.matchLabels"),
+	)
 	assert.Equal(t, map[string]interface{}{}, GetMap(deploySpec, "template.spec.notExistsKey"))
 }
 
@@ -189,11 +193,17 @@ func TestFindKey(t *testing.T) {
 		foobar string
 	}
 
-	result3, ok3 := lo.FindKey(map[string]test{"foo": {"foo"}, "bar": {"bar"}, "baz": {"baz"}}, test{"foo"})
+	result3, ok3 := lo.FindKey(
+		map[string]test{"foo": {"foo"}, "bar": {"bar"}, "baz": {"baz"}},
+		test{"foo"},
+	)
 	is.Equal("foo", result3)
 	is.True(ok3)
 
-	result4, ok4 := lo.FindKey(map[string]test{"foo": {"foo"}, "bar": {"bar"}, "baz": {"baz"}}, test{"hello world"})
+	result4, ok4 := lo.FindKey(
+		map[string]test{"foo": {"foo"}, "bar": {"bar"}, "baz": {"baz"}},
+		test{"hello world"},
+	)
 	is.Equal("", result4)
 	is.False(ok4)
 }
@@ -203,15 +213,21 @@ func TestFindKeyBy(t *testing.T) {
 	t.Parallel()
 	is := assert.New(t)
 
-	result1, ok1 := lo.FindKeyBy(map[string]int{"foo": 1, "bar": 2, "baz": 3}, func(k string, v int) bool {
-		return k == "foo"
-	})
+	result1, ok1 := lo.FindKeyBy(
+		map[string]int{"foo": 1, "bar": 2, "baz": 3},
+		func(k string, v int) bool {
+			return k == "foo"
+		},
+	)
 	is.Equal("foo", result1)
 	is.True(ok1)
 
-	result2, ok2 := lo.FindKeyBy(map[string]int{"foo": 1, "bar": 2, "baz": 3}, func(k string, v int) bool {
-		return false
-	})
+	result2, ok2 := lo.FindKeyBy(
+		map[string]int{"foo": 1, "bar": 2, "baz": 3},
+		func(k string, v int) bool {
+			return false
+		},
+	)
 	is.Equal("", result2)
 	is.False(ok2)
 }

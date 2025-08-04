@@ -128,7 +128,12 @@ func TestWaitForWithContext(t *testing.T) {
 			return i >= 5
 		}
 
-		iter, duration, ok := lo.WaitForWithContext(context.Background(), laterTrue, longTimeout, time.Millisecond)
+		iter, duration, ok := lo.WaitForWithContext(
+			context.Background(),
+			laterTrue,
+			longTimeout,
+			time.Millisecond,
+		)
 		is.Equal(6, iter, "unexpected iteration count")
 		is.InEpsilon(6*time.Millisecond, duration, float64(500*time.Microsecond))
 		is.True(ok)
@@ -147,7 +152,12 @@ func TestWaitForWithContext(t *testing.T) {
 			return false
 		}
 
-		iter, duration, ok := lo.WaitForWithContext(context.Background(), alwaysFalse, shortTimeout, 1050*time.Microsecond)
+		iter, duration, ok := lo.WaitForWithContext(
+			context.Background(),
+			alwaysFalse,
+			shortTimeout,
+			1050*time.Microsecond,
+		)
 		is.Equal(counter, iter, "unexpected iteration count")
 		is.InEpsilon(10*time.Millisecond, duration, float64(500*time.Microsecond))
 		is.False(ok)
@@ -162,7 +172,12 @@ func TestWaitForWithContext(t *testing.T) {
 		tests.TestWithTimeout(t, testTimeout)
 		is := assert.New(t)
 
-		iter, duration, ok := lo.WaitForWithContext(context.Background(), alwaysFalse, shortTimeout, 10*time.Millisecond)
+		iter, duration, ok := lo.WaitForWithContext(
+			context.Background(),
+			alwaysFalse,
+			shortTimeout,
+			10*time.Millisecond,
+		)
 		is.Equal(0, iter, "unexpected iteration count")
 		is.InEpsilon(10*time.Millisecond, duration, float64(500*time.Microsecond))
 		is.False(ok)
@@ -175,7 +190,12 @@ func TestWaitForWithContext(t *testing.T) {
 		is := assert.New(t)
 
 		shortTimeout := 4 * time.Millisecond
-		iter, duration, ok := lo.WaitForWithContext(context.Background(), alwaysFalse, shortTimeout, 10*time.Millisecond)
+		iter, duration, ok := lo.WaitForWithContext(
+			context.Background(),
+			alwaysFalse,
+			shortTimeout,
+			10*time.Millisecond,
+		)
 		is.Equal(0, iter, "unexpected iteration count")
 		is.InEpsilon(10*time.Millisecond, duration, float64(500*time.Microsecond))
 		is.False(ok)
@@ -187,7 +207,12 @@ func TestWaitForWithContext(t *testing.T) {
 		tests.TestWithTimeout(t, testTimeout)
 		is := assert.New(t)
 
-		iter, duration, ok := lo.WaitForWithContext(context.Background(), alwaysTrue, 10*time.Millisecond, time.Millisecond)
+		iter, duration, ok := lo.WaitForWithContext(
+			context.Background(),
+			alwaysTrue,
+			10*time.Millisecond,
+			time.Millisecond,
+		)
 		is.Equal(1, iter, "unexpected iteration count")
 		is.InEpsilon(time.Millisecond, duration, float64(5*time.Microsecond))
 		is.True(ok)
@@ -204,7 +229,12 @@ func TestWaitForWithContext(t *testing.T) {
 			clean()
 		})
 
-		iter, duration, ok := lo.WaitForWithContext(expiringCtx, alwaysFalse, 100*time.Millisecond, 3*time.Millisecond)
+		iter, duration, ok := lo.WaitForWithContext(
+			expiringCtx,
+			alwaysFalse,
+			100*time.Millisecond,
+			3*time.Millisecond,
+		)
 		is.Equal(2, iter, "unexpected iteration count")
 		is.InEpsilon(10*time.Millisecond, duration, float64(500*time.Microsecond))
 		is.False(ok)
@@ -219,7 +249,12 @@ func TestWaitForWithContext(t *testing.T) {
 		canceledCtx, cancel := context.WithCancel(context.Background())
 		cancel()
 
-		iter, duration, ok := lo.WaitForWithContext(canceledCtx, alwaysFalse, 100*time.Millisecond, 1050*time.Microsecond)
+		iter, duration, ok := lo.WaitForWithContext(
+			canceledCtx,
+			alwaysFalse,
+			100*time.Millisecond,
+			1050*time.Microsecond,
+		)
 		is.Equal(0, iter, "unexpected iteration count")
 		is.InEpsilon(1*time.Millisecond, duration, float64(5*time.Microsecond))
 		is.False(ok)

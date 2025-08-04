@@ -93,11 +93,15 @@ var (
 )
 
 func TestRuleMatch(t *testing.T) {
-	matched, err := exampleRule.Match(jsonx.JsonString(`{"test":1,"test1":[{"test2":"b"}],"test3":111}`))
+	matched, err := exampleRule.Match(
+		jsonx.JsonString(`{"test":1,"test1":[{"test2":"b"}],"test3":111}`),
+	)
 	assert.NoError(t, err)
 	assert.Equal(t, true, matched)
 
-	matched, err = exampleRule.Match(jsonx.JsonString(`{"test":1,"test1":[{"test2":"a"}],"test3":111}`))
+	matched, err = exampleRule.Match(
+		jsonx.JsonString(`{"test":1,"test1":[{"test2":"a"}],"test3":111}`),
+	)
 	assert.NoError(t, err)
 	assert.Equal(t, false, matched)
 }

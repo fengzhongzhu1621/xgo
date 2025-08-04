@@ -397,7 +397,7 @@ func (z *ZkClient) CheckNode(path string, data []byte) error {
 
 // CheckMulNode TODO
 func (z *ZkClient) CheckMulNode(path string, data []byte) error {
-	var tempPath = ""
+	tempPath := ""
 	temp := strings.Split(path, "/")
 	for i := 1; i < len(temp); i++ {
 		if temp[i] == "" {

@@ -19,9 +19,7 @@ var (
 	GoVersion       = runtime.Version()
 )
 
-var (
-	versionRegex = regexp.MustCompile(`(\d+).(\d+).(\d+)`)
-)
+var versionRegex = regexp.MustCompile(`(\d+).(\d+).(\d+)`)
 
 // ShowVersion is the default handler which match the --version flag.
 func ShowVersion() {

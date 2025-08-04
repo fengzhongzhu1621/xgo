@@ -8,12 +8,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var (
-	JobFuncMap = map[string]func(ctx context.Context){
-		"demo": func(ctx context.Context) {
-			println("Task executed")
-		}}
-)
+var JobFuncMap = map[string]func(ctx context.Context){
+	"demo": func(ctx context.Context) {
+		println("Task executed")
+	},
+}
 
 type TaskRequestSerializer struct {
 	ID       string `json:"id"`
@@ -22,9 +21,7 @@ type TaskRequestSerializer struct {
 }
 
 func AddTask(c *gin.Context) {
-	var (
-		req TaskRequestSerializer
-	)
+	var req TaskRequestSerializer
 
 	if err := c.BindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

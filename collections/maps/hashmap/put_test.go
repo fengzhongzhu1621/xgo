@@ -11,5 +11,5 @@ func main() {
 	hm.Put("a", 1)
 
 	val := hm.Get("a")
-	fmt.Println(val) //1
+	fmt.Println(val) // 1
 }

@@ -4,10 +4,9 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/samber/lo"
-
 	"github.com/araujo88/lambda-go/pkg/core"
 	"github.com/duke-git/lancet/v2/slice"
+	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -110,9 +109,13 @@ func TestReduceRight(t *testing.T) {
 	is := assert.New(t)
 
 	{
-		result1 := lo.ReduceRight([][]int{{0, 1}, {2, 3}, {4, 5}}, func(agg []int, item []int, _ int) []int {
-			return append(agg, item...)
-		}, []int{})
+		result1 := lo.ReduceRight(
+			[][]int{{0, 1}, {2, 3}, {4, 5}},
+			func(agg []int, item []int, _ int) []int {
+				return append(agg, item...)
+			},
+			[]int{},
+		)
 
 		is.Equal(result1, []int{4, 5, 2, 3, 0, 1})
 
@@ -124,9 +127,13 @@ func TestReduceRight(t *testing.T) {
 	}
 
 	{
-		result := slice.ReduceRight([]int{1, 2, 3, 4}, "", func(_ int, item int, agg string) string {
-			return agg + fmt.Sprintf("%v", item)
-		})
+		result := slice.ReduceRight(
+			[]int{1, 2, 3, 4},
+			"",
+			func(_ int, item int, agg string) string {
+				return agg + fmt.Sprintf("%v", item)
+			},
+		)
 
 		assert.Equal(t, "4321", result)
 	}

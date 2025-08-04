@@ -29,11 +29,8 @@ func Ipv4ToInt64(ip string) int64 {
 
 // InetToHexStr net.Ip 类型转换为十六进制字符串
 func InetToHexStr(ip net.IP) string {
-	ipv4 := false
+	ipv4 := ip.To4() != nil
 	// 判断是否是 ipv4
-	if ip.To4() != nil {
-		ipv4 = true
-	}
 
 	ipInt := big.NewInt(0)
 	if ipv4 {
@@ -323,9 +320,9 @@ func ConvertIpv6ToFullWord(value interface{}) (interface{}, error) {
 		// each element in the array or slice should be of the same basic type.
 		for i := 0; i < length; i++ {
 			item := v.Index(i).Interface()
-			switch item.(type) {
+			switch item := item.(type) {
 			case string:
-				v, err := ConvertIPv6ToStandardFormat(item.(string))
+				v, err := ConvertIPv6ToStandardFormat(item)
 				if err != nil {
 					return nil, err
 				}

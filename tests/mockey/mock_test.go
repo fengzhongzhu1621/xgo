@@ -27,7 +27,6 @@ func (b *B) Foo(in string) string { return in }
 var Bar = 0
 
 func TestMockXXX(t *testing.T) {
-
 	PatchConvey("Function mocking", t, func() {
 		Mock(Foo).Return("c").Build()         // mock function
 		So(Foo("anything"), ShouldEqual, "c") // assert `Foo` is mocked

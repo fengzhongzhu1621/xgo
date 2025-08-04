@@ -8,7 +8,6 @@ import (
 
 	"github.com/araujo88/lambda-go/pkg/sortgroup"
 	"github.com/duke-git/lancet/v2/slice"
-
 	"github.com/stretchr/testify/assert"
 )
 
@@ -102,7 +101,8 @@ func TestSortBy(t *testing.T) {
 		users := []User{
 			{Name: "a", Age: 21},
 			{Name: "b", Age: 15},
-			{Name: "c", Age: 100}}
+			{Name: "c", Age: 100},
+		}
 
 		slice.SortBy(users, func(a, b User) bool {
 			return a.Age < b.Age
@@ -119,7 +119,8 @@ func TestSortBy(t *testing.T) {
 		users := []User{
 			{Name: "a", Age: 21},
 			{Name: "b", Age: 15},
-			{Name: "c", Age: 100}}
+			{Name: "c", Age: 100},
+		}
 
 		// Sort by age, keeping original order or equal elements.
 		sort.SliceStable(users, func(i, j int) bool {
@@ -170,7 +171,6 @@ func (a ByAge) Less(i, j int) bool { return a[i].Age < a[j].Age }
 func (a ByAge) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 
 func TestSortInterface(t *testing.T) {
-
 	// 只要某一个数据结构实现了 Len() int，Less(i, j int) bool 和 Swap(i, j int) 这三个方法，那么就可以使用 sort.Sort 来排序
 	//
 	//	type Interface interface {

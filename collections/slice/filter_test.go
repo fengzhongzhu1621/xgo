@@ -9,10 +9,9 @@ import (
 
 	"github.com/araujo88/lambda-go/pkg/predicate"
 	"github.com/araujo88/lambda-go/pkg/utils"
+	"github.com/duke-git/lancet/v2/slice"
 	"github.com/gookit/goutil/arrutil"
 	"github.com/samber/lo"
-
-	"github.com/duke-git/lancet/v2/slice"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -57,7 +56,12 @@ func TestFilter(t *testing.T) {
 			predicate func(int) bool
 			want      []int
 		}{
-			{"filter out non-matching elements", []int{1, 2, 3}, func(x int) bool { return x > 1 }, []int{2, 3}},
+			{
+				"filter out non-matching elements",
+				[]int{1, 2, 3},
+				func(x int) bool { return x > 1 },
+				[]int{2, 3},
+			},
 			{"filter with no matches", []int{1, 2, 3}, func(x int) bool { return x == 5 }, []int{}},
 			{"empty slice", []int{}, func(x int) bool { return true }, []int{}},
 		}
@@ -104,12 +108,15 @@ func TestFilterMap(t *testing.T) {
 			}
 			return "", false
 		})
-		r2 := lo.FilterMap([]string{"cpu", "gpu", "mouse", "keyboard"}, func(x string, _ int) (string, bool) {
-			if strings.HasSuffix(x, "pu") {
-				return "xpu", true
-			}
-			return "", false
-		})
+		r2 := lo.FilterMap(
+			[]string{"cpu", "gpu", "mouse", "keyboard"},
+			func(x string, _ int) (string, bool) {
+				if strings.HasSuffix(x, "pu") {
+					return "xpu", true
+				}
+				return "", false
+			},
+		)
 
 		is.Equal(len(r1), 2)
 		is.Equal(len(r2), 2)

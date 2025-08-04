@@ -158,7 +158,8 @@ func (entry *Entry) WithFields(fields Fields) *Entry {
 		isErrField := false
 		if t := reflect.TypeOf(v); t != nil {
 			switch {
-			case t.Kind() == reflect.Func, t.Kind() == reflect.Ptr && t.Elem().Kind() == reflect.Func:
+			case t.Kind() == reflect.Func,
+				t.Kind() == reflect.Ptr && t.Elem().Kind() == reflect.Func:
 				isErrField = true
 			}
 		}
@@ -173,7 +174,13 @@ func (entry *Entry) WithFields(fields Fields) *Entry {
 			data[k] = v
 		}
 	}
-	return &Entry{Logger: entry.Logger, Data: data, Time: entry.Time, err: fieldErr, Context: entry.Context}
+	return &Entry{
+		Logger:  entry.Logger,
+		Data:    data,
+		Time:    entry.Time,
+		err:     fieldErr,
+		Context: entry.Context,
+	}
 }
 
 // WithError Add an error as single field (using the key defined in ErrorKey) to the Entry.
@@ -187,7 +194,13 @@ func (entry *Entry) WithContext(ctx context.Context) *Entry {
 	for k, v := range entry.Data {
 		dataCopy[k] = v
 	}
-	return &Entry{Logger: entry.Logger, Data: dataCopy, Time: entry.Time, err: entry.err, Context: ctx}
+	return &Entry{
+		Logger:  entry.Logger,
+		Data:    dataCopy,
+		Time:    entry.Time,
+		err:     entry.err,
+		Context: ctx,
+	}
 }
 
 // WithTime Overrides the time of the Entry.
@@ -196,7 +209,13 @@ func (entry *Entry) WithTime(t time.Time) *Entry {
 	for k, v := range entry.Data {
 		dataCopy[k] = v
 	}
-	return &Entry{Logger: entry.Logger, Data: dataCopy, Time: t, err: entry.err, Context: entry.Context}
+	return &Entry{
+		Logger:  entry.Logger,
+		Data:    dataCopy,
+		Time:    t,
+		err:     entry.err,
+		Context: entry.Context,
+	}
 }
 
 func (entry *Entry) Logf(level Level, format string, args ...interface{}) {
@@ -220,7 +239,13 @@ func (entry *Entry) Dup() *Entry {
 	for k, v := range entry.Data {
 		data[k] = v
 	}
-	return &Entry{Logger: entry.Logger, Data: data, Time: entry.Time, Context: entry.Context, err: entry.err}
+	return &Entry{
+		Logger:  entry.Logger,
+		Data:    data,
+		Time:    entry.Time,
+		Context: entry.Context,
+		err:     entry.err,
+	}
 }
 
 func (entry *Entry) getBufferPool() pool.BufferPool {

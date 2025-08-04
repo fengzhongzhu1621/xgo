@@ -90,7 +90,10 @@ func TestSizeMongoCond(t *testing.T) {
 		return
 	}
 
-	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{DBSize: uint64(0)}}) {
+	if !reflect.DeepEqual(
+		cond,
+		map[string]interface{}{"test": map[string]interface{}{DBSize: uint64(0)}},
+	) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}

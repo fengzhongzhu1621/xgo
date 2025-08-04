@@ -49,7 +49,7 @@ func TestReflectEqualsComparer(t *testing.T) {
 
 // ElemTypeEqualCompareFunc
 func TestElemTypeEqualCompareFuncShouldEquals(t *testing.T) {
-	var c = 1
+	c := 1
 	assert.Equal(t, 0, arrutil.ElemTypeEqualsComparer(c, c))
 	assert.Equal(t, 0, arrutil.ElemTypeEqualsComparer(1, 1))
 

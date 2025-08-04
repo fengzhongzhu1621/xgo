@@ -46,10 +46,10 @@ type AccessTable struct {
 // 配置访问类
 type AccessConf struct {
 	// 非登录用户的上传文件的权限
-	Upload bool `yaml:"upload" json:"upload"`
+	Upload bool `yaml:"upload"       json:"upload"`
 	// 非登录用户的的删除权限
-	Delete bool          `yaml:"delete" json:"delete"`
-	Users  []UserControl `yaml:"users" json:"users"`
+	Delete bool          `yaml:"delete"       json:"delete"`
+	Users  []UserControl `yaml:"users"        json:"users"`
 	// 根据正则表达式判断是否有某个文件的访问权限
 	AccessTables []AccessTable `yaml:"accessTables"`
 }

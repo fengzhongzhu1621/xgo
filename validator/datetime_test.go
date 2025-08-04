@@ -25,9 +25,9 @@ func TestIsLeapYear(t *testing.T) {
 // Checks if passed time is weekend or not.
 // func IsWeekend(t time.Time) bool
 func TestIsWeekend(t *testing.T) {
-	date1 := time.Date(2023, 06, 03, 0, 0, 0, 0, time.Local)
-	date2 := time.Date(2023, 06, 04, 0, 0, 0, 0, time.Local)
-	date3 := time.Date(2023, 06, 02, 0, 0, 0, 0, time.Local)
+	date1 := time.Date(2023, 0o6, 0o3, 0, 0, 0, 0, time.Local)
+	date2 := time.Date(2023, 0o6, 0o4, 0, 0, 0, 0, time.Local)
+	date3 := time.Date(2023, 0o6, 0o2, 0, 0, 0, 0, time.Local)
 
 	result1 := datetime.IsWeekend(date1)
 	result2 := datetime.IsWeekend(date2)

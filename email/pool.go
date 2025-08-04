@@ -48,7 +48,12 @@ type Pool struct {
 	helloHostname string
 }
 
-func NewPool(address string, count int, auth smtp.Auth, opt_tlsConfig ...*tls.Config) (pool *Pool, err error) {
+func NewPool(
+	address string,
+	count int,
+	auth smtp.Auth,
+	opt_tlsConfig ...*tls.Config,
+) (pool *Pool, err error) {
 	pool = &Pool{
 		addr:    address,
 		auth:    auth,

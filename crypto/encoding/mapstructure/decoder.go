@@ -11,10 +11,11 @@ type DecoderConfigOption func(*mapstructure.DecoderConfig)
 // DecodeHook returns a DecoderConfigOption which overrides the default
 // DecoderConfig.DecodeHook value, the default is:
 //
-//  mapstructure.ComposeDecodeHookFunc(
-//		mapstructure.StringToTimeDurationHookFunc(),
-//		mapstructure.StringToSliceHookFunc(","),
-//	)
+//	 mapstructure.ComposeDecodeHookFunc(
+//			mapstructure.StringToTimeDurationHookFunc(),
+//			mapstructure.StringToSliceHookFunc(","),
+//		)
+//
 // 给 mapstructure.DecoderConfig 添加 hook函数.
 func DecodeHook(hook mapstructure.DecodeHookFunc) DecoderConfigOption {
 	return func(c *mapstructure.DecoderConfig) {
@@ -24,7 +25,10 @@ func DecodeHook(hook mapstructure.DecodeHookFunc) DecoderConfigOption {
 
 // defaultDecoderConfig returns default mapsstructure.DecoderConfig with suppot
 // of time.Duration values & string slices.
-func DefaultDecoderConfig(output interface{}, opts ...DecoderConfigOption) *mapstructure.DecoderConfig {
+func DefaultDecoderConfig(
+	output interface{},
+	opts ...DecoderConfigOption,
+) *mapstructure.DecoderConfig {
 	c := &mapstructure.DecoderConfig{
 		Metadata:         nil,
 		Result:           output,

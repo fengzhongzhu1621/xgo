@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/fengzhongzhu1621/xgo/collections/maps"
-
 	"github.com/spf13/cast"
 	"gopkg.in/ini.v1"
 )

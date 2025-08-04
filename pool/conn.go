@@ -70,7 +70,11 @@ func (cn *Conn) RemoteAddr() net.Addr {
 }
 
 // WithReader 设置读超时，返回一个读操作.
-func (cn *Conn) WithReader(ctx context.Context, timeout time.Duration, fn func(rd *proto.Reader) error) error {
+func (cn *Conn) WithReader(
+	ctx context.Context,
+	timeout time.Duration,
+	fn func(rd *proto.Reader) error,
+) error {
 	// 设置读超时时间
 	if err := cn.netConn.SetReadDeadline(cn.deadline(ctx, timeout)); err != nil {
 		return err

@@ -17,11 +17,8 @@ func longRunningOperation(ctx context.Context) error {
 		case <-ctx.Done():
 			// 返回错误信息
 			return ctx.Err()
-		default:
-
 		}
 	}
-
 }
 
 func TestWithCancel(t *testing.T) {

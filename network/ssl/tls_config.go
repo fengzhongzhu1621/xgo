@@ -88,7 +88,7 @@ func ClientTslConfVerity(caFile, certFile, keyFile, passwd string) (*tls.Config,
 
 // ServerTslConf 服务端Tsl配置
 func ServerTslConf(caFile, certFile, keyFile, passwd string) (*tls.Config, error) {
-	if "" == caFile {
+	if caFile == "" {
 		return ServerTslConfVerity(certFile, keyFile, passwd)
 	}
 

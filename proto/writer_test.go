@@ -50,7 +50,7 @@ var _ = Describe("WriteBuffer", func() {
 	})
 
 	It("should append time", func() {
-		tm := time.Date(2019, 01, 01, 9, 45, 10, 222125, time.UTC)
+		tm := time.Date(2019, 0o1, 0o1, 9, 45, 10, 222125, time.UTC)
 		err := wr.WriteArgs([]interface{}{tm})
 		Expect(err).NotTo(HaveOccurred())
 

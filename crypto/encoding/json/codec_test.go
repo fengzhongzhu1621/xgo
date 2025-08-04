@@ -92,15 +92,21 @@ func TestMapToJson(t *testing.T) {
 		}
 
 		if encoded != string(b) {
-			t.Fatalf("decoded value does not match the expected one\nactual:   %#v\nexpected: %#v", string(b), encoded)
+			t.Fatalf(
+				"decoded value does not match the expected one\nactual:   %#v\nexpected: %#v",
+				string(b),
+				encoded,
+			)
 		}
 	}
 
 	{
 		bizIds := []int64{1, 2, 3}
-		actual, _ := json.Marshal([]map[string]any{{"field": "bk_biz_id",
+		actual, _ := json.Marshal([]map[string]any{{
+			"field":    "bk_biz_id",
 			"operator": "in",
-			"value":    bizIds}})
+			"value":    bizIds,
+		}})
 		expect := []byte(`[{"field":"bk_biz_id","operator":"in","value":[1,2,3]}]`)
 		assert.Equal(t, expect, actual)
 	}
@@ -110,7 +116,6 @@ func TestMapToJson(t *testing.T) {
 		// func ToJson(value any) (string, error)
 		aMap := map[string]int{"a": 1, "b": 2, "c": 3}
 		result, err := convertor.ToJson(aMap)
-
 		if err != nil {
 			fmt.Printf("%v", err)
 		}
@@ -136,7 +141,11 @@ func TestJsonToMap(t *testing.T) {
 			}
 
 			if !reflect.DeepEqual(data, v) {
-				t.Fatalf("decoded value does not match the expected one\nactual:   %#v\nexpected: %#v", v, data)
+				t.Fatalf(
+					"decoded value does not match the expected one\nactual:   %#v\nexpected: %#v",
+					v,
+					data,
+				)
 			}
 		})
 

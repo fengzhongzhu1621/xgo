@@ -3,9 +3,8 @@ package forwarder
 import (
 	"encoding/json"
 
-	"github.com/fengzhongzhu1621/xgo/crypto/uuid"
-
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
+	"github.com/fengzhongzhu1621/xgo/crypto/uuid"
 	"github.com/pkg/errors"
 )
 
@@ -42,7 +41,10 @@ func (e *messageEnvelope) validate() error {
 }
 
 // wrapMessageInEnvelope 将消息放进信封
-func wrapMessageInEnvelope(destinationTopic string, msg *message.Message) (*message.Message, error) {
+func wrapMessageInEnvelope(
+	destinationTopic string,
+	msg *message.Message,
+) (*message.Message, error) {
 	// 创建一个信封
 	envelope, err := newMessageEnvelope(destinationTopic, msg)
 	if err != nil {
@@ -62,7 +64,9 @@ func wrapMessageInEnvelope(destinationTopic string, msg *message.Message) (*mess
 	return wrappedMsg, nil
 }
 
-func unwrapMessageFromEnvelope(msg *message.Message) (destinationTopic string, unwrappedMsg *message.Message, err error) {
+func unwrapMessageFromEnvelope(
+	msg *message.Message,
+) (destinationTopic string, unwrappedMsg *message.Message, err error) {
 	envelopedMsg := messageEnvelope{}
 	if err := json.Unmarshal(msg.Payload, &envelopedMsg); err != nil {
 		return "", nil, errors.Wrap(err, "cannot unmarshal message wrapped in an envelope")

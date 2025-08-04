@@ -5,10 +5,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/fengzhongzhu1621/xgo/crypto/uuid"
-
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/amqp/pubsub/gochannel"
+	"github.com/fengzhongzhu1621/xgo/crypto/uuid"
 	"github.com/fengzhongzhu1621/xgo/logging"
 )
 

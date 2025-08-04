@@ -6,14 +6,11 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/duke-git/lancet/v2/function"
 	"github.com/gookit/goutil/basefn"
-
 	"github.com/samber/lo"
 	"github.com/samber/lo/parallel"
-
 	"github.com/stretchr/testify/assert"
-
-	"github.com/duke-git/lancet/v2/function"
 )
 
 // TestAfter 创建一个函数，限制最少执行次数，当被调用达到n次或n次以上时调用给定的func（函数）。

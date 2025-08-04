@@ -168,12 +168,18 @@ func TestToSlice(t *testing.T) {
 
 	{
 		{
-			result1 := lo.MapToSlice(map[int]int{1: 5, 2: 6, 3: 7, 4: 8}, func(k int, v int) string {
-				return fmt.Sprintf("%d_%d", k, v)
-			})
-			result2 := lo.MapToSlice(map[int]int{1: 5, 2: 6, 3: 7, 4: 8}, func(k int, _ int) string {
-				return strconv.FormatInt(int64(k), 10)
-			})
+			result1 := lo.MapToSlice(
+				map[int]int{1: 5, 2: 6, 3: 7, 4: 8},
+				func(k int, v int) string {
+					return fmt.Sprintf("%d_%d", k, v)
+				},
+			)
+			result2 := lo.MapToSlice(
+				map[int]int{1: 5, 2: 6, 3: 7, 4: 8},
+				func(k int, _ int) string {
+					return strconv.FormatInt(int64(k), 10)
+				},
+			)
 
 			is.Equal(len(result1), 4)
 			is.Equal(len(result2), 4)

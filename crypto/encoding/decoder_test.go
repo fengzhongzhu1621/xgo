@@ -64,7 +64,11 @@ func TestDecoderRegistry_Decode(t *testing.T) {
 		}
 
 		if !reflect.DeepEqual(decoder.v, v) {
-			t.Fatalf("decoded value does not match the expected one\nactual:   %+v\nexpected: %+v", v, decoder.v)
+			t.Fatalf(
+				"decoded value does not match the expected one\nactual:   %+v\nexpected: %+v",
+				v,
+				decoder.v,
+			)
 		}
 	})
 

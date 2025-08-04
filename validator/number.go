@@ -9,9 +9,7 @@ const (
 	numCharPattern = `^[a-zA-Z0-9]*$`
 )
 
-var (
-	numCharRegexp = regexp.MustCompile(numCharPattern)
-)
+var numCharRegexp = regexp.MustCompile(numCharPattern)
 
 // IsNumeric judges if value is a number
 func IsNumeric(val interface{}) bool {

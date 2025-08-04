@@ -25,14 +25,15 @@ func NewClientAuthMiddleware(c *config.Config) gin.HandlerFunc {
 // ClientAuthMiddleware 根据公钥从 jwt token 解析用户信息
 func ClientAuthMiddleware(apiGatewayPublicKey []byte) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var (
-			clientID, clientUsername string
-		)
+		var clientID, clientUsername string
 
 		// 1. 获得 jwt
 		jwtToken := c.GetHeader("X-Bkapi-JWT")
 		if jwtToken == "" {
-			utils.UnauthorizedJSONResponse(c, "request from apigateway jwt token should not be empty!")
+			utils.UnauthorizedJSONResponse(
+				c,
+				"request from apigateway jwt token should not be empty!",
+			)
 			c.Abort()
 			return
 		}

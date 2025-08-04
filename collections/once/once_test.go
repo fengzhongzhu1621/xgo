@@ -19,5 +19,4 @@ func TestSyncOnce(t *testing.T) {
 
 	// Output:
 	// This will be printed once
-
 }

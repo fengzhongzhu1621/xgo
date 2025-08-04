@@ -3,10 +3,11 @@ package json
 import (
 	"encoding/json"
 	"fmt"
+	"testing"
+
 	"github.com/fengzhongzhu1621/xgo/tests"
 	"github.com/stretchr/testify/assert"
 	"github.com/wneessen/niljson"
-	"testing"
 )
 
 type JSONType struct {

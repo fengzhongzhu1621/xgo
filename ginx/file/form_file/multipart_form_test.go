@@ -36,7 +36,7 @@ func TestMultipartForm(t *testing.T) {
 
 		// 3. 确保上传目录存在
 		uploadDir := "./uploads"
-		if err := os.MkdirAll(uploadDir, 0755); err != nil {
+		if err := os.MkdirAll(uploadDir, 0o755); err != nil {
 			log.Println("创建上传目录失败:", err)
 			c.String(http.StatusInternalServerError, "服务器内部错误")
 			return
@@ -107,7 +107,10 @@ func TestMultipartForm(t *testing.T) {
 			return
 		}
 
-		c.String(http.StatusOK, fmt.Sprintf("成功上传 %d/%d 个文件: %v", len(savedFiles), len(files), savedFiles))
+		c.String(
+			http.StatusOK,
+			fmt.Sprintf("成功上传 %d/%d 个文件: %v", len(savedFiles), len(files), savedFiles),
+		)
 	})
 
 	engine.Run(":8080")

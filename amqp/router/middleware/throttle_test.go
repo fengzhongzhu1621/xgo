@@ -5,11 +5,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/pkg/errors"
-
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/amqp/router/middleware"
-
+	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -36,9 +34,11 @@ func TestThrottle_Middleware(t *testing.T) {
 				producedMessages := []*message.Message{message.NewMessage("produced", nil)}
 				producedErr := errors.New("produced err")
 
-				produced, err := throttle.Middleware(func(msg *message.Message) ([]*message.Message, error) {
-					return producedMessages, producedErr
-				})(
+				produced, err := throttle.Middleware(
+					func(msg *message.Message) ([]*message.Message, error) {
+						return producedMessages, producedErr
+					},
+				)(
 					message.NewMessage("uuid", nil),
 				)
 

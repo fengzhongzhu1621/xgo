@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/gookit/goutil/byteutil"
-
 	"github.com/stretchr/testify/assert"
 )
 

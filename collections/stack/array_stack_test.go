@@ -33,8 +33,8 @@ func TestPop(t *testing.T) {
 	sk.Push(3)
 
 	val, err := sk.Pop()
-	fmt.Println(err)  //nil
-	fmt.Println(*val) //3
+	fmt.Println(err)  // nil
+	fmt.Println(*val) // 3
 
 	fmt.Println(sk.Data()) //[]int{2, 1}
 }
@@ -47,8 +47,8 @@ func TestPeak(t *testing.T) {
 	sk.Push(3)
 
 	val, err := sk.Peak()
-	fmt.Println(err)  //nil
-	fmt.Println(*val) //3
+	fmt.Println(err)  // nil
+	fmt.Println(*val) // 3
 
 	fmt.Println(sk.Data()) //[]int{3, 2, 1}
 }
@@ -70,19 +70,19 @@ func TestSize(t *testing.T) {
 	sk.Push(2)
 	sk.Push(3)
 
-	fmt.Println(sk.Size()) //3
+	fmt.Println(sk.Size()) // 3
 }
 
 // func (s *ArrayStack[T]) IsEmpty() bool
 func TestIsEmpty(t *testing.T) {
 	sk := stack.NewArrayStack[int]()
-	fmt.Println(sk.IsEmpty()) //true
+	fmt.Println(sk.IsEmpty()) // true
 
 	sk.Push(1)
 	sk.Push(2)
 	sk.Push(3)
 
-	fmt.Println(sk.IsEmpty()) //false
+	fmt.Println(sk.IsEmpty()) // false
 }
 
 // func (s *ArrayStack[T]) Clear()

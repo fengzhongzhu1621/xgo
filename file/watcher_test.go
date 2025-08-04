@@ -12,15 +12,13 @@ import (
 	"testing"
 	"time"
 
+	ms "github.com/fengzhongzhu1621/xgo/crypto/encoding/mapstructure"
 	"github.com/fengzhongzhu1621/xgo/numpy"
-
+	"github.com/fengzhongzhu1621/xgo/tests"
 	"github.com/mitchellh/mapstructure"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-
-	ms "github.com/fengzhongzhu1621/xgo/crypto/encoding/mapstructure"
-	"github.com/fengzhongzhu1621/xgo/tests"
 )
 
 var yamlExampleWithExtras = []byte(`Existing: true
@@ -199,7 +197,9 @@ func TestUnmarshalExact(t *testing.T) {
 	vip.ReadConfig(r)
 	err := vip.UnmarshalExact(target)
 	if err == nil {
-		t.Fatal("UnmarshalExact should error when populating a struct from a conf that contains unused fields")
+		t.Fatal(
+			"UnmarshalExact should error when populating a struct from a conf that contains unused fields",
+		)
 	}
 }
 

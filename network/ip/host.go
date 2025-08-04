@@ -49,7 +49,7 @@ func GetDailAddress(addr string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	var port = uri.Port()
+	port := uri.Port()
 	if uri.Port() == "" {
 		port = "80"
 	}

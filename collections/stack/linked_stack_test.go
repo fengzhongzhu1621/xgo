@@ -37,8 +37,8 @@ func TestLinkedStackPop(t *testing.T) {
 	sk.Push(3)
 
 	val, err := sk.Pop()
-	fmt.Println(err)  //nil
-	fmt.Println(*val) //3
+	fmt.Println(err)  // nil
+	fmt.Println(*val) // 3
 
 	fmt.Println(sk.Data()) //[]int{2, 1}
 }
@@ -51,8 +51,8 @@ func TestLinkedStackPeak(t *testing.T) {
 	sk.Push(3)
 
 	val, err := sk.Peak()
-	fmt.Println(err)  //nil
-	fmt.Println(*val) //3
+	fmt.Println(err)  // nil
+	fmt.Println(*val) // 3
 
 	fmt.Println(sk.Data()) //[]int{3, 2, 1}
 }
@@ -74,19 +74,19 @@ func TestLinkedStackSize(t *testing.T) {
 	sk.Push(2)
 	sk.Push(3)
 
-	fmt.Println(sk.Size()) //3
+	fmt.Println(sk.Size()) // 3
 }
 
 // func (s *LinkedStack[T]) IsEmpty() bool
 func TestLinkedStackIsEmpty(t *testing.T) {
 	sk := stack.NewLinkedStack[int]()
-	fmt.Println(sk.IsEmpty()) //true
+	fmt.Println(sk.IsEmpty()) // true
 
 	sk.Push(1)
 	sk.Push(2)
 	sk.Push(3)
 
-	fmt.Println(sk.IsEmpty()) //false
+	fmt.Println(sk.IsEmpty()) // false
 }
 
 // func (s *LinkedStack[T]) Clear()

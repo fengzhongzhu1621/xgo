@@ -7,9 +7,7 @@ import (
 	"github.com/fengzhongzhu1621/xgo"
 )
 
-var (
-	_tmpls = make(map[string]*template.Template)
-)
+var _tmpls = make(map[string]*template.Template)
 
 // RenderHTML 根据文件名，读取模板文件，并使用 v 进行渲染模板内容
 func RenderHTML(w http.ResponseWriter, name string, v interface{}) {
@@ -19,7 +17,9 @@ func RenderHTML(w http.ResponseWriter, name string, v interface{}) {
 		return
 	}
 	// 读取模板文件，渲染资源文件的内容
-	t := template.Must(template.New(name).Funcs(xgo.FuncMap).Delims("[[", "]]").Parse(xgo.ReadAssetsContent(name)))
+	t := template.Must(
+		template.New(name).Funcs(xgo.FuncMap).Delims("[[", "]]").Parse(xgo.ReadAssetsContent(name)),
+	)
 	// 添加到缓存中
 	_tmpls[name] = t
 	// 使用上下文变量 v 渲染资源文件的内容，将渲染的内容写入到 http 响应中

@@ -91,7 +91,10 @@ func TestInMongoCond(t *testing.T) {
 		return
 	}
 
-	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{DBIN: []int64{1, 2}}}) {
+	if !reflect.DeepEqual(
+		cond,
+		map[string]interface{}{"test": map[string]interface{}{DBIN: []int64{1, 2}}},
+	) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}
@@ -103,7 +106,8 @@ func TestInMongoCond(t *testing.T) {
 		return
 	}
 	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{
-		DBIN: []string{"a", "b"}}}) {
+		DBIN: []string{"a", "b"},
+	}}) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}
@@ -115,7 +119,8 @@ func TestInMongoCond(t *testing.T) {
 		return
 	}
 	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{
-		DBIN: []interface{}{true, false}}}) {
+		DBIN: []interface{}{true, false},
+	}}) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}

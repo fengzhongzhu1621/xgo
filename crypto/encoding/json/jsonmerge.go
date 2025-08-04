@@ -11,7 +11,6 @@ import (
 // 合并两个 JSON 表示为一个单一对象。`data` 是现有的表示，`patch` 是要合并的新数据。
 // 如果 `data` 或 `patch` 为 nil，则视为空对象 {}。
 func JSONMerge(data, patch json.RawMessage) (json.RawMessage, error) {
-
 	// 设置置了合并器的配置选项 CopyNonexistent 为 true。这意味着在合并过程中，
 	// patch 中存在但 data 中不存在的属性会被复制到最终的合并结果中。
 	// data 中存在但 patch 中不存在的属性会保留下来

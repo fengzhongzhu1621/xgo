@@ -11,6 +11,6 @@ func TestContains(t *testing.T) {
 	hm := heap.NewHashMap()
 	hm.Put("a", 1)
 
-	fmt.Println(hm.Contains("a")) //true
-	fmt.Println(hm.Contains("b")) //false
+	fmt.Println(hm.Contains("a")) // true
+	fmt.Println(hm.Contains("b")) // false
 }

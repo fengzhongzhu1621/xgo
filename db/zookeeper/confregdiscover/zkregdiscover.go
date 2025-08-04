@@ -45,7 +45,6 @@ func (zkRD *ZkRegDiscover) Read(path string) (string, error) {
 
 // Discover TODO
 func (zkRD *ZkRegDiscover) Discover(key string) (<-chan *DiscoverEvent, error) {
-
 	env := make(chan *DiscoverEvent, 1)
 
 	go zkRD.loopDiscover(zkRD.rootCtx, key, env)
@@ -53,7 +52,11 @@ func (zkRD *ZkRegDiscover) Discover(key string) (<-chan *DiscoverEvent, error) {
 	return env, nil
 }
 
-func (zkRD *ZkRegDiscover) loopDiscover(discvCtx context.Context, path string, env chan *DiscoverEvent) {
+func (zkRD *ZkRegDiscover) loopDiscover(
+	discvCtx context.Context,
+	path string,
+	env chan *DiscoverEvent,
+) {
 	for {
 		discvEnv := &DiscoverEvent{
 			Err: nil,

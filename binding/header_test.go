@@ -1,8 +1,9 @@
 package binding
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestHeaderBinding(t *testing.T) {

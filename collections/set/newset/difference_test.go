@@ -25,7 +25,7 @@ func Test_SetDifference(t *testing.T) {
 	c := a.Difference(b)
 	fmt.Println(c)
 
-	if !(c.Cardinality() == 1 && c.Contains(2)) {
+	if c.Cardinality() != 1 || !c.Contains(2) {
 		t.Error("the difference of set a to b is the set of 1 item: 2")
 	}
 }
@@ -49,7 +49,10 @@ func Test_SetSymmetricDifference(t *testing.T) {
 	c := a.SymmetricDifference(b)
 	fmt.Println(c)
 
-	if !(c.Cardinality() == 6 && c.Contains(2) && c.Contains(45) && c.Contains(4) && c.Contains(5) && c.Contains(6) && c.Contains(99)) {
+	if c.Cardinality() != 6 || !c.Contains(2) || !c.Contains(45) || !c.Contains(4) ||
+		!c.Contains(5) ||
+		!c.Contains(6) ||
+		!c.Contains(99) {
 		t.Error("the symmetric difference of set a to b is the set of 6 items: 2, 45, 4, 5, 6, 99")
 	}
 }

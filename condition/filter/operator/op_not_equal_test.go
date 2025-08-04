@@ -87,7 +87,10 @@ func TestNotEqualMongoCond(t *testing.T) {
 		t.Errorf("to mongo failed, err: %v", err)
 		return
 	}
-	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{DBNE: false}}) {
+	if !reflect.DeepEqual(
+		cond,
+		map[string]interface{}{"test": map[string]interface{}{DBNE: false}},
+	) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}

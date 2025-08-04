@@ -27,7 +27,10 @@ func GetJwtTokenFromHeader(c *gin.Context) (string, error) {
 }
 
 // GetClientIDFromJWTToken 从 jwt 中解析出 app_code 和 username
-func GetClientIDFromJWTToken(jwtToken string, apiGatewayPublicKey []byte) (clientID, clientUsername string, err error) {
+func GetClientIDFromJWTToken(
+	jwtToken string,
+	apiGatewayPublicKey []byte,
+) (clientID, clientUsername string, err error) {
 	// 尝试从缓存中获取用户 ID 和名称
 	clientID, clientUsername, err = cacheimpls.GetJWTTokenClientIDAndUsername(jwtToken)
 	if err == nil {
@@ -44,10 +47,11 @@ func GetClientIDFromJWTToken(jwtToken string, apiGatewayPublicKey []byte) (clien
 }
 
 // VerifyClientAndUsername 从 jwt token 解析出 app_code 和 username
-func VerifyClientAndUsername(jwtToken string, publicKey []byte) (clientID, userName string, err error) {
-	var (
-		claims jwt.MapClaims
-	)
+func VerifyClientAndUsername(
+	jwtToken string,
+	publicKey []byte,
+) (clientID, userName string, err error) {
+	var claims jwt.MapClaims
 	// 根据公钥从 jwt token 中解码出用户信息
 	claims, err = parseBKJWTToken(jwtToken, publicKey)
 	if err != nil {

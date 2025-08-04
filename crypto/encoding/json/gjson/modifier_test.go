@@ -9,11 +9,11 @@ import (
 )
 
 // @reverse：翻转一个数组；
-// @ugly：移除 JSON 中的所有空白符；
-// @pretty：使 JSON 更易用阅读；
+// @ugly：移除	JSON 中的所有空白符；
+// @pretty：使	JSON 更易用阅读；
 // @this：返回当前的元素，可以用来返回根元素；
-// @valid：校验 JSON 的合法性；
-// @flatten：数组平坦化，即将["a", ["b", "c"]]转为["a","b","c"]；
+// @valid：校验				JSON 的合法性；
+// @flatten：数组平坦化，即将["a",	["b", "c"]]转为["a","b","c"]；
 // @join：将多个对象合并到一个对象中。
 func TestModifier(t *testing.T) {
 	// 读取数组children，然后使用修饰符@reverse翻转之后返回

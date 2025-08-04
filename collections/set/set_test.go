@@ -13,7 +13,7 @@ import (
 // func FromSlice[T comparable](items []T) Set[T]
 func TestToSlice(t *testing.T) {
 	st := set.FromSlice([]int{1, 2, 2, 3})
-	fmt.Println(st.ToSlice()) //1,2,3
+	fmt.Println(st.ToSlice()) // 1,2,3
 }
 
 // func (s Set[T]) ToSortedSlice() (v T, ok bool)
@@ -42,7 +42,7 @@ func TestAdd(t *testing.T) {
 	st := set.New[int]()
 	st.Add(1, 2, 3)
 
-	fmt.Println(st.ToSlice()) //1,2,3
+	fmt.Println(st.ToSlice()) // 1,2,3
 }
 
 // func (s Set[T]) AddIfNotExist(item T) bool
@@ -82,7 +82,7 @@ func TestDelete(t *testing.T) {
 	st.Add(1, 2, 3)
 
 	st.Delete(3)
-	fmt.Println(st.ToSlice()) //1,2
+	fmt.Println(st.ToSlice()) // 1,2
 }
 
 // func (s Set[T]) Contain(item T) bool
@@ -90,8 +90,8 @@ func TestContain(t *testing.T) {
 	st := set.New[int]()
 	st.Add(1, 2, 3)
 
-	fmt.Println(st.Contain(1)) //true
-	fmt.Println(st.Contain(4)) //false
+	fmt.Println(st.Contain(1)) // true
+	fmt.Println(st.Contain(4)) // false
 }
 
 // func (s Set[T]) ContainAll(other Set[T]) bool
@@ -100,15 +100,15 @@ func TestContainAll(t *testing.T) {
 	set2 := set.New(1, 2)
 	set3 := set.New(1, 2, 3, 4)
 
-	fmt.Println(set1.ContainAll(set2)) //true
-	fmt.Println(set1.ContainAll(set3)) //false
+	fmt.Println(set1.ContainAll(set2)) // true
+	fmt.Println(set1.ContainAll(set3)) // false
 }
 
 // func (s Set[T]) Size() int
 func TestSize(t *testing.T) {
 	set1 := set.New(1, 2, 3)
 
-	fmt.Println(set1.Size()) //3
+	fmt.Println(set1.Size()) // 3
 }
 
 // func (s Set[T]) Clone() Set[T]
@@ -116,8 +116,8 @@ func TestClone(t *testing.T) {
 	set1 := set.New(1, 2, 3)
 	set2 := set1.Clone()
 
-	fmt.Println(set1.Size() == set2.Size()) //true
-	fmt.Println(set1.ContainAll(set2))      //true
+	fmt.Println(set1.Size() == set2.Size()) // true
+	fmt.Println(set1.ContainAll(set2))      // true
 }
 
 // func (s Set[T]) Equal(other Set[T]) bool
@@ -126,8 +126,8 @@ func TestEqual(t *testing.T) {
 	set2 := set.New(1, 2, 3)
 	set3 := set.New(1, 2, 3, 4)
 
-	fmt.Println(set1.Equal(set2)) //true
-	fmt.Println(set1.Equal(set3)) //false
+	fmt.Println(set1.Equal(set2)) // true
+	fmt.Println(set1.Equal(set3)) // false
 }
 
 // func (s Set[T]) Iterate(fn func(item T))
@@ -138,7 +138,7 @@ func TestIterate(t *testing.T) {
 		arr = append(arr, item)
 	})
 
-	fmt.Println(arr) //1,2,3
+	fmt.Println(arr) // 1,2,3
 }
 
 // func (s Set[T]) EachWithBreak(iteratee func(item T) bool)
@@ -155,7 +155,7 @@ func TestEachWithBreak(t *testing.T) {
 		return true
 	})
 
-	fmt.Println(sum) //6
+	fmt.Println(sum) // 6
 }
 
 // func (s Set[T]) IsEmpty() bool
@@ -163,8 +163,8 @@ func TestIsEmpty(t *testing.T) {
 	set1 := set.New(1, 2, 3)
 	set2 := set.New[int]()
 
-	fmt.Println(set1.IsEmpty()) //false
-	fmt.Println(set2.IsEmpty()) //true
+	fmt.Println(set1.IsEmpty()) // false
+	fmt.Println(set2.IsEmpty()) // true
 }
 
 // func (s Set[T]) Union(other Set[T]) Set[T]
@@ -173,7 +173,7 @@ func TestUnion(t *testing.T) {
 	set2 := set.New(2, 3, 4, 5)
 	set3 := set1.Union(set2)
 
-	fmt.Println(set3.ToSlice()) //1,2,3,4,5
+	fmt.Println(set3.ToSlice()) // 1,2,3,4,5
 }
 
 // func (s Set[T]) Intersection(other Set[T]) Set[T]
@@ -182,7 +182,7 @@ func TestIntersection(t *testing.T) {
 	set2 := set.New(2, 3, 4, 5)
 	set3 := set1.Intersection(set2)
 
-	fmt.Println(set3.ToSlice()) //2,3
+	fmt.Println(set3.ToSlice()) // 2,3
 }
 
 // func (s Set[T]) SymmetricDifference(other Set[T]) Set[T]
@@ -191,7 +191,7 @@ func TestSymmetricDifference(t *testing.T) {
 	set2 := set.New(2, 3, 4, 5)
 	set3 := set1.SymmetricDifference(set2)
 
-	fmt.Println(set3.ToSlice()) //1,4,5
+	fmt.Println(set3.ToSlice()) // 1,4,5
 }
 
 // Create an set of whose element in origin set but not in compared set
@@ -202,10 +202,10 @@ func TestMinus(t *testing.T) {
 	set3 := set.New(2, 3)
 
 	res1 := set1.Minus(set2)
-	fmt.Println(res1.ToSlice()) //1
+	fmt.Println(res1.ToSlice()) // 1
 
 	res2 := set2.Minus(set3)
-	fmt.Println(res2.ToSlice()) //4,5
+	fmt.Println(res2.ToSlice()) // 4,5
 }
 
 // Delete the top element of set then return it, if set is empty, return nil-value of T and false.

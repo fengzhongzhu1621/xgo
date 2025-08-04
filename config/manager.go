@@ -25,7 +25,11 @@ type ConfigManager[T any] struct {
 }
 
 // NewConfigManager 创建配置管理器
-func NewConfigManager[T any](repo IRepository, initCfg T, scanInterval time.Duration) *ConfigManager[T] {
+func NewConfigManager[T any](
+	repo IRepository,
+	initCfg T,
+	scanInterval time.Duration,
+) *ConfigManager[T] {
 	return &ConfigManager[T]{
 		dynCfg:       initCfg,      // 动态应用配置
 		repo:         repo,         // 存储库

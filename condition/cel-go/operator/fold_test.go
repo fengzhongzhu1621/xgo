@@ -24,5 +24,4 @@ func TestFolding(t *testing.T) {
 	} else {
 		fmt.Println("评估结果:", out) // [1, 3, 6]
 	}
-
 }

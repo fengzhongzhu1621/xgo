@@ -87,7 +87,10 @@ func (s *Server) Run(ctx context.Context) {
 	// 启动服务
 	if strings.ToLower(s.config.Server.Mode) == "https" {
 		go func() {
-			err := s.server.ListenAndServeTLS(s.config.Server.TlsCertFile, s.config.Server.TlsKeyFile)
+			err := s.server.ListenAndServeTLS(
+				s.config.Server.TlsCertFile,
+				s.config.Server.TlsKeyFile,
+			)
 			if err != nil {
 				log.Info(err.Error())
 			}

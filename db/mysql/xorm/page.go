@@ -38,7 +38,6 @@ func (model *Page) ParsePageAndPageSize(params mysql.CommonQueryConditionMap) {
 		} else {
 			model.Page = p1
 		}
-
 	}
 
 	// 从查询条件中获取每页显示的记录数

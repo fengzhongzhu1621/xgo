@@ -58,7 +58,10 @@ func (o SizeOp) Match(value1, value2 interface{}) (bool, error) {
 
 	intVal, err := cast.ToIntE(value2)
 	if err != nil {
-		return false, fmt.Errorf("invalid size operator's value, should be a numeric value, err: %v", err)
+		return false, fmt.Errorf(
+			"invalid size operator's value, should be a numeric value, err: %v",
+			err,
+		)
 	}
 
 	return reflect.ValueOf(value1).Len() == intVal, nil

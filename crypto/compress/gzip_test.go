@@ -21,7 +21,7 @@ func TestGZip(t *testing.T) {
 		t.Error(err)
 	}
 
-	if bytes.Compare(b, buffer) != 0 {
+	if !bytes.Equal(b, buffer) {
 		t.Error("gzip error")
 	}
 }

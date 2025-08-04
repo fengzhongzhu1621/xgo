@@ -5,9 +5,8 @@ import (
 	"sync"
 	"testing"
 
-	cmap "github.com/orcaman/concurrent-map/v2"
-
 	"github.com/duke-git/lancet/v2/maputil"
+	cmap "github.com/orcaman/concurrent-map/v2"
 )
 
 // ConcurrentMap is like map, but is safe for concurrent use by multiple goroutines.
@@ -125,10 +124,10 @@ func TestConcurrentMapGetAndDelete(t *testing.T) {
 	for j := 0; j < 5; j++ {
 		go func(n int) {
 			val, ok := cm.GetAndDelete(fmt.Sprintf("%d", n))
-			fmt.Println(val, ok) //n, true
+			fmt.Println(val, ok) // n, true
 
 			_, ok = cm.Get(fmt.Sprintf("%d", n))
-			fmt.Println(val, ok) //false
+			fmt.Println(val, ok) // false
 
 			wg2.Done()
 		}(j)
@@ -180,7 +179,6 @@ func TestConcurrentMapHas(t *testing.T) {
 	// true
 	// true
 	// true
-
 }
 
 // TestConcurrentMapIter Calls iterator sequentially for each key and value present in each of the shards in the map. If iterator returns false, range stops the iteration.

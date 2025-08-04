@@ -9,9 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/assert"
-
 	reflect_utils "github.com/fengzhongzhu1621/xgo/buildin/reflectutils"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestMappingBaseTypes(t *testing.T) {

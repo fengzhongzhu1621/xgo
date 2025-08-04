@@ -12,9 +12,9 @@ func TestDelete(t *testing.T) {
 	hm := heap.NewHashMap()
 	hm.Put("a", 1)
 	val := hm.Get("a")
-	fmt.Println(val) //1
+	fmt.Println(val) // 1
 
 	hm.Delete("a")
 	val = hm.Get("a")
-	fmt.Println(val) //nil
+	fmt.Println(val) // nil
 }

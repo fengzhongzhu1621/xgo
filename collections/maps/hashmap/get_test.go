@@ -12,5 +12,5 @@ func TestGet(t *testing.T) {
 	hm := heap.NewHashMap()
 	val := hm.Get("a")
 
-	fmt.Println(val) //nil
+	fmt.Println(val) // nil
 }

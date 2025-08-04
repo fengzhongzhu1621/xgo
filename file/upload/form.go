@@ -18,7 +18,7 @@ func SaveUploadedFile(file *multipart.FileHeader, dst string) error {
 	defer src.Close()
 
 	// 创建目录
-	if err = os.MkdirAll(filepath.Dir(dst), 0750); err != nil {
+	if err = os.MkdirAll(filepath.Dir(dst), 0o750); err != nil {
 		return err
 	}
 

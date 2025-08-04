@@ -8,7 +8,6 @@ import (
 
 func SuperClientAppMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-
 		appCode := utils.GetClientID(c)
 		if !config.SuperAppCodeSet.Has(appCode) {
 			utils.UnauthorizedJSONResponse(c, "super client app code wrong")

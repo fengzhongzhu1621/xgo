@@ -54,7 +54,6 @@ func TestZkLock(t *testing.T) {
 	}
 
 	zkLock1.UnLock()
-
 }
 
 func Test_WatchChildren(t *testing.T) {
@@ -103,5 +102,4 @@ func Test_WatchChildren(t *testing.T) {
 	time.Sleep(10 * time.Second)
 
 	t.Logf("----- end test WatchChildren -----")
-
 }

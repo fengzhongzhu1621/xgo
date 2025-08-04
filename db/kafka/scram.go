@@ -17,11 +17,11 @@ type XDGSCRAMClient struct {
 
 // Begin prepares the client for the SCRAM exchange with the server with a user name and a password.
 func (x *XDGSCRAMClient) Begin(userName, password, authzID string) (err error) {
-	x.Client, err = x.HashGeneratorFcn.NewClient(userName, password, authzID)
+	x.Client, err = x.NewClient(userName, password, authzID)
 	if err != nil {
 		return err
 	}
-	x.ClientConversation = x.Client.NewConversation()
+	x.ClientConversation = x.NewConversation()
 	return nil
 }
 

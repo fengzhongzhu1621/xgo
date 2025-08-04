@@ -7,10 +7,9 @@ import (
 	"testing"
 
 	"github.com/araujo88/lambda-go/pkg/utils"
+	"github.com/duke-git/lancet/v2/slice"
 	"github.com/gookit/goutil/arrutil"
 	"github.com/samber/lo"
-
-	"github.com/duke-git/lancet/v2/slice"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -195,9 +194,12 @@ func TestDropWhile(t *testing.T) {
 			return true
 		}))
 
-		is.Equal([]int{0, 1, 2, 3, 4, 5, 6}, lo.DropWhile([]int{0, 1, 2, 3, 4, 5, 6}, func(t int) bool {
-			return t == 10
-		}))
+		is.Equal(
+			[]int{0, 1, 2, 3, 4, 5, 6},
+			lo.DropWhile([]int{0, 1, 2, 3, 4, 5, 6}, func(t int) bool {
+				return t == 10
+			}),
+		)
 
 		type myStrings []string
 		allStrings := myStrings{"", "foo", "bar"}
@@ -260,9 +262,12 @@ func TestDropRightWhile(t *testing.T) {
 			return t != 1
 		}))
 
-		is.Equal([]int{0, 1, 2, 3, 4, 5, 6}, lo.DropRightWhile([]int{0, 1, 2, 3, 4, 5, 6}, func(t int) bool {
-			return t == 10
-		}))
+		is.Equal(
+			[]int{0, 1, 2, 3, 4, 5, 6},
+			lo.DropRightWhile([]int{0, 1, 2, 3, 4, 5, 6}, func(t int) bool {
+				return t == 10
+			}),
+		)
 
 		is.Equal([]int{}, lo.DropRightWhile([]int{0, 1, 2, 3, 4, 5, 6}, func(t int) bool {
 			return t != 10
@@ -327,12 +332,15 @@ func TestRejectMap(t *testing.T) {
 		}
 		return "", true
 	})
-	r2 := lo.RejectMap([]string{"cpu", "gpu", "mouse", "keyboard"}, func(x string, _ int) (string, bool) {
-		if strings.HasSuffix(x, "pu") {
-			return "xpu", false
-		}
-		return "", true
-	})
+	r2 := lo.RejectMap(
+		[]string{"cpu", "gpu", "mouse", "keyboard"},
+		func(x string, _ int) (string, bool) {
+			if strings.HasSuffix(x, "pu") {
+				return "xpu", false
+			}
+			return "", true
+		},
+	)
 
 	is.Equal(len(r1), 2)
 	is.Equal(len(r2), 2)
@@ -351,9 +359,12 @@ func TestFilterReject(t *testing.T) {
 	is.Equal(left1, []int{2, 4})
 	is.Equal(right1, []int{1, 3})
 
-	left2, right2 := lo.FilterReject([]string{"Smith", "foo", "Domin", "bar", "Olivia"}, func(x string, _ int) bool {
-		return len(x) > 3
-	})
+	left2, right2 := lo.FilterReject(
+		[]string{"Smith", "foo", "Domin", "bar", "Olivia"},
+		func(x string, _ int) bool {
+			return len(x) > 3
+		},
+	)
 
 	is.Equal(left2, []string{"Smith", "Domin", "Olivia"})
 	is.Equal(right2, []string{"foo", "bar"})

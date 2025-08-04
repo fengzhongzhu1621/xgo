@@ -71,10 +71,20 @@ func (r HTMLDebug) loadTemplate() *template.Template {
 		r.FuncMap = template.FuncMap{}
 	}
 	if len(r.Files) > 0 {
-		return template.Must(template.New("").Delims(r.Delims.Left, r.Delims.Right).Funcs(r.FuncMap).ParseFiles(r.Files...))
+		return template.Must(
+			template.New("").
+				Delims(r.Delims.Left, r.Delims.Right).
+				Funcs(r.FuncMap).
+				ParseFiles(r.Files...),
+		)
 	}
 	if r.Glob != "" {
-		return template.Must(template.New("").Delims(r.Delims.Left, r.Delims.Right).Funcs(r.FuncMap).ParseGlob(r.Glob))
+		return template.Must(
+			template.New("").
+				Delims(r.Delims.Left, r.Delims.Right).
+				Funcs(r.FuncMap).
+				ParseGlob(r.Glob),
+		)
 	}
 	panic("the HTML debug render was created without files or glob pattern")
 }

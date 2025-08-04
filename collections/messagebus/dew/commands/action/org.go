@@ -5,9 +5,7 @@ import (
 	"fmt"
 )
 
-var (
-	ErrInvalidName = fmt.Errorf("invalid name")
-)
+var ErrInvalidName = fmt.Errorf("invalid name")
 
 // UpdateOrgAction represents the arguments for updating an organization.
 type UpdateOrgAction struct{ Name string }

@@ -28,7 +28,7 @@ func TestGosched(t *testing.T) {
 	}
 
 	// 87ns
-	fmt.Println(time.Now().Sub(currentTime) / 2000000)
+	fmt.Println(time.Since(currentTime) / 2000000)
 }
 
 // 计算协程使用的内存开销

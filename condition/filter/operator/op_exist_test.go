@@ -28,7 +28,10 @@ func TestExistMongoCond(t *testing.T) {
 		return
 	}
 
-	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{DBExists: true}}) {
+	if !reflect.DeepEqual(
+		cond,
+		map[string]interface{}{"test": map[string]interface{}{DBExists: true}},
+	) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}
@@ -55,7 +58,10 @@ func TestNotExistMongoCond(t *testing.T) {
 		return
 	}
 
-	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{DBExists: false}}) {
+	if !reflect.DeepEqual(
+		cond,
+		map[string]interface{}{"test": map[string]interface{}{DBExists: false}},
+	) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}

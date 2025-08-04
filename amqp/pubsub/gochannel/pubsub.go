@@ -4,14 +4,11 @@ import (
 	"context"
 	"sync"
 
+	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/crypto/uuid"
-
 	"github.com/fengzhongzhu1621/xgo/logging"
-
 	"github.com/lithammer/shortuuid/v3"
 	"github.com/pkg/errors"
-
-	"github.com/fengzhongzhu1621/xgo/amqp/message"
 )
 
 // Config holds the GoChannel Pub/Sub's configuration options.
@@ -133,7 +130,10 @@ func (g *GoChannel) Publish(topic string, messages ...*message.Message) error {
 }
 
 // waitForAckFromSubscribers 等待订阅者返回ack消息
-func (g *GoChannel) waitForAckFromSubscribers(msg *message.Message, ackedByConsumer <-chan struct{}) {
+func (g *GoChannel) waitForAckFromSubscribers(
+	msg *message.Message,
+	ackedByConsumer <-chan struct{},
+) {
 	logFields := logging.LogFields{"message_uuid": msg.UUID}
 	g.logger.Debug("Waiting for subscribers ack", logFields)
 
@@ -142,7 +142,7 @@ func (g *GoChannel) waitForAckFromSubscribers(msg *message.Message, ackedByConsu
 		// 等待所有的订阅者处理完毕
 		g.logger.Trace("Message acked by subscribers", logFields)
 	case <-g.closing:
-		//Gochannl关闭
+		// Gochannl关闭
 		g.logger.Trace("Closing Pub/Sub before ack from subscribers", logFields)
 	}
 }
@@ -303,9 +303,7 @@ func (g *GoChannel) topicSubscribers(topic string) []*GoChannelSubscriber {
 	// let's do a copy to avoid race conditions and deadlocks due to lock
 	// 复制订阅者
 	subscribersCopy := make([]*GoChannelSubscriber, len(subscribers))
-	for i, s := range subscribers {
-		subscribersCopy[i] = s
-	}
+	copy(subscribersCopy, subscribers)
 
 	return subscribersCopy
 }

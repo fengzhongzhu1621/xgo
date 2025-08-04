@@ -8,18 +8,20 @@ import (
 )
 
 func TestRune(t *testing.T) {
-
 	temp := []rune{20320, 22909, 32, 19990, 30028}
 	fmt.Println(string(temp)) // 你好 世界
 
-	var str string = "hello world"
-	fmt.Println("byte=", []byte(str))    // [104 101 108 108 111 32 119 111 114 108 100]
-	fmt.Println("byte=", []rune(str))    // [104 101 108 108 111 32 119 111 114 108 100]
-	fmt.Println(str[:2])                 // he
-	fmt.Println(string([]rune(str)[:2])) // he
+	str := "hello world"
+	fmt.Println("byte=", string([]byte(str))) // [104 101 108 108 111 32 119 111 114 108 100]
+	fmt.Println("byte=", []rune(str))         // [104 101 108 108 111 32 119 111 114 108 100]
+	fmt.Println(str[:2])                      // he
+	fmt.Println(string([]rune(str)[:2]))      // he
 
-	var str2 string = "你好 世界"
-	fmt.Println("byte=", []byte(str2)) // [228 189 160 229 165 189 32 228 184 150 231 149 140]
+	str2 := "你好 世界"
+	fmt.Println(
+		"byte=",
+		string([]byte(str2)),
+	) // [228 189 160 229 165 189 32 228 184 150 231 149 140]
 	fmt.Println("byte=", []rune(str2)) // [20320 22909 32 19990 30028]
 	fmt.Println(str2[:2])
 	fmt.Println(string([]rune(str2)[:2])) // 你好
@@ -29,7 +31,7 @@ func TestLen(t *testing.T) {
 	s := "Hello王"
 	sHello := "Hello"
 	sWang := "王"
-	//len()获得的是 byte 字节的数量
+	// len()获得的是 byte 字节的数量
 	assert.Equal(t, len(s), 8)
 	assert.Equal(t, len(sHello), 5)
 	assert.Equal(t, len(sWang), 3)

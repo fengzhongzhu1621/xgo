@@ -64,30 +64,46 @@ func TestAttemptWithDelay(t *testing.T) {
 
 	err := fmt.Errorf("failed")
 
-	iter1, dur1, err1 := lo.AttemptWithDelay(42, 10*time.Millisecond, func(i int, d time.Duration) error {
-		return nil
-	})
-	iter2, dur2, err2 := lo.AttemptWithDelay(42, 10*time.Millisecond, func(i int, d time.Duration) error {
-		if i == 5 {
+	iter1, dur1, err1 := lo.AttemptWithDelay(
+		42,
+		10*time.Millisecond,
+		func(i int, d time.Duration) error {
 			return nil
-		}
+		},
+	)
+	iter2, dur2, err2 := lo.AttemptWithDelay(
+		42,
+		10*time.Millisecond,
+		func(i int, d time.Duration) error {
+			if i == 5 {
+				return nil
+			}
 
-		return err
-	})
-	iter3, dur3, err3 := lo.AttemptWithDelay(2, 10*time.Millisecond, func(i int, d time.Duration) error {
-		if i == 5 {
-			return nil
-		}
-
-		return err
-	})
-	iter4, dur4, err4 := lo.AttemptWithDelay(0, 10*time.Millisecond, func(i int, d time.Duration) error {
-		if i < 10 {
 			return err
-		}
+		},
+	)
+	iter3, dur3, err3 := lo.AttemptWithDelay(
+		2,
+		10*time.Millisecond,
+		func(i int, d time.Duration) error {
+			if i == 5 {
+				return nil
+			}
 
-		return nil
-	})
+			return err
+		},
+	)
+	iter4, dur4, err4 := lo.AttemptWithDelay(
+		0,
+		10*time.Millisecond,
+		func(i int, d time.Duration) error {
+			if i < 10 {
+				return err
+			}
+
+			return nil
+		},
+	)
 
 	is.Equal(iter1, 1)
 	is.GreaterOrEqual(dur1, 0*time.Millisecond)
@@ -191,9 +207,13 @@ func TestAttemptWhileWithDelay(t *testing.T) {
 	err := fmt.Errorf("failed")
 
 	// 执行 1 次
-	iter1, dur1, err1 := lo.AttemptWhileWithDelay(42, 10*time.Millisecond, func(i int, d time.Duration) (error, bool) {
-		return nil, true
-	})
+	iter1, dur1, err1 := lo.AttemptWhileWithDelay(
+		42,
+		10*time.Millisecond,
+		func(i int, d time.Duration) (error, bool) {
+			return nil, true
+		},
+	)
 
 	is.Equal(iter1, 1)
 	is.GreaterOrEqual(dur1, 0*time.Millisecond)
@@ -201,77 +221,101 @@ func TestAttemptWhileWithDelay(t *testing.T) {
 	is.Nil(err1)
 
 	// 执行 6 次
-	iter2, dur2, err2 := lo.AttemptWhileWithDelay(42, 10*time.Millisecond, func(i int, d time.Duration) (error, bool) {
-		if i == 5 {
-			return nil, true
-		}
+	iter2, dur2, err2 := lo.AttemptWhileWithDelay(
+		42,
+		10*time.Millisecond,
+		func(i int, d time.Duration) (error, bool) {
+			if i == 5 {
+				return nil, true
+			}
 
-		return err, true
-	})
+			return err, true
+		},
+	)
 
 	is.Equal(iter2, 6)
 	is.Greater(dur2, 50*time.Millisecond)
 	is.Less(dur2, 60*time.Millisecond)
 	is.Nil(err2)
 
-	iter3, dur3, err3 := lo.AttemptWhileWithDelay(2, 10*time.Millisecond, func(i int, d time.Duration) (error, bool) {
-		if i == 5 {
-			return nil, true
-		}
+	iter3, dur3, err3 := lo.AttemptWhileWithDelay(
+		2,
+		10*time.Millisecond,
+		func(i int, d time.Duration) (error, bool) {
+			if i == 5 {
+				return nil, true
+			}
 
-		return err, true
-	})
+			return err, true
+		},
+	)
 
 	is.Equal(iter3, 2)
 	is.Greater(dur3, 10*time.Millisecond)
 	is.Less(dur3, 20*time.Millisecond)
 	is.Equal(err3, err)
 
-	iter4, dur4, err4 := lo.AttemptWhileWithDelay(0, 10*time.Millisecond, func(i int, d time.Duration) (error, bool) {
-		if i < 10 {
-			return err, true
-		}
+	iter4, dur4, err4 := lo.AttemptWhileWithDelay(
+		0,
+		10*time.Millisecond,
+		func(i int, d time.Duration) (error, bool) {
+			if i < 10 {
+				return err, true
+			}
 
-		return nil, true
-	})
+			return nil, true
+		},
+	)
 
 	is.Equal(iter4, 11)
 	is.Greater(dur4, 100*time.Millisecond)
 	is.Less(dur4, 115*time.Millisecond)
 	is.Nil(err4)
 
-	iter5, dur5, err5 := lo.AttemptWhileWithDelay(0, 10*time.Millisecond, func(i int, d time.Duration) (error, bool) {
-		if i == 5 {
-			return nil, false
-		}
+	iter5, dur5, err5 := lo.AttemptWhileWithDelay(
+		0,
+		10*time.Millisecond,
+		func(i int, d time.Duration) (error, bool) {
+			if i == 5 {
+				return nil, false
+			}
 
-		return err, true
-	})
+			return err, true
+		},
+	)
 
 	is.Equal(iter5, 6)
 	is.Greater(dur5, 10*time.Millisecond)
 	is.Less(dur5, 115*time.Millisecond)
 	is.Nil(err5)
 
-	iter6, dur6, err6 := lo.AttemptWhileWithDelay(0, 10*time.Millisecond, func(i int, d time.Duration) (error, bool) {
-		return nil, false
-	})
+	iter6, dur6, err6 := lo.AttemptWhileWithDelay(
+		0,
+		10*time.Millisecond,
+		func(i int, d time.Duration) (error, bool) {
+			return nil, false
+		},
+	)
 
 	is.Equal(iter6, 1)
 	is.Less(dur6, 10*time.Millisecond)
 	is.Less(dur6, 115*time.Millisecond)
 	is.Nil(err6)
 
-	iter7, dur7, err7 := lo.AttemptWhileWithDelay(42, 10*time.Millisecond, func(i int, d time.Duration) (error, bool) {
-		if i == 42 {
-			return nil, false
-		}
-		if i < 41 {
-			return err, true
-		}
+	iter7, dur7, err7 := lo.AttemptWhileWithDelay(
+		42,
+		10*time.Millisecond,
+		func(i int, d time.Duration) (error, bool) {
+			if i == 42 {
+				return nil, false
+			}
+			if i < 41 {
+				return err, true
+			}
 
-		return nil, true
-	})
+			return nil, true
+		},
+	)
 
 	is.Equal(iter7, 42)
 	is.Less(dur7, 500*time.Millisecond)

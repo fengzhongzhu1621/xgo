@@ -29,7 +29,6 @@ func TestMul(t *testing.T) {
 		if Mul(2, 3) != 6 {
 			t.Fatal("fail")
 		}
-
 	})
 	t.Run("neg", func(t *testing.T) {
 		if Mul(2, -3) != -6 {
@@ -68,7 +67,6 @@ func createMulTestCase(t *testing.T, c *calcCase) {
 		t.Fatalf("%d * %d expected %d, but %d got",
 			c.A, c.B, c.Expected, ans)
 	}
-
 }
 
 func TestMul3(t *testing.T) {

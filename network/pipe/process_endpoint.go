@@ -6,9 +6,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/fengzhongzhu1621/xgo/str/bytesutils"
-
 	. "github.com/fengzhongzhu1621/xgo/logging"
+	"github.com/fengzhongzhu1621/xgo/str/bytesutils"
 	. "github.com/fengzhongzhu1621/xgo/system/command"
 )
 
@@ -46,7 +45,11 @@ func (pe *ProcessEndpoint) Terminate() {
 	// 命令执行完成直接退出
 	select {
 	case <-terminated:
-		pe.log.Debug("process", "Process %v terminated after stdin was closed", pe.process.Cmd.Process.Pid)
+		pe.log.Debug(
+			"process",
+			"Process %v terminated after stdin was closed",
+			pe.process.Cmd.Process.Pid,
+		)
 		return // means process finished
 	case <-time.After(100*time.Millisecond + pe.closetime):
 	}
@@ -126,7 +129,11 @@ func (pe *ProcessEndpoint) process_txtout() {
 		buf, err := bufin.ReadBytes('\n')
 		if err != nil {
 			if err != io.EOF {
-				pe.log.Error("process", "Unexpected error while reading STDOUT from process: %s", err)
+				pe.log.Error(
+					"process",
+					"Unexpected error while reading STDOUT from process: %s",
+					err,
+				)
 			} else {
 				pe.log.Debug("process", "Process STDOUT closed")
 			}
@@ -145,7 +152,11 @@ func (pe *ProcessEndpoint) process_binout() {
 		n, err := pe.process.Stdout.Read(buf)
 		if err != nil {
 			if err != io.EOF {
-				pe.log.Error("process", "Unexpected error while reading STDOUT from process: %s", err)
+				pe.log.Error(
+					"process",
+					"Unexpected error while reading STDOUT from process: %s",
+					err,
+				)
 			} else {
 				pe.log.Debug("process", "Process STDOUT closed")
 			}
@@ -166,7 +177,11 @@ func (pe *ProcessEndpoint) log_stderr() {
 		buf, err := bufStderr.ReadSlice('\n')
 		if err != nil {
 			if err != io.EOF {
-				pe.log.Error("process", "Unexpected error while reading STDERR from process: %s", err)
+				pe.log.Error(
+					"process",
+					"Unexpected error while reading STDERR from process: %s",
+					err,
+				)
 			} else {
 				pe.log.Debug("process", "Process STDERR closed")
 			}

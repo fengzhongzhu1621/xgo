@@ -14,11 +14,24 @@ var noopPresets = make(map[string]string)
 func parseAndCompare(t *testing.T, rawEnvLine string, expectedKey string, expectedValue string) {
 	key, value, _ := parseLine(rawEnvLine, noopPresets)
 	if key != expectedKey || value != expectedValue {
-		t.Errorf("Expected '%v' to parse as '%v' => '%v', got '%v' => '%v' instead", rawEnvLine, expectedKey, expectedValue, key, value)
+		t.Errorf(
+			"Expected '%v' to parse as '%v' => '%v', got '%v' => '%v' instead",
+			rawEnvLine,
+			expectedKey,
+			expectedValue,
+			key,
+			value,
+		)
 	}
 }
 
-func loadEnvAndCompareValues(t *testing.T, loader func(files ...string) error, envFileName string, expectedValues map[string]string, presets map[string]string) {
+func loadEnvAndCompareValues(
+	t *testing.T,
+	loader func(files ...string) error,
+	envFileName string,
+	expectedValues map[string]string,
+	presets map[string]string,
+) {
 	// first up, clear the env
 	os.Clearenv()
 
@@ -268,7 +281,6 @@ func TestExpanding(t *testing.T) {
 			}
 		})
 	}
-
 }
 
 func TestActualEnvVarsAreLeftAlone(t *testing.T) {
@@ -304,7 +316,7 @@ func TestParsing(t *testing.T) {
 	// parses yaml style options
 	parseAndCompare(t, "OPTION_A: 1", "OPTION_A", "1")
 
-	//parses yaml values with equal signs
+	// parses yaml values with equal signs
 	parseAndCompare(t, "OPTION_A: Foo=bar", "OPTION_A", "Foo=bar")
 
 	// parses non-yaml options with colons
@@ -353,7 +365,7 @@ func TestParsing(t *testing.T) {
 	parseAndCompare(t, `FOO="ba#r"`, "FOO", "ba#r")
 	parseAndCompare(t, "FOO='ba#r'", "FOO", "ba#r")
 
-	//newlines and backslashes should be escaped
+	// newlines and backslashes should be escaped
 	parseAndCompare(t, `FOO="bar\n\ b\az"`, "FOO", "bar\n baz")
 	parseAndCompare(t, `FOO="bar\\\n\ b\az"`, "FOO", "bar\\\n baz")
 	parseAndCompare(t, `FOO="bar\\r\ b\az"`, "FOO", "bar\\r baz")
@@ -429,17 +441,23 @@ func TestWrite(t *testing.T) {
 		envMap, _ := Unmarshal(env)
 		actual, _ := Marshal(envMap)
 		if expected != actual {
-			t.Errorf("Expected '%v' (%v) to write as '%v', got '%v' instead.", env, envMap, expected, actual)
+			t.Errorf(
+				"Expected '%v' (%v) to write as '%v', got '%v' instead.",
+				env,
+				envMap,
+				expected,
+				actual,
+			)
 		}
 	}
-	//just test some single lines to show the general idea
-	//TestRoundtrip makes most of the good assertions
+	// just test some single lines to show the general idea
+	// TestRoundtrip makes most of the good assertions
 
-	//values are always double-quoted
+	// values are always double-quoted
 	writeAndCompare(`key=value`, `key="value"`)
-	//double-quotes are escaped
+	// double-quotes are escaped
 	writeAndCompare(`key=va"lu"e`, `key="va\"lu\"e"`)
-	//but single quotes are left alone
+	// but single quotes are left alone
 	writeAndCompare(`key=va'lu'e`, `key="va'lu'e"`)
 	// newlines, backslashes, and some other special chars are escaped
 	writeAndCompare(`foo="\n\r\\r!"`, `foo="\n\r\\r\!"`)
@@ -447,7 +465,6 @@ func TestWrite(t *testing.T) {
 	writeAndCompare("foo=bar\nbaz=buzz", "baz=\"buzz\"\nfoo=\"bar\"")
 	// integers should not be quoted
 	writeAndCompare(`key="10"`, `key=10`)
-
 }
 
 func TestRoundtrip(t *testing.T) {
@@ -467,7 +484,12 @@ func TestRoundtrip(t *testing.T) {
 			t.Errorf("Expected '%s' to Mashal and Unmarshal (%v)", fixtureFilename, err)
 		}
 		if !reflect.DeepEqual(env, roundtripped) {
-			t.Errorf("Expected '%s' to roundtrip as '%v', got '%v' instead", fixtureFilename, env, roundtripped)
+			t.Errorf(
+				"Expected '%s' to roundtrip as '%v', got '%v' instead",
+				fixtureFilename,
+				env,
+				roundtripped,
+			)
 		}
 
 	}

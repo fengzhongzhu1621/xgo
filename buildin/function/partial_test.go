@@ -5,11 +5,9 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/samber/lo"
-
-	"github.com/stretchr/testify/assert"
-
 	"github.com/duke-git/lancet/v2/function"
+	"github.com/samber/lo"
+	"github.com/stretchr/testify/assert"
 )
 
 // TestCurryFn 编写柯里化函数。这里指的是创建一个柯里化（Currying）函数，柯里化是一种将使用多个参数的函数转换成一系列使用一个参数的函数的技术。

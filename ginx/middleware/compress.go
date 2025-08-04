@@ -63,7 +63,7 @@ func Compress7zip(data []byte) ([]byte, error) {
 
 	// Create a temporary directory for the compressed file output.
 	tmpDir := filepath.Join(os.TempDir(), "compress_output")
-	err = os.MkdirAll(tmpDir, 0755)
+	err = os.MkdirAll(tmpDir, 0o755)
 	if err != nil {
 		return nil, err
 	}
@@ -91,7 +91,6 @@ func Compress7zip(data []byte) ([]byte, error) {
 
 func CompressResponse(cf CompressFunc) gin.HandlerFunc {
 	return func(c *gin.Context) {
-
 		buffer := bytes.Buffer{}
 		compressWriter := &CompressResponseWriter{
 			headers: http.Header{},
@@ -113,7 +112,6 @@ func CompressResponse(cf CompressFunc) gin.HandlerFunc {
 		// 压缩文件
 		result := buffer.Bytes()
 		compressed, err := cf(result)
-
 		if err != nil {
 			c.AbortWithError(http.StatusInternalServerError, err)
 			return

@@ -3,10 +3,9 @@ package metrics
 import (
 	"time"
 
-	"github.com/prometheus/client_golang/prometheus"
-
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/amqp/router"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 var (

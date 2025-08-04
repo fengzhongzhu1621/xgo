@@ -47,7 +47,11 @@ func (zkRD *ZkRegDiscv) RegisterAndWatch(path string, data []byte) error {
 			if zkRD.registerPath == "" {
 				zkRD.registerPath, err = zkRD.zkcli.CreateEphAndSeqEx(path, data)
 				if err != nil {
-					log.Errorf("fail to register server node(%s). CreateEphAndSeqEx err:%s", path, err.Error())
+					log.Errorf(
+						"fail to register server node(%s). CreateEphAndSeqEx err:%s",
+						path,
+						err.Error(),
+					)
 					if zkRD.zkcli.IsConnectionError(err) {
 						log.Error("zk is closed, try to reconnect")
 						zkRD.reconnectZk()
@@ -154,7 +158,11 @@ func (zkRD *ZkRegDiscv) Discover(path string) (<-chan *DiscoverEvent, error) {
 	return env, nil
 }
 
-func (zkRD *ZkRegDiscv) loopDiscover(discvCtx context.Context, path string, env chan *DiscoverEvent) {
+func (zkRD *ZkRegDiscv) loopDiscover(
+	discvCtx context.Context,
+	path string,
+	env chan *DiscoverEvent,
+) {
 	for {
 		_, watchEnv, err := zkRD.zkcli.WatchChildren(path)
 		if err != nil {
@@ -183,8 +191,12 @@ func (zkRD *ZkRegDiscv) loopDiscover(discvCtx context.Context, path string, env 
 			fmt.Printf("discover path(%s) done\n", path)
 			return
 		case e := <-watchEnv:
-			fmt.Printf("watch found the children of path(%s) change. event type:%s, event err:%v\n", path,
-				e.Type.String(), e.Err)
+			fmt.Printf(
+				"watch found the children of path(%s) change. event type:%s, event err:%v\n",
+				path,
+				e.Type.String(),
+				e.Err,
+			)
 			if e.State == gozk.StateDisconnected {
 				zkRD.reconnectZk()
 			}
@@ -234,7 +246,11 @@ func (zkRD *ZkRegDiscv) getServerInfoByPath(path string) *DiscoverEvent {
 					break
 				}
 				isGetNodeInfoErr = true
-				fmt.Printf("fail to get server info from zookeeper by path(%s), err:%s\n", servPath, err.Error())
+				fmt.Printf(
+					"fail to get server info from zookeeper by path(%s), err:%s\n",
+					servPath,
+					err.Error(),
+				)
 				break
 			}
 
@@ -246,7 +262,6 @@ func (zkRD *ZkRegDiscv) getServerInfoByPath(path string) *DiscoverEvent {
 
 		return discvEnv
 	}
-
 }
 
 // reconnectZk try to reconnect zookeeper until success
@@ -281,7 +296,11 @@ func (zkRD *ZkRegDiscv) sortNode(nodes []string) []string {
 
 		p, err := strconv.Atoi(chNode[len(chNode)-10:])
 		if err != nil {
-			fmt.Printf("fail to conv string to seq number for node(%s), err:%s\n", chNode, err.Error())
+			fmt.Printf(
+				"fail to conv string to seq number for node(%s), err:%s\n",
+				chNode,
+				err.Error(),
+			)
 			continue
 		}
 

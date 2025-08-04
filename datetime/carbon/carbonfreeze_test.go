@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/fengzhongzhu1621/xgo/datetime/carbon"
-
 	"github.com/stretchr/testify/assert"
 )
 
@@ -68,7 +67,7 @@ func TestUnFreeze(t *testing.T) {
 
 	assert.NotEqual(t, frozenNow, unfrozenNow)
 	assert.Equal(t, expectedTimeStamp, frozenNow.Unix())
-	assert.Equal(t, realNow.Unix(), unfrozenNow.Time.Unix())
+	assert.Equal(t, realNow.Unix(), unfrozenNow.Unix())
 }
 
 func TestNotSharing(t *testing.T) {

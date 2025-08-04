@@ -16,4 +16,3 @@ func JoinPaths(absolutePath, relativePath string) string {
 	}
 	return finalPath
 }
-

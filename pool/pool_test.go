@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/fengzhongzhu1621/xgo/pool"
-
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )

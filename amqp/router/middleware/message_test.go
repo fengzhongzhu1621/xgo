@@ -3,7 +3,6 @@ package middleware_test
 import (
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/crypto/uuid"
-
 	"github.com/pkg/errors"
 )
 

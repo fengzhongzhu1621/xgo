@@ -1,7 +1,6 @@
 package opentelemetry
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -24,5 +23,5 @@ func WrapperTraceClient(client *http.Client) {
 }
 
 func serviceName() string {
-	return fmt.Sprintf("%s", "xgo")
+	return "xgo"
 }

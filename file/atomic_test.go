@@ -6,7 +6,7 @@ import (
 )
 
 func Test_AtomicFileNew(t *testing.T) {
-	atomFile, err := NewAtomicFile("./test.txt", os.FileMode(0755))
+	atomFile, err := NewAtomicFile("./test.txt", os.FileMode(0o755))
 	if err != nil {
 		t.Errorf("AtomicFileNew failed! err:%s", err.Error())
 		return

@@ -13,7 +13,7 @@ func (c *intComparator) Compare(v1 any, v2 any) int {
 	val1, _ := v1.(int)
 	val2, _ := v2.(int)
 
-	//ascending order
+	// ascending order
 	if val1 < val2 {
 		return -1
 	} else if val1 > val2 {

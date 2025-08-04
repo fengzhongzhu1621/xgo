@@ -13,8 +13,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/fengzhongzhu1621/xgo/numpy"
-
 	"github.com/fengzhongzhu1621/xgo/cast"
 	"github.com/fengzhongzhu1621/xgo/collections/maps"
 	"github.com/fengzhongzhu1621/xgo/crypto/encoding"
@@ -28,15 +26,30 @@ import (
 	"github.com/fengzhongzhu1621/xgo/crypto/encoding/yaml"
 	"github.com/fengzhongzhu1621/xgo/file/pathutils"
 	jww "github.com/fengzhongzhu1621/xgo/logging"
+	"github.com/fengzhongzhu1621/xgo/numpy"
 	"github.com/fengzhongzhu1621/xgo/remote"
 	"github.com/fengzhongzhu1621/xgo/str/stringutils"
-
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/afero"
 )
 
-var SupportedExts = []string{"json", "toml", "yaml", "yml", "properties", "props", "prop", "hcl", "tfvars", "dotenv", "env", "ini"}
-var SupportedRemoteProviders = []string{"etcd", "consul", "firestore"}
+var (
+	SupportedExts = []string{
+		"json",
+		"toml",
+		"yaml",
+		"yml",
+		"properties",
+		"props",
+		"prop",
+		"hcl",
+		"tfvars",
+		"dotenv",
+		"env",
+		"ini",
+	}
+	SupportedRemoteProviders = []string{"etcd", "consul", "firestore"}
+)
 
 type defaultRemoteProvider struct {
 	provider      string
@@ -397,7 +410,18 @@ func (v *Watcher) writeConfig(filename string, force bool) error {
 func (v *Watcher) marshalWriter(f afero.File, configType string) error {
 	c := v.AllSettings()
 	switch configType {
-	case "yaml", "yml", "json", "toml", "hcl", "tfvars", "ini", "prop", "props", "properties", "dotenv", "env":
+	case "yaml",
+		"yml",
+		"json",
+		"toml",
+		"hcl",
+		"tfvars",
+		"ini",
+		"prop",
+		"props",
+		"properties",
+		"dotenv",
+		"env":
 		b, err := v.encoderRegistry.Encode(configType, c)
 		if err != nil {
 			return ConfigMarshalError{err}
@@ -427,7 +451,9 @@ func (v *Watcher) WatchRemoteConfigOnChannel() error {
 // Retrieve the first found remote configuration.
 func (v *Watcher) getKeyValueConfig() error {
 	if v.RemoteConfig == nil {
-		return RemoteConfigError("Enable the remote features by doing a blank import of the viper/remote package: '_ github.com/spf13/viper/remote'")
+		return RemoteConfigError(
+			"Enable the remote features by doing a blank import of the viper/remote package: '_ github.com/spf13/viper/remote'",
+		)
 	}
 
 	for _, rp := range v.remoteProviders {
@@ -490,7 +516,9 @@ func (v *Watcher) watchKeyValueConfig() error {
 	return RemoteConfigError("No Files Found")
 }
 
-func (v *Watcher) watchRemoteConfig(provider remote.IRemoteProvider) (map[string]interface{}, error) {
+func (v *Watcher) watchRemoteConfig(
+	provider remote.IRemoteProvider,
+) (map[string]interface{}, error) {
 	reader, err := v.RemoteConfig.Watch(provider)
 	if err != nil {
 		return nil, err
@@ -904,7 +932,11 @@ func (v *Watcher) AllSettings() map[string]interface{} {
 
 // UnmarshalKey takes a single key and unmarshals it into a Struct.
 // 搜索key的值，转换为golang对象rawVal .
-func (v *Watcher) UnmarshalKey(key string, rawVal interface{}, opts ...mapstructure.DecoderConfigOption) error {
+func (v *Watcher) UnmarshalKey(
+	key string,
+	rawVal interface{},
+	opts ...mapstructure.DecoderConfigOption,
+) error {
 	return mapstructure.Decode(v.Get(key), mapstructure.DefaultDecoderConfig(rawVal, opts...))
 }
 
@@ -914,7 +946,10 @@ func (v *Watcher) Unmarshal(rawVal interface{}, opts ...mapstructure.DecoderConf
 	return mapstructure.Decode(v.AllSettings(), mapstructure.DefaultDecoderConfig(rawVal, opts...))
 }
 
-func (v *Watcher) UnmarshalExact(rawVal interface{}, opts ...mapstructure.DecoderConfigOption) error {
+func (v *Watcher) UnmarshalExact(
+	rawVal interface{},
+	opts ...mapstructure.DecoderConfigOption,
+) error {
 	config := mapstructure.DefaultDecoderConfig(rawVal, opts...)
 	config.ErrorUnused = true
 
@@ -927,7 +962,18 @@ func (v *Watcher) unmarshalReader(in io.Reader, c map[string]interface{}) error 
 	buf.ReadFrom(in)
 
 	switch format := strings.ToLower(v.getConfigType()); format {
-	case "yaml", "yml", "json", "toml", "hcl", "tfvars", "ini", "properties", "props", "prop", "dotenv", "env":
+	case "yaml",
+		"yml",
+		"json",
+		"toml",
+		"hcl",
+		"tfvars",
+		"ini",
+		"properties",
+		"props",
+		"prop",
+		"dotenv",
+		"env":
 		// 解码文件内容，结果放到c中
 		err := v.decoderRegistry.Decode(format, buf.Bytes(), c)
 		if err != nil {
@@ -1045,7 +1091,20 @@ func New() *Watcher {
 // can use it in their testing as well.
 func Reset() *Watcher {
 	v = New()
-	SupportedExts = []string{"json", "toml", "yaml", "yml", "properties", "props", "prop", "hcl", "tfvars", "dotenv", "env", "ini"}
+	SupportedExts = []string{
+		"json",
+		"toml",
+		"yaml",
+		"yml",
+		"properties",
+		"props",
+		"prop",
+		"hcl",
+		"tfvars",
+		"dotenv",
+		"env",
+		"ini",
+	}
 	SupportedRemoteProviders = []string{"etcd", "consul", "firestore"}
 	return v
 }

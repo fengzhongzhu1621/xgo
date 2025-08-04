@@ -27,7 +27,14 @@ func UploadChunks(config Config, chunks [][]byte) error {
 			// 重试逻辑
 			var lastErr error
 			for retry := 0; retry < config.MaxRetries; retry++ {
-				err := uploadChunk(config.UploadURL, config.FilePath, filePart, partNumber, &wg, errChan)
+				err := uploadChunk(
+					config.UploadURL,
+					config.FilePath,
+					filePart,
+					partNumber,
+					&wg,
+					errChan,
+				)
 				if err == nil {
 					return // 上传成功
 				}
@@ -61,7 +68,13 @@ func UploadChunks(config Config, chunks [][]byte) error {
 // partNumber: 当前块的编号（用于标识是第几块）。
 // wg *sync.WaitGroup: 用于等待所有分块上传完成的同步机制。
 // errChan chan error: 用于传递上传过程中发生的错误。
-func uploadChunk(url, filename string, filePart []byte, partNumber int, wg *sync.WaitGroup, errChan chan error) error {
+func uploadChunk(
+	url, filename string,
+	filePart []byte,
+	partNumber int,
+	wg *sync.WaitGroup,
+	errChan chan error,
+) error {
 	defer wg.Done()
 
 	// 创建 multipart 表单数据

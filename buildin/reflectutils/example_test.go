@@ -10,9 +10,9 @@ import (
 )
 
 func TestExample(t *testing.T) {
-	var x float64 = 3.4
+	x := 3.4
 
-	t1 := reflect.TypeOf(x)  //返回给定值的类型
+	t1 := reflect.TypeOf(x)  // 返回给定值的类型
 	v1 := reflect.ValueOf(x) // 返回给定值的值
 
 	fmt.Println("Type: ", t1)  // Type:  float64

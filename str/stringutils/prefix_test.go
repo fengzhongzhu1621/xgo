@@ -78,7 +78,13 @@ func TestHasPrefix(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			result := strings.HasPrefix(tt.s, tt.prefix)
 			if result != tt.expected {
-				t.Errorf("HasPrefix(%q, %q) = %v; expected %v", tt.s, tt.prefix, result, tt.expected)
+				t.Errorf(
+					"HasPrefix(%q, %q) = %v; expected %v",
+					tt.s,
+					tt.prefix,
+					result,
+					tt.expected,
+				)
 			}
 		})
 	}

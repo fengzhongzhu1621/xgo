@@ -11,9 +11,7 @@ import (
 
 // NewZapJSONLogger 设置  json 格式的日志输出记录器
 func NewZapJSONLogger(cfg *config.LogConfig, cache bool) *zap.Logger {
-	var (
-		core zapcore.Core
-	)
+	var core zapcore.Core
 
 	writer, err := GetWriter(cfg.Writer, cfg.Settings)
 	if err != nil {

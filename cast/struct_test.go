@@ -4,9 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/gogf/gf/v2/util/gconv"
-
 	"github.com/duke-git/lancet/v2/maputil"
+	"github.com/gogf/gf/v2/util/gconv"
 )
 
 // Converts map to struct

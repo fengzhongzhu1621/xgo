@@ -21,5 +21,4 @@ func TestSetCfgFile(t *testing.T) {
 func TestGetAdminCfgFilePath(t *testing.T) {
 	adminFilePath := GetAdminCfgFilePath()
 	assert.Equal(t, true, strings.HasSuffix(adminFilePath, "config/admin.yaml"))
-
 }

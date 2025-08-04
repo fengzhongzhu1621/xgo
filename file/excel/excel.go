@@ -325,9 +325,7 @@ func (excel *Excel) StreamingRead(sheet string) (result [][]string, err error) {
 			return nil, err
 		}
 
-		for _, cell := range cols {
-			rowData = append(rowData, cell)
-		}
+		rowData = append(rowData, cols...)
 
 		result = append(result, rowData)
 	}
@@ -368,7 +366,6 @@ func (excel *Excel) NewStyle(style *style.Style) (int, error) {
 }
 
 func (excel *Excel) MergeSameRowCell(sheet string, colIdx, rowIdx, length int) error {
-
 	if length == oneCellLen {
 		return nil
 	}

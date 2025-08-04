@@ -64,11 +64,14 @@ func TestFindBy(t *testing.T) {
 
 	{
 		index := 0
-		item1, index1, ok1 := lo.FindIndexOf([]string{"a", "b", "c", "d", "b"}, func(item string) bool {
-			is.Equal([]string{"a", "b", "c", "d", "b"}[index], item)
-			index++
-			return item == "b"
-		})
+		item1, index1, ok1 := lo.FindIndexOf(
+			[]string{"a", "b", "c", "d", "b"},
+			func(item string) bool {
+				is.Equal([]string{"a", "b", "c", "d", "b"}[index], item)
+				index++
+				return item == "b"
+			},
+		)
 		is.Equal(item1, "b")
 		is.Equal(ok1, true)
 		is.Equal(index1, 1)
@@ -128,11 +131,14 @@ func TestFindLastBy(t *testing.T) {
 
 	{
 		index := 0
-		item1, index1, ok1 := lo.FindLastIndexOf([]string{"a", "b", "c", "d", "b"}, func(item string) bool {
-			is.Equal([]string{"b", "d", "c", "b", "a"}[index], item)
-			index++
-			return item == "b"
-		})
+		item1, index1, ok1 := lo.FindLastIndexOf(
+			[]string{"a", "b", "c", "d", "b"},
+			func(item string) bool {
+				is.Equal([]string{"b", "d", "c", "b", "a"}[index], item)
+				index++
+				return item == "b"
+			},
+		)
 		item2, index2, ok2 := lo.FindLastIndexOf([]string{"foobar"}, func(item string) bool {
 			is.Equal("foobar", item)
 			return item == "b"
@@ -266,7 +272,6 @@ func TestFindShouldPassed(t *testing.T) {
 	_, err = arrutil.Find(data, func(a string) bool { return a == "d" })
 	assert.NotNil(t, err)
 	assert.Equal(t, arrutil.ErrElementNotFound, err)
-
 }
 
 func TestFindEmptyReturnsErrElementNotFound(t *testing.T) {

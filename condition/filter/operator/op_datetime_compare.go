@@ -69,7 +69,10 @@ func (o DatetimeLessOrEqualOp) ValidateValue(v interface{}, opt *ExprOption) err
 }
 
 // ToMgo convert the datetime less than or equal operator's field and value to a mongo query condition.
-func (o DatetimeLessOrEqualOp) ToMgo(field string, value interface{}) (map[string]interface{}, error) {
+func (o DatetimeLessOrEqualOp) ToMgo(
+	field string,
+	value interface{},
+) (map[string]interface{}, error) {
 	if len(field) == 0 {
 		return nil, errors.New("field is empty")
 	}
@@ -148,13 +151,19 @@ func (o DatetimeGreaterOrEqualOp) Name() OpType {
 func (o DatetimeGreaterOrEqualOp) ValidateValue(v interface{}, opt *ExprOption) error {
 	err := validator.ValidateDatetimeType(v)
 	if err != nil {
-		return fmt.Errorf("datetime greater than or equal operator's value is invalid, err: %v", err)
+		return fmt.Errorf(
+			"datetime greater than or equal operator's value is invalid, err: %v",
+			err,
+		)
 	}
 	return nil
 }
 
 // ToMgo convert the datetime greater than or equal operator's field and value to a mongo query condition.
-func (o DatetimeGreaterOrEqualOp) ToMgo(field string, value interface{}) (map[string]interface{}, error) {
+func (o DatetimeGreaterOrEqualOp) ToMgo(
+	field string,
+	value interface{},
+) (map[string]interface{}, error) {
 	if len(field) == 0 {
 		return nil, errors.New("field is empty")
 	}

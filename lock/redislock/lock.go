@@ -15,7 +15,12 @@ import (
 type IRedisClient interface {
 	AcquireLock(ctx context.Context, key string, ttl time.Duration, opt *IOptions) (*Lock, error)
 	// SetNX 置如果不存在
-	SetNX(ctx context.Context, key string, value interface{}, expiration time.Duration) *redis.BoolCmd
+	SetNX(
+		ctx context.Context,
+		key string,
+		value interface{},
+		expiration time.Duration,
+	) *redis.BoolCmd
 	// Eval 执行Lua脚本
 	Eval(ctx context.Context, script string, keys []string, args ...interface{}) *redis.Cmd
 	// EvalSha 执行Lua脚本
@@ -141,7 +146,12 @@ func (c *RedislockClient) randomToken() (string, error) {
 }
 
 // AcquireLock 加锁（支持重试）
-func (c *RedislockClient) AcquireLock(ctx context.Context, key string, ttl time.Duration, opt *IOptions) (*Lock, error) {
+func (c *RedislockClient) AcquireLock(
+	ctx context.Context,
+	key string,
+	ttl time.Duration,
+	opt *IOptions,
+) (*Lock, error) {
 	token, err := c.randomToken()
 	if err != nil {
 		return nil, err
@@ -193,7 +203,11 @@ func (c *RedislockClient) AcquireLock(ctx context.Context, key string, ttl time.
 }
 
 // acquire 设置键值对，但只有在键不存在时才会执行
-func (c *RedislockClient) acquire(ctx context.Context, key, value string, ttl time.Duration) (bool, error) {
+func (c *RedislockClient) acquire(
+	ctx context.Context,
+	key, value string,
+	ttl time.Duration,
+) (bool, error) {
 	return c.client.SetNX(ctx, key, value, ttl).Result()
 }
 

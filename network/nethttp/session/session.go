@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/fengzhongzhu1621/xgo/crypto/randutils"
-
 	"github.com/gorilla/sessions"
 )
 
@@ -37,7 +36,10 @@ func (sm *SessionManager) ConfigureStore() {
 }
 
 // StartSession 启动会话
-func (sm *SessionManager) StartSession(w http.ResponseWriter, r *http.Request) (*sessions.Session, error) {
+func (sm *SessionManager) StartSession(
+	w http.ResponseWriter,
+	r *http.Request,
+) (*sessions.Session, error) {
 	// 获取或创建一个会话
 	session, err := sm.store.Get(r, SecureSessionName)
 	if err != nil {

@@ -11,9 +11,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-var (
-	DefaultXormDBClient *XormDBClient
-)
+var DefaultXormDBClient *XormDBClient
 
 var defaultXormDBClientOnce sync.Once
 

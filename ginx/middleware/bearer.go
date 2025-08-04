@@ -12,7 +12,6 @@ func BearerAuthMiddleware(cfg *config.Config) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 从请求头获取 jwt token 的值
 		bearerToken, err := jwt.GetJwtTokenFromHeader(c)
-
 		if err != nil {
 			utils.UnauthorizedJSONResponse(
 				c,

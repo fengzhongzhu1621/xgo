@@ -5,10 +5,10 @@ import (
 )
 
 type Paging struct {
-	Page      int //当前页码
-	PageSize  int //每页条数
-	Total     int //总条数
-	PageCount int //总页数
+	Page      int // 当前页码
+	PageSize  int // 每页条数
+	Total     int // 总条数
+	PageCount int // 总页数
 	Offset    int // 偏移量
 }
 

@@ -36,7 +36,7 @@ func TestDoublyLinkValues(t *testing.T) {
 func TestDoublyLinkInsertAt(t *testing.T) {
 	lk := link.NewDoublyLink[int]()
 
-	lk.InsertAt(1, 1) //do nothing
+	lk.InsertAt(1, 1) // do nothing
 
 	lk.InsertAt(0, 1)
 	lk.InsertAt(1, 2)
@@ -130,7 +130,7 @@ func TestDoublyLinkGetMiddleNode(t *testing.T) {
 	lk.InsertAtTail(3)
 
 	midNode := lk.GetMiddleNode()
-	fmt.Println(midNode.Value) //2
+	fmt.Println(midNode.Value) // 2
 }
 
 // func (link *DoublyLink[T]) Size() int
@@ -141,19 +141,19 @@ func TestDoublyLinkSize(t *testing.T) {
 	lk.InsertAtTail(2)
 	lk.InsertAtTail(3)
 
-	fmt.Println(lk.Size()) //3
+	fmt.Println(lk.Size()) // 3
 }
 
 // func (link *DoublyLink[T]) IsEmpty() bool
 func TestDoublyLinkIsEmpty(t *testing.T) {
 	lk := link.NewDoublyLink[int]()
-	fmt.Println(lk.IsEmpty()) //true
+	fmt.Println(lk.IsEmpty()) // true
 
 	lk.InsertAtTail(1)
 	lk.InsertAtTail(2)
 	lk.InsertAtTail(3)
 
-	fmt.Println(lk.IsEmpty()) //false
+	fmt.Println(lk.IsEmpty()) // false
 }
 
 // func (link *DoublyLink[T]) Clear()

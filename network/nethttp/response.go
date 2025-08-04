@@ -49,10 +49,10 @@ func (r Response) IsSuccess() bool {
 }
 
 type BaseResp struct {
-	Result      bool               `json:"result" bson:"result" mapstructure:"result"`
+	Result      bool               `json:"result"        bson:"result"        mapstructure:"result"`
 	Code        int                `json:"bk_error_code" bson:"bk_error_code" mapstructure:"bk_error_code"`
-	ErrMsg      string             `json:"bk_error_msg" bson:"bk_error_msg" mapstructure:"bk_error_msg"`
-	Permissions *iam.IamPermission `json:"permission" bson:"permission" mapstructure:"permission"`
+	ErrMsg      string             `json:"bk_error_msg"  bson:"bk_error_msg"  mapstructure:"bk_error_msg"`
+	Permissions *iam.IamPermission `json:"permission"    bson:"permission"    mapstructure:"permission"`
 }
 
 func (br *BaseResp) ToString() string {

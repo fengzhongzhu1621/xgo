@@ -12,10 +12,12 @@ import (
 	"github.com/spf13/viper"
 )
 
-var mongodbParser *viperParser
-var commonParser *viperParser
-var extraParser *viperParser
-var localParser *viperParser
+var (
+	mongodbParser *viperParser
+	commonParser  *viperParser
+	extraParser   *viperParser
+	localParser   *viperParser
+)
 
 var confLock sync.RWMutex
 
@@ -101,7 +103,8 @@ func IsExist(key string) bool {
 	defer confLock.RUnlock()
 
 	// 在所有的配置文件中判断
-	if (localParser == nil || !localParser.isSet(key)) && (commonParser == nil || !commonParser.isSet(key)) &&
+	if (localParser == nil || !localParser.isSet(key)) &&
+		(commonParser == nil || !commonParser.isSet(key)) &&
 		(extraParser == nil || !extraParser.isSet(key)) {
 		return false
 	}

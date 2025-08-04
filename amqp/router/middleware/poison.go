@@ -3,7 +3,6 @@ package middleware
 import (
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/amqp/router"
-
 	multierror "github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
 )
@@ -48,7 +47,11 @@ func PoisonQueue(pub message.Publisher, topic string) (router.HandlerMiddleware,
 }
 
 // PoisonQueueWithFilter is just like PoisonQueue, but accepts a function that decides which errors qualify for the poison queue.
-func PoisonQueueWithFilter(pub message.Publisher, topic string, shouldGoToPoisonQueue func(err error) bool) (router.HandlerMiddleware, error) {
+func PoisonQueueWithFilter(
+	pub message.Publisher,
+	topic string,
+	shouldGoToPoisonQueue func(err error) bool,
+) (router.HandlerMiddleware, error) {
 	if topic == "" {
 		return nil, ErrInvalidPoisonQueueTopic
 	}

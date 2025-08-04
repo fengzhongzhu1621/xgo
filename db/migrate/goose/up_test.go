@@ -12,7 +12,10 @@ import (
 
 func TestUp(t *testing.T) {
 	// 连接数据库
-	db, err := sql.Open("mysql", "root:@tcp(127.0.0.1:3306)/xgo?parseTime=True&loc=Local&multiStatements=true")
+	db, err := sql.Open(
+		"mysql",
+		"root:@tcp(127.0.0.1:3306)/xgo?parseTime=True&loc=Local&multiStatements=true",
+	)
 	if err != nil {
 		log.Fatal(err)
 	}

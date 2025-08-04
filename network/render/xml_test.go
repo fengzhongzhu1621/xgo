@@ -2,9 +2,10 @@ package render
 
 import (
 	"encoding/xml"
-	"github.com/stretchr/testify/assert"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 type xmlmap map[string]interface{}

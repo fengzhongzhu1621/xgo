@@ -33,8 +33,8 @@ func TestMergeFlatMap(t *testing.T) {
 	t.Parallel()
 
 	t.Run("UpperKey", func(t *testing.T) {
-		var shadow = map[string]bool{}
-		var src = map[string]interface{}{
+		shadow := map[string]bool{}
+		src := map[string]interface{}{
 			"A":     1,
 			"A_B":   2,
 			"A_B_C": 3,
@@ -53,8 +53,8 @@ func TestMergeFlatMap(t *testing.T) {
 	})
 
 	t.Run("LowerKey", func(t *testing.T) {
-		var shadow = map[string]bool{}
-		var src = map[string]interface{}{
+		shadow := map[string]bool{}
+		src := map[string]interface{}{
 			"a":     1,
 			"a_b":   2,
 			"a_b_C": 3,
@@ -74,7 +74,7 @@ func TestMergeFlatMap(t *testing.T) {
 func TestFlattenAndMergeMap(t *testing.T) {
 	t.Parallel()
 
-	var data = map[string]interface{}{
+	data := map[string]interface{}{
 		"KEY": map[string]interface{}{
 			"a": 1,
 			"b": 2,
@@ -94,7 +94,7 @@ func TestMergeMaps(t *testing.T) {
 	t.Parallel()
 
 	t.Run("OK", func(t *testing.T) {
-		var src = map[string]interface{}{
+		src := map[string]interface{}{
 			"a": 1,
 			"b": 2,
 			"c": map[string]interface{}{

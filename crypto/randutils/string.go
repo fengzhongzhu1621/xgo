@@ -43,9 +43,7 @@ func RandomString(length int) string {
 
 // RandString2 生成一个指定长度的随机字符串
 func RandString2(length int64) string {
-	var (
-		result []byte
-	)
+	var result []byte
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	var i int64 = 0
 	for ; i < length; i++ {

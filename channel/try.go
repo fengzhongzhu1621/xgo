@@ -122,7 +122,12 @@ func TryOr2[A, B any](callback func() (A, B, error), fallbackA A, fallbackB B) (
 
 // TryOr3 has the same behavior as Must, but returns a default value in case of error.
 // Play: https://go.dev/play/p/B4F7Wg2Zh9X
-func TryOr3[A, B, C any](callback func() (A, B, C, error), fallbackA A, fallbackB B, fallbackC C) (A, B, C, bool) {
+func TryOr3[A, B, C any](
+	callback func() (A, B, C, error),
+	fallbackA A,
+	fallbackB B,
+	fallbackC C,
+) (A, B, C, bool) {
 	ok := false
 
 	Try0(func() {
@@ -140,7 +145,13 @@ func TryOr3[A, B, C any](callback func() (A, B, C, error), fallbackA A, fallback
 
 // TryOr4 has the same behavior as Must, but returns a default value in case of error.
 // Play: https://go.dev/play/p/B4F7Wg2Zh9X
-func TryOr4[A, B, C, D any](callback func() (A, B, C, D, error), fallbackA A, fallbackB B, fallbackC C, fallbackD D) (A, B, C, D, bool) {
+func TryOr4[A, B, C, D any](
+	callback func() (A, B, C, D, error),
+	fallbackA A,
+	fallbackB B,
+	fallbackC C,
+	fallbackD D,
+) (A, B, C, D, bool) {
 	ok := false
 
 	Try0(func() {
@@ -159,7 +170,14 @@ func TryOr4[A, B, C, D any](callback func() (A, B, C, D, error), fallbackA A, fa
 
 // TryOr5 has the same behavior as Must, but returns a default value in case of error.
 // Play: https://go.dev/play/p/B4F7Wg2Zh9X
-func TryOr5[A, B, C, D, E any](callback func() (A, B, C, D, E, error), fallbackA A, fallbackB B, fallbackC C, fallbackD D, fallbackE E) (A, B, C, D, E, bool) {
+func TryOr5[A, B, C, D, E any](
+	callback func() (A, B, C, D, E, error),
+	fallbackA A,
+	fallbackB B,
+	fallbackC C,
+	fallbackD D,
+	fallbackE E,
+) (A, B, C, D, E, bool) {
 	ok := false
 
 	Try0(func() {
@@ -179,7 +197,15 @@ func TryOr5[A, B, C, D, E any](callback func() (A, B, C, D, E, error), fallbackA
 
 // TryOr6 has the same behavior as Must, but returns a default value in case of error.
 // Play: https://go.dev/play/p/B4F7Wg2Zh9X
-func TryOr6[A, B, C, D, E, F any](callback func() (A, B, C, D, E, F, error), fallbackA A, fallbackB B, fallbackC C, fallbackD D, fallbackE E, fallbackF F) (A, B, C, D, E, F, bool) {
+func TryOr6[A, B, C, D, E, F any](
+	callback func() (A, B, C, D, E, F, error),
+	fallbackA A,
+	fallbackB B,
+	fallbackC C,
+	fallbackD D,
+	fallbackE E,
+	fallbackF F,
+) (A, B, C, D, E, F, bool) {
 	ok := false
 
 	Try0(func() {

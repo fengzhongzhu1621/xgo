@@ -10,7 +10,7 @@ import (
 // e.g. my_flag_name -> my-flag-name
 func WordSepNormalizeFunc(f *pflag.FlagSet, name string) pflag.NormalizedName {
 	if strings.Contains(name, "_") {
-		return pflag.NormalizedName(strings.Replace(name, "_", "-", -1))
+		return pflag.NormalizedName(strings.ReplaceAll(name, "_", "-"))
 	}
 	return pflag.NormalizedName(name)
 }

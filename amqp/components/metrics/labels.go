@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/fengzhongzhu1621/xgo/amqp/router"
-
 	"github.com/prometheus/client_golang/prometheus"
 )
 
@@ -18,13 +17,11 @@ const (
 	labelValueNoHandler = "<no handler>"
 )
 
-var (
-	labelGetters = map[string]func(context.Context) string{
-		labelKeyHandlerName:    router.HandlerNameFromCtx,
-		labelKeyPublisherName:  router.PublisherNameFromCtx,
-		labelKeySubscriberName: router.SubscriberNameFromCtx,
-	}
-)
+var labelGetters = map[string]func(context.Context) string{
+	labelKeyHandlerName:    router.HandlerNameFromCtx,
+	labelKeyPublisherName:  router.PublisherNameFromCtx,
+	labelKeySubscriberName: router.SubscriberNameFromCtx,
+}
 
 func labelsFromCtx(ctx context.Context, labels ...string) prometheus.Labels {
 	ctxLabels := map[string]string{}

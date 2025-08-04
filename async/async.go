@@ -40,7 +40,7 @@ func (t Tasks) GetFuncs() (interface{}, error) {
 type MapTasks map[string]interface{}
 
 func (mt MapTasks) GetFuncs() (interface{}, error) {
-	var fns = map[string]reflect.Value{}
+	fns := map[string]reflect.Value{}
 
 	for k, v := range mt {
 		f := reflect.Indirect(reflect.ValueOf(v))
@@ -99,7 +99,6 @@ func execConcurrentStack(stack taskier, parallel bool) (Results, error) {
 
 	// Checks if the Tasks passed are valid functions.
 	f.Stack, err = stack.GetFuncs()
-
 	if err != nil {
 		panic(err)
 	}

@@ -25,9 +25,7 @@ func GetLatestVersion(vers []string) string {
 		matchs := versionRegex.FindStringSubmatch(v)
 		if len(matchs) > 0 && len(matchs) == 4 {
 			defaultVersion = fmt.Sprintf("V%s", matchs[0])
-			var (
-				a, b, c int
-			)
+			var a, b, c int
 			if a, err = strconv.Atoi(matchs[1]); err != nil {
 				continue
 			}
@@ -66,7 +64,11 @@ func readFileContent(filepath string) (string, error) {
 }
 
 // ListChangelogs 获得指定目录下指定版本和语言的版本日志
-func ListChangelogs(rootDir string, language string, version string) (string, []*VersionLog, error) {
+func ListChangelogs(
+	rootDir string,
+	language string,
+	version string,
+) (string, []*VersionLog, error) {
 	var (
 		err                error
 		files              []string
@@ -117,7 +119,8 @@ func ListChangelogs(rootDir string, language string, version string) (string, []
 		}
 
 		// 读取 md 文件
-		if version != "" && strings.Contains(filename, version) && strings.Contains(filename, language) {
+		if version != "" && strings.Contains(filename, version) &&
+			strings.Contains(filename, language) {
 			content, err = readFileContent(rootDir + filename)
 			if err != nil {
 				continue

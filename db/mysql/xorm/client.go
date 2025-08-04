@@ -5,14 +5,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/fengzhongzhu1621/xgo/logging"
-
-	xormLog "xorm.io/xorm/log"
-
 	"github.com/fengzhongzhu1621/xgo/db/mysql"
+	"github.com/fengzhongzhu1621/xgo/logging"
 	log "github.com/sirupsen/logrus"
 	"xorm.io/core"
 	"xorm.io/xorm"
+	xormLog "xorm.io/xorm/log"
 )
 
 const (
@@ -98,9 +96,7 @@ func (db *XormDBClient) Close() {
 
 // Connect to db, and update some settings
 func (db *XormDBClient) Connect() error {
-	var (
-		err error
-	)
+	var err error
 
 	// 创建一个新的 Engine 实例
 	if db.DB, err = xorm.NewEngine("mysql", db.dataSource); err != nil {
@@ -148,8 +144,16 @@ func NewXormDBClient(config *mysql.Database) *XormDBClient {
 	// 如果设置为 false，XORM 将时间字段作为字符串返回。
 	// 如果数据库中的时间字段使用了特定的时区或格式，你可能需要自定义时间解析的行为。
 	// 如果不需要自动解析时间字段，可以将 parseTime 设置为 false 或者从连接字符串中移除该参数。
-	dataSource := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=False&interpolateParams=true&loc=%s",
-		config.User, config.Password, config.Host, config.Port, config.Name, "utf8mb4", "UTC")
+	dataSource := fmt.Sprintf(
+		"%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=False&interpolateParams=true&loc=%s",
+		config.User,
+		config.Password,
+		config.Host,
+		config.Port,
+		config.Name,
+		"utf8mb4",
+		"UTC",
+	)
 
 	// 获得最大连接数
 	maxOpenConns := defaultMaxOpenConns

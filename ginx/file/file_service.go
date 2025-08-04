@@ -8,11 +8,10 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/gin-gonic/gin"
-	"golang.org/x/sys/unix"
-
 	"github.com/fengzhongzhu1621/xgo/file"
 	"github.com/fengzhongzhu1621/xgo/validator"
+	"github.com/gin-gonic/gin"
+	"golang.org/x/sys/unix"
 )
 
 // FileService 结构体
@@ -94,7 +93,8 @@ func (fs *FileService) ZeroCopyDownload(w http.ResponseWriter, filePath string) 
 	}
 
 	// 设置 HTTP 头部
-	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"", filepath.Base(stat.Name())))
+	w.Header().
+		Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"", filepath.Base(stat.Name())))
 	w.Header().Set("Content-Type", "application/octet-stream")
 	w.Header().Set("Content-Length", fmt.Sprintf("%d", stat.Size()))
 	w.Header().Set("Last-Modified", stat.ModTime().UTC().Format(http.TimeFormat))

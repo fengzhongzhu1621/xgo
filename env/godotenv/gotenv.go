@@ -95,7 +95,6 @@ func Parse(r io.Reader) (envMap map[string]string, err error) {
 			var key, value string
 			// 从单行配置中解析key，value
 			key, value, err = parseLine(fullLine, envMap)
-
 			if err != nil {
 				return
 			}
@@ -138,7 +137,7 @@ func parseLine(line string, envMap map[string]string) (key string, value string,
 	firstColon := strings.Index(line, ":")
 	splitString := strings.SplitN(line, "=", 2)
 	if firstColon != -1 && (firstColon < firstEquals || firstEquals == -1) {
-		//this is a yaml-style line
+		// this is a yaml-style line
 		splitString = strings.SplitN(line, ":", 2)
 	}
 
@@ -162,7 +161,6 @@ func parseLine(line string, envMap map[string]string) (key string, value string,
 }
 
 func parseValue(value string, envMap map[string]string) string {
-
 	// trim
 	value = strings.Trim(value, " ")
 
@@ -241,7 +239,7 @@ func doubleQuoteEscape(line string) string {
 		if c == '\r' {
 			toReplace = `\r`
 		}
-		line = strings.Replace(line, string(c), toReplace, -1)
+		line = strings.ReplaceAll(line, string(c), toReplace)
 	}
 	return line
 }

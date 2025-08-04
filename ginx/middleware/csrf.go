@@ -18,7 +18,12 @@ func CSRF(secret string) gin.HandlerFunc {
 		// csrf.Secure(false): 设置CSRF保护为非安全模式，这意味着即使是在HTTPS连接中，CSRF令牌也可以通过非加密的HTTP连接传输。在生产环境中，你应该将其设置为true
 		// csrf.Path("/")：设置CSRF保护的路径为根路径，这意味着所有路径都将受到保护。
 		// csrf.CookieName 设置CSRF令牌的Cookie名称
-		csrf.Protect([]byte(secret), csrf.Secure(false), csrf.Path("/"), csrf.CookieName("xgo-csrf")),
+		csrf.Protect(
+			[]byte(secret),
+			csrf.Secure(false),
+			csrf.Path("/"),
+			csrf.CookieName("xgo-csrf"),
+		),
 	)
 }
 

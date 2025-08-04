@@ -9,10 +9,9 @@ import (
 
 	"github.com/araujo88/lambda-go/pkg/predicate"
 	"github.com/araujo88/lambda-go/pkg/sortgroup"
+	"github.com/duke-git/lancet/v2/slice"
 	"github.com/samber/lo"
 	"github.com/samber/lo/parallel"
-
-	"github.com/duke-git/lancet/v2/slice"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -126,7 +125,13 @@ func TestPartition(t *testing.T) {
 			wantTrue  []int
 			wantFalse []int
 		}{
-			{"partition based on even", []int{1, 2, 3, 4}, func(x int) bool { return x%2 == 0 }, []int{2, 4}, []int{1, 3}},
+			{
+				"partition based on even",
+				[]int{1, 2, 3, 4},
+				func(x int) bool { return x%2 == 0 },
+				[]int{2, 4},
+				[]int{1, 3},
+			},
 			{"empty slice", []int{}, func(x int) bool { return x%2 == 0 }, []int{}, []int{}},
 		}
 
@@ -134,7 +139,13 @@ func TestPartition(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				gotTrue, gotFalse := predicate.Partition(tt.slice, tt.predicate)
 				if !equal(gotTrue, tt.wantTrue) || !equal(gotFalse, tt.wantFalse) {
-					t.Errorf("Partition() gotTrue = %v, wantTrue %v; gotFalse = %v, wantFalse %v", gotTrue, tt.wantTrue, gotFalse, tt.wantFalse)
+					t.Errorf(
+						"Partition() gotTrue = %v, wantTrue %v; gotFalse = %v, wantFalse %v",
+						gotTrue,
+						tt.wantTrue,
+						gotFalse,
+						tt.wantFalse,
+					)
 				}
 			})
 		}
@@ -254,7 +265,7 @@ func TestGroupWith(t *testing.T) {
 			return math.Floor(num)
 		}
 
-		result := slice.GroupWith(nums, floor) //map[float64][]float64
+		result := slice.GroupWith(nums, floor) // map[float64][]float64
 
 		assert.Equal(t, map[float64][]float64{
 			4.0: {4.2},
@@ -293,7 +304,10 @@ func TestGroupWith(t *testing.T) {
 
 		for _, tt := range tests {
 			t.Run(tt.name, func(t *testing.T) {
-				if got := sortgroup.GroupBy(tt.slice, tt.keyFunc); !reflect.DeepEqual(got, tt.want) {
+				if got := sortgroup.GroupBy(tt.slice, tt.keyFunc); !reflect.DeepEqual(
+					got,
+					tt.want,
+				) {
 					t.Errorf("groupBy() = %v, want %v", got, tt.want)
 				}
 			})

@@ -44,8 +44,9 @@ func (s *structSpec) set(tag string, sf *structField) {
 }
 
 // 创建结构体字段类型解码器对象，设置每个字段的类型解码器
-// 	t: 是结构体值运行时表示
-// 	fieldTag: 注解的前缀
+//
+//	t: 是结构体值运行时表示
+//	fieldTag: 注解的前缀
 func newStructSpec(t reflect.Type, fieldTag string) *structSpec {
 	out := &structSpec{
 		m: make(map[string]*structField),
@@ -99,8 +100,14 @@ func (s StructValue) Scan(key string, value string) error {
 	if err := field.fn(s.value.Field(field.index), value); err != nil {
 		// 获得结构体类型对象
 		t := s.value.Type()
-		return fmt.Errorf("cannot scan redis.result %s into struct field %s.%s of type %s, error-%s",
-			value, t.Name(), t.Field(field.index).Name, t.Field(field.index).Type, err.Error())
+		return fmt.Errorf(
+			"cannot scan redis.result %s into struct field %s.%s of type %s, error-%s",
+			value,
+			t.Name(),
+			t.Field(field.index).Name,
+			t.Field(field.index).Type,
+			err.Error(),
+		)
 	}
 	return nil
 }

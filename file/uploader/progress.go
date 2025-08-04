@@ -20,5 +20,10 @@ func (p *Progress) Increment() {
 func (p *Progress) PrintProgress() {
 	p.mu.Lock()
 	defer p.mu.Unlock()
-	fmt.Printf("\rUploaded: %d/%d (%.2f%%)", p.Uploaded, p.TotalChunks, float64(p.Uploaded)/float64(p.TotalChunks)*100)
+	fmt.Printf(
+		"\rUploaded: %d/%d (%.2f%%)",
+		p.Uploaded,
+		p.TotalChunks,
+		float64(p.Uploaded)/float64(p.TotalChunks)*100,
+	)
 }

@@ -5,10 +5,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/gookit/goutil/byteutil"
-
 	"github.com/duke-git/lancet/v2/cryptor"
-
+	"github.com/gookit/goutil/byteutil"
 	"github.com/stretchr/testify/assert"
 )
 

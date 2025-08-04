@@ -28,7 +28,7 @@ func Test_SetIntersect(t *testing.T) {
 
 	d := a.Intersect(b)
 
-	if !(d.Cardinality() == 1 && d.Contains(10)) {
+	if d.Cardinality() != 1 || !d.Contains(10) {
 		t.Error("set d should have a size of 1 and contain the item 10")
 	}
 }

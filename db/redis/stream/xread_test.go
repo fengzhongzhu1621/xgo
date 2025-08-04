@@ -17,7 +17,7 @@ import (
 func TestXRead(t *testing.T) {
 	client := redis.NewClient(&redis.Options{Addr: "localhost:6379"})
 
-	var ctx = context.Background()
+	ctx := context.Background()
 
 	for {
 		res, err := client.XRead(ctx, &redis.XReadArgs{
@@ -41,7 +41,7 @@ func TestXReadGroup(t *testing.T) {
 	client := redis.NewClient(&redis.Options{Addr: "localhost:6379"})
 
 	// 使用带超时的上下文
-	var ctx = context.Background()
+	ctx := context.Background()
 
 	// 创建消费者组（如果不存在）
 	_, err := client.XGroupCreateMkStream(ctx, "alerts", "my-group", "$").Result()

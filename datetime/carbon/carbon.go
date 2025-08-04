@@ -315,7 +315,16 @@ func nowIn(loc *time.Location) *Carbon {
 
 // Copy returns a new copy of the current Carbon instance
 func (c *Carbon) Copy() *Carbon {
-	return create(c.Year(), c.Month(), c.Day(), c.Hour(), c.Minute(), c.Second(), c.Nanosecond(), c.Location())
+	return create(
+		c.Year(),
+		c.Month(),
+		c.Day(),
+		c.Hour(),
+		c.Minute(),
+		c.Second(),
+		c.Nanosecond(),
+		c.Location(),
+	)
 }
 
 // WeekStartsAt get the starting day of the week
@@ -660,32 +669,86 @@ func (c *Carbon) SubSeconds(s int) *Carbon {
 
 // SetYear sets the year of the current time
 func (c *Carbon) SetYear(y int) {
-	c.Time = time.Date(y, c.Month(), c.Day(), c.Hour(), c.Minute(), c.Second(), c.Nanosecond(), c.Location())
+	c.Time = time.Date(
+		y,
+		c.Month(),
+		c.Day(),
+		c.Hour(),
+		c.Minute(),
+		c.Second(),
+		c.Nanosecond(),
+		c.Location(),
+	)
 }
 
 // SetMonth sets the month of the current time
 func (c *Carbon) SetMonth(m time.Month) {
-	c.Time = time.Date(c.Year(), m, c.Day(), c.Hour(), c.Minute(), c.Second(), c.Nanosecond(), c.Location())
+	c.Time = time.Date(
+		c.Year(),
+		m,
+		c.Day(),
+		c.Hour(),
+		c.Minute(),
+		c.Second(),
+		c.Nanosecond(),
+		c.Location(),
+	)
 }
 
 // SetDay sets the day of the current time
 func (c *Carbon) SetDay(d int) {
-	c.Time = time.Date(c.Year(), c.Month(), d, c.Hour(), c.Minute(), c.Second(), c.Nanosecond(), c.Location())
+	c.Time = time.Date(
+		c.Year(),
+		c.Month(),
+		d,
+		c.Hour(),
+		c.Minute(),
+		c.Second(),
+		c.Nanosecond(),
+		c.Location(),
+	)
 }
 
 // SetHour sets the hour of the current time
 func (c *Carbon) SetHour(h int) {
-	c.Time = time.Date(c.Year(), c.Month(), c.Day(), h, c.Minute(), c.Second(), c.Nanosecond(), c.Location())
+	c.Time = time.Date(
+		c.Year(),
+		c.Month(),
+		c.Day(),
+		h,
+		c.Minute(),
+		c.Second(),
+		c.Nanosecond(),
+		c.Location(),
+	)
 }
 
 // SetMinute sets the minute of the current time
 func (c *Carbon) SetMinute(m int) {
-	c.Time = time.Date(c.Year(), c.Month(), c.Day(), c.Hour(), m, c.Second(), c.Nanosecond(), c.Location())
+	c.Time = time.Date(
+		c.Year(),
+		c.Month(),
+		c.Day(),
+		c.Hour(),
+		m,
+		c.Second(),
+		c.Nanosecond(),
+		c.Location(),
+	)
 }
 
 // SetSecond sets the second of the current time
 func (c *Carbon) SetSecond(s int) {
-	c.Time = time.Date(c.Year(), c.Month(), c.Day(), c.Hour(), c.Minute(), s, c.Nanosecond(), c.Location())
+	c.Time = time.Date(
+		c.Year(),
+		c.Month(),
+		c.Day(),
+		c.Hour(),
+		c.Minute(),
+		s,
+		c.Nanosecond(),
+		c.Location(),
+	)
 }
 
 // SetDate sets only the date of the current time
@@ -756,7 +819,16 @@ func (c *Carbon) SetTimeZone(name string) error {
 	if err != nil {
 		return err
 	}
-	c.Time = time.Date(c.Year(), c.Month(), c.Day(), c.Hour(), c.Minute(), c.Second(), c.Nanosecond(), loc)
+	c.Time = time.Date(
+		c.Year(),
+		c.Month(),
+		c.Day(),
+		c.Hour(),
+		c.Minute(),
+		c.Second(),
+		c.Nanosecond(),
+		loc,
+	)
 
 	return nil
 }

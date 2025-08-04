@@ -15,7 +15,7 @@ var _ operator.IRuleFactory = new(CombinedRule)
 // CombinedRule is the compound query rule combined by many rules.
 type CombinedRule struct {
 	Condition operator.LogicOperator  `json:"condition" bson:"condition"`
-	Rules     []operator.IRuleFactory `json:"rules" bson:"rules"`
+	Rules     []operator.IRuleFactory `json:"rules"     bson:"rules"`
 }
 
 // WithType return the combined rule's tye.
@@ -97,7 +97,10 @@ func (cr *CombinedRule) ToMgo(opt ...*operator.RuleOption) (map[string]interface
 }
 
 // Match checks if the input data matches this combined rule
-func (cr *CombinedRule) Match(data operator.MatchedData, opts ...*operator.RuleOption) (bool, error) {
+func (cr *CombinedRule) Match(
+	data operator.MatchedData,
+	opts ...*operator.RuleOption,
+) (bool, error) {
 	if err := cr.Condition.Validate(); err != nil {
 		return false, err
 	}

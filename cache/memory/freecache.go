@@ -4,7 +4,6 @@ import (
 	"sync"
 
 	"github.com/coocood/freecache"
-
 	log "github.com/sirupsen/logrus"
 )
 

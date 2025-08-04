@@ -47,16 +47,19 @@ func (m *HS256JWTManager) Generate(userID string, role string) (string, error) {
 
 func (m *HS256JWTManager) Verify(tokenStr string) (*HS256Claims, error) {
 	// 解析传入的 JWT 字符串
-	token, err := jwt4.ParseWithClaims(tokenStr, &HS256Claims{}, func(token *jwt4.Token) (interface{}, error) {
-		// 回调函数，用于验证签名方法和获取密钥
-		// 检查 JWT 使用的签名方法是否为 HS256
-		if _, ok := token.Method.(*jwt4.SigningMethodHMAC); !ok {
-			// 如果签名方法不符合预期，返回错误，防止潜在的安全风险
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-		}
-		return m.secretKey, nil
-	})
-
+	token, err := jwt4.ParseWithClaims(
+		tokenStr,
+		&HS256Claims{},
+		func(token *jwt4.Token) (interface{}, error) {
+			// 回调函数，用于验证签名方法和获取密钥
+			// 检查 JWT 使用的签名方法是否为 HS256
+			if _, ok := token.Method.(*jwt4.SigningMethodHMAC); !ok {
+				// 如果签名方法不符合预期，返回错误，防止潜在的安全风险
+				return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+			}
+			return m.secretKey, nil
+		},
+	)
 	if err != nil {
 		return nil, err
 	}

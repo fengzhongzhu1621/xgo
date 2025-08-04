@@ -32,7 +32,6 @@ func mockInputData() ([]Gopher, error) {
 }
 
 var _ = Describe("validate", func() {
-
 	// 每个测试例执行前执行该段代码
 	BeforeEach(func() {
 		By("当测试不通过时，我会在这里打印一个消息 【BeforeEach】")
@@ -42,7 +41,6 @@ var _ = Describe("validate", func() {
 	inputData, err := mockInputData()
 
 	Describe("校验输入数据", func() {
-
 		Context("当获取数据没有错误发生时", func() {
 			It("它应该是接收数据成功了的", func() {
 				// gomega.Expect(err)：这部分告诉 gomega 库我们想要对变量 err 进行断言。

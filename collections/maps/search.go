@@ -24,13 +24,13 @@ func SearchMap(source map[string]interface{}, path []string) interface{} {
 		}
 
 		// Nested case
-		switch next.(type) {
+		switch next := next.(type) {
 		case map[interface{}]interface{}:
 			return SearchMap(cast.ToStringMap(next), path[1:])
 		case map[string]interface{}:
 			// Type assertion is safe here since it is only reached
 			// if the type of `next` is the same as the type being asserted
-			return SearchMap(next.(map[string]interface{}), path[1:])
+			return SearchMap(next, path[1:])
 		default:
 			// got a value but nested key expected, return "nil" for not found
 			return nil
@@ -89,7 +89,11 @@ func DeepSearch(m map[string]interface{}, path []string) map[string]interface{} 
 //
 // Note: This assumes that the path entries and map keys are lower cased.
 // 支持根据字典的key和数组的索引进行搜索.
-func SearchIndexableWithPathPrefixes(source interface{}, path []string, keyDelim string) interface{} {
+func SearchIndexableWithPathPrefixes(
+	source interface{},
+	path []string,
+	keyDelim string,
+) interface{} {
 	if len(path) == 0 {
 		return source
 	}
@@ -190,7 +194,9 @@ func searchMapWithPathPrefixes(
 // IsPathShadowedInDeepMap makes sure the given path is not shadowed somewhere
 // on its path in the map.
 // e.g., if "foo.bar" has a value in the given map, it “shadows”
-//       "foo.bar.baz" in a lower-priority map
+//
+//	"foo.bar.baz" in a lower-priority map
+//
 // 判断子路径path是否覆盖到m中的一条路径，返回被覆盖的路径.
 func IsPathShadowedInDeepMap(path []string, m map[string]interface{}, keyDelim string) string {
 	var parentVal interface{}
@@ -216,7 +222,9 @@ func IsPathShadowedInDeepMap(path []string, m map[string]interface{}, keyDelim s
 // IsPathShadowedInFlatMap makes sure the given path is not shadowed somewhere
 // in a sub-path of the map.
 // e.g., if "foo.bar" has a value in the given map, it “shadows”
-//       "foo.bar.baz" in a lower-priority map
+//
+//	"foo.bar.baz" in a lower-priority map
+//
 // 判断子路径是否覆盖到m中的一条路径，返回被覆盖的路径.
 func IsPathShadowedInFlatMap(path []string, m map[string]interface{}, keyDelim string) string {
 	// scan paths

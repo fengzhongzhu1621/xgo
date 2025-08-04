@@ -62,7 +62,10 @@ func TestOneToOne(t *testing.T) {
 	var user2 UserHasOne
 	// SELECT * FROM `profiles` WHERE `profiles`.`user_id` = 1
 	// SELECT * FROM `user_has_ones` WHERE `user_has_ones`.`id` = 1 ORDER BY `user_has_ones`.`id` LIMIT 1
-	db.Preload("Profile").First(&user2, 1)      // 预加载Profile信息
-	fmt.Printf("User: %+v\n", user2)            // {ID:1 Name:Alice Profile:{ID:1 UserID:1 Bio:Hello, I am Alice.}}
+	db.Preload("Profile").First(&user2, 1) // 预加载Profile信息
+	fmt.Printf(
+		"User: %+v\n",
+		user2,
+	) // {ID:1 Name:Alice Profile:{ID:1 UserID:1 Bio:Hello, I am Alice.}}
 	fmt.Printf("Profile: %+v\n", user2.Profile) // {ID:1 UserID:1 Bio:Hello, I am Alice.}
 }

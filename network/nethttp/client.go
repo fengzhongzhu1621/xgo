@@ -128,7 +128,11 @@ func (client *HttpClient) SetBatchHeader(headerSet []*HeaderSet) {
 }
 
 // RequestEx do http request, old version
-func (client *HttpClient) RequestEx(url, method string, header http.Header, data []byte) (*HttpResponse, error) {
+func (client *HttpClient) RequestEx(
+	url, method string,
+	header http.Header,
+	data []byte,
+) (*HttpResponse, error) {
 	var req *http.Request
 	var errReq error
 	httpRsp := &HttpResponse{
@@ -184,7 +188,11 @@ func (client *HttpClient) RequestEx(url, method string, header http.Header, data
 	return httpRsp, nil
 }
 
-func (client *HttpClient) RequestStream(url, method string, header http.Header, data []byte) (io.ReadCloser, error) {
+func (client *HttpClient) RequestStream(
+	url, method string,
+	header http.Header,
+	data []byte,
+) (io.ReadCloser, error) {
 	var req *http.Request
 	var errReq error
 
@@ -256,7 +264,11 @@ func (client *HttpClient) Post(url string, header http.Header, data []byte) (*Ht
 	return client.RequestEx(url, "POST", header, data)
 }
 
-func (client *HttpClient) Delete(url string, header http.Header, data []byte) (*HttpResponse, error) {
+func (client *HttpClient) Delete(
+	url string,
+	header http.Header,
+	data []byte,
+) (*HttpResponse, error) {
 	return client.RequestEx(url, "DELETE", header, data)
 }
 
@@ -264,11 +276,19 @@ func (client *HttpClient) Put(url string, header http.Header, data []byte) (*Htt
 	return client.RequestEx(url, "PUT", header, data)
 }
 
-func (client *HttpClient) Patch(url string, header http.Header, data []byte) (*HttpResponse, error) {
+func (client *HttpClient) Patch(
+	url string,
+	header http.Header,
+	data []byte,
+) (*HttpResponse, error) {
 	return client.RequestEx(url, "PATCH", header, data)
 }
 
-func (client *HttpClient) Request(url, method string, header http.Header, data []byte) ([]byte, error) {
+func (client *HttpClient) Request(
+	url, method string,
+	header http.Header,
+	data []byte,
+) ([]byte, error) {
 	rsp, err := client.RequestEx(url, method, header, data)
 	return rsp.Reply, err
 }

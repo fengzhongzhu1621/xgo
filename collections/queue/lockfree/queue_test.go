@@ -60,7 +60,11 @@ func TestLockFreeQueue(t *testing.T) {
 	// wait for producer
 	wg.Wait()
 
-	fmt.Printf("producer has been writed, write count: %v, time cost: %v \n", total, time.Since(now).String())
+	fmt.Printf(
+		"producer has been writed, write count: %v, time cost: %v \n",
+		total,
+		time.Since(now).String(),
+	)
 
 	// wait for consumer
 	handler.wait()
@@ -78,7 +82,11 @@ type eventHandler[T uint64] struct {
 func (h *eventHandler[T]) OnEvent(v uint64) {
 	cur := atomic.AddUint64(&h.gcounter, 1)
 	if cur == uint64(total) {
-		fmt.Printf("eventHandler has been consumed already, read count: %v, time cose: %v\n", total, time.Since(h.now))
+		fmt.Printf(
+			"eventHandler has been consumed already, read count: %v, time cose: %v\n",
+			total,
+			time.Since(h.now),
+		)
 		close(h.signal)
 		return
 	}

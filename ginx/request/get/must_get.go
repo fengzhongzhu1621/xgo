@@ -12,7 +12,6 @@ func TestMuatGet(t *testing.T) {
 	r.GET("/test", func(c *gin.Context) {
 		example := c.MustGet("example").(string)
 		log.Println(example)
-
 	})
 
 	r.Run(":8080")

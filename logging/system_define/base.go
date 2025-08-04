@@ -7,9 +7,8 @@ import (
 	"os"
 	"strings"
 
-	"logur.dev/logur"
-
 	"github.com/fengzhongzhu1621/xgo/logging"
+	"logur.dev/logur"
 )
 
 // SetLogger sets a logger to the logging package.
@@ -37,7 +36,12 @@ func New(logger *log.Logger, level logur.Level) *Logger {
 	}
 }
 
-func (l *Logger) log(level logur.Level, prefix string, msg string, fields ...map[string]interface{}) {
+func (l *Logger) log(
+	level logur.Level,
+	prefix string,
+	msg string,
+	fields ...map[string]interface{},
+) {
 	// 检查传入的日志级别是否低于 Logger 实例设置的最低日志级别。如果是，则直接返回，不进行任何日志记录。
 	if level < l.level {
 		return

@@ -15,7 +15,7 @@ func TestWriteCsvFile(t *testing.T) {
 	fpath := "./test.csv"
 	fileutil.CreateFile(fpath)
 
-	f, _ := os.OpenFile(fpath, os.O_WRONLY|os.O_TRUNC, 0777)
+	f, _ := os.OpenFile(fpath, os.O_WRONLY|os.O_TRUNC, 0o777)
 	defer f.Close()
 
 	data := [][]string{
@@ -23,13 +23,11 @@ func TestWriteCsvFile(t *testing.T) {
 		{"Jim", "21", "male"},
 	}
 	err := fileutil.WriteCsvFile(fpath, data, false)
-
 	if err != nil {
 		return
 	}
 
 	content, err := fileutil.ReadCsvFile(fpath)
-
 	if err != nil {
 		return
 	}
@@ -50,7 +48,7 @@ func TestWriteMapsToCsv(t *testing.T) {
 	fpath := "./test.csv"
 	fileutil.CreateFile(fpath)
 
-	f, _ := os.OpenFile(fpath, os.O_WRONLY|os.O_TRUNC, 0777)
+	f, _ := os.OpenFile(fpath, os.O_WRONLY|os.O_TRUNC, 0o777)
 	defer f.Close()
 
 	records := []map[string]any{
@@ -60,7 +58,6 @@ func TestWriteMapsToCsv(t *testing.T) {
 
 	headers := []string{"Name", "Age", "Gender"}
 	err := fileutil.WriteMapsToCsv(fpath, records, false, ';', headers)
-
 	if err != nil {
 		log.Fatal(err)
 	}

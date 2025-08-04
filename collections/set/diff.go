@@ -31,5 +31,9 @@ func SetsDifference(former []string, latter []string) ([]interface{}, []interfac
 	former_set = gset.NewSetFromSlice(former_i)
 	latter_set = gset.NewSetFromSlice(latter_i)
 
-	return former_set.Difference(latter_set).ToSlice(), latter_set.Difference(former_set).ToSlice(), nil
+	return former_set.Difference(latter_set).
+			ToSlice(),
+		latter_set.Difference(former_set).
+			ToSlice(),
+		nil
 }

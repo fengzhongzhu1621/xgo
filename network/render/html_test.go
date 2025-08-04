@@ -1,10 +1,11 @@
 package render
 
 import (
-	"github.com/stretchr/testify/assert"
 	"html/template"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestRenderHTMLTemplate(t *testing.T) {
@@ -41,7 +42,8 @@ func TestRenderHTMLTemplateEmptyName(t *testing.T) {
 
 func TestRenderHTMLDebugFiles(t *testing.T) {
 	w := httptest.NewRecorder()
-	htmlRender := HTMLDebug{Files: []string{"../testdata/template/hello.tmpl"},
+	htmlRender := HTMLDebug{
+		Files:   []string{"../testdata/template/hello.tmpl"},
 		Glob:    "",
 		Delims:  Delims{Left: "{[{", Right: "}]}"},
 		FuncMap: nil,
@@ -59,7 +61,8 @@ func TestRenderHTMLDebugFiles(t *testing.T) {
 
 func TestRenderHTMLDebugGlob(t *testing.T) {
 	w := httptest.NewRecorder()
-	htmlRender := HTMLDebug{Files: nil,
+	htmlRender := HTMLDebug{
+		Files:   nil,
 		Glob:    "../testdata/template/hello*",
 		Delims:  Delims{Left: "{[{", Right: "}]}"},
 		FuncMap: nil,
@@ -76,7 +79,8 @@ func TestRenderHTMLDebugGlob(t *testing.T) {
 }
 
 func TestRenderHTMLDebugPanics(t *testing.T) {
-	htmlRender := HTMLDebug{Files: nil,
+	htmlRender := HTMLDebug{
+		Files:   nil,
 		Glob:    "",
 		Delims:  Delims{"{{", "}}"},
 		FuncMap: nil,

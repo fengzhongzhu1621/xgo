@@ -2,16 +2,13 @@ package metrics
 
 import (
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
-
 	"github.com/prometheus/client_golang/prometheus"
 )
 
-var (
-	subscriberLabelKeys = []string{
-		labelKeyHandlerName,
-		labelKeySubscriberName,
-	}
-)
+var subscriberLabelKeys = []string{
+	labelKeyHandlerName,
+	labelKeySubscriberName,
+}
 
 // SubscriberPrometheusMetricsDecorator decorates a subscriber to capture Prometheus metrics.
 type SubscriberPrometheusMetricsDecorator struct {

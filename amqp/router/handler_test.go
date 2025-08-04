@@ -8,7 +8,6 @@ import (
 )
 
 func TestHandleClose(t *testing.T) {
-
 	num_chan := make(chan int)
 	routersCloseCh := make(chan struct{})
 

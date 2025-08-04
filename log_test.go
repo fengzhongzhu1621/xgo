@@ -30,7 +30,7 @@ func TestLog(t *testing.T) {
 
 	writer1 := &bytes.Buffer{}
 	writer2 := os.Stdout
-	writer3, err := os.OpenFile("log.txt", os.O_WRONLY|os.O_CREATE, 0755)
+	writer3, err := os.OpenFile("log.txt", os.O_WRONLY|os.O_CREATE, 0o755)
 	if err != nil {
 		log.Fatalf("create file log.txt failed: %v", err)
 	}

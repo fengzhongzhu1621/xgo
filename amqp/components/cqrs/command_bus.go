@@ -3,9 +3,8 @@ package cqrs
 import (
 	"context"
 
-	"github.com/pkg/errors"
-
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
+	"github.com/pkg/errors"
 )
 
 // CommandBus transports commands to command handlers.

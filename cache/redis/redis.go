@@ -120,7 +120,11 @@ func (c *Cache) Exists(key gopkgcache.Key) bool {
 // key: 要查询的缓存键
 // obj: 目标对象，数据将被反序列化到这个对象中
 // retrieveFunc: 用于在缓存未命中时从数据源获取数据
-func (c *Cache) GetInto(key gopkgcache.Key, obj interface{}, retrieveFunc gopkgcache.RetrieveFunc) (err error) {
+func (c *Cache) GetInto(
+	key gopkgcache.Key,
+	obj interface{},
+	retrieveFunc gopkgcache.RetrieveFunc,
+) (err error) {
 	// 尝试从缓存中获取数据:
 	err = c.Get(key, obj)
 	if err == nil {
@@ -300,7 +304,13 @@ func (c *Cache) BatchZAdd(zDataList []ZData) error {
 }
 
 // ZRevRangeByScore execute `zrevrangebyscorewithscores`
-func (c *Cache) ZRevRangeByScore(k string, min int64, max int64, offset int64, count int64) ([]redis.Z, error) {
+func (c *Cache) ZRevRangeByScore(
+	k string,
+	min int64,
+	max int64,
+	offset int64,
+	count int64,
+) ([]redis.Z, error) {
 	// 时间戳, 从大到小排序
 	ctx := context.TODO()
 

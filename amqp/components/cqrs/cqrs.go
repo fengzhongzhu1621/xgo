@@ -55,7 +55,11 @@ func NewFacade(config FacadeConfig) (*Facade, error) {
 	}
 	if config.EventsEnabled() {
 		var err error
-		c.eventBus, err = NewEventBus(config.EventsPublisher, config.GenerateEventsTopic, config.CommandEventMarshaler)
+		c.eventBus, err = NewEventBus(
+			config.EventsPublisher,
+			config.GenerateEventsTopic,
+			config.CommandEventMarshaler,
+		)
 		if err != nil {
 			return nil, errors.Wrap(err, "cannot create event bus")
 		}

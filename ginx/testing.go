@@ -18,8 +18,10 @@ type Response struct {
 	Data    interface{} `json:"data"`
 }
 
-type ResponseAssertFunc func(Response) error
-type JSONAssertFunc func(map[string]interface{}) error
+type (
+	ResponseAssertFunc func(Response) error
+	JSONAssertFunc     func(map[string]interface{}) error
+)
 
 // SetupRouter 创建了一个新的Gin路由引擎实例
 func SetupRouter() *gin.Engine {
@@ -43,7 +45,10 @@ func SetupDebugModeRouter() *gin.Engine {
 	return r
 }
 
-func NewJSONAssertFunc(t assert.TestingT, assertFunc JSONAssertFunc) func(res *http.Response, req *http.Request) error {
+func NewJSONAssertFunc(
+	t assert.TestingT,
+	assertFunc JSONAssertFunc,
+) func(res *http.Response, req *http.Request) error {
 	return func(res *http.Response, req *http.Request) error {
 		// 读取响应结果
 		body, err := io.ReadAll(res.Body)

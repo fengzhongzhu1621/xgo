@@ -18,7 +18,7 @@ func TestReadFileToString(t *testing.T) {
 	fname := "./test.txt"
 	fileutil.CreateFile(fname)
 
-	f, _ := os.OpenFile(fname, os.O_WRONLY|os.O_TRUNC, 0777)
+	f, _ := os.OpenFile(fname, os.O_WRONLY|os.O_TRUNC, 0o777)
 	defer f.Close()
 
 	f.WriteString("hello world")
@@ -40,7 +40,7 @@ func TestReadFileByLine(t *testing.T) {
 	fname := "./test.txt"
 	fileutil.CreateFile(fname)
 
-	f, _ := os.OpenFile(fname, os.O_WRONLY|os.O_TRUNC, 0777)
+	f, _ := os.OpenFile(fname, os.O_WRONLY|os.O_TRUNC, 0o777)
 	defer f.Close()
 
 	f.WriteString("hello\nworld")
@@ -83,7 +83,6 @@ func TestChunkRead(t *testing.T) {
 		{"Jim", "21", "male"},
 	}
 	err := fileutil.WriteCsvFile(fpath, data, false)
-
 	if err != nil {
 		return
 	}
@@ -98,7 +97,7 @@ func TestChunkRead(t *testing.T) {
 
 	defer f.Close()
 
-	var bufPool = sync.Pool{
+	bufPool := sync.Pool{
 		New: func() interface{} {
 			return make([]byte, 0, defaultChunkSizeMB*mb)
 		},
@@ -132,7 +131,6 @@ func TestParallelChunkRead(t *testing.T) {
 		{"Jim", "21", "male"},
 	}
 	err := fileutil.WriteCsvFile(fpath, data, false)
-
 	if err != nil {
 		return
 	}
@@ -161,5 +159,4 @@ func TestParallelChunkRead(t *testing.T) {
 	// Lili,22,female
 	// Jim,21,male
 	// 2
-
 }

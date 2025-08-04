@@ -281,7 +281,9 @@ func TestIsGBK(t *testing.T) {
 // TestIsJWT 检查给定的字符串是否是有效的JSON Web Token（JWT）。
 // func IsJWT(str string) bool
 func TestIsJWT(t *testing.T) {
-	result1 := validator.IsJWT("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibWVzc2FnZSI6IlB1dGluIGlzIGFic29sdXRlIHNoaXQiLCJpYXQiOjE1MTYyMzkwMjJ9.wkLWA5GtCpWdxNOrRse8yHZgORDgf8TpJp73WUQb910")
+	result1 := validator.IsJWT(
+		"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibWVzc2FnZSI6IlB1dGluIGlzIGFic29sdXRlIHNoaXQiLCJpYXQiOjE1MTYyMzkwMjJ9.wkLWA5GtCpWdxNOrRse8yHZgORDgf8TpJp73WUQb910",
+	)
 	result2 := validator.IsJWT("abc")
 
 	assert.Equal(t, true, result1, "result1")

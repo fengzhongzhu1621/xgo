@@ -6,9 +6,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/fengzhongzhu1621/xgo/crypto/uuid"
-
 	cache "github.com/fengzhongzhu1621/xgo/cache/common"
+	"github.com/fengzhongzhu1621/xgo/crypto/uuid"
 )
 
 var (

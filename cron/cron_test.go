@@ -137,7 +137,9 @@ func TestAddJob(t *testing.T) {
 // TestNewParser 解析crontab字符串，并将任务添加到调度器中
 func TestNewParser(t *testing.T) {
 	// cron.NewParser 可以指定哪些时间字段被解析，包含秒字段的表达式需要额外支持秒字段
-	parser := cron.NewParser(cron.Second | cron.Minute | cron.Hour | cron.Dom | cron.Month | cron.Dow)
+	parser := cron.NewParser(
+		cron.Second | cron.Minute | cron.Hour | cron.Dom | cron.Month | cron.Dow,
+	)
 
 	// 解析表达式，得到一个调度计划
 	spec := "*/1 * * * * *"

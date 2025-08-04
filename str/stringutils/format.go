@@ -29,7 +29,8 @@ func GetValueInBraces(key string) string {
 }
 
 func MergeGetAndPostParamWithKey(queryParam map[string]string,
-	postParam map[string]string, key string, keyName string) string {
+	postParam map[string]string, key string, keyName string,
+) string {
 	m := make(map[string]string)
 	if len(queryParam) > 0 {
 		for k, v := range queryParam {

@@ -1,10 +1,9 @@
 package cast
 
 import (
-	"testing"
-
 	"fmt"
 	"strings"
+	"testing"
 
 	"github.com/mozillazg/go-pinyin"
 )

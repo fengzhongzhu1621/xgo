@@ -22,7 +22,7 @@ func GoFmtFile(fpath string) error {
 		return err
 	}
 	// 使用格式化后的代码替换
-	err = ioutil.WriteFile(fpath, out, 0644)
+	err = ioutil.WriteFile(fpath, out, 0o644)
 	if err != nil {
 		return err
 	}

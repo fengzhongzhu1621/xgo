@@ -6,7 +6,6 @@ import (
 	"testing"
 
 	"github.com/duke-git/lancet/v2/fileutil"
-
 	"github.com/fengzhongzhu1621/xgo/crypto/randutils"
 	"github.com/stretchr/testify/assert"
 )

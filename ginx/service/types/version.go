@@ -17,7 +17,7 @@ type GetVersionContentRequestData struct {
 	// 语言
 	Language string `json:"language" form:"language"`
 	// 版本号
-	Version string `json:"version" form:"version" binding:"required"`
+	Version string `json:"version"  form:"version"  binding:"required"`
 	// 操作人
 	Operator string `json:"operator" form:"operator" binding:"required"`
 }

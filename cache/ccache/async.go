@@ -40,7 +40,7 @@ func GetFromDefaultCache(kvmap map[string]string) map[string]string {
 	// 获得 LRU 缓存
 	cache := GetDefaultCache()
 
-	for k, _ := range kvmap {
+	for k := range kvmap {
 		// 从 LRU 中获取缓存的结果
 		item := cache.Get(k)
 		if item == nil {
@@ -85,7 +85,6 @@ func AyncRefreshDefaultCache(ctx context.Context, timeout time.Duration) {
 		case dataMap := <-defaultCacheChan:
 			// 从队列获取需要缓存的数据
 			if dataMap == nil || len(dataMap) == 0 {
-
 			} else {
 				index := 0
 				pipeline := cli.Pipeline()

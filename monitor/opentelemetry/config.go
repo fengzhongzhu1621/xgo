@@ -11,9 +11,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-var (
-	openTelemetryCfg = new(OpenTelemetryConfig)
-)
+var openTelemetryCfg = new(OpenTelemetryConfig)
 
 // OpenTelemetryConfig TODO
 type OpenTelemetryConfig struct {
@@ -27,7 +25,6 @@ type OpenTelemetryConfig struct {
 
 // InitOpenTelemetryConfig init openTelemetry config
 func InitOpenTelemetryConfig() error {
-
 	var err error
 	maxCnt := 100
 	cnt := 0
@@ -56,7 +53,8 @@ func InitOpenTelemetryConfig() error {
 		return fmt.Errorf("config openTelemetry.endpoint err: %v", err)
 	}
 
-	if !viper_parser.IsExist("openTelemetry.tls.caFile") || !viper_parser.IsExist("openTelemetry.tls.certFile") ||
+	if !viper_parser.IsExist("openTelemetry.tls.caFile") ||
+		!viper_parser.IsExist("openTelemetry.tls.certFile") ||
 		!viper_parser.IsExist("openTelemetry.tls.keyFile") {
 
 		return nil

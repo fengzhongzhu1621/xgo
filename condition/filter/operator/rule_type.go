@@ -12,11 +12,39 @@ type OpType string
 // Validate test the operator is valid or not.
 func (op OpType) Validate() error {
 	switch op {
-	case Equal, NotEqual, In, NotIn, Less, LessOrEqual, Greater, GreaterOrEqual, DatetimeLess, DatetimeLessOrEqual,
-		DatetimeGreater, DatetimeGreaterOrEqual, BeginsWith, BeginsWithInsensitive, NotBeginsWith,
-		NotBeginsWithInsensitive, Contains, ContainsSensitive, NotContains, NotContainsInsensitive, EndsWith,
-		EndsWithInsensitive, NotEndsWith, NotEndsWithInsensitive, IsEmpty, IsNotEmpty, Size, IsNull,
-		IsNotNull, Exist, NotExist, Object, Array:
+	case Equal,
+		NotEqual,
+		In,
+		NotIn,
+		Less,
+		LessOrEqual,
+		Greater,
+		GreaterOrEqual,
+		DatetimeLess,
+		DatetimeLessOrEqual,
+		DatetimeGreater,
+		DatetimeGreaterOrEqual,
+		BeginsWith,
+		BeginsWithInsensitive,
+		NotBeginsWith,
+		NotBeginsWithInsensitive,
+		Contains,
+		ContainsSensitive,
+		NotContains,
+		NotContainsInsensitive,
+		EndsWith,
+		EndsWithInsensitive,
+		NotEndsWith,
+		NotEndsWithInsensitive,
+		IsEmpty,
+		IsNotEmpty,
+		Size,
+		IsNull,
+		IsNotNull,
+		Exist,
+		NotExist,
+		Object,
+		Array:
 	default:
 		return fmt.Errorf("unsupported operator: %s", op)
 	}

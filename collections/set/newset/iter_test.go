@@ -97,7 +97,6 @@ type yourType struct {
 }
 
 func Test_ExampleIterator(t *testing.T) {
-
 	s := mapset.NewSet(
 		[]*yourType{
 			{name: "Alise"},

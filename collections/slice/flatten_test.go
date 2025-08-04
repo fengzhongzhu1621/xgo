@@ -5,9 +5,8 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/samber/lo"
-
 	"github.com/duke-git/lancet/v2/slice"
+	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
 )
 

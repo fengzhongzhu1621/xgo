@@ -95,10 +95,10 @@ func headerToBytes(buff io.Writer, header textproto.MIMEHeader) {
 			io.WriteString(buff, field)
 			io.WriteString(buff, ": ")
 			// Write the encoded header if needed
-			switch {
-			case field == "Content-Type" || field == "Content-Disposition":
+			switch field {
+			case "Content-Type", "Content-Disposition":
 				buff.Write([]byte(subval))
-			case field == "From" || field == "To" || field == "Cc" || field == "Bcc":
+			case "From", "To", "Cc", "Bcc":
 				participants := strings.Split(subval, ",")
 				for i, v := range participants {
 					addr, err := mail.ParseAddress(v)

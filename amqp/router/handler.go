@@ -9,7 +9,6 @@ import (
 	. "github.com/fengzhongzhu1621/xgo/amqp/message"
 	. "github.com/fengzhongzhu1621/xgo/amqp/publisher"
 	"github.com/fengzhongzhu1621/xgo/logging"
-
 	"github.com/pkg/errors"
 )
 
@@ -168,7 +167,10 @@ func (h *handler) handleMessage(msg *Message, handler HandlerFunc) {
 	h.logger.Trace("Message acked", msgFields)
 }
 
-func (h *handler) publishProducedMessages(producedMessages Messages, msgFields logging.LogFields) error {
+func (h *handler) publishProducedMessages(
+	producedMessages Messages,
+	msgFields logging.LogFields,
+) error {
 	if len(producedMessages) == 0 {
 		// 消息不需要发给下一个生产者
 		return nil

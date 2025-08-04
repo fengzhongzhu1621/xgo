@@ -7,8 +7,7 @@ import (
 	"github.com/agiledragon/gomonkey/v2"
 )
 
-type Computer struct {
-}
+type Computer struct{}
 
 func (t *Computer) NetworkCompute(a, b int) (int, error) {
 	// do something in remote computer
@@ -24,9 +23,13 @@ func (t *Computer) Compute(a, b int) (int, error) {
 
 func TestApplyMethod(t *testing.T) {
 	var c *Computer
-	patches := gomonkey.ApplyMethod(reflect.TypeOf(c), "NetworkCompute", func(_ *Computer, a, b int) (int, error) {
-		return 2, nil
-	})
+	patches := gomonkey.ApplyMethod(
+		reflect.TypeOf(c),
+		"NetworkCompute",
+		func(_ *Computer, a, b int) (int, error) {
+			return 2, nil
+		},
+	)
 
 	defer patches.Reset()
 
@@ -35,5 +38,4 @@ func TestApplyMethod(t *testing.T) {
 	if sum != 2 || err != nil {
 		t.Errorf("expected %v, got %v", 2, sum)
 	}
-
 }

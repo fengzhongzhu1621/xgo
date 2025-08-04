@@ -208,7 +208,11 @@ func TestTryOrX(t *testing.T) {
 
 	{
 		a1, b1, ok1 := TryOr2(func() (int, string, error) { panic("error") }, 42, "hello")
-		a2, b2, ok2 := TryOr2(func() (int, string, error) { return 21, "world", assert.AnError }, 42, "hello")
+		a2, b2, ok2 := TryOr2(
+			func() (int, string, error) { return 21, "world", assert.AnError },
+			42,
+			"hello",
+		)
 		a3, b3, ok3 := TryOr2(func() (int, string, error) { return 21, "world", nil }, 42, "hello")
 
 		is.Equal(42, a1)
@@ -225,9 +229,24 @@ func TestTryOrX(t *testing.T) {
 	}
 
 	{
-		a1, b1, c1, ok1 := TryOr3(func() (int, string, bool, error) { panic("error") }, 42, "hello", false)
-		a2, b2, c2, ok2 := TryOr3(func() (int, string, bool, error) { return 21, "world", true, assert.AnError }, 42, "hello", false)
-		a3, b3, c3, ok3 := TryOr3(func() (int, string, bool, error) { return 21, "world", true, nil }, 42, "hello", false)
+		a1, b1, c1, ok1 := TryOr3(
+			func() (int, string, bool, error) { panic("error") },
+			42,
+			"hello",
+			false,
+		)
+		a2, b2, c2, ok2 := TryOr3(
+			func() (int, string, bool, error) { return 21, "world", true, assert.AnError },
+			42,
+			"hello",
+			false,
+		)
+		a3, b3, c3, ok3 := TryOr3(
+			func() (int, string, bool, error) { return 21, "world", true, nil },
+			42,
+			"hello",
+			false,
+		)
 
 		is.Equal(42, a1)
 		is.Equal("hello", b1)
@@ -246,9 +265,27 @@ func TestTryOrX(t *testing.T) {
 	}
 
 	{
-		a1, b1, c1, d1, ok1 := TryOr4(func() (int, string, bool, int, error) { panic("error") }, 42, "hello", false, 42)
-		a2, b2, c2, d2, ok2 := TryOr4(func() (int, string, bool, int, error) { return 21, "world", true, 21, assert.AnError }, 42, "hello", false, 42)
-		a3, b3, c3, d3, ok3 := TryOr4(func() (int, string, bool, int, error) { return 21, "world", true, 21, nil }, 42, "hello", false, 42)
+		a1, b1, c1, d1, ok1 := TryOr4(
+			func() (int, string, bool, int, error) { panic("error") },
+			42,
+			"hello",
+			false,
+			42,
+		)
+		a2, b2, c2, d2, ok2 := TryOr4(
+			func() (int, string, bool, int, error) { return 21, "world", true, 21, assert.AnError },
+			42,
+			"hello",
+			false,
+			42,
+		)
+		a3, b3, c3, d3, ok3 := TryOr4(
+			func() (int, string, bool, int, error) { return 21, "world", true, 21, nil },
+			42,
+			"hello",
+			false,
+			42,
+		)
 
 		is.Equal(42, a1)
 		is.Equal("hello", b1)
@@ -270,9 +307,30 @@ func TestTryOrX(t *testing.T) {
 	}
 
 	{
-		a1, b1, c1, d1, e1, ok1 := TryOr5(func() (int, string, bool, int, int, error) { panic("error") }, 42, "hello", false, 42, 42)
-		a2, b2, c2, d2, e2, ok2 := TryOr5(func() (int, string, bool, int, int, error) { return 21, "world", true, 21, 21, assert.AnError }, 42, "hello", false, 42, 42)
-		a3, b3, c3, d3, e3, ok3 := TryOr5(func() (int, string, bool, int, int, error) { return 21, "world", true, 21, 21, nil }, 42, "hello", false, 42, 42)
+		a1, b1, c1, d1, e1, ok1 := TryOr5(
+			func() (int, string, bool, int, int, error) { panic("error") },
+			42,
+			"hello",
+			false,
+			42,
+			42,
+		)
+		a2, b2, c2, d2, e2, ok2 := TryOr5(
+			func() (int, string, bool, int, int, error) { return 21, "world", true, 21, 21, assert.AnError },
+			42,
+			"hello",
+			false,
+			42,
+			42,
+		)
+		a3, b3, c3, d3, e3, ok3 := TryOr5(
+			func() (int, string, bool, int, int, error) { return 21, "world", true, 21, 21, nil },
+			42,
+			"hello",
+			false,
+			42,
+			42,
+		)
 
 		is.Equal(42, a1)
 		is.Equal("hello", b1)
@@ -297,9 +355,33 @@ func TestTryOrX(t *testing.T) {
 	}
 
 	{
-		a1, b1, c1, d1, e1, f1, ok1 := TryOr6(func() (int, string, bool, int, int, int, error) { panic("error") }, 42, "hello", false, 42, 42, 42)
-		a2, b2, c2, d2, e2, f2, ok2 := TryOr6(func() (int, string, bool, int, int, int, error) { return 21, "world", true, 21, 21, 21, assert.AnError }, 42, "hello", false, 42, 42, 42)
-		a3, b3, c3, d3, e3, f3, ok3 := TryOr6(func() (int, string, bool, int, int, int, error) { return 21, "world", true, 21, 21, 21, nil }, 42, "hello", false, 42, 42, 42)
+		a1, b1, c1, d1, e1, f1, ok1 := TryOr6(
+			func() (int, string, bool, int, int, int, error) { panic("error") },
+			42,
+			"hello",
+			false,
+			42,
+			42,
+			42,
+		)
+		a2, b2, c2, d2, e2, f2, ok2 := TryOr6(
+			func() (int, string, bool, int, int, int, error) { return 21, "world", true, 21, 21, 21, assert.AnError },
+			42,
+			"hello",
+			false,
+			42,
+			42,
+			42,
+		)
+		a3, b3, c3, d3, e3, f3, ok3 := TryOr6(
+			func() (int, string, bool, int, int, int, error) { return 21, "world", true, 21, 21, 21, nil },
+			42,
+			"hello",
+			false,
+			42,
+			42,
+			42,
+		)
 
 		is.Equal(42, a1)
 		is.Equal("hello", b1)

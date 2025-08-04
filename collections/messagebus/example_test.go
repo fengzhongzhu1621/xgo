@@ -53,7 +53,7 @@ func Example_second() {
 		}
 	}()
 
-	var sum = 0
+	sum := 0
 	for sum < (subscribersAmount * queueSize) {
 		select {
 		case <-ch:

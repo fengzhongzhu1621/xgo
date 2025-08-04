@@ -16,7 +16,6 @@ func examplePool() {
 		4,
 		smtp.PlainAuth("", "my@example.com", "123456", "smtp.example.com"),
 	)
-
 	if err != nil {
 		log.Fatal("failed to create pool:", err)
 	}

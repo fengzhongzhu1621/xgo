@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
-
 	"github.com/pkg/errors"
 )
 

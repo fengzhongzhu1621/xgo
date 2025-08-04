@@ -25,7 +25,7 @@ type Option struct {
 
 // TypeConverters 将类型转换器转换为具有反射类型的字典
 func (opt Option) TypeConverters() map[ConverterPair]TypeConverter {
-	var converters = map[ConverterPair]TypeConverter{}
+	converters := map[ConverterPair]TypeConverter{}
 
 	// save converters into map for faster lookup
 	for i := range opt.Converters {

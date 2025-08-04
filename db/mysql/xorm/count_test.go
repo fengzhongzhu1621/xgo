@@ -7,9 +7,7 @@ import (
 )
 
 func TestCount(t *testing.T) {
-	var (
-		err error
-	)
+	var err error
 	dbClient := GetDefaultXormDBClient()
 	xormEngine := dbClient.DB
 

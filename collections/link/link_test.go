@@ -32,7 +32,7 @@ func TestValues(t *testing.T) {
 func TestInsertAt(t *testing.T) {
 	lk := link.NewSinglyLink[int]()
 
-	lk.InsertAt(1, 1) //do nothing
+	lk.InsertAt(1, 1) // do nothing
 
 	lk.InsertAt(0, 1)
 	lk.InsertAt(1, 2)
@@ -139,7 +139,7 @@ func TestGetMiddleNode(t *testing.T) {
 	lk.InsertAtTail(3)
 
 	midNode := lk.GetMiddleNode()
-	fmt.Println(midNode.Value) //2
+	fmt.Println(midNode.Value) // 2
 }
 
 // func (link *SinglyLink[T]) Size() int
@@ -150,19 +150,19 @@ func TestSize(t *testing.T) {
 	lk.InsertAtTail(2)
 	lk.InsertAtTail(3)
 
-	fmt.Println(lk.Size()) //3
+	fmt.Println(lk.Size()) // 3
 }
 
 // func (link *SinglyLink[T]) IsEmpty() bool
 func TestIsEmpty(t *testing.T) {
 	lk := link.NewSinglyLink[int]()
-	fmt.Println(lk.IsEmpty()) //true
+	fmt.Println(lk.IsEmpty()) // true
 
 	lk.InsertAtTail(1)
 	lk.InsertAtTail(2)
 	lk.InsertAtTail(3)
 
-	fmt.Println(lk.IsEmpty()) //false
+	fmt.Println(lk.IsEmpty()) // false
 }
 
 // func (link *SinglyLink[T]) Clear()

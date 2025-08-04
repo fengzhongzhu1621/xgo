@@ -30,34 +30,38 @@ var (
 	timeWithLocationRegexp = regexp.MustCompile(timeWithLocationPattern)
 )
 
-var (
-	timeFormats = []timeFormat{
-		{time.RFC3339, timeFormatNumericTimezone},
-		{"2006-01-02T15:04:05", timeFormatNoTimezone}, // iso8601 without timezone
-		{time.RFC1123Z, timeFormatNumericTimezone},
-		{time.RFC1123, timeFormatNamedTimezone},
-		{time.RFC822Z, timeFormatNumericTimezone},
-		{time.RFC822, timeFormatNamedTimezone},
-		{time.RFC850, timeFormatNamedTimezone},
-		{"2006-01-02 15:04:05.999999999 -0700 MST", timeFormatNumericAndNamedTimezone}, // Time.String()
-		{"2006-01-02T15:04:05-0700", timeFormatNumericTimezone},                        // RFC3339 without timezone hh:mm colon
-		{"2006-01-02 15:04:05Z0700", timeFormatNumericTimezone},                        // RFC3339 without T or timezone hh:mm colon
-		{"2006-01-02 15:04:05", timeFormatNoTimezone},
-		{time.ANSIC, timeFormatNoTimezone},
-		{time.UnixDate, timeFormatNamedTimezone},
-		{time.RubyDate, timeFormatNumericTimezone},
-		{"2006-01-02 15:04:05Z07:00", timeFormatNumericTimezone},
-		{"2006-01-02", timeFormatNoTimezone},
-		{"02 Jan 2006", timeFormatNoTimezone},
-		{"2006-01-02 15:04:05 -07:00", timeFormatNumericTimezone},
-		{"2006-01-02 15:04:05 -0700", timeFormatNumericTimezone},
-		{time.Kitchen, timeFormatTimeOnly},
-		{time.Stamp, timeFormatTimeOnly},
-		{time.StampMilli, timeFormatTimeOnly},
-		{time.StampMicro, timeFormatTimeOnly},
-		{time.StampNano, timeFormatTimeOnly},
-	}
-)
+var timeFormats = []timeFormat{
+	{time.RFC3339, timeFormatNumericTimezone},
+	{"2006-01-02T15:04:05", timeFormatNoTimezone}, // iso8601 without timezone
+	{time.RFC1123Z, timeFormatNumericTimezone},
+	{time.RFC1123, timeFormatNamedTimezone},
+	{time.RFC822Z, timeFormatNumericTimezone},
+	{time.RFC822, timeFormatNamedTimezone},
+	{time.RFC850, timeFormatNamedTimezone},
+	{"2006-01-02 15:04:05.999999999 -0700 MST", timeFormatNumericAndNamedTimezone}, // Time.String()
+	{
+		"2006-01-02T15:04:05-0700",
+		timeFormatNumericTimezone,
+	}, // RFC3339 without timezone hh:mm colon
+	{
+		"2006-01-02 15:04:05Z0700",
+		timeFormatNumericTimezone,
+	}, // RFC3339 without T or timezone hh:mm colon
+	{"2006-01-02 15:04:05", timeFormatNoTimezone},
+	{time.ANSIC, timeFormatNoTimezone},
+	{time.UnixDate, timeFormatNamedTimezone},
+	{time.RubyDate, timeFormatNumericTimezone},
+	{"2006-01-02 15:04:05Z07:00", timeFormatNumericTimezone},
+	{"2006-01-02", timeFormatNoTimezone},
+	{"02 Jan 2006", timeFormatNoTimezone},
+	{"2006-01-02 15:04:05 -07:00", timeFormatNumericTimezone},
+	{"2006-01-02 15:04:05 -0700", timeFormatNumericTimezone},
+	{time.Kitchen, timeFormatTimeOnly},
+	{time.Stamp, timeFormatTimeOnly},
+	{time.StampMilli, timeFormatTimeOnly},
+	{time.StampMicro, timeFormatTimeOnly},
+	{time.StampNano, timeFormatTimeOnly},
+}
 
 type timeFormat struct {
 	format string
@@ -158,7 +162,11 @@ func ToDurationSlice(i interface{}) []time.Duration {
 // ToDurationSliceE casts an interface to a []time.Duration type.
 func ToDurationSliceE(i interface{}) ([]time.Duration, error) {
 	if i == nil {
-		return []time.Duration{}, fmt.Errorf("unable to cast %#v of type %T to []time.Duration", i, i)
+		return []time.Duration{}, fmt.Errorf(
+			"unable to cast %#v of type %T to []time.Duration",
+			i,
+			i,
+		)
 	}
 
 	switch v := i.(type) {
@@ -174,13 +182,21 @@ func ToDurationSliceE(i interface{}) ([]time.Duration, error) {
 		for j := 0; j < s.Len(); j++ {
 			val, err := ToDurationE(s.Index(j).Interface())
 			if err != nil {
-				return []time.Duration{}, fmt.Errorf("unable to cast %#v of type %T to []time.Duration", i, i)
+				return []time.Duration{}, fmt.Errorf(
+					"unable to cast %#v of type %T to []time.Duration",
+					i,
+					i,
+				)
 			}
 			a[j] = val
 		}
 		return a, nil
 	default:
-		return []time.Duration{}, fmt.Errorf("unable to cast %#v of type %T to []time.Duration", i, i)
+		return []time.Duration{}, fmt.Errorf(
+			"unable to cast %#v of type %T to []time.Duration",
+			i,
+			i,
+		)
 	}
 }
 

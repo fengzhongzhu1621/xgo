@@ -15,9 +15,9 @@ import (
 
 // 生成所有静态文件的索引配置，索引由相对路径和文件的元数据构造
 func (s *HTTPStaticServer) makeIndex() error {
-	var indexes = make([]IndexFileItem, 0)
+	indexes := make([]IndexFileItem, 0)
 	// 遍历所有的静态文件
-	var err = filepath.Walk(s.Root, func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk(s.Root, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			log.Printf("WARN: Visit path: %s error: %v", strconv.Quote(path), err)
 			return filepath.SkipDir
@@ -75,7 +75,13 @@ func (s *HTTPStaticServer) hIndex(w http.ResponseWriter, r *http.Request) {
 	path := mux.Vars(r)["path"]
 	// 获得静态路由执行的文件所在的绝对路径
 	realPath := s.getRealPath(r)
-	log.Printf("GET hIndex path = %s realPath = %s raw = %s json = %s", path, realPath, r.FormValue("raw"), r.FormValue("json"))
+	log.Printf(
+		"GET hIndex path = %s realPath = %s raw = %s json = %s",
+		path,
+		realPath,
+		r.FormValue("raw"),
+		r.FormValue("json"),
+	)
 
 	if r.FormValue("json") == "true" {
 		s.hJSONList(w, r)

@@ -176,28 +176,40 @@ func TestExpressionValidateOption(t *testing.T) {
 	opt.RuleFields["time"] = criteria.Time
 
 	opt.MaxRulesDepth = 2
-	if err := expr.Validate(opt); !strings.Contains(err.Error(), "expression rules depth exceeds maximum") {
+	if err := expr.Validate(opt); !strings.Contains(
+		err.Error(),
+		"expression rules depth exceeds maximum",
+	) {
 		t.Errorf("validate rule depth failed, err: %v", err)
 		return
 	}
 	opt.MaxRulesDepth = 3
 
 	opt.MaxRulesLimit = 3
-	if err := expr.Validate(opt); !strings.Contains(err.Error(), "rules elements number exceeds limit: 3") {
+	if err := expr.Validate(opt); !strings.Contains(
+		err.Error(),
+		"rules elements number exceeds limit: 3",
+	) {
 		t.Errorf("validate rule limit failed, err: %v", err)
 		return
 	}
 	opt.MaxRulesLimit = 4
 
 	opt.MaxInLimit = 1
-	if err := expr.Validate(opt); !strings.Contains(err.Error(), "elements length 2 exceeds maximum 1") {
+	if err := expr.Validate(opt); !strings.Contains(
+		err.Error(),
+		"elements length 2 exceeds maximum 1",
+	) {
 		t.Errorf("validate rule in limit failed, err: %v", err)
 		return
 	}
 	opt.MaxInLimit = 2
 
 	opt.MaxNotInLimit = 2
-	if err := expr.Validate(opt); !strings.Contains(err.Error(), "elements length 3 exceeds maximum 2") {
+	if err := expr.Validate(opt); !strings.Contains(
+		err.Error(),
+		"elements length 3 exceeds maximum 2",
+	) {
 		t.Errorf("validate rule in limit failed, err: %v", err)
 		return
 	}

@@ -14,7 +14,7 @@ func TestFileSize(t *testing.T) {
 	fname := "./test.txt"
 	fileutil.CreateFile(fname)
 
-	f, _ := os.OpenFile(fname, os.O_WRONLY|os.O_TRUNC, 0777)
+	f, _ := os.OpenFile(fname, os.O_WRONLY|os.O_TRUNC, 0o777)
 	defer f.Close()
 
 	f.WriteString("hello\nworld")

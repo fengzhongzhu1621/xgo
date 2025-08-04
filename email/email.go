@@ -144,7 +144,13 @@ func (e *Email) msgHeaders() (textproto.MIMEHeader, error) {
 	return res, nil
 }
 
-func writeMessage(buff io.Writer, msg []byte, multipart bool, mediaType string, w *multipart.Writer) error {
+func writeMessage(
+	buff io.Writer,
+	msg []byte,
+	multipart bool,
+	mediaType string,
+	w *multipart.Writer,
+) error {
 	if multipart {
 		header := textproto.MIMEHeader{
 			"Content-Type":              {mediaType + "; charset=UTF-8"},
@@ -573,10 +579,10 @@ func NewEmailFromReader(r io.Reader) (*Email, error) {
 				continue
 			}
 		}
-		switch {
-		case ct == "text/plain":
+		switch ct {
+		case "text/plain":
 			e.Text = p.body
-		case ct == "text/html":
+		case "text/html":
 			e.HTML = p.body
 		}
 	}

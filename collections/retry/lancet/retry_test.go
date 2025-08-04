@@ -128,6 +128,10 @@ func TestRetryTimes(t *testing.T) {
 	err := retry.Retry(increaseNumber, retry.RetryTimes(2))
 	if err != nil {
 		assert.Equal(t, 2, number)
-		assert.EqualError(t, err, "function retry.TestRetryTimes.func1 run failed after 2 times retry")
+		assert.EqualError(
+			t,
+			err,
+			"function retry.TestRetryTimes.func1 run failed after 2 times retry",
+		)
 	}
 }

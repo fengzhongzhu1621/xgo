@@ -9,24 +9,24 @@ type IStringReplacer interface {
 }
 
 func RemoveStringSpace(data string) string {
-	return strings.Replace(data, " ", "", -1)
+	return strings.ReplaceAll(data, " ", "")
 }
 
 func PurifyStrings(ori string) string {
-	purifyStr := strings.Replace(ori, "\\r", ";", -1)
-	purifyStr = strings.Replace(purifyStr, "\\n", ";", -1)
-	purifyStr = strings.Replace(purifyStr, "\n", ";", -1)
-	purifyStr = strings.Replace(purifyStr, "\r", ";", -1)
-	purifyStr = strings.Replace(purifyStr, " ", "", -1)
-	purifyStr = strings.Replace(purifyStr, ";", ",", -1)
+	purifyStr := strings.ReplaceAll(ori, "\\r", ";")
+	purifyStr = strings.ReplaceAll(purifyStr, "\\n", ";")
+	purifyStr = strings.ReplaceAll(purifyStr, "\n", ";")
+	purifyStr = strings.ReplaceAll(purifyStr, "\r", ";")
+	purifyStr = strings.ReplaceAll(purifyStr, " ", "")
+	purifyStr = strings.ReplaceAll(purifyStr, ";", ",")
 
 	return purifyStr
 }
 
 // RemoteTabCharacters 清理包含制表符和水平制表符的字符串
 func RemoteTabCharacters(data string) string {
-	data = strings.Replace(data, "\x09", "", -1)
-	data = strings.Replace(data, "\t", "", -1)
+	data = strings.ReplaceAll(data, "\x09", "")
+	data = strings.ReplaceAll(data, "\t", "")
 
 	return data
 }

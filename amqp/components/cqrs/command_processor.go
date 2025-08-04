@@ -4,12 +4,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/pkg/errors"
-
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/amqp/router"
 	"github.com/fengzhongzhu1621/xgo/buildin/reflectutils"
 	"github.com/fengzhongzhu1621/xgo/logging"
+	"github.com/pkg/errors"
 )
 
 // CommandHandler receives a command defined by NewCommand and handles it with the Handle method.
@@ -142,7 +141,10 @@ func (p CommandProcessor) Handlers() []CommandHandler {
 }
 
 // routerHandlerFunc 构造消息处理器装饰器
-func (p CommandProcessor) routerHandlerFunc(handler CommandHandler, logger logging.LoggerAdapter) (router.NoPublishHandlerFunc, error) {
+func (p CommandProcessor) routerHandlerFunc(
+	handler CommandHandler,
+	logger logging.LoggerAdapter,
+) (router.NoPublishHandlerFunc, error) {
 	cmd := handler.NewCommand()
 	cmdName := p.marshaler.Name(cmd)
 
@@ -155,11 +157,14 @@ func (p CommandProcessor) routerHandlerFunc(handler CommandHandler, logger loggi
 		messageCmdName := p.marshaler.NameFromMessage(msg)
 
 		if messageCmdName != cmdName {
-			logger.Trace("Received different command type than expected, ignoring", logging.LogFields{
-				"message_uuid":          msg.UUID,
-				"expected_command_type": cmdName,
-				"received_command_type": messageCmdName,
-			})
+			logger.Trace(
+				"Received different command type than expected, ignoring",
+				logging.LogFields{
+					"message_uuid":          msg.UUID,
+					"expected_command_type": cmdName,
+					"received_command_type": messageCmdName,
+				},
+			)
 			return nil
 		}
 

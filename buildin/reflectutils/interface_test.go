@@ -7,7 +7,7 @@ import (
 )
 
 func TestInterface(t *testing.T) {
-	var x float64 = 3.4
+	x := 3.4
 	t1 := reflect.TypeOf(x)
 	v := reflect.ValueOf(x)
 

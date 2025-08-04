@@ -50,7 +50,12 @@ func NewHealthzHandleFunc(cfg *config.Config) gin.HandlerFunc {
 		}
 
 		if err != nil {
-			message := fmt.Sprintf("redis(mode=%s) connect fail: %s [addr=%s]", redisConfig.Type, err.Error(), addr)
+			message := fmt.Sprintf(
+				"redis(mode=%s) connect fail: %s [addr=%s]",
+				redisConfig.Type,
+				err.Error(),
+				addr,
+			)
 			c.String(http.StatusInternalServerError, message)
 			return
 		}

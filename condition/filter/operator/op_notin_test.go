@@ -89,7 +89,10 @@ func TestNotInMongoCond(t *testing.T) {
 		return
 	}
 
-	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{DBNIN: []int64{1, 2}}}) {
+	if !reflect.DeepEqual(
+		cond,
+		map[string]interface{}{"test": map[string]interface{}{DBNIN: []int64{1, 2}}},
+	) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}
@@ -101,7 +104,8 @@ func TestNotInMongoCond(t *testing.T) {
 		return
 	}
 	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{
-		DBNIN: []string{"a", "b"}}}) {
+		DBNIN: []string{"a", "b"},
+	}}) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}
@@ -113,7 +117,8 @@ func TestNotInMongoCond(t *testing.T) {
 		return
 	}
 	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{
-		DBNIN: []interface{}{true, false}}}) {
+		DBNIN: []interface{}{true, false},
+	}}) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}

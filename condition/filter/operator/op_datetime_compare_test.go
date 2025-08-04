@@ -96,7 +96,10 @@ func TestDatetimeLessMongoCond(t *testing.T) {
 		return
 	}
 
-	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{DBLT: nowUnixTime}}) {
+	if !reflect.DeepEqual(
+		cond,
+		map[string]interface{}{"test": map[string]interface{}{DBLT: nowUnixTime}},
+	) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}
@@ -111,7 +114,8 @@ func TestDatetimeLessMongoCond(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{
-		DBLT: nowStrTime.UTC()}}) {
+		DBLT: nowStrTime.UTC(),
+	}}) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}
@@ -192,7 +196,10 @@ func TestDatetimeLessOrEqualMongoCond(t *testing.T) {
 		return
 	}
 
-	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{DBLTE: now}}) {
+	if !reflect.DeepEqual(
+		cond,
+		map[string]interface{}{"test": map[string]interface{}{DBLTE: now}},
+	) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}
@@ -205,7 +212,10 @@ func TestDatetimeLessOrEqualMongoCond(t *testing.T) {
 		return
 	}
 
-	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{DBLTE: nowUnixTime}}) {
+	if !reflect.DeepEqual(
+		cond,
+		map[string]interface{}{"test": map[string]interface{}{DBLTE: nowUnixTime}},
+	) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}
@@ -220,7 +230,8 @@ func TestDatetimeLessOrEqualMongoCond(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{
-		DBLTE: nowStrTime.UTC()}}) {
+		DBLTE: nowStrTime.UTC(),
+	}}) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}
@@ -314,7 +325,10 @@ func TestDatetimeGreaterMongoCond(t *testing.T) {
 		return
 	}
 
-	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{DBGT: nowUnixTime}}) {
+	if !reflect.DeepEqual(
+		cond,
+		map[string]interface{}{"test": map[string]interface{}{DBGT: nowUnixTime}},
+	) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}
@@ -329,7 +343,8 @@ func TestDatetimeGreaterMongoCond(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{
-		DBGT: nowStrTime.UTC()}}) {
+		DBGT: nowStrTime.UTC(),
+	}}) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}
@@ -410,7 +425,10 @@ func TestDatetimeGreaterOrEqualMongoCond(t *testing.T) {
 		return
 	}
 
-	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{DBGTE: now}}) {
+	if !reflect.DeepEqual(
+		cond,
+		map[string]interface{}{"test": map[string]interface{}{DBGTE: now}},
+	) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}
@@ -423,7 +441,10 @@ func TestDatetimeGreaterOrEqualMongoCond(t *testing.T) {
 		return
 	}
 
-	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{DBGTE: nowUnixTime}}) {
+	if !reflect.DeepEqual(
+		cond,
+		map[string]interface{}{"test": map[string]interface{}{DBGTE: nowUnixTime}},
+	) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}
@@ -438,7 +459,8 @@ func TestDatetimeGreaterOrEqualMongoCond(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{
-		DBGTE: nowStrTime.UTC()}}) {
+		DBGTE: nowStrTime.UTC(),
+	}}) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}

@@ -4,17 +4,14 @@ import (
 	"time"
 
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
-
 	"github.com/prometheus/client_golang/prometheus"
 )
 
-var (
-	publisherLabelKeys = []string{
-		labelKeyHandlerName,
-		labelKeyPublisherName,
-		labelSuccess,
-	}
-)
+var publisherLabelKeys = []string{
+	labelKeyHandlerName,
+	labelKeyPublisherName,
+	labelSuccess,
+}
 
 // PublisherPrometheusMetricsDecorator decorates a publisher to capture Prometheus metrics.
 type PublisherPrometheusMetricsDecorator struct {
@@ -24,7 +21,10 @@ type PublisherPrometheusMetricsDecorator struct {
 }
 
 // Publish updates the relevant publisher metrics and calls the wrapped publisher's Publish.
-func (m PublisherPrometheusMetricsDecorator) Publish(topic string, messages ...*message.Message) (err error) {
+func (m PublisherPrometheusMetricsDecorator) Publish(
+	topic string,
+	messages ...*message.Message,
+) (err error) {
 	if len(messages) == 0 {
 		return m.pub.Publish(topic)
 	}

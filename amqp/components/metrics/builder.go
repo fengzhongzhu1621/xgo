@@ -4,12 +4,15 @@ import (
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/amqp/router"
 	"github.com/fengzhongzhu1621/xgo/buildin"
-
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
-func NewPrometheusMetricsBuilder(prometheusRegistry prometheus.Registerer, namespace string, subsystem string) PrometheusMetricsBuilder {
+func NewPrometheusMetricsBuilder(
+	prometheusRegistry prometheus.Registerer,
+	namespace string,
+	subsystem string,
+) PrometheusMetricsBuilder {
 	return PrometheusMetricsBuilder{
 		Namespace:          namespace,
 		Subsystem:          subsystem,
@@ -37,7 +40,9 @@ func (b PrometheusMetricsBuilder) AddPrometheusRouterMetrics(r *router.Router) {
 }
 
 // DecoratePublisher wraps the underlying publisher with Prometheus metrics.
-func (b PrometheusMetricsBuilder) DecoratePublisher(pub message.Publisher) (message.Publisher, error) {
+func (b PrometheusMetricsBuilder) DecoratePublisher(
+	pub message.Publisher,
+) (message.Publisher, error) {
 	var err error
 	d := PublisherPrometheusMetricsDecorator{
 		pub:           pub,
@@ -60,7 +65,9 @@ func (b PrometheusMetricsBuilder) DecoratePublisher(pub message.Publisher) (mess
 }
 
 // DecorateSubscriber wraps the underlying subscriber with Prometheus metrics.
-func (b PrometheusMetricsBuilder) DecorateSubscriber(sub message.Subscriber) (message.Subscriber, error) {
+func (b PrometheusMetricsBuilder) DecorateSubscriber(
+	sub message.Subscriber,
+) (message.Subscriber, error) {
 	var err error
 	d := &SubscriberPrometheusMetricsDecorator{
 		closing:        make(chan struct{}),
@@ -102,7 +109,9 @@ func (b PrometheusMetricsBuilder) register(c prometheus.Collector) (prometheus.C
 	return nil, err
 }
 
-func (b PrometheusMetricsBuilder) registerCounterVec(c *prometheus.CounterVec) (*prometheus.CounterVec, error) {
+func (b PrometheusMetricsBuilder) registerCounterVec(
+	c *prometheus.CounterVec,
+) (*prometheus.CounterVec, error) {
 	col, err := b.register(c)
 	if err != nil {
 		return nil, err
@@ -110,7 +119,9 @@ func (b PrometheusMetricsBuilder) registerCounterVec(c *prometheus.CounterVec) (
 	return col.(*prometheus.CounterVec), nil
 }
 
-func (b PrometheusMetricsBuilder) registerHistogramVec(h *prometheus.HistogramVec) (*prometheus.HistogramVec, error) {
+func (b PrometheusMetricsBuilder) registerHistogramVec(
+	h *prometheus.HistogramVec,
+) (*prometheus.HistogramVec, error) {
 	col, err := b.register(h)
 	if err != nil {
 		return nil, err

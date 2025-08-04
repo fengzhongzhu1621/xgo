@@ -27,5 +27,4 @@ func TestRegister(t *testing.T) {
 	if _, err := dew.Dispatch(ctx, &action.HelloAction{Name: name}); err != nil {
 		fmt.Println("failed to dispatch HelloAction: %w", err)
 	}
-
 }

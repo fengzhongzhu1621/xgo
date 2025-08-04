@@ -71,7 +71,10 @@ func TestManyToMany(t *testing.T) {
 	// SELECT * FROM `user_many_to_manies` WHERE `user_many_to_manies`.`id` = 1 ORDER BY `user_many_to_manies`.`id` LIMIT 1
 	var user2 UserManyToMany
 	db.Preload("Languages").First(&user2, 1)
-	fmt.Printf("User: %+v\n", user2) // {ID:1 Name:Charlie Languages:[{ID:1 Name:English} {ID:2 Name:Chinese}]}
+	fmt.Printf(
+		"User: %+v\n",
+		user2,
+	) // {ID:1 Name:Charlie Languages:[{ID:1 Name:English} {ID:2 Name:Chinese}]}
 	for _, lang := range user2.Languages {
 		// Language: {ID:1 Name:English}
 		// Language: {ID:2 Name:Chinese}

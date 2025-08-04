@@ -9,7 +9,6 @@ import (
 
 func TestPrintln(t *testing.T) {
 	emoji.Println(":beer: Beer")
-
 }
 
 func TestSprint(t *testing.T) {

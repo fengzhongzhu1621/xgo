@@ -163,7 +163,7 @@ const (
 )
 
 type Code struct {
-	ErrCode int    `json:"Code" form:"Code"`
+	ErrCode int    `json:"Code"    form:"Code"`
 	Message string `json:"Message" form:"Message"`
 }
 
@@ -187,9 +187,7 @@ func NewErrCode(code int, message string) *Code {
 
 // ParseErrCode 将字符串转换为 Code 对象
 func ParseErrCode(s string) (*Code, error) {
-	var (
-		code Code
-	)
+	var code Code
 	err := json.Unmarshal([]byte(s), &code)
 	if err != nil {
 		return nil, err
@@ -220,7 +218,9 @@ var (
 )
 
 var (
-	ErrInvalidCopyDestination        = errors.New("copy destination must be non-nil and addressable")
+	ErrInvalidCopyDestination = errors.New(
+		"copy destination must be non-nil and addressable",
+	)
 	ErrInvalidCopyFrom               = errors.New("copy from must be non-nil and addressable")
 	ErrMapKeyNotMatch                = errors.New("map's key type doesn't match")
 	ErrNotSupported                  = errors.New("not supported")
@@ -518,21 +518,45 @@ func Must3[T1, T2, T3 any](val1 T1, val2 T2, val3 T3, err any, messageArgs ...an
 
 // Must4 has the same behavior as Must, but callback returns 4 variables.
 // Play: https://go.dev/play/p/TMoWrRp3DyC
-func Must4[T1, T2, T3, T4 any](val1 T1, val2 T2, val3 T3, val4 T4, err any, messageArgs ...any) (T1, T2, T3, T4) {
+func Must4[T1, T2, T3, T4 any](
+	val1 T1,
+	val2 T2,
+	val3 T3,
+	val4 T4,
+	err any,
+	messageArgs ...any,
+) (T1, T2, T3, T4) {
 	must(err, messageArgs...)
 	return val1, val2, val3, val4
 }
 
 // Must5 has the same behavior as Must, but callback returns 5 variables.
 // Play: https://go.dev/play/p/TMoWrRp3DyC
-func Must5[T1, T2, T3, T4, T5 any](val1 T1, val2 T2, val3 T3, val4 T4, val5 T5, err any, messageArgs ...any) (T1, T2, T3, T4, T5) {
+func Must5[T1, T2, T3, T4, T5 any](
+	val1 T1,
+	val2 T2,
+	val3 T3,
+	val4 T4,
+	val5 T5,
+	err any,
+	messageArgs ...any,
+) (T1, T2, T3, T4, T5) {
 	must(err, messageArgs...)
 	return val1, val2, val3, val4, val5
 }
 
 // Must6 has the same behavior as Must, but callback returns 6 variables.
 // Play: https://go.dev/play/p/TMoWrRp3DyC
-func Must6[T1, T2, T3, T4, T5, T6 any](val1 T1, val2 T2, val3 T3, val4 T4, val5 T5, val6 T6, err any, messageArgs ...any) (T1, T2, T3, T4, T5, T6) {
+func Must6[T1, T2, T3, T4, T5, T6 any](
+	val1 T1,
+	val2 T2,
+	val3 T3,
+	val4 T4,
+	val5 T5,
+	val6 T6,
+	err any,
+	messageArgs ...any,
+) (T1, T2, T3, T4, T5, T6) {
 	must(err, messageArgs...)
 	return val1, val2, val3, val4, val5, val6
 }

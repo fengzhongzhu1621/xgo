@@ -23,7 +23,6 @@ func (o ArrayOp) Name() OpType {
 
 // ValidateValue validate filter array operator value
 func (o ArrayOp) ValidateValue(v interface{}, opt *ExprOption) error {
-
 	// filter array operator's value is the sub-rule to filter the array's field.
 	subRule, ok := v.(IRuleFactory)
 	if !ok {

@@ -127,7 +127,10 @@ func (p EventProcessor) Handlers() []EventHandler {
 }
 
 // routerHandlerFunc 构造消费者的消息处理函数装饰器
-func (p EventProcessor) routerHandlerFunc(handler EventHandler, logger logging.LoggerAdapter) (router.NoPublishHandlerFunc, error) {
+func (p EventProcessor) routerHandlerFunc(
+	handler EventHandler,
+	logger logging.LoggerAdapter,
+) (router.NoPublishHandlerFunc, error) {
 	initEvent := handler.NewEvent()
 	if err := p.validateEvent(initEvent); err != nil {
 		return nil, err

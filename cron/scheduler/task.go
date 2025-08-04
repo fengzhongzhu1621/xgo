@@ -8,5 +8,5 @@ type Task struct {
 	Name     string                    // 任务的名称（如 "Daily Report Generator"），便于人类阅读
 	Schedule string                    // Cron 表达式（如 "0 0 * * *"），定义任务的执行时间
 	JobFunc  func(ctx context.Context) // 任务的具体执行逻辑（函数），接收 context.Context 参数
-	Retry    int                       //任务失败时的重试次数（如 3 表示最多重试 3 次）
+	Retry    int                       // 任务失败时的重试次数（如 3 表示最多重试 3 次）
 }

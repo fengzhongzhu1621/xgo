@@ -50,5 +50,4 @@ func TestConvert2Json(t *testing.T) {
 	if s != expectedString || err != nil {
 		t.Errorf("expected %v, got %v", expectedString, s)
 	}
-
 }

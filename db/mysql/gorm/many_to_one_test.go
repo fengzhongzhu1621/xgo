@@ -98,7 +98,10 @@ func TestManyToOne(t *testing.T) {
 	// SELECT * FROM `user_has_manies` WHERE `user_has_manies`.`id` = 1 ORDER BY `user_has_manies`.`id` LIMIT 1
 	var user2 UserHasMany
 	db.Preload("Orders").First(&user2, 1)
-	fmt.Printf("User: %+v\n", user2) // {ID:1 Name:Bob Orders:[{ID:1 UserID:1 Price:9.9} {ID:2 UserID:1 Price:19.9}]}
+	fmt.Printf(
+		"User: %+v\n",
+		user2,
+	) // {ID:1 Name:Bob Orders:[{ID:1 UserID:1 Price:9.9} {ID:2 UserID:1 Price:19.9}]}
 	for _, order := range user2.Orders {
 		// {ID:1 UserID:1 Price:9.9}
 		// {ID:2 UserID:1 Price:19.9}

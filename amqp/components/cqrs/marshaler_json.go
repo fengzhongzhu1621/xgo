@@ -3,10 +3,9 @@ package cqrs
 import (
 	"encoding/json"
 
-	"github.com/fengzhongzhu1621/xgo/crypto/uuid"
-
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/buildin"
+	"github.com/fengzhongzhu1621/xgo/crypto/uuid"
 )
 
 var _ CommandEventMarshaler = (*JSONMarshaler)(nil)

@@ -37,5 +37,12 @@ type RedisConfig struct {
 }
 
 func (cfg *RedisConfig) DSN() string {
-	return fmt.Sprintf("redis://%s:%s@%s:%d/%d", cfg.Username, cfg.Password, cfg.Host, cfg.Port, cfg.DB)
+	return fmt.Sprintf(
+		"redis://%s:%s@%s:%d/%d",
+		cfg.Username,
+		cfg.Password,
+		cfg.Host,
+		cfg.Port,
+		cfg.DB,
+	)
 }

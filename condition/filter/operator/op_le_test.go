@@ -91,7 +91,10 @@ func TestLessOrEqualMongoCond(t *testing.T) {
 		return
 	}
 
-	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{DBLTE: uint64(0)}}) {
+	if !reflect.DeepEqual(
+		cond,
+		map[string]interface{}{"test": map[string]interface{}{DBLTE: uint64(0)}},
+	) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}
@@ -103,7 +106,10 @@ func TestLessOrEqualMongoCond(t *testing.T) {
 		return
 	}
 
-	if !reflect.DeepEqual(cond, map[string]interface{}{"test": map[string]interface{}{DBLTE: int32(-1)}}) {
+	if !reflect.DeepEqual(
+		cond,
+		map[string]interface{}{"test": map[string]interface{}{DBLTE: int32(-1)}},
+	) {
 		t.Errorf("cond %+v is invalid", cond)
 		return
 	}

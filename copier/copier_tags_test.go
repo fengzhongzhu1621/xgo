@@ -12,7 +12,7 @@ type EmployeeTags struct {
 	DOB     string
 	Address string
 	// 忽略拷贝这个字段
-	ID      int `copier:"-"`
+	ID int `copier:"-"`
 }
 
 type User1 struct {
@@ -31,7 +31,12 @@ type User2 struct {
 // 测试自定字段不拷贝
 func TestCopyTagIgnore(t *testing.T) {
 	employee := EmployeeTags{ID: 100}
-	user := User1{Name: "Dexter Ledesma", DOB: "1 November, 1970", Address: "21 Jump Street", ID: 12345}
+	user := User1{
+		Name:    "Dexter Ledesma",
+		DOB:     "1 November, 1970",
+		Address: "21 Jump Street",
+		ID:      12345,
+	}
 	// 不拷贝 ID 字段
 	copier.Copy(&employee, user)
 	if employee.ID == user.ID {

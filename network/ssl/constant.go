@@ -2,8 +2,10 @@ package ssl
 
 import "regexp"
 
-var OpensslVersionRegex = regexp.MustCompile(`(?i)OpenSSH_([0-9]+\.[0-9]+)`)
-var OpensslVersionRegexV2 = regexp.MustCompile(`(?i)OpenSSH_([0-9]+)\.([0-9]+)`)
+var (
+	OpensslVersionRegex   = regexp.MustCompile(`(?i)OpenSSH_([0-9]+\.[0-9]+)`)
+	OpensslVersionRegexV2 = regexp.MustCompile(`(?i)OpenSSH_([0-9]+)\.([0-9]+)`)
+)
 
 // 非对称加密算法类型
 const (

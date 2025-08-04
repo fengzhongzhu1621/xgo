@@ -39,7 +39,7 @@ func TestNewPeriod(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		//want []*Carbon
+		// want []*Carbon
 		want
 	}{
 		{
@@ -82,10 +82,10 @@ func TestNewPeriod(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := Period(tt.args.start, tt.args.days, tt.args.end)
-			assert.Equal(t, tt.want.error, err)
+			assert.Equal(t, tt.error, err)
 
 			for key, val := range got {
-				assert.Equal(t, tt.want.wantTime[key], val)
+				assert.Equal(t, tt.wantTime[key], val)
 			}
 		})
 	}

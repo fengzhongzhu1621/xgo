@@ -5,11 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gookit/goutil/arrutil"
-
 	"github.com/araujo88/lambda-go/pkg/utils"
-
 	"github.com/duke-git/lancet/v2/slice"
+	"github.com/gookit/goutil/arrutil"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -159,7 +159,12 @@ func (c *BaseCache) GetTime(ctx context.Context, k cache.Key) (time.Time, error)
 
 	v, ok := value.(time.Time)
 	if !ok {
-		return defaultZeroTime, fmt.Errorf("not a string value. key=%s, value=%v(%T)", k.Key(), value, value)
+		return defaultZeroTime, fmt.Errorf(
+			"not a string value. key=%s, value=%v(%T)",
+			k.Key(),
+			value,
+			value,
+		)
 	}
 	return v, nil
 }
@@ -364,7 +369,12 @@ func WithEmptyCache(timeout time.Duration) Option {
 	}
 }
 
-func NewBaseCache(disabled bool, retrieveFunc cache.RetrieveFunc, backend backend.Backend, options ...Option) Cache {
+func NewBaseCache(
+	disabled bool,
+	retrieveFunc cache.RetrieveFunc,
+	backend backend.Backend,
+	options ...Option,
+) Cache {
 	c := &BaseCache{
 		backend:      backend,
 		disabled:     disabled,

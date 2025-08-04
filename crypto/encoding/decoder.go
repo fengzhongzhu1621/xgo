@@ -17,7 +17,9 @@ const (
 	ErrDecoderNotFound = xgo.EncodingError("decoder not found for this format")
 
 	// ErrDecoderFormatAlreadyRegistered is returned when an decoder is already registered for a format.
-	ErrDecoderFormatAlreadyRegistered = xgo.EncodingError("decoder already registered for this format")
+	ErrDecoderFormatAlreadyRegistered = xgo.EncodingError(
+		"decoder already registered for this format",
+	)
 )
 
 // DecoderRegistry can choose an appropriate Decoder based on the provided format.

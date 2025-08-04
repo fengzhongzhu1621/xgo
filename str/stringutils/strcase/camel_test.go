@@ -3,9 +3,8 @@ package strcase
 import (
 	"testing"
 
-	"github.com/samber/lo"
-
 	"github.com/duke-git/lancet/v2/strutil"
+	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -709,19 +708,39 @@ func TestAllCase(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			pascal := lo.PascalCase(test.input)
 			if pascal != test.output.PascalCase {
-				t.Errorf("PascalCase(%q) = %q; expected %q", test.input, pascal, test.output.PascalCase)
+				t.Errorf(
+					"PascalCase(%q) = %q; expected %q",
+					test.input,
+					pascal,
+					test.output.PascalCase,
+				)
 			}
 			camel := lo.CamelCase(test.input)
 			if camel != test.output.CamelCase {
-				t.Errorf("CamelCase(%q) = %q; expected %q", test.input, camel, test.output.CamelCase)
+				t.Errorf(
+					"CamelCase(%q) = %q; expected %q",
+					test.input,
+					camel,
+					test.output.CamelCase,
+				)
 			}
 			kebab := lo.KebabCase(test.input)
 			if kebab != test.output.KebabCase {
-				t.Errorf("KebabCase(%q) = %q; expected %q", test.input, kebab, test.output.KebabCase)
+				t.Errorf(
+					"KebabCase(%q) = %q; expected %q",
+					test.input,
+					kebab,
+					test.output.KebabCase,
+				)
 			}
 			snake := lo.SnakeCase(test.input)
 			if snake != test.output.SnakeCase {
-				t.Errorf("SnakeCase(%q) = %q; expected %q", test.input, snake, test.output.SnakeCase)
+				t.Errorf(
+					"SnakeCase(%q) = %q; expected %q",
+					test.input,
+					snake,
+					test.output.SnakeCase,
+				)
 			}
 		})
 	}

@@ -10,14 +10,12 @@ import (
 /**
  * Wheel
  */
-type Wheel struct {
-}
+type Wheel struct{}
 
 /**
  * Engine
  */
-type Engine2 struct {
-}
+type Engine2 struct{}
 
 func (e *Engine2) HealthCheck() error {
 	return fmt.Errorf("engine broken")

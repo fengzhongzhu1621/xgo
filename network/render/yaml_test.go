@@ -2,9 +2,10 @@ package render
 
 import (
 	"errors"
-	"github.com/stretchr/testify/assert"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestRenderYAML(t *testing.T) {

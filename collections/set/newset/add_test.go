@@ -36,7 +36,7 @@ func Test_AddConcurrent(t *testing.T) {
 }
 
 func TestMakeSetInt(*testing.T) {
-	var ints = []int{1, 2, 3}
+	ints := []int{1, 2, 3}
 	s := mapset.NewSet[int]()
 	for _, i := range ints {
 		s.Add(i)

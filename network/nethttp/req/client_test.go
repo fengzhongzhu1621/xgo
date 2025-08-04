@@ -27,7 +27,11 @@ func NewGithubClient() *GithubClient {
 				}
 				if !resp.IsSuccessState() {
 					// Neither a success response nor a error response, record details to help troubleshooting
-					resp.Err = fmt.Errorf("bad status: %s\nraw content:\n%s", resp.Status, resp.Dump())
+					resp.Err = fmt.Errorf(
+						"bad status: %s\nraw content:\n%s",
+						resp.Status,
+						resp.Dump(),
+					)
 				}
 				return nil
 			}),
@@ -41,7 +45,10 @@ type UserProfile struct {
 
 // GetUserProfile_Style1 returns the user profile for the specified user.
 // Github API doc: https://docs.github.com/en/rest/users/users#get-a-user
-func (c *GithubClient) GetUserProfile_Style1(ctx context.Context, username string) (user *UserProfile, err error) {
+func (c *GithubClient) GetUserProfile_Style1(
+	ctx context.Context,
+	username string,
+) (user *UserProfile, err error) {
 	_, err = c.R().
 		SetContext(ctx).
 		SetPathParam("username", username).
@@ -52,7 +59,10 @@ func (c *GithubClient) GetUserProfile_Style1(ctx context.Context, username strin
 
 // GetUserProfile_Style2 returns the user profile for the specified user.
 // Github API doc: https://docs.github.com/en/rest/users/users#get-a-user
-func (c *GithubClient) GetUserProfile_Style2(ctx context.Context, username string) (user *UserProfile, err error) {
+func (c *GithubClient) GetUserProfile_Style2(
+	ctx context.Context,
+	username string,
+) (user *UserProfile, err error) {
 	err = c.Get("/users/{username}").
 		SetPathParam("username", username).
 		Do(ctx).

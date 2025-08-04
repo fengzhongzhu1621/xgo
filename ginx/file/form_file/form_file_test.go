@@ -91,7 +91,7 @@ func TestSingleFileUpload(t *testing.T) {
 
 		// 4. 直接保存文件（不提前读取内容）
 		dst := "./uploads/" + file.Filename
-		if err := os.MkdirAll("./uploads", 0755); err != nil {
+		if err := os.MkdirAll("./uploads", 0o755); err != nil {
 			log.Println("创建上传目录失败:", err)
 			c.String(http.StatusInternalServerError, "服务器内部错误")
 			return

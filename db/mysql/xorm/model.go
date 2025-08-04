@@ -107,15 +107,15 @@ type XormUser4 struct {
 //
 // ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 type XormLink struct {
-	Id          int       `form:"id" xorm:"int(3) pk not null autoincr"`
+	Id          int       `form:"id"          xorm:"int(3) pk not null autoincr"`
 	Description string    `form:"description" xorm:"varchar(40) not null"`
-	Url         string    `form:"url" xorm:"varchar(80) not null"`
-	CreateUser  string    `xorm:"varchar(20) default 'SYSTEM'"`
-	CreateDate  time.Time `xorm:"datetime created"`
-	UpdateUser  string    `xorm:"varchar(20) default 'SYSTEM'"`
-	UpdateDate  time.Time `xorm:"datetime updated"`
-	Version     int       `form:"version" xorm:"int(11) version"`
-	Page        `xorm:"-"`
+	Url         string    `form:"url"         xorm:"varchar(80) not null"`
+	CreateUser  string    `                   xorm:"varchar(20) default 'SYSTEM'"`
+	CreateDate  time.Time `                   xorm:"datetime created"`
+	UpdateUser  string    `                   xorm:"varchar(20) default 'SYSTEM'"`
+	UpdateDate  time.Time `                   xorm:"datetime updated"`
+	Version     int       `form:"version"     xorm:"int(11) version"`
+	Page        ` xorm:"-"`
 }
 
 // CREATE TABLE `xorm_shop` (
@@ -141,42 +141,42 @@ type XormLink struct {
 //
 // ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 type XormShop struct {
-	//id
-	Id int64 `xorm:"pk autoincr" json:"id"`
-	//商铺名称
-	Name string `xorm:"varchar(12)" json:"name"`
-	//宣传信息
-	PromotionInfo string `xorm:"varchar(30)" json:"promotion_info"`
-	//地址
+	// id
+	Id int64 `xorm:"pk autoincr"  json:"id"`
+	// 商铺名称
+	Name string `xorm:"varchar(12)"  json:"name"`
+	// 宣传信息
+	PromotionInfo string `xorm:"varchar(30)"  json:"promotion_info"`
+	// 地址
 	Address string `xorm:"varchar(100)" json:"address"`
-	//联系电话
-	Phone string `xorm:"varchar(11)" json:"phone"`
-	//店铺营业状态
-	Status int `xorm:"tinyint" json:"status"`
+	// 联系电话
+	Phone string `xorm:"varchar(11)"  json:"phone"`
+	// 店铺营业状态
+	Status int `xorm:"tinyint"      json:"status"`
 
-	//经度
-	Longitude float64 `xorm:"" json:"longitude"`
-	//纬度
-	Latitude float64 `xorm:"" json:"latitude"`
-	//店铺图标
+	// 经度
+	Longitude float64 `xorm:""             json:"longitude"`
+	// 纬度
+	Latitude float64 `xorm:""             json:"latitude"`
+	// 店铺图标
 	ImagePath string `xorm:"varchar(255)" json:"image_path"`
 
 	IsNew     bool `xorm:"bool" json:"is_new"`
 	IsPremium bool `xorm:"bool" json:"is_premium"`
 
-	//商铺评分
+	// 商铺评分
 	Rating float32 `xorm:"float" json:"rating"`
-	//评分总数
-	RatingCount int64 `xorm:"int" json:"rating_count"`
-	//当前订单总数
-	RecentOrderNum int64 `xorm:"int" json:"recent_order_num"`
+	// 评分总数
+	RatingCount int64 `xorm:"int"   json:"rating_count"`
+	// 当前订单总数
+	RecentOrderNum int64 `xorm:"int"   json:"recent_order_num"`
 
-	//配送起送价
+	// 配送起送价
 	MinimumOrderAmount int32 `xorm:"int" json:"minimum_order_amount"`
-	//配送费
+	// 配送费
 	DeliveryFee int32 `xorm:"int" json:"delivery_fee"`
 
-	//营业时间
+	// 营业时间
 	OpeningHours string `xorm:"varchar(20)" json:"opening_hours"`
 }
 
@@ -311,10 +311,10 @@ type Address struct {
 //
 // ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 type XormCardS struct {
-	Addr        Address `xorm:"json notnull 'addr'" json:"addr"`
-	Id          string  `xorm:"pk notnull 'id'" json:"id"`
-	IsDefault   bool    `xorm:"'is_default'" json:"isDefault"`
-	Nickname    string  `xorm:"text notnull 'nickname'" json:"nickname"`
+	Addr        Address `xorm:"json notnull 'addr'"          json:"addr"`
+	Id          string  `xorm:"pk notnull 'id'"              json:"id"`
+	IsDefault   bool    `xorm:"'is_default'"                 json:"isDefault"`
+	Nickname    string  `xorm:"text notnull 'nickname'"      json:"nickname"`
 	NumberLast4 string  `xorm:"text notnull 'number_last_4'" json:"numberLast4"`
 }
 
@@ -328,15 +328,15 @@ type XormCardS struct {
 //
 // ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 type XormCardM struct {
-	Addr        map[string]interface{} `xorm:"json notnull 'addr'" json:"addr"`
-	Id          string                 `xorm:"pk notnull 'id'" json:"id"`
-	Nickname    string                 `xorm:"text notnull 'nickname'" json:"nickname"`
+	Addr        map[string]interface{} `xorm:"json notnull 'addr'"          json:"addr"`
+	Id          string                 `xorm:"pk notnull 'id'"              json:"id"`
+	Nickname    string                 `xorm:"text notnull 'nickname'"      json:"nickname"`
 	NumberLast4 string                 `xorm:"text notnull 'number_last_4'" json:"numberLast4"`
 }
 
 type XormCategory struct {
-	ID      int64       `json:"id" xorm:"bigint(20) pk autoincr"`
-	Name    string      `json:"name" xorm:"not null unique VARCHAR(32)"`
+	ID      int64       `json:"id"      xorm:"bigint(20) pk autoincr"`
+	Name    string      `json:"name"    xorm:"not null unique VARCHAR(32)"`
 	Entries []XormEntry `json:"entries" xorm:"- extends"`
 
 	BaseTimeModelWithoutSoftDelete `xorm:"extends"`
@@ -345,11 +345,11 @@ type XormCategory struct {
 // XormEntry 条目
 type XormEntry struct {
 	CategoryID int64        `json:"categoryID" xorm:"not null"`
-	Category   XormCategory `json:"category" xorm:"- extends"`
+	Category   XormCategory `json:"category"   xorm:"- extends"`
 
-	ID    int64   `json:"id" xorm:"pk autoincr"`
-	Name  string  `json:"name" xorm:"varchar(64) unique not null"`
-	Desc  string  `json:"desc" xorm:"text null"`
+	ID    int64   `json:"id"    xorm:"pk autoincr"`
+	Name  string  `json:"name"  xorm:"varchar(64) unique not null"`
+	Desc  string  `json:"desc"  xorm:"text null"`
 	Price float32 `json:"price" xorm:"not null"`
 
 	BaseTimeModelWithoutSoftDelete `xorm:"extends"`
@@ -372,12 +372,12 @@ type XormEntry struct {
 //
 // ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 type XormTask struct {
-	ID        int64                  `json:"id"  xorm:"pk autoincr"`
-	Name      string                 `json:"name" xorm:"varchar(128) not null"`
-	Args      map[string]interface{} `json:"args" xorm:"json"`
-	Result    map[string]interface{} `json:"result" xorm:"json"`
+	ID        int64                  `json:"id"        xorm:"pk autoincr"`
+	Name      string                 `json:"name"      xorm:"varchar(128) not null"`
+	Args      map[string]interface{} `json:"args"      xorm:"json"`
+	Result    map[string]interface{} `json:"result"    xorm:"json"`
 	StartedAt time.Time              `json:"startedAt" xorm:"datetime default null"`
-	Duration  time.Duration          `json:"duration" xorm:"bigint default null"`
+	Duration  time.Duration          `json:"duration"  xorm:"bigint default null"`
 
 	BaseTimeModelWithoutSoftDelete `xorm:"extends"`
 }
@@ -398,10 +398,10 @@ type XormTask struct {
 //
 // ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 type XormPeriodicTask struct {
-	ID      int64                  `json:"id" xorm:"pk autoincr"`
-	Cron    string                 `json:"cron" xorm:"varchar(32) not null"`
-	Name    string                 `json:"name" xorm:"varchar(128) not null"`
-	Args    map[string]interface{} `json:"args" xorm:"json"`
+	ID      int64                  `json:"id"      xorm:"pk autoincr"`
+	Cron    string                 `json:"cron"    xorm:"varchar(32) not null"`
+	Name    string                 `json:"name"    xorm:"varchar(128) not null"`
+	Args    map[string]interface{} `json:"args"    xorm:"json"`
 	Enabled bool                   `json:"enabled" xorm:"not null default true"`
 
 	BaseTimeModelWithoutSoftDelete `xorm:"extends"`

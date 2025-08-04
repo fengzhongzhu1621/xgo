@@ -17,8 +17,10 @@ import (
 // e.g. homedir.DisableCache = true.
 var DisableCache bool
 
-var homedirCache string
-var cacheLock sync.RWMutex
+var (
+	homedirCache string
+	cacheLock    sync.RWMutex
+)
 
 // Dir returns the home directory for the executing user.
 //
@@ -108,7 +110,11 @@ func dirUnix() (string, error) {
 
 	// If that fails, try OS specific commands
 	if runtime.GOOS == "darwin" {
-		cmd := exec.Command("sh", "-c", `dscl -q . -read /Users/"$(whoami)" NFSHomeDirectory | sed 's/^[^ ]*: //'`)
+		cmd := exec.Command(
+			"sh",
+			"-c",
+			`dscl -q . -read /Users/"$(whoami)" NFSHomeDirectory | sed 's/^[^ ]*: //'`,
+		)
 		cmd.Stdout = &stdout
 		if err := cmd.Run(); err == nil {
 			result := strings.TrimSpace(stdout.String())

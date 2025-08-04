@@ -12,7 +12,11 @@ const (
 
 func init() {
 	// 注册拦截器
-	filter.Register(pluginName, ServerFilterWithOptions(defaultOptions), ClientFilterWithOptions(defaultOptions))
+	filter.Register(
+		pluginName,
+		ServerFilterWithOptions(defaultOptions),
+		ClientFilterWithOptions(defaultOptions),
+	)
 }
 
 func init() {

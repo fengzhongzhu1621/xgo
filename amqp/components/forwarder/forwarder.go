@@ -25,7 +25,12 @@ type Forwarder struct {
 //
 // Note: Keep in mind that by default the forwarder will nack all messages which weren't sent using a decorated publisher.
 // You can change this behavior by passing a middleware which will ack them instead.
-func NewForwarder(subscriberIn message.Subscriber, publisherOut message.Publisher, logger logging.LoggerAdapter, config Config) (*Forwarder, error) {
+func NewForwarder(
+	subscriberIn message.Subscriber,
+	publisherOut message.Publisher,
+	logger logging.LoggerAdapter,
+	config Config,
+) (*Forwarder, error) {
 	config.SetDefaults()
 
 	routerConfig := router.RouterConfig{CloseTimeout: config.CloseTimeout}

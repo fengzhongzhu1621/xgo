@@ -4,11 +4,10 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/duke-git/lancet/v2/condition"
 	"github.com/duke-git/lancet/v2/convertor"
 	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
-
-	"github.com/duke-git/lancet/v2/condition"
 )
 
 func TestBool(t *testing.T) {
@@ -169,10 +168,18 @@ func TestIfFElseF(t *testing.T) {
 	t.Parallel()
 	is := assert.New(t)
 
-	result1 := lo.IfF(true, func() int { return 1 }).ElseIfF(false, func() int { return 2 }).ElseF(func() int { return 3 })
-	result2 := lo.IfF(true, func() int { return 1 }).ElseIfF(true, func() int { return 2 }).ElseF(func() int { return 3 })
-	result3 := lo.IfF(false, func() int { return 1 }).ElseIfF(true, func() int { return 2 }).ElseF(func() int { return 3 })
-	result4 := lo.IfF(false, func() int { return 1 }).ElseIfF(false, func() int { return 2 }).ElseF(func() int { return 3 })
+	result1 := lo.IfF(true, func() int { return 1 }).
+		ElseIfF(false, func() int { return 2 }).
+		ElseF(func() int { return 3 })
+	result2 := lo.IfF(true, func() int { return 1 }).
+		ElseIfF(true, func() int { return 2 }).
+		ElseF(func() int { return 3 })
+	result3 := lo.IfF(false, func() int { return 1 }).
+		ElseIfF(true, func() int { return 2 }).
+		ElseF(func() int { return 3 })
+	result4 := lo.IfF(false, func() int { return 1 }).
+		ElseIfF(false, func() int { return 2 }).
+		ElseF(func() int { return 3 })
 
 	is.Equal(result1, 1)
 	is.Equal(result2, 1)
@@ -199,10 +206,26 @@ func TestSwitchCaseF(t *testing.T) {
 	t.Parallel()
 	is := assert.New(t)
 
-	result1 := lo.Switch[int, int](42).CaseF(42, func() int { return 1 }).CaseF(1, func() int { return 2 }).DefaultF(func() int { return 3 })
-	result2 := lo.Switch[int, int](42).CaseF(42, func() int { return 1 }).CaseF(42, func() int { return 2 }).DefaultF(func() int { return 3 })
-	result3 := lo.Switch[int, int](42).CaseF(1, func() int { return 1 }).CaseF(42, func() int { return 2 }).DefaultF(func() int { return 3 })
-	result4 := lo.Switch[int, int](42).CaseF(1, func() int { return 1 }).CaseF(1, func() int { return 2 }).DefaultF(func() int { return 3 })
+	result1 := lo.Switch[int, int](
+		42,
+	).CaseF(42, func() int { return 1 }).
+		CaseF(1, func() int { return 2 }).
+		DefaultF(func() int { return 3 })
+	result2 := lo.Switch[int, int](
+		42,
+	).CaseF(42, func() int { return 1 }).
+		CaseF(42, func() int { return 2 }).
+		DefaultF(func() int { return 3 })
+	result3 := lo.Switch[int, int](
+		42,
+	).CaseF(1, func() int { return 1 }).
+		CaseF(42, func() int { return 2 }).
+		DefaultF(func() int { return 3 })
+	result4 := lo.Switch[int, int](
+		42,
+	).CaseF(1, func() int { return 1 }).
+		CaseF(1, func() int { return 2 }).
+		DefaultF(func() int { return 3 })
 
 	is.Equal(result1, 1)
 	is.Equal(result2, 1)

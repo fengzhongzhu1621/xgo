@@ -6,8 +6,7 @@ import (
 )
 
 // Plugin is the implement of the debuglog trpc plugin.
-type Plugin struct {
-}
+type Plugin struct{}
 
 // Type is the type of debuglog trpc plugin.
 func (p *Plugin) Type() string {

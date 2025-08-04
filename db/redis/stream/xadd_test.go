@@ -15,7 +15,7 @@ func TestXAdd(t *testing.T) {
 	client := redis.NewClient(&redis.Options{Addr: "localhost:6379"})
 
 	// 使用带超时的上下文
-	var ctx = context.Background()
+	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 

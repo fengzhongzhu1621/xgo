@@ -9,8 +9,10 @@ import (
 
 var once = sync.Once{}
 
-var EnableAuthFlag *authValue
-var enableAuth = true // 默认值
+var (
+	EnableAuthFlag *authValue
+	enableAuth     = true // 默认值
+)
 
 type authValue struct{}
 

@@ -5,11 +5,10 @@ import (
 	"fmt"
 	"time"
 
-	"go.uber.org/zap"
-
 	"github.com/dgrijalva/jwt-go/v4"
 	"github.com/fengzhongzhu1621/xgo/config"
 	"github.com/fengzhongzhu1621/xgo/logging"
+	"go.uber.org/zap"
 )
 
 // JWTRsa JWTRsa结构，用于存储RSA算法的私钥和公钥
@@ -49,11 +48,10 @@ type CustomJwtClaims struct {
 
 // NewCustomJwtClaims 创建JWT断言，支持多种加密算法
 func NewCustomJwtClaims(option *CustomJwtClaimsOption) (*CustomJwtClaims, error) {
-	var (
-		err error
-	)
+	var err error
 	// 检查option中的密钥配置。如果HS256密钥和RS256密钥（私钥和公钥）都为空，则触发一个panic，表示没有提供有效的JWT根令牌密钥
-	if option.HS256Key == "" && option.RS256Key.PrivateKey == "" && option.RS256Key.PublicKey == "" {
+	if option.HS256Key == "" && option.RS256Key.PrivateKey == "" &&
+		option.RS256Key.PublicKey == "" {
 		panic(ErrJwtRootTokenNone)
 	}
 	claims := &CustomJwtClaims{
@@ -117,9 +115,13 @@ func (c *CustomJwtClaims) GetOperator() string {
 
 // ParseHS256JwtToken 解析一个 JWT（JSON Web Token），并将其转换为 CustomJwtClaims 类型的声明
 func (c *CustomJwtClaims) ParseHS256JwtToken(jwtStr string) (*CustomJwtClaims, error) {
-	token, err := jwt.ParseWithClaims(jwtStr, &CustomJwtClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(c.HS256Key), nil
-	})
+	token, err := jwt.ParseWithClaims(
+		jwtStr,
+		&CustomJwtClaims{},
+		func(token *jwt.Token) (interface{}, error) {
+			return []byte(c.HS256Key), nil
+		},
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -133,18 +135,20 @@ func (c *CustomJwtClaims) ParseHS256JwtToken(jwtStr string) (*CustomJwtClaims, e
 
 // ParseRsaJwtToken 解析RsaJwtToken
 func (c *CustomJwtClaims) ParseRsaJwtToken(jwtStr string) (*CustomJwtClaims, error) {
-	var (
-		key = c.RS256PubKey
+	key := c.RS256PubKey
+
+	token, err := jwt.ParseWithClaims(
+		jwtStr,
+		&CustomJwtClaims{},
+		func(jwtToken *jwt.Token) (interface{}, error) {
+			if _, ok := jwtToken.Method.(*jwt.SigningMethodRSA); !ok {
+				// 判断签名算法是否一致
+				return nil, fmt.Errorf("unexpected method: %s", jwtToken.Header["alg"])
+			}
+
+			return key, nil
+		},
 	)
-
-	token, err := jwt.ParseWithClaims(jwtStr, &CustomJwtClaims{}, func(jwtToken *jwt.Token) (interface{}, error) {
-		if _, ok := jwtToken.Method.(*jwt.SigningMethodRSA); !ok {
-			// 判断签名算法是否一致
-			return nil, fmt.Errorf("unexpected method: %s", jwtToken.Header["alg"])
-		}
-
-		return key, nil
-	})
 	if err != nil {
 		return nil, fmt.Errorf("validate: %w", err)
 	}

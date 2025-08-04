@@ -6,9 +6,8 @@ import (
 )
 
 var _ = Describe("String", func() {
-
 	Describe("TruncateString", func() {
-		var s = "helloworld"
+		s := "helloworld"
 
 		DescribeTable("TruncateString cases", func(expected string, truncatedSize int) {
 			assert.Equal(GinkgoT(), expected, TruncateString(s, truncatedSize))

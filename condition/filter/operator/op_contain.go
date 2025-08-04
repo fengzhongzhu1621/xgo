@@ -69,7 +69,10 @@ func (o ContainsSensitiveOp) ValidateValue(v interface{}, opt *ExprOption) error
 }
 
 // ToMgo convert the contains sensitive operator's field and value to a mongo query condition.
-func (o ContainsSensitiveOp) ToMgo(field string, value interface{}) (map[string]interface{}, error) {
+func (o ContainsSensitiveOp) ToMgo(
+	field string,
+	value interface{},
+) (map[string]interface{}, error) {
 	if len(field) == 0 {
 		return nil, errors.New("field is empty")
 	}
@@ -151,7 +154,10 @@ func (o NotContainsInsensitiveOp) ValidateValue(v interface{}, opt *ExprOption) 
 }
 
 // ToMgo convert the not contains insensitive operator's field and value to a mongo query condition.
-func (o NotContainsInsensitiveOp) ToMgo(field string, value interface{}) (map[string]interface{}, error) {
+func (o NotContainsInsensitiveOp) ToMgo(
+	field string,
+	value interface{},
+) (map[string]interface{}, error) {
 	if len(field) == 0 {
 		return nil, errors.New("field is empty")
 	}

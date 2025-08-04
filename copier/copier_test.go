@@ -76,35 +76,61 @@ func checkEmployee(employee Employee, user User, t *testing.T, testCase string) 
 	}
 
 	if len(employee.Notes) != len(user.Notes) {
-		t.Fatalf("%v: Copy from slice doesn't work, employee notes len: %v, user: %v", testCase, len(employee.Notes), len(user.Notes))
+		t.Fatalf(
+			"%v: Copy from slice doesn't work, employee notes len: %v, user: %v",
+			testCase,
+			len(employee.Notes),
+			len(user.Notes),
+		)
 	}
 
 	for idx, note := range user.Notes {
 		if note != *employee.Notes[idx] {
-			t.Fatalf("%v: Copy from slice doesn't work, notes idx: %v employee: %v user: %v", testCase, idx, *employee.Notes[idx], note)
+			t.Fatalf(
+				"%v: Copy from slice doesn't work, notes idx: %v employee: %v user: %v",
+				testCase,
+				idx,
+				*employee.Notes[idx],
+				note,
+			)
 		}
 	}
 }
 
 func TestCopySameStructWithPointerField(t *testing.T) {
 	var fakeAge int32 = 12
-	var currentTime time.Time = time.Now()
-	user := &User{Birthday: &currentTime, Name: "Jinzhu", Nickname: "jinzhu", Age: 18, FakeAge: &fakeAge, Role: "Admin", Notes: []string{"hello world", "welcome"}, flags: []byte{'x'}}
+	currentTime := time.Now()
+	user := &User{
+		Birthday: &currentTime,
+		Name:     "Jinzhu",
+		Nickname: "jinzhu",
+		Age:      18,
+		FakeAge:  &fakeAge,
+		Role:     "Admin",
+		Notes:    []string{"hello world", "welcome"},
+		flags:    []byte{'x'},
+	}
 	newUser := &User{}
 	copier.Copy(newUser, user)
 	if user.Birthday == newUser.Birthday {
-		t.Errorf("TestCopySameStructWithPointerField: copy Birthday failed since they need to have different address")
+		t.Errorf(
+			"TestCopySameStructWithPointerField: copy Birthday failed since they need to have different address",
+		)
 	}
 
 	if user.FakeAge == newUser.FakeAge {
-		t.Errorf("TestCopySameStructWithPointerField: copy FakeAge failed since they need to have different address")
+		t.Errorf(
+			"TestCopySameStructWithPointerField: copy FakeAge failed since they need to have different address",
+		)
 	}
 }
 
 func checkEmployee2(employee Employee, user *User, t *testing.T, testCase string) {
 	if user == nil {
 		if employee.Name != "" || employee.Nickname != nil || employee.Birthday != nil || employee.Age != 0 ||
-			employee.DoubleAge != 0 || employee.FakeAge != 0 || employee.SuperRule != "" || employee.Notes != nil {
+			employee.DoubleAge != 0 || employee.FakeAge != 0 ||
+			employee.SuperRule != "" ||
+			employee.Notes != nil {
 			t.Errorf("%v : employee should be empty", testCase)
 		}
 		return
@@ -115,7 +141,15 @@ func checkEmployee2(employee Employee, user *User, t *testing.T, testCase string
 
 func TestCopyStruct(t *testing.T) {
 	var fakeAge int32 = 12
-	user := User{Name: "Jinzhu", Nickname: "jinzhu", Age: 18, FakeAge: &fakeAge, Role: "Admin", Notes: []string{"hello world", "welcome"}, flags: []byte{'x'}}
+	user := User{
+		Name:     "Jinzhu",
+		Nickname: "jinzhu",
+		Age:      18,
+		FakeAge:  &fakeAge,
+		Role:     "Admin",
+		Notes:    []string{"hello world", "welcome"},
+		flags:    []byte{'x'},
+	}
 	employee := Employee{}
 
 	if err := copier.Copy(employee, &user); err == nil {
@@ -184,7 +218,8 @@ func TestCopyFromStructToSlice(t *testing.T) {
 func TestCopyFromSliceToSlice(t *testing.T) {
 	users := []User{
 		{Name: "Jinzhu", Age: 18, Role: "Admin", Notes: []string{"hello world"}},
-		{Name: "Jinzhu2", Age: 22, Role: "Dev", Notes: []string{"hello world", "hello"}}}
+		{Name: "Jinzhu2", Age: 22, Role: "Dev", Notes: []string{"hello world", "hello"}},
+	}
 	employees := []Employee{}
 
 	if copier.Copy(&employees, users); len(employees) != 2 {
@@ -275,7 +310,8 @@ func TestCopyFromSliceToSlice3(t *testing.T) {
 	}
 
 	for idx := range mockedResult {
-		if mockedResult[idx].Name != mockedResult[idx].Name || mockedResult[idx].CollectionName != mockedResult[idx].CollectionName {
+		if mockedResult[idx].Name != mockedResult[idx].Name ||
+			mockedResult[idx].CollectionName != mockedResult[idx].CollectionName {
 			t.Fatalf("failed to copy results")
 		}
 	}
@@ -803,7 +839,11 @@ func TestMapInterface(t *testing.T) {
 				},
 			},
 		}
-		err := copier.CopyWithOption(&out, &value, reflectutils.Option{IgnoreEmpty: false, DeepCopy: true})
+		err := copier.CopyWithOption(
+			&out,
+			&value,
+			reflectutils.Option{IgnoreEmpty: false, DeepCopy: true},
+		)
 		if err != nil {
 			t.Fatalf("failed to deep copy nested map")
 		}
@@ -907,7 +947,11 @@ func TestCopierSlice(t *testing.T) {
 		}
 
 		if len(to) != len(from) {
-			t.Errorf("should be the same length, got len(from): %v, len(to): %v", len(from), len(to))
+			t.Errorf(
+				"should be the same length, got len(from): %v, len(to): %v",
+				len(from),
+				len(to),
+			)
 		}
 	})
 
@@ -949,7 +993,11 @@ func TestCopierSlice(t *testing.T) {
 		}
 
 		if len(to.X) != len(from.X) {
-			t.Errorf("should be the same length, got len(from.X): %v, len(to.X): %v", len(from.X), len(to.X))
+			t.Errorf(
+				"should be the same length, got len(from.X): %v, len(to.X): %v",
+				len(from.X),
+				len(to.X),
+			)
 		}
 
 		if to.Options[0].Value != from.Options[0].Value {
@@ -991,7 +1039,11 @@ func TestCopierSlice(t *testing.T) {
 		}
 
 		if len(to.X) != len(from.X) {
-			t.Errorf("should be the same length, got len(from.X): %v, len(to.X): %v", len(from.X), len(to.X))
+			t.Errorf(
+				"should be the same length, got len(from.X): %v, len(to.X): %v",
+				len(from.X),
+				len(to.X),
+			)
 		}
 
 		if to.Options[0].Value == from.Options[0].Value {
@@ -1027,7 +1079,7 @@ func TestAnonymousFields(t *testing.T) {
 			return
 		}
 
-		from.nested.A = "b"
+		from.A = "b"
 
 		if to.nested != nil {
 			t.Errorf("should be nil")
@@ -1055,9 +1107,9 @@ func TestAnonymousFields(t *testing.T) {
 			return
 		}
 
-		from.nested.A = "b"
+		from.A = "b"
 
-		if to.nested.A == from.nested.A {
+		if to.A == from.A {
 			t.Errorf("should be different")
 		}
 	})
@@ -1085,9 +1137,9 @@ func TestAnonymousFields(t *testing.T) {
 			return
 		}
 
-		from.Nested.A = "b"
+		from.A = "b"
 
-		if to.Nested.A != fieldValue {
+		if to.A != fieldValue {
 			t.Errorf("should not change")
 		}
 	})
@@ -1117,7 +1169,7 @@ func TestAnonymousFields(t *testing.T) {
 
 		from.A = "b"
 
-		if to.Nested.A != fieldValue {
+		if to.A != fieldValue {
 			t.Errorf("should not change")
 		}
 	})
@@ -1145,9 +1197,9 @@ func TestAnonymousFields(t *testing.T) {
 			return
 		}
 
-		from.Nested.A = "b"
+		from.A = "b"
 
-		if to.Nested.A != fieldValue {
+		if to.A != fieldValue {
 			t.Errorf("should not change")
 		}
 	})
@@ -1662,13 +1714,12 @@ func TestDeepCopyAnonymousFieldTime(t *testing.T) {
 	if err != nil {
 		t.Error("should not error")
 	}
-	if !from.Time.Equal(to.Time) {
+	if !from.Equal(to.Time) {
 		t.Errorf("to (%v) value should equal from (%v) value", to.Time, from.Time)
 	}
 }
 
 func TestSqlNullFiled(t *testing.T) {
-
 	type sqlStruct struct {
 		MkId              sql.NullInt64
 		MkExpiryDateType  sql.NullInt32
@@ -1698,11 +1749,19 @@ func TestSqlNullFiled(t *testing.T) {
 	}
 
 	if from.MkExpiryDateStart.String != to.MkExpiryDateStart {
-		t.Errorf("to (%v) value should equal from (%v) value", to.MkExpiryDateStart, from.MkExpiryDateStart.String)
+		t.Errorf(
+			"to (%v) value should equal from (%v) value",
+			to.MkExpiryDateStart,
+			from.MkExpiryDateStart.String,
+		)
 	}
 
 	if from.MkExpiryDateType.Int32 != to.MkExpiryDateType {
-		t.Errorf("to (%v) value should equal from (%v) value", to.MkExpiryDateType, from.MkExpiryDateType.Int32)
+		t.Errorf(
+			"to (%v) value should equal from (%v) value",
+			to.MkExpiryDateType,
+			from.MkExpiryDateType.Int32,
+		)
 	}
 }
 

@@ -59,7 +59,6 @@ func TestFirst(t *testing.T) {
 	is.Equal(ok1, true)
 	is.Equal(result2, 0)
 	is.Equal(ok2, false)
-
 }
 
 func TestFirstOrEmpty(t *testing.T) {

@@ -85,13 +85,14 @@ func (g *SshKeyGenerator) run() {
 	defer func() { recover() }()
 
 	for {
-		var (
-			err error
-		)
+		var err error
 		// 生成密钥
 		sshKey, err := NewSSHKey(g.Type, uint(g.Length))
 		if err != nil {
-			g.logger.Error("[SshKeyGenerator]Generator RSA key pairs error", zap.String("errmsg", err.Error()))
+			g.logger.Error(
+				"[SshKeyGenerator]Generator RSA key pairs error",
+				zap.String("errmsg", err.Error()),
+			)
 			// 失败重试 in case of cpu 100%
 			time.Sleep(100 * time.Millisecond)
 			continue

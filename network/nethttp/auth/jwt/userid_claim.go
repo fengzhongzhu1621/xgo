@@ -6,9 +6,7 @@ import (
 	"github.com/dgrijalva/jwt-go/v4"
 )
 
-var (
-	JwtIssuer = "xgo"
-)
+var JwtIssuer = "xgo"
 
 type UserIdJwtClaims struct {
 	UserId string `json:"user_id"`
@@ -40,9 +38,13 @@ func GenerateJwtToken(c *UserIdJwtClaims, secret string) (string, error) {
 
 // ParseJwtToken 使用密钥解析 jwt token
 func ParseJwtToken(jwtStr, secret string) (*UserIdJwtClaims, error) {
-	token, err := jwt.ParseWithClaims(jwtStr, &UserIdJwtClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(secret), nil
-	})
+	token, err := jwt.ParseWithClaims(
+		jwtStr,
+		&UserIdJwtClaims{},
+		func(token *jwt.Token) (interface{}, error) {
+			return []byte(secret), nil
+		},
+	)
 	if err != nil {
 		return nil, err
 	}

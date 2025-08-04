@@ -11,7 +11,6 @@ import (
 	"github.com/fengzhongzhu1621/xgo/tests"
 	"github.com/gookit/goutil/arrutil"
 	"github.com/samber/lo"
-
 	"github.com/stretchr/testify/assert"
 )
 
@@ -172,7 +171,11 @@ func TestToSliceE(t *testing.T) {
 		iserr  bool
 	}{
 		{[]interface{}{1, 3}, []interface{}{1, 3}, false},
-		{[]map[string]interface{}{{"k1": 1}, {"k2": 2}}, []interface{}{map[string]interface{}{"k1": 1}, map[string]interface{}{"k2": 2}}, false},
+		{
+			[]map[string]interface{}{{"k1": 1}, {"k2": 2}},
+			[]interface{}{map[string]interface{}{"k1": 1}, map[string]interface{}{"k2": 2}},
+			false,
+		},
 		// errors
 		{nil, nil, true},
 		{testing.T{}, nil, true},

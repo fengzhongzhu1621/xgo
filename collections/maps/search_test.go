@@ -123,7 +123,11 @@ func TestSearchIndexableWithPathPrefixes(t *testing.T) {
 		actual := SearchIndexableWithPathPrefixes(src, path, keyDelim)
 		expect := "6"
 		if !reflect.DeepEqual(actual, expect) {
-			t.Fatalf("SearchIndexableWithPathPrefixes error actual is %v, expect is %v", actual, expect)
+			t.Fatalf(
+				"SearchIndexableWithPathPrefixes error actual is %v, expect is %v",
+				actual,
+				expect,
+			)
 		}
 	})
 }

@@ -17,9 +17,11 @@ var _ xormLog.Logger = (*DBLogger)(nil)
 func (il *DBLogger) Sync() {
 	_ = il.logger.Sync()
 }
+
 func (il *DBLogger) Debug(v ...interface{}) {
 	il.logger.Debug(fmt.Sprint(v...))
 }
+
 func (il *DBLogger) Debugf(format string, v ...interface{}) {
 	il.logger.Debug(fmt.Sprintf(format, v...))
 }
@@ -62,12 +64,10 @@ func (il *DBLogger) Level() xormLog.LogLevel {
 
 // SetLevel implement ILogger 设置日志级别
 func (il *DBLogger) SetLevel(_ xormLog.LogLevel) {
-
 }
 
 // ShowSQL implement ILogger
 func (il *DBLogger) ShowSQL(_ ...bool) {
-
 }
 
 // IsShowSQL implement ILogger 显示 SQL 语句

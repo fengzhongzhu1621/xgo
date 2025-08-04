@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/duke-git/lancet/v2/datetime"
-
 	"github.com/duke-git/lancet/v2/function"
 )
 

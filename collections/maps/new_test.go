@@ -14,7 +14,7 @@ func TestCreateDeepMap(t *testing.T) {
 	t.Parallel()
 
 	t.Run("UpperKey", func(t *testing.T) {
-		var src = map[string]interface{}{
+		src := map[string]interface{}{
 			"A":     1,
 			"A_B":   2,
 			"A_B_C": 3,
@@ -79,7 +79,6 @@ func TestFromEntries(t *testing.T) {
 		// Output:
 		// map[a:1 b:2 c:3]
 	}
-
 }
 
 func TestFromPairs(t *testing.T) {

@@ -72,8 +72,10 @@ type Service struct {
 // NewService returns new metrics service
 func NewService(conf Config) *Service {
 	registry := prometheus.NewRegistry()
-	register := prometheus.WrapRegistererWith(prometheus.Labels{LabelProcessName: conf.ProcessName,
-		LabelHost: strings.Split(conf.ProcessInstance, ":")[0]}, registry)
+	register := prometheus.WrapRegistererWith(prometheus.Labels{
+		LabelProcessName: conf.ProcessName,
+		LabelHost:        strings.Split(conf.ProcessInstance, ":")[0],
+	}, registry)
 
 	// set up global register
 	globalRegister = register
@@ -144,7 +146,6 @@ func (s *Service) RestfulWebService() *restful.WebService {
 // HTTPMiddleware is the http middleware for go-restful framework
 func (s *Service) HTTPMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
 		if r.RequestURI == "/metrics" || r.RequestURI == "/metrics/" {
 			s.ServeHTTP(w, r)
 			return
@@ -184,12 +185,15 @@ func (s *Service) HTTPMiddleware(next http.Handler) http.Handler {
 		// add user metrics for api-server
 		s.userTotal.With(s.label(LabelUser, nethttp.GetUser(r.Header), LabelOrigin,
 			getOrigin(r.Header))).Inc()
-
 	})
 }
 
 // RestfulMiddleWare is the http middleware for go-restful framework
-func (s *Service) RestfulMiddleWare(req *restful.Request, resp *restful.Response, chain *restful.FilterChain) {
+func (s *Service) RestfulMiddleWare(
+	req *restful.Request,
+	resp *restful.Response,
+	chain *restful.FilterChain,
+) {
 	if v := req.Request.Context().Value(KeySelectedRoutePath); v != nil {
 		if selectedRoutePath, ok := v.(*string); ok {
 			*selectedRoutePath = req.SelectedRoutePath()

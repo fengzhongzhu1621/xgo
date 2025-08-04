@@ -45,7 +45,10 @@ func (s *GoChannelSubscriber) Close() {
 }
 
 // sendMessageToSubscriber 订阅者接收消息到缓存队列
-func (s *GoChannelSubscriber) SendMessageToSubscriber(msg *message.Message, logFields logging.LogFields) {
+func (s *GoChannelSubscriber) SendMessageToSubscriber(
+	msg *message.Message,
+	logFields logging.LogFields,
+) {
 	s.sending.Lock()
 	defer s.sending.Unlock()
 

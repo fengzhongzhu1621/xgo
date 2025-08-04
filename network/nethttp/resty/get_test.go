@@ -13,7 +13,6 @@ func TestGet(t *testing.T) {
 	resp, err := client.R().
 		SetHeader("Content-Type", "application/json").
 		Get("https://api.example.com/data")
-
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
@@ -36,7 +35,6 @@ func TestSetQueryParams(t *testing.T) {
 		SetHeader("Content-Type", "application/json").
 		SetQueryParams(params).
 		Get("https://api.example.com/data")
-
 	if err != nil {
 		fmt.Println("Error:", err)
 		return

@@ -57,9 +57,11 @@ type LoggerAdapter interface {
 	With(fields LogFields) LoggerAdapter
 }
 
-var _ LoggerAdapter = (*NopLogger)(nil)
-var _ LoggerAdapter = (*StdLoggerAdapter)(nil)
-var _ LoggerAdapter = (*CaptureLoggerAdapter)(nil)
+var (
+	_ LoggerAdapter = (*NopLogger)(nil)
+	_ LoggerAdapter = (*StdLoggerAdapter)(nil)
+	_ LoggerAdapter = (*CaptureLoggerAdapter)(nil)
+)
 
 // NopLogger is a logger which discards all logs.
 // 忽略所有的日志

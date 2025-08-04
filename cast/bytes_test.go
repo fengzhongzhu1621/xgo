@@ -19,7 +19,7 @@ func TestStringToBytes(t *testing.T) {
 	{
 		// func EncodeByte(data any) ([]byte, error)
 		byteData, _ := convertor.EncodeByte("abc")
-		fmt.Println(byteData)
+		fmt.Println(string(byteData))
 
 		// Output:
 		// [6 12 0 3 97 98 99]
@@ -32,7 +32,7 @@ func TestStringToBytes(t *testing.T) {
 		result2 := reflect.DeepEqual(result1, []byte{'a', 'b', 'c'})
 
 		// [97 98 99]
-		fmt.Println(result1)
+		fmt.Println(string(result1))
 		assert.Equal(t, true, result2)
 	}
 
@@ -52,7 +52,7 @@ func TestStringToBytes(t *testing.T) {
 			fmt.Println(err)
 		}
 
-		fmt.Println(bytesData)
+		fmt.Println(string(bytesData))
 
 		// Output:
 		// [97 98 99]

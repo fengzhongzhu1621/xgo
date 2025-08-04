@@ -59,7 +59,7 @@ func (m MapResults) Len() int {
 // 获得切片数组的key值，放到字符组切片.
 func (m MapResults) Keys() []string {
 	// 创建字符串切片
-	var keys = make([]string, len(m))
+	keys := make([]string, len(m))
 
 	i := 0
 	for k := range m {

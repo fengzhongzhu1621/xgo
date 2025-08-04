@@ -5,7 +5,6 @@ import (
 
 	"github.com/araujo88/lambda-go/pkg/predicate"
 	"github.com/duke-git/lancet/v2/slice"
-
 	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
 )
@@ -45,7 +44,12 @@ func TestEvery(t *testing.T) {
 			want      bool
 		}{
 			{"true when all match", []int{2, 4, 6}, func(x int) bool { return x%2 == 0 }, true},
-			{"false when one does not match", []int{2, 3, 6}, func(x int) bool { return x%2 == 0 }, false},
+			{
+				"false when one does not match",
+				[]int{2, 3, 6},
+				func(x int) bool { return x%2 == 0 },
+				false,
+			},
 			{"empty slice returns true", []int{}, func(x int) bool { return x%2 == 0 }, true},
 		}
 

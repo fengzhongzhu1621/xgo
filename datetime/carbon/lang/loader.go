@@ -13,7 +13,6 @@ var f embed.FS
 func LoadLocaleText(l string) ([]byte, error) {
 	// 读取静态文件内容
 	lText, err := f.ReadFile(l + ".json")
-
 	if err != nil {
 		return nil, errors.New("not able to read the lang file:" + err.Error())
 	}

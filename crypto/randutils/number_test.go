@@ -40,7 +40,7 @@ func TestRandNumberOfLength(t *testing.T) {
 // func RandFloat(min, max float64, precision int) float64
 func TestRandFloat(t *testing.T) {
 	floatNumber := random.RandFloat(1.0, 5.0, 2)
-	fmt.Println(floatNumber) //2.14 (random number)
+	fmt.Println(floatNumber) // 2.14 (random number)
 }
 
 // TestRandFloats Generate a slice of random float64 numbers of length n that do not repeat. Number range in [min, max)

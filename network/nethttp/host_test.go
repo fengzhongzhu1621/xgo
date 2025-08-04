@@ -31,7 +31,12 @@ func TestTellHostPort(t *testing.T) {
 			t.Errorf("test case for %#v failed, error should not happen", testcase.src)
 		}
 		if testcase.server != s || testcase.port != p {
-			t.Errorf("test case for %#v failed, server or port mismatch to expected values (%s:%s)", testcase.src, s, p)
+			t.Errorf(
+				"test case for %#v failed, server or port mismatch to expected values (%s:%s)",
+				testcase.src,
+				s,
+				p,
+			)
 		}
 	}
 }
@@ -39,7 +44,7 @@ func TestTellHostPort(t *testing.T) {
 // TestConvertMapToQueryString Convert map to url query string.
 // func ConvertMapToQueryString(param map[string]any) string
 func TestConvertMapToQueryString(t *testing.T) {
-	var m = map[string]any{
+	m := map[string]any{
 		"c": 3,
 		"a": 1,
 		"b": 2,
@@ -53,7 +58,6 @@ func TestConvertMapToQueryString(t *testing.T) {
 func TestEncodeUrl(t *testing.T) {
 	urlAddr := "http://www.lancet.com?a=1&b=[2]"
 	encodedUrl, err := netutil.EncodeUrl(urlAddr)
-
 	if err != nil {
 		fmt.Println(err)
 	}

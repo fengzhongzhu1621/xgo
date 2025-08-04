@@ -15,5 +15,4 @@ func TestLancetAes(t *testing.T) {
 	decrypted := cryptor.AesEcbDecrypt(encrypted, []byte(key))
 
 	assert.Equal(t, "hello", string(decrypted))
-
 }

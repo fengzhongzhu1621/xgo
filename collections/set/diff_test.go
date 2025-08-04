@@ -61,7 +61,13 @@ func TestSetsDifference(t *testing.T) {
 	for _, tt := range tests {
 		got1, got2, err := SetsDifference(tt.former, tt.latter)
 		if (err != nil) != tt.wantErr {
-			t.Errorf("SetsDifference(%v, %v) error = %v, wantErr %v", tt.former, tt.latter, err, tt.wantErr)
+			t.Errorf(
+				"SetsDifference(%v, %v) error = %v, wantErr %v",
+				tt.former,
+				tt.latter,
+				err,
+				tt.wantErr,
+			)
 			continue
 		}
 		s1 := gset.NewSetFromSlice(got1)

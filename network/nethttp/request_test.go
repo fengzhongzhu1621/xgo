@@ -142,5 +142,5 @@ func TestStructToUrlValues(t *testing.T) {
 	todoValues, _ := netutil.StructToUrlValues(todoQuery)
 
 	fmt.Println(todoValues.Get("id"))   // 1
-	fmt.Println(todoValues.Get("name")) //Test
+	fmt.Println(todoValues.Get("name")) // Test
 }

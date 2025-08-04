@@ -2,7 +2,6 @@ package redis
 
 import (
 	"github.com/fengzhongzhu1621/xgo/config"
-
 	redis "github.com/fengzhongzhu1621/xgo/db/redis/client"
 	log "github.com/sirupsen/logrus"
 )
@@ -16,7 +15,7 @@ func InitRedis() {
 	standaloneConfig, isStandalone := redisMap[redis.ModeStandalone]
 	sentinelConfig, isSentinel := redisMap[redis.ModeSentinel]
 
-	if !(isStandalone || isSentinel) {
+	if !isStandalone && !isSentinel {
 		panic("redis id=standalone or id=sentinel should be configured")
 	}
 

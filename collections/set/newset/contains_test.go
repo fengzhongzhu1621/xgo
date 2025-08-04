@@ -13,7 +13,7 @@ func Test_AddSetNoDuplicate(t *testing.T) {
 		t.Error("AddSetNoDuplicate set should have 3 elements since 7 is a duplicate")
 	}
 
-	if !(a.Contains(7) && a.Contains(5) && a.Contains(3)) {
+	if !a.Contains(7) || !a.Contains(5) || !a.Contains(3) {
 		t.Error("AddSetNoDuplicate set should have a 7, 5, and 3 in it.")
 	}
 }
@@ -49,7 +49,7 @@ func Test_ContainsOneSet(t *testing.T) {
 	a.Add(7)
 	a.Add(1)
 
-	if !(a.ContainsOne(13) && a.ContainsOne(7) && a.ContainsOne(1)) {
+	if !a.ContainsOne(13) || !a.ContainsOne(7) || !a.ContainsOne(1) {
 		t.Error("ContainsSet should contain 13, 7, 1")
 	}
 }

@@ -37,7 +37,10 @@ func MessageTransformSubscriberDecorator(transform func(*Message)) SubscriberDec
 }
 
 // Subscribe
-func (t *messageTransformSubscriberDecorator) Subscribe(ctx context.Context, topic string) (<-chan *Message, error) {
+func (t *messageTransformSubscriberDecorator) Subscribe(
+	ctx context.Context,
+	topic string,
+) (<-chan *Message, error) {
 	// 订阅topic
 	in, err := t.sub.Subscribe(ctx, topic)
 	if err != nil {

@@ -18,7 +18,9 @@ func (e *TestEndpoint) StartReading() {
 		for i := 0; i < e.limit; i++ {
 			e.c <- []byte(e.prefix + strconv.Itoa(i))
 		}
-		time.Sleep(time.Millisecond) // should be enough for smaller channel to catch up with long one
+		time.Sleep(
+			time.Millisecond,
+		) // should be enough for smaller channel to catch up with long one
 		close(e.c)
 	}()
 }

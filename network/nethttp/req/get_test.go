@@ -41,11 +41,13 @@ func TestAdvancedGet(t *testing.T) {
 	resp, err := client.R().
 		SetHeader("Accept", "application/vnd.github.v3+json"). // Chainable request settings.
 		SetPathParam("username", "imroc").                     // Replace path variable in url.
-		SetSuccessResult(&userInfo).                           // Unmarshal response body into userInfo automatically if status code is between 200 and 299.
-		SetErrorResult(&errMsg).                               // Unmarshal response body into errMsg automatically if status code >= 400.
-		EnableDump().                                          // Enable dump at request level, only print dump content if there is an error or some unknown situation occurs to help troubleshoot.
+		SetSuccessResult(&userInfo).
+		// Unmarshal response body into userInfo automatically if status code is between 200 and 299.
+		SetErrorResult(&errMsg).
+		// Unmarshal response body into errMsg automatically if status code >= 400.
+		EnableDump().
+		// Enable dump at request level, only print dump content if there is an error or some unknown situation occurs to help troubleshoot.
 		Get("https://api.github.com/users/{username}")
-
 	if err != nil { // Error handling.
 		log.Println("error:", err)
 		log.Println("raw content:")
@@ -80,7 +82,7 @@ func (msg *ErrorMessage2) Error() string {
 func TestOnAfterResponse(t *testing.T) {
 	var userInfo UserInfo
 
-	var client = req.C().
+	client := req.C().
 		SetUserAgent("my-custom-client"). // Chainable client settings.
 		SetTimeout(5 * time.Second).
 		EnableDumpEachRequest().
@@ -103,9 +105,9 @@ func TestOnAfterResponse(t *testing.T) {
 	resp, err := client.R().
 		SetHeader("Accept", "application/vnd.github.v3+json"). // Chainable request settings
 		SetPathParam("username", "imroc").
-		SetSuccessResult(&userInfo). // Unmarshal response body into userInfo automatically if status code is between 200 and 299.
+		SetSuccessResult(&userInfo).
+		// Unmarshal response body into userInfo automatically if status code is between 200 and 299.
 		Get("https://api.github.com/users/{username}")
-
 	if err != nil { // Error handling.
 		log.Println("error:", err)
 		return

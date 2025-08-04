@@ -10,9 +10,7 @@ import (
 	"strings"
 )
 
-var (
-	ErrNilRequestBody = errors.New("request Body is nil")
-)
+var ErrNilRequestBody = errors.New("request Body is nil")
 
 // RequestWithBody 创建一个新的HTTP请求
 func RequestWithBody(method, path, body string) (req *http.Request) {

@@ -7,8 +7,8 @@ import (
 )
 
 func TestPointerOf(t *testing.T) {
-	var x int = 42
-	var y *int = &x
+	x := 42
+	y := &x
 
 	// 获取 y 的 reflect.Value
 	valueY := reflect.ValueOf(y)

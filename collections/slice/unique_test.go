@@ -7,9 +7,8 @@ import (
 	"testing"
 
 	"github.com/araujo88/lambda-go/pkg/utils"
-	"github.com/gookit/goutil/arrutil"
-
 	"github.com/duke-git/lancet/v2/slice"
+	"github.com/gookit/goutil/arrutil"
 	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
 )
@@ -50,7 +49,12 @@ func TestUnique(t *testing.T) {
 		for _, tt := range tests {
 			t.Run(tt.name, func(t *testing.T) {
 				if got := utils.Unique(tt.slice); !reflect.DeepEqual(got, tt.want) {
-					t.Errorf("Unique() = %v, want %v, failed in test case: %s", got, tt.want, tt.name)
+					t.Errorf(
+						"Unique() = %v, want %v, failed in test case: %s",
+						got,
+						tt.want,
+						tt.name,
+					)
 				}
 			})
 		}
@@ -65,7 +69,11 @@ func TestUnique(t *testing.T) {
 		assert.Equal(t, []int{2}, arrutil.Unique[int]([]int{2}))
 		assert.Equal(t, []int{2, 3, 4}, arrutil.Unique[int]([]int{2, 3, 2, 4}))
 		assert.Equal(t, []uint{2, 3, 4}, arrutil.Unique([]uint{2, 3, 2, 4}))
-		assert.Equal(t, []string{"ab", "bc", "cd"}, arrutil.Unique([]string{"ab", "bc", "ab", "cd"}))
+		assert.Equal(
+			t,
+			[]string{"ab", "bc", "cd"},
+			arrutil.Unique([]string{"ab", "bc", "ab", "cd"}),
+		)
 	}
 }
 
@@ -108,14 +116,20 @@ func TestUniqueBy(t *testing.T) {
 // The function maintains the order of the elements.
 // func UniqueByComparator[T comparable](slice []T, comparator func(item T, other T) bool) []T
 func TestUniqueByComparator(t *testing.T) {
-	uniqueNums := slice.UniqueByComparator([]int{1, 2, 3, 1, 2, 4, 5, 6, 4}, func(item int, other int) bool {
-		return item == other
-	})
+	uniqueNums := slice.UniqueByComparator(
+		[]int{1, 2, 3, 1, 2, 4, 5, 6, 4},
+		func(item int, other int) bool {
+			return item == other
+		},
+	)
 
-	caseInsensitiveStrings := slice.UniqueByComparator([]string{"apple", "banana", "Apple", "cherry", "Banana", "date"}, func(item string, other string) bool {
-		// return strings.ToLower(item) == strings.ToLower(other)
-		return strings.EqualFold(item, other)
-	})
+	caseInsensitiveStrings := slice.UniqueByComparator(
+		[]string{"apple", "banana", "Apple", "cherry", "Banana", "date"},
+		func(item string, other string) bool {
+			// return strings.ToLower(item) == strings.ToLower(other)
+			return strings.EqualFold(item, other)
+		},
+	)
 
 	assert.Equal(t, []int{1, 2, 3, 4, 5, 6}, uniqueNums)
 	assert.Equal(t, []string{"apple", "banana", "cherry", "date"}, caseInsensitiveStrings)

@@ -4,22 +4,23 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-
 	"github.com/fengzhongzhu1621/xgo/amqp/message"
 	"github.com/fengzhongzhu1621/xgo/amqp/router/middleware"
+	"github.com/stretchr/testify/assert"
 )
 
-var (
-	someMsg = message.NewMessage("1", nil)
-)
+var someMsg = message.NewMessage("1", nil)
 
 func TestDuplicator(t *testing.T) {
 	var executionsCount int
-	producedMessages, err := middleware.Duplicator(func(msg *message.Message) ([]*message.Message, error) {
-		executionsCount++
-		return []*message.Message{msg}, nil
-	})(someMsg)
+	producedMessages, err := middleware.Duplicator(
+		func(msg *message.Message) ([]*message.Message, error) {
+			executionsCount++
+			return []*message.Message{msg}, nil
+		},
+	)(
+		someMsg,
+	)
 
 	assert.NoError(t, err)
 	assert.Len(t, producedMessages, 2)

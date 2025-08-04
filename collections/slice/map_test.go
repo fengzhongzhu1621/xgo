@@ -6,14 +6,11 @@ import (
 	"sync/atomic"
 	"testing"
 
+	"github.com/araujo88/lambda-go/pkg/core"
+	"github.com/duke-git/lancet/v2/slice"
 	"github.com/gookit/goutil/arrutil"
-
 	"github.com/samber/lo"
 	"github.com/samber/lo/parallel"
-
-	"github.com/araujo88/lambda-go/pkg/core"
-
-	"github.com/duke-git/lancet/v2/slice"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -117,7 +114,6 @@ func TestMapConcurrent(t *testing.T) {
 		result := slice.MapConcurrent(nums, func(_, n int) int { return n * n }, 4)
 		assert.Equal(t, []int{1, 4, 9, 16, 25, 36}, result)
 	}
-
 }
 
 // TestForEach Iterates over elements of slice and invokes function for each element.

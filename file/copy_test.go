@@ -15,7 +15,7 @@ import (
 
 func TestCopyFile(t *testing.T) {
 	{
-		var dst string = "./file_test2.go"
+		dst := "./file_test2.go"
 		err := Copy("./file_test.go", dst)
 		fmt.Println(err)
 		assert.Equal(t, validator.IsFileOrDirExists(dst), true)

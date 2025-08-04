@@ -1,10 +1,9 @@
 package logrus
 
 import (
+	"github.com/fengzhongzhu1621/xgo/logging"
 	"github.com/sirupsen/logrus"
 	adapter "logur.dev/adapter/logrus"
-
-	"github.com/fengzhongzhu1621/xgo/logging"
 )
 
 // SetLogger sets a logger to the logging package.

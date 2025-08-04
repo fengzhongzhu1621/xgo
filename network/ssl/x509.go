@@ -47,7 +47,7 @@ func LoadX509Certificates(certFile, keyFile, passwd string) (*tls.Certificate, e
 	}
 
 	// 如果提供了密码，尝试解密私钥
-	if "" != passwd {
+	if passwd != "" {
 		// 首先使用 pem.Decode() 函数解码 PEM 格式的私钥
 		privatePem, _ := pem.Decode(privateKey)
 		if privatePem == nil {
