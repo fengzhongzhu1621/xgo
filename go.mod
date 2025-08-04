@@ -32,8 +32,6 @@ require (
 	golang.org/x/sys v0.34.0
 	google.golang.org/protobuf v1.36.6
 	gopkg.in/ini.v1 v1.67.0
-	gopkg.in/yaml.v2 v2.4.0
-	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
@@ -64,7 +62,6 @@ require (
 	github.com/alecthomas/units v0.0.0-20240927000941-0f3dac36c52b // indirect
 	github.com/alexkohler/nakedret/v2 v2.0.6 // indirect
 	github.com/alexkohler/prealloc v1.0.0 // indirect
-	github.com/alicebob/gopher-json v0.0.0-20230218143504-906a9b012302 // indirect
 	github.com/alingse/asasalint v0.0.11 // indirect
 	github.com/alingse/nilnesserr v0.2.0 // indirect
 	github.com/andybalholm/brotli v1.2.0 // indirect
@@ -98,7 +95,6 @@ require (
 	github.com/charmbracelet/x/term v0.2.1 // indirect
 	github.com/chigopher/pathlib v0.19.1 // indirect
 	github.com/ckaznocha/intrange v0.3.1 // indirect
-	github.com/cloudflare/circl v1.6.1 // indirect
 	github.com/cloudwego/base64x v0.1.6 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.6 // indirect
 	github.com/curioswitch/go-reassign v0.3.0 // indirect
@@ -115,6 +111,7 @@ require (
 	github.com/firefart/nonamedreturns v1.0.6 // indirect
 	github.com/fzipp/gocyclo v0.6.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.8 // indirect
+	github.com/getkin/kin-openapi v0.132.0 // indirect
 	github.com/ghostiam/protogetter v0.3.15 // indirect
 	github.com/gin-contrib/sse v1.1.0 // indirect
 	github.com/go-critic/go-critic v0.13.0 // indirect
@@ -260,6 +257,7 @@ require (
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	github.com/sourcegraph/go-diff v0.7.0 // indirect
 	github.com/speakeasy-api/jsonpath v0.6.2 // indirect
+	github.com/speakeasy-api/openapi-overlay v0.10.3 // indirect
 	github.com/ssgreg/nlreturn/v2 v2.2.1 // indirect
 	github.com/stbenjam/no-sprintf-host-port v0.2.0 // indirect
 	github.com/stoewer/go-strcase v1.2.0 // indirect
@@ -415,7 +413,6 @@ require (
 	github.com/dustin/go-humanize v1.0.1
 	github.com/emicklei/go-restful/v3 v3.12.2
 	github.com/fork2fix/go-plist v0.0.0-20181126021357-36960be5e636
-	github.com/getkin/kin-openapi v0.132.0
 	github.com/getsentry/sentry-go v0.35.0
 	github.com/gin-contrib/cors v1.7.5
 	github.com/gin-contrib/sessions v1.0.3
@@ -428,7 +425,6 @@ require (
 	github.com/go-redsync/redsync/v4 v4.13.0
 	github.com/go-resty/resty/v2 v2.16.5
 	github.com/go-sql-driver/mysql v1.9.2
-	github.com/go-yaml/yaml v2.1.0+incompatible
 	github.com/go-zookeeper/zk v1.0.4
 	github.com/gofrs/uuid v4.4.0+incompatible
 	github.com/gogf/gf/v2 v2.9.0
@@ -491,7 +487,6 @@ require (
 	github.com/sirupsen/logrus v1.9.3
 	github.com/smartystreets/goconvey v1.8.1
 	github.com/sony/sonyflake v1.2.1
-	github.com/speakeasy-api/openapi-overlay v0.10.3
 	github.com/spf13/cobra v1.9.1
 	github.com/sqids/sqids-go v0.4.1
 	github.com/steinfletcher/apitest v1.5.17
@@ -520,6 +515,8 @@ require (
 	golang.org/x/sync v0.16.0
 	golang.org/x/time v0.12.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
+	gopkg.in/yaml.v2 v2.4.0
+	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/driver/mysql v1.5.7
 	gorm.io/gorm v1.30.1
 	gorm.io/plugin/optimisticlock v1.1.3
@@ -535,6 +532,7 @@ tool (
 	github.com/golangci/golangci-lint/v2/cmd/golangci-lint
 	github.com/google/wire/cmd/wire
 	github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen
+	github.com/speakeasy-api/openapi-overlay
 	github.com/swaggo/swag/cmd/swag
 	github.com/vektra/mockery/v2
 	go.uber.org/mock/mockgen

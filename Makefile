@@ -78,7 +78,7 @@ $(GOFUMPT): $(LOCALBIN)
 	GOBIN=$(LOCALBIN) go install mvdan.cc/gofumpt@latest
 
 install_golangcui-lint:
-	go get -tool github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.3.1
+	go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.3.1
 
 install_gowatch:
 	go install github.com/silenceper/gowatch@latest
@@ -180,7 +180,7 @@ test2file:
 	go test ./... -v -gcflags=all=-l -json > sn_report_test.json
 	go test ./... -gcflags=all=-l -coverprofile=sn_report_covprofile
 	go vet -json ./... 2> sn_report_vet_report.out
-	go tool golangci-lint run --out-format checkstyle ./... > sn_report_report.xml || true
+	golangci-lint run --out-format checkstyle ./... > sn_report_report.xml || true
 	nilaway ./... > sn_report_nilaway.out || true
 
 # test:
@@ -208,7 +208,7 @@ lint: ## Run linter
 	# 这是开发时最常用的模式，适合在本地快速检查代码问题。
 	# 默认情况下，golangci-lint 会一直运行直到完成所有检查（适合本地开发，代码量通常可控）。
 	# --fast：跳过耗时检查（如 unused），加速本地 lint。
-	go tool golangci-lint run ./... || true
+	golangci-lint run ./... || true
 
 lint-ci:
 	# CI/CD 环境使用
@@ -216,10 +216,10 @@ lint-ci:
 	# 这是为了兼容 CI 系统（如 GitHub Actions、GitLab CI）的日志收集机制，避免因彩色输出或特殊格式导致日志解析失败。
 	# 超时能防止因 lint 耗时过长阻塞流水线。
 	# 禁用缓存，确保 CI 中每次都是全新检查。
-	go tool golangci-lint run ./... --no-cache --output.text.path=stdout --timeout=5m
+	golangci-lint run ./... --no-cache --output.text.path=stdout --timeout=5m
 
 fix: ## Fix lint violations
-	go tool golangci-lint run --fix ./... || true
+	golangci-lint run --fix ./... || true
 
 BENCH ?= .
 bench:

@@ -45,7 +45,7 @@ func TestBeginOfDay(t *testing.T) {
 // func BeginOfWeek(t time.Time, beginFrom ...time.Weekday) time.Time
 func TestBeginOfWeek(t *testing.T) {
 	input := time.Date(2023, 1, 8, 18, 50, 10, 100, time.UTC)
-	result := datetime.BeginOfWeek(input)
+	result := datetime.BeginOfWeek(input, time.Monday)
 
 	fmt.Println(result) // 2023-01-08 00:00:00 +0000 UTC
 }
@@ -93,7 +93,7 @@ func TestEndOfDay(t *testing.T) {
 // func EndOfWeek(t time.Time, endWith ...time.Weekday) time.Time
 func TestEndOfWeek(t *testing.T) {
 	input := time.Date(2023, 1, 8, 18, 50, 10, 100, time.UTC)
-	result := datetime.EndOfWeek(input)
+	result := datetime.EndOfWeek(input, time.Sunday)
 
 	fmt.Println(result) // 2023-01-14 23:59:59.999999999 +0000 UTC
 }

@@ -17,10 +17,10 @@ import (
 	"github.com/fengzhongzhu1621/xgo/network/nethttp"
 	"github.com/fengzhongzhu1621/xgo/network/nethttp/staticserver/httpstaticserver"
 	"github.com/fengzhongzhu1621/xgo/str/stringutils"
-	"github.com/go-yaml/yaml"
 	"github.com/goji/httpauth"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"gopkg.in/yaml.v3"
 )
 
 func main() {

@@ -1,9 +1,7 @@
 # https://golangci-lint.run/usage/configuration/
 version: "2"
 linters:
-    #default: all
     default: standard
-    settings:
     exclusions:
         generated: lax
         presets:
@@ -15,6 +13,8 @@ linters:
             - third_party$
             - builtin$
             - examples$
+            - assets$
+            - codegen
 formatters:
     exclusions:
         generated: lax
@@ -22,6 +22,8 @@ formatters:
             - third_party$
             - builtin$
             - examples$
+            - assets$
+            - codegen$
     enable:
         - gci
         - gofmt
