@@ -1,4 +1,4 @@
-package flagutils
+package pflag
 
 import (
 	"github.com/spf13/pflag"

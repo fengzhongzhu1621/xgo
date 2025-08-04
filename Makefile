@@ -78,7 +78,7 @@ $(GOFUMPT): $(LOCALBIN)
 	GOBIN=$(LOCALBIN) go install mvdan.cc/gofumpt@latest
 
 install_golangcui-lint:
-	go get -tool github.com/golangci/golangci-lint/cmd/golangci-lint@v2.3.0
+	go get -tool github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.3.1
 
 install_gowatch:
 	go install github.com/silenceper/gowatch@latest

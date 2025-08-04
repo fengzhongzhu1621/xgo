@@ -1,4 +1,4 @@
-package flagutils
+package pflag
 
 import (
 	"testing"

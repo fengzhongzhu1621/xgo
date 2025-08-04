@@ -1,4 +1,4 @@
-package flagutils
+package pflag
 
 const (
 	// OpenSourceDeployment is the open-source deployment method, do not rely on api gateway
