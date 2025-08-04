@@ -4,7 +4,7 @@ Cross Language AES 256 Encryption Library (Bash, Powershell, C#, Dart, GoLang, J
 
 https://github.com/mervick/aes-everywhere
 https://github.com/mervick/aes-everywhere/blob/master/go/aes256/aes256.go
-
+https://github.com/mervick/aes-bridge-go
 
 # 2. AES-GCM
 AES-GCM（Galois/Counter Mode）是一种使用AES算法的加密模式，它结合了Galois域乘法运算和计数器模式，提供加密、认证和完整性校验（MAC）功能。
