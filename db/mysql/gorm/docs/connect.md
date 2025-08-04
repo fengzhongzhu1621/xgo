@@ -12,9 +12,12 @@ db, err := gorm.Open(mysql.New(mysql.Config{
   SkipInitializeWithVersion: false, // 根据当前 MySQL 版本自动配置
 }), &gorm.Config{})
 ```
-* charset
-* parseTime
-* loc
+
+GORM默认使用UTC时区，需要通过在DSN中设置parseTime=True&loc=Local或parseTime=True&loc=Asia%2FShanghai
+
+* charset: charset=utf8mb4
+* parseTime: parseTime=True
+* loc: loc=Local
 
 
 * DefaultStringSize
