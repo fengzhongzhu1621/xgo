@@ -100,6 +100,7 @@ func TestDegradeFilter(t *testing.T) {
 	cfg.MaxConcurrentCnt = 1
 	cfg.DegradeRate = 0
 	isDegrade = false
+	sema = make(chan struct{}, cfg.MaxConcurrentCnt) // 重置chan
 	sema <- struct{}{}
 	rsp, err = Filter(context.Background(), nil, testHandleFunc)
 	assert.NotNil(t, err)
