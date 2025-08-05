@@ -25,5 +25,25 @@ func TempMkFile(t *testing.T, dir string, prefix string) string {
 		t.Fatalf("failed to create test file: %v", err)
 	}
 	defer f.Close()
+
 	return f.Name()
+}
+
+// CreateTempFile 创建临时文件并写入内容，返回文件路径
+func CreateTempFile(content string) (string, error) {
+	tmpfile, err := os.CreateTemp("", "example")
+	if err != nil {
+		return "", err
+	}
+
+	if _, err := tmpfile.WriteString(content); err != nil {
+		tmpfile.Close()
+		return "", err
+	}
+
+	if err := tmpfile.Close(); err != nil {
+		return "", err
+	}
+
+	return tmpfile.Name(), nil
 }
