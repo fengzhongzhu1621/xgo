@@ -482,6 +482,7 @@ require (
 	github.com/samber/do v1.6.0
 	github.com/samber/lo v1.51.0
 	github.com/segmentio/ksuid v1.0.4
+	github.com/shirou/gopsutil v2.21.11+incompatible
 	github.com/shirou/gopsutil/v4 v4.25.6
 	github.com/shogo82148/androidbinary v1.0.5
 	github.com/sirupsen/logrus v1.9.3

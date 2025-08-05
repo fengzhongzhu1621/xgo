@@ -84,3 +84,12 @@ func getMachineMemoryTotal() (total uint64, err error) {
 
 	return
 }
+
+// GetMemoryStat 获取内存状态
+func GetMemoryStat() float64 {
+	usage, _, _, err := GetDockerMemoryUsageInfos()
+	if err != nil {
+		return 0.0
+	}
+	return usage * 100
+}
