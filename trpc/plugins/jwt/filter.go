@@ -18,14 +18,14 @@ func ServerFilter(opts ...Option) filter.ServerFilter {
 		opt(o)
 	}
 	return func(ctx context.Context, req interface{}, handler filter.ServerHandleFunc) (interface{}, error) {
-		var head = trpcHttp.Head(ctx)
+		head := trpcHttp.Head(ctx)
 		// 非http请求
 		if head == nil {
 			return handler(ctx, req)
 		}
 
 		// 是否跳过OA验证(path白名单)
-		var r = head.Request
+		r := head.Request
 		if r.URL != nil && o.isInExcludePath(r.URL.Path) {
 			return handler(ctx, req)
 		}

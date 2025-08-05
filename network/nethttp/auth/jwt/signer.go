@@ -7,10 +7,8 @@ import (
 	jwt5 "github.com/golang-jwt/jwt/v5"
 )
 
-var (
-	// ErrInvalidToken 非法 token，表示 Token 验证失败时返回的错误
-	ErrInvalidToken = fmt.Errorf("invalid token")
-)
+// ErrInvalidToken 非法 token，表示 Token 验证失败时返回的错误
+var ErrInvalidToken = fmt.Errorf("invalid token")
 
 // Signer 数字签名器接口
 type Signer interface {
@@ -49,9 +47,11 @@ func (t *jwtSign) Sign(custom interface{}) (string, error) {
 	now := time.Now()
 	cl := claims{
 		RegisteredClaims: jwt5.RegisteredClaims{
-			ExpiresAt: jwt5.NewNumericDate(now.Add(t.Expired)), // 当前时间 + 有效期（now.Add(t.Expired)），通过 jwt.At() 转换为 UNIX 时间戳。
-			IssuedAt:  jwt5.NewNumericDate(now),                // 当前时间，表示 Token 的签发时间。
-			Issuer:    t.Issuer,                                // 设置为结构体中的 t.Issuer。
+			ExpiresAt: jwt5.NewNumericDate(
+				now.Add(t.Expired),
+			), // 当前时间 + 有效期（now.Add(t.Expired)），通过 jwt.At() 转换为 UNIX 时间戳。
+			IssuedAt: jwt5.NewNumericDate(now), // 当前时间，表示 Token 的签发时间。
+			Issuer:   t.Issuer,                 // 设置为结构体中的 t.Issuer。
 		},
 		Custom: custom,
 	}
@@ -70,7 +70,6 @@ func (t *jwtSign) Verify(tokenStr string) (interface{}, error) {
 			// 用于提供签名验证的密钥，在这里直接返回结构体中的 t.Secret
 			return t.Secret, nil
 		})
-
 	if err != nil {
 		// 如果解析过程中出错（比如 Token 被篡改、过期等），则直接返回错误
 		return nil, err

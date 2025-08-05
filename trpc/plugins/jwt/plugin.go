@@ -27,13 +27,13 @@ func (p *pluginImp) Setup(name string, configDec plugin.Decoder) error {
 	}
 
 	// 未设置-默认为1小时过期
-	var expired = time.Hour
+	expired := time.Hour
 	if cfg.Expired > 0 {
 		expired = time.Duration(cfg.Expired) * time.Second
 	}
 
 	// slice 转换为 Set
-	var excludePathSet = make(map[string]bool)
+	excludePathSet := make(map[string]bool)
 	for _, s := range cfg.ExcludePaths {
 		excludePathSet[s] = true
 	}

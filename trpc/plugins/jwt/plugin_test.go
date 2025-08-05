@@ -3,10 +3,9 @@ package jwt
 import (
 	"testing"
 
-	"trpc.group/trpc-go/trpc-go"
-
 	"github.com/stretchr/testify/assert"
 	yaml "gopkg.in/yaml.v3"
+	"trpc.group/trpc-go/trpc-go"
 )
 
 const configInfo = `
