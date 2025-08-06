@@ -1,3 +1,5 @@
+# tRPC-Go [degrade] 熔断保护插件
+
 ## degrade 插件使用介绍
 
 * degrade 插件主要功能：
