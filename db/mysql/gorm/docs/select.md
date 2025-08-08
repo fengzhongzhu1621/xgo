@@ -2,6 +2,9 @@
 ## ErrRecordNotFound
 当使用First、Last、Take等方法未找到记录时，GORM会返回ErrRecordNotFound。
 
+Find 操作会返回一个空的 user 对象而不是 nil。这是因为 gorm 库在查询数据库时，即使没有找到匹配的记录，也不会返回 nil，而是返回一个实例化的对象
+并将该对象的主键字段设为零值。
+
 ```go
 if err := db.Where("name = ?", "jinzhu").First(&user).Error; err != nil {
   // 处理错误...
