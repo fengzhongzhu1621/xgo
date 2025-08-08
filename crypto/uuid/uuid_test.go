@@ -72,7 +72,7 @@ func TestMd5(t *testing.T) {
 }
 
 func TestGenerateId(t *testing.T) {
-	actual := GenerateID()
+	actual := GenerateID() // 1754665414697754000PASS
 	s, err := strconv.ParseUint(actual, 10, 64)
 	assert.Equal(t, err, nil)
 	assert.Equal(t, s > 0, true)
@@ -89,7 +89,7 @@ func TestUUIdV3(t *testing.T) {
 
 	// 生成版本3 UUID(基于MD5)
 	u3 := uuid.NewMD5(nsDNS, []byte("example.com"))
-	fmt.Println("版本3 UUID:", u3)
+	fmt.Println("版本3 UUID:", u3) // 9073926b-929f-31c2-abc9-fad77ae3e8eb
 }
 
 // TestUUIdV4 Generate a random UUID of version 4 according to RFC 4122.
@@ -113,7 +113,7 @@ func TestUUIdV4(t *testing.T) {
 	{
 		// 创建版本4 UUID
 		u, _ := gofrsUUID.NewV4()
-		fmt.Println("生成的UUID:", u)
+		fmt.Println("生成的UUID:", u) // 83facc20-a4cc-42a0-a0bc-61c38ed74187
 	}
 }
 
@@ -123,7 +123,12 @@ func TestUUIdV5(t *testing.T) {
 
 	// 生成版本5 UUID(基于SHA-1)
 	u5 := uuid.NewSHA1(nsDNS, []byte("example.com"))
-	fmt.Println("版本5 UUID:", u5)
+	fmt.Println("版本5 UUID:", u5) // cfbff0d1-9375-5685-968c-48ce8b15ae17
+}
+
+func TestUUIdV7(t *testing.T) {
+	id, _ := uuid.NewV7()
+	fmt.Println(id) // 01988a33-4037-7991-ae9a-8ac596da81d1
 }
 
 func TestGoogleParseUUID(t *testing.T) {
