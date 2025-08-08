@@ -1,4 +1,8 @@
 # 排序
+Note:
+* Order必须放在Find前面才会生效
+* Order在First/Last中不生效
+
 ```go
 db.Order("age desc, name").Find(&users)
 // SELECT * FROM users ORDER BY age desc, name;

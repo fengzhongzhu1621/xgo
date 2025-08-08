@@ -1,4 +1,8 @@
 # Limit & Offset
+
+Note:
+* Limit放在Find前面不生效
+
 ```go
 db.Limit(3).Find(&users)
 // SELECT * FROM users LIMIT 3;
