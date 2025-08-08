@@ -1,7 +1,10 @@
 # 简介
 是一个功能强大且易于使用的内存缓存库，适用于单机应用程序。
-
-github.com/patrickmn/go-cache
+```go
+import (
+    gocache "github.com/patrickmn/go-cache"
+)
+```
 
 # 特性
 * 过期时间与自动清理：每个缓存项可以设置独立的过期时间，支持永久存储（NoExpiration）和默认过期时间（DefaultExpiration）。库内部通过定时任务自动清理过期数据，避免内存泄漏。

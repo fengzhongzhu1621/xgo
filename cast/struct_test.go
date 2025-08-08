@@ -2,16 +2,57 @@ package cast
 
 import (
 	"fmt"
+	"log"
 	"testing"
 
 	"github.com/duke-git/lancet/v2/maputil"
 	"github.com/gogf/gf/v2/util/gconv"
+	"github.com/mitchellh/mapstructure"
 )
 
 // Converts map to struct
 // func MapTo(src any, dst any) error
 // func MapToStruct(m map[string]any, structObj any) error
 func TestMapToStruct(t *testing.T) {
+	{
+		type Address struct {
+			Street  string `mapstructure:"street"`
+			City    string `mapstructure:"city"`
+			Zipcode string `mapstructure:"zipcode"`
+		}
+
+		type User struct {
+			ID      string   `mapstructure:"id"`
+			Name    string   `mapstructure:"name"`
+			Email   string   `mapstructure:"email"`
+			Age     int      `mapstructure:"age"`
+			Active  bool     `mapstructure:"active"`
+			Address Address  `mapstructure:"address"`
+			Roles   []string `mapstructure:"roles"`
+		}
+
+		data := map[string]interface{}{
+			"id":     "12345",
+			"name":   "李四",
+			"email":  "lisi@example.com",
+			"age":    25,
+			"active": false,
+			"address": map[string]interface{}{
+				"street":  "长安街",
+				"city":    "北京",
+				"zipcode": "100000",
+			},
+			"roles": []interface{}{"admin", "editor"},
+		}
+
+		var user User
+		err := mapstructure.Decode(data, &user)
+		if err != nil {
+			log.Fatalf("无法解码数据: %v", err)
+		}
+
+		fmt.Printf("用户信息: %+v\n", user)
+	}
 	{
 		type (
 			Address struct {
