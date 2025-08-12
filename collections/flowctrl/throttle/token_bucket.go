@@ -43,7 +43,7 @@ func NewTokenBucket(maxTokens, tokenRatio float64) (*TokenBucket, error) {
 		tokens:     math.Float64bits(maxTokens), // // 初始化为满桶
 		maxTokens:  maxTokens,
 		threshold:  maxTokens / 2, // 动态计算的阈值（默认半满），用于快速判断是否允许请求，避免频繁计算
-		tokenRatio: tokenRatio,
+		tokenRatio: tokenRatio,    // 成功请求时的令牌奖励比例
 	}, nil
 }
 
