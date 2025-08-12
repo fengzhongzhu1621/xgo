@@ -56,10 +56,14 @@ func ServerFilter(opts ...Option) filter.ServerFilter {
 
 		parsedOriginHost := ""
 		if referer != "" {
-			if !(strings.HasPrefix(referer, refererPrefixHTTP) ||
-				strings.HasPrefix(referer, refererPrefixHTTPS)) {
-				return nil, DefRefererErrorFunc(ctx, referer, errs.NewFrameError(errs.RetServerAuthFail,
-					fmt.Sprintf("referer %s prefix err !", referer)))
+			if !strings.HasPrefix(referer, refererPrefixHTTP) &&
+				!strings.HasPrefix(referer, refererPrefixHTTPS) {
+				return nil, DefRefererErrorFunc(
+					ctx,
+					referer,
+					errs.NewFrameError(errs.RetServerAuthFail,
+						fmt.Sprintf("referer %s prefix err !", referer)),
+				)
 			}
 
 			parsedOriginObj, err := url.Parse(referer)

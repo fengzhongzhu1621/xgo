@@ -22,10 +22,18 @@ func TestGetDockerMemoryUsageInfos(t *testing.T) {
 				return
 			}
 			if gotUsage <= tt.wantUsage {
-				t.Errorf("GetDockerMemoryUsageInfos() gotUsage = %v, want %v", gotUsage, tt.wantUsage)
+				t.Errorf(
+					"GetDockerMemoryUsageInfos() gotUsage = %v, want %v",
+					gotUsage,
+					tt.wantUsage,
+				)
 			}
 			if gotTotal <= tt.wantTotal {
-				t.Errorf("GetDockerMemoryUsageInfos() gotTotal = %v, want %v", gotTotal, tt.wantTotal)
+				t.Errorf(
+					"GetDockerMemoryUsageInfos() gotTotal = %v, want %v",
+					gotTotal,
+					tt.wantTotal,
+				)
 			}
 			if gotRss <= tt.wantRss {
 				t.Errorf("GetDockerMemoryUsageInfos() gotRss = %v, want %v", gotRss, tt.wantRss)

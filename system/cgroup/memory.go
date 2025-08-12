@@ -17,9 +17,7 @@ const (
 	procMemFile = "/proc/meminfo"
 )
 
-var (
-	machineMemoryTotal, _ = getMachineMemoryTotal()
-)
+var machineMemoryTotal, _ = getMachineMemoryTotal()
 
 // GetDockerMemoryUsageInfos 获取容器的内存使用相关信息
 func GetDockerMemoryUsageInfos() (usage float64, total, rss uint64, err error) {

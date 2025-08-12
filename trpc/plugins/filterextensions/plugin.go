@@ -12,11 +12,15 @@ const (
 	MethodFilters = "method_filters"
 )
 
-type methodClientFilters map[string][]filter.ClientFilter
-type methodServerFilters map[string][]filter.ServerFilter
+type (
+	methodClientFilters map[string][]filter.ClientFilter
+	methodServerFilters map[string][]filter.ServerFilter
+)
 
-type serviceMethodClientFilters map[string]map[string][]filter.ClientFilter
-type serviceMethodServerFilters map[string]map[string][]filter.ServerFilter
+type (
+	serviceMethodClientFilters map[string]map[string][]filter.ClientFilter
+	serviceMethodServerFilters map[string]map[string][]filter.ServerFilter
+)
 
 type serviceMethodFiltersPlugin struct {
 	client serviceMethodClientFilters

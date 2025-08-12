@@ -27,16 +27,19 @@ func (tb *TokenBucket) Allow() bool {
 	tb.mu.Lock()
 	defer tb.mu.Unlock()
 
+	// 计算时间间隔
 	now := time.Now()
 	elapsed := now.Sub(tb.lastTime)
 
-	// 计算可用令牌数
+	// 计算时间间隔内生成的可用令牌数
 	tb.tokens += int(elapsed / tb.rate)
 	if tb.tokens > tb.capacity {
 		tb.tokens = tb.capacity
 	}
 	tb.lastTime = now
 
+	// 申请一个令牌
+	// 流出速度不确定，一旦有突增的流量，令牌桶里已有的令牌可以短暂的应对突发流量
 	if tb.tokens > 0 {
 		tb.tokens--
 		return true
@@ -72,6 +75,7 @@ func (tb *TokenBucket) AllowN(n int) bool {
 	tb.lastTime = now
 
 	// 检查是否有足够的令牌
+	// 申请 n 个令牌
 	if tb.tokens >= n {
 		tb.tokens -= n
 		return true

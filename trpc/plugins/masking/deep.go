@@ -19,7 +19,6 @@ func DeepCheck(src interface{}) {
 
 // checkRecursive 调用masking插件导出的脱敏方法
 func checkRecursive(original reflect.Value) {
-
 	// 判断值的类型的枚举
 	switch original.Kind() {
 	case reflect.Ptr:

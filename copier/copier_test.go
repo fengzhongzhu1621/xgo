@@ -127,7 +127,8 @@ func TestCopySameStructWithPointerField(t *testing.T) {
 
 func checkEmployee2(employee Employee, user *User, t *testing.T, testCase string) {
 	if user == nil {
-		if employee.Name != "" || employee.Nickname != nil || employee.Birthday != nil || employee.Age != 0 ||
+		if employee.Name != "" || employee.Nickname != nil || employee.Birthday != nil ||
+			employee.Age != 0 ||
 			employee.DoubleAge != 0 ||
 			employee.FakeAge != 0 ||
 			employee.SuperRule != "" ||

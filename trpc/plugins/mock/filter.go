@@ -42,7 +42,10 @@ func ClientFilter(opts ...Option) filter.ClientFilter {
 				// 模拟自定义超时
 				select {
 				case <-ctx.Done():
-					return errs.NewFrameError(errs.RetClientTimeout, "mock filter: timeout during delay mock")
+					return errs.NewFrameError(
+						errs.RetClientTimeout,
+						"mock filter: timeout during delay mock",
+					)
 				case <-time.After(mock.delay):
 				}
 			}
@@ -55,7 +58,10 @@ func ClientFilter(opts ...Option) filter.ClientFilter {
 			// 模拟返回成功的body
 			if mock.Body != "" {
 				if err := codec.Unmarshal(mock.Serialization, mock.data, rsp); err != nil {
-					return errs.NewFrameError(errs.RetClientDecodeFail, "mock filter Unmarshal: "+err.Error())
+					return errs.NewFrameError(
+						errs.RetClientDecodeFail,
+						"mock filter Unmarshal: "+err.Error(),
+					)
 				}
 				return nil
 			}

@@ -13,8 +13,7 @@ const (
 )
 
 // MaskingPlugin masking trpc 插件实现
-type MaskingPlugin struct {
-}
+type MaskingPlugin struct{}
 
 // Type masking trpc插件类型
 func (p *MaskingPlugin) Type() string {
@@ -23,7 +22,6 @@ func (p *MaskingPlugin) Type() string {
 
 // Setup masking实例初始化
 func (p *MaskingPlugin) Setup(_ string, configDec plugin.Decoder) error {
-
 	// 配置解析
 	if configDec == nil {
 		return errors.New("masking decoder empty")

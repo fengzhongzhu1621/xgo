@@ -1,8 +1,6 @@
 package degrade
 
-var (
-	cfg Config
-)
+var cfg Config
 
 // Config 熔断配置结构体声明
 type Config struct {

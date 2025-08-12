@@ -43,5 +43,4 @@ func newServerIntercept(
 		}
 		return handler(ctx, req)
 	}
-
 }

@@ -12,12 +12,9 @@ const (
 	pluginName = "hystrix"
 )
 
-var (
-	cfg map[string]hystrix.CommandConfig
-)
+var cfg map[string]hystrix.CommandConfig
 
-type hystrixPlugin struct {
-}
+type hystrixPlugin struct{}
 
 // Type ...
 func (p *hystrixPlugin) Type() string {
