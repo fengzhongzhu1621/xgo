@@ -329,6 +329,12 @@ type APIUser struct {
 // 在查询时，GORM 会自动选择 `id `, `name` 字段
 db.Model(&User{}).Limit(10).Find(&APIUser{})
 // SQL: SELECT `id`, `name` FROM `users` LIMIT 10
+
+
+var ages []int
+// 下列两条查询SQL是等价的
+db.Model(&User{}).Pluck("age", &ages)
+db.Model(&User{}).Select("age").Find(&ages)
 ```
 
 # 聚合
