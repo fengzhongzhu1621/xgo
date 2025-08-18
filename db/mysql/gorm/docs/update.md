@@ -35,7 +35,7 @@ db.Model(&user).Where("active = ?", true).Update("name", "hello")
 ```
 
 Note: Updates 方法支持 struct 和 map[string]interface{} 参数。当使用 struct 更新时，默认情况下GORM 只会更新非零值的字段
-注意 使用 struct 更新时, GORM 将只更新非零值字段。 你可能想用 map 来更新属性，或者使用 Select 声明字段来更新
+注意 使用 struct 更新时, GORM 将只更新非零值字段。 应该使用Select + Update语句进行特定字段更新或者使用map[string]interface{} kv对结构进行更新。
 ```go
 // 根据 `struct` 更新属性，只会更新非零值的字段（Active不更新）
 db.Model(&user).Updates(User{Name: "hello", Age: 18, Active: false})
