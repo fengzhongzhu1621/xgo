@@ -29,8 +29,8 @@ type linearBackoffs struct {
 	bfs []time.Duration // 存储线性递增的退避时间序列
 }
 
-// newLinearBackoffs create a new linear backoff. Empty bfs will cause an error.
-func newLinearBackoffs(bfs ...time.Duration) (*linearBackoffs, error) {
+// NewLinearBackoffs create a new linear backoff. Empty bfs will cause an error.
+func NewLinearBackoffs(bfs ...time.Duration) (*linearBackoffs, error) {
 	if len(bfs) == 0 {
 		return nil, errors.New("linear backoff list must not be empty")
 	}
@@ -38,7 +38,7 @@ func newLinearBackoffs(bfs ...time.Duration) (*linearBackoffs, error) {
 }
 
 // backoff is randomly distributed in [0, bfs[min(len(bfs)-1, attempt)]].
-func (bf *linearBackoffs) backoff(attempt int) (delay time.Duration) {
+func (bf *linearBackoffs) Backoff(attempt int) (delay time.Duration) {
 	defer func() {
 		// 对最终计算的 delay 乘以一个 [0, 1) 的随机数，使实际延迟时间在 [0, delay) 之间均匀分布。这避免了多个客户端同时重试导致的“惊群效应”
 		delay = time.Duration(rand.Float64() * float64(delay))
