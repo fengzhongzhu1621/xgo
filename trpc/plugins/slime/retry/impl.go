@@ -20,22 +20,19 @@ var TimeoutErr = errs.NewFrameError(errs.RetClientTimeout, "request timeout")
 // impl contains some useful fields to implement retry request.
 // 实现了 IStat 接口
 type impl struct {
-	*ThrottledRetry
+	*ThrottledRetry                         // 继承限流重试基类（提供限流逻辑）
+	ctx             context.Context         // 请求上下文（支持超时/取消）
+	req             interface{}             // 原始请求对象
+	rsp             interface{}             // 最终响应对象
+	err             error                   // 最终错误
+	handler         filter.ClientHandleFunc // TRPC客户端处理函数
 
-	ctx     context.Context
-	req     interface{}
-	rsp     interface{}
-	err     error
-	handler filter.ClientHandleFunc
-
-	cost      time.Duration
-	throttled bool
-	frozen    bool
-	attempts  []*attempt
-
-	timer *time.Timer
-
-	log ILogger
+	cost      time.Duration // 总耗时
+	throttled bool          // 是否被限流
+	frozen    bool          // 是否终止重试（如达到最大尝试次数）
+	attempts  []*attempt    // 所有尝试记录
+	timer     *time.Timer   // 控制重试间隔的定时器
+	log       ILogger       // 日志接口
 }
 
 // newAttempt creates a new attempt.
@@ -43,6 +40,7 @@ type impl struct {
 // The msg and rsp in impl are copied to attempt.
 // newAttempt freeze impl if all attempts has been drained or throttle check is failed.
 func (impl *impl) newAttempt() (*attempt, error) {
+	// 复制上下文和消息
 	ctx, msg := codec.WithNewMessage(impl.ctx)
 	if err := cpmsg.CopyMsg(msg, codec.Message(impl.ctx)); err != nil {
 		return nil, fmt.Errorf("failed to create new attempt: %w", err)
@@ -51,11 +49,10 @@ func (impl *impl) newAttempt() (*attempt, error) {
 	a := attempt{
 		impl:    impl,
 		ctx:     ctx,
-		rsp:     reflectutils.New(impl.rsp),
-		attempt: len(impl.attempts) + 1,
+		rsp:     reflectutils.New(impl.rsp), // 深拷贝响应对象
+		attempt: len(impl.attempts) + 1,     // 当前尝试序号
 	}
-
-	impl.attempts = append(impl.attempts, &a)
+	impl.attempts = append(impl.attempts, &a) // 记录尝试
 
 	impl.log.Printf("start %dth attempt", a.attempt)
 

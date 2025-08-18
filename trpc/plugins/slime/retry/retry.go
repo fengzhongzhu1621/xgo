@@ -104,6 +104,7 @@ func (r *Retry) NewThrottledRetry(throttle throttle.Throttler) *ThrottledRetry {
 // Invoke calls Invoke of ThrottledRetry with a Noop throttle.
 // 执行子类的默认操作
 func (r *Retry) Invoke(ctx context.Context, req, rsp interface{}, f filter.ClientHandleFunc) error {
+	// 默认不支持限频
 	return r.NewThrottledRetry(throttle.NewNoop()).
 		Invoke(ctx, req, rsp, f)
 }
