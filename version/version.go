@@ -6,6 +6,13 @@ import (
 	"runtime"
 )
 
+const (
+	MajorVersion  = 0
+	MinorVersion  = 0
+	PatchVersion  = 1
+	VersionSuffix = "-dev" // -alpha -alpha.1 -beta -rc -rc.1
+)
+
 // Version is the current package version.
 var (
 	// AppVersion 版本号
@@ -39,6 +46,11 @@ func Version() string {
 		"\nVersion  : %s\nGitCommit: %s\nBuildTime: %s\nTemplateVersion: %s\nGoVersion: %s\n",
 		AppVersion, GitCommit, BuildTime, TemplateVersion, GoVersion,
 	)
+}
+
+// Version returns the version of trpc.
+func Version2() string {
+	return fmt.Sprintf("v%d.%d.%d%s", MajorVersion, MinorVersion, PatchVersion, VersionSuffix)
 }
 
 // /////////////////////////////////////////////////////////////////////////
