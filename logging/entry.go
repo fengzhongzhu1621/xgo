@@ -248,7 +248,7 @@ func (entry *Entry) Dup() *Entry {
 	}
 }
 
-func (entry *Entry) getBufferPool() pool.BufferPool {
+func (entry *Entry) getBufferPool() pool.IBufferPool {
 	if entry.Logger.BufferPool != nil {
 		return entry.Logger.BufferPool
 	}

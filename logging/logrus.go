@@ -126,7 +126,7 @@ type LogrusLogger struct {
 	ExitFunc exitFunc
 	// The buffer pool used to format the log. If it is nil, the default global
 	// buffer pool will be used.
-	BufferPool pool.BufferPool
+	BufferPool pool.IBufferPool
 }
 
 // Creates a new logger. Configuration should be set by changing `Formatter`,

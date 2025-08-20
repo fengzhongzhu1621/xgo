@@ -5,14 +5,14 @@ import (
 	"sync"
 )
 
-var DefaultBufferPool BufferPool
+var DefaultBufferPool IBufferPool
 
-type BufferPool interface {
+type IBufferPool interface {
 	Put(*bytes.Buffer)
 	Get() *bytes.Buffer
 }
 
-var _ BufferPool = (*defaultPool)(nil)
+var _ IBufferPool = (*defaultPool)(nil)
 
 type defaultPool struct {
 	pool *sync.Pool
@@ -28,7 +28,7 @@ func (p *defaultPool) Get() *bytes.Buffer {
 
 // SetBufferPool allows to replace the default logrus buffer pool
 // to better meets the specific needs of an application.
-func SetBufferPool(bp BufferPool) {
+func SetBufferPool(bp IBufferPool) {
 	DefaultBufferPool = bp
 }
 
