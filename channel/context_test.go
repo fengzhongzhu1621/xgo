@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/magiconair/properties/assert"
+	"github.com/stretchr/testify/require"
 )
 
 // longRunningOperation 子协程，接收到截止信号后，停止运行。
@@ -175,5 +176,35 @@ func TestGetPriority(t *testing.T) {
 		fmt.Println("中优先级")
 	default:
 		fmt.Println("低优先级")
+	}
+}
+
+func TestWithValues(t *testing.T) {
+	type testKey struct{}
+	testValue := "value"
+	ctx := context.WithValue(context.TODO(), testKey{}, testValue)
+
+	ctx1 := NewContextWithValues(context.TODO(), ctx)
+	require.NotNil(t, ctx1.Value(testKey{}))
+	type notExist struct{}
+	require.Nil(t, ctx1.Value(notExist{}))
+
+	// 原始 context（带超时）
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	// 值优先的 context（带键值对）
+	valuesCtx := context.WithValue(context.Background(), "key1", "value1")
+
+	// 合并后的 context
+	mergedCtx := NewContextWithValues(ctx, valuesCtx)
+
+	// 优先从 valuesCtx 获取值
+	assert.Equal(t, "value1", mergedCtx.Value("key1"))
+
+	// 超时行为仍由 ctx 控制
+	select {
+	case <-mergedCtx.Done():
+		fmt.Println("timed out")
 	}
 }
