@@ -5,6 +5,8 @@ type IHistogram interface {
 	Observe(name string, v float64, tagPairs ...string)
 }
 
+var _ IHistogram = (*histogramWrapper)(nil)
+
 type histogramWrapper struct {
 	IHistogram
 	tagPairs []string

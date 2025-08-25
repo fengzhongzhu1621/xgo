@@ -5,6 +5,8 @@ type ICounter interface {
 	Inc(name string, cnt int, tagPairs ...string)
 }
 
+var _ ICounter = (*counterWrapper)(nil)
+
 type counterWrapper struct {
 	ICounter
 	tagPairs []string

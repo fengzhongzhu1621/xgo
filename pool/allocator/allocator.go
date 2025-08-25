@@ -20,6 +20,8 @@ const maxPowerToRoundUpInt = 63
 // 使用NewClassAllocator初始化，提供线程安全的字节池
 var defaultAllocator = NewClassAllocator()
 
+var _ IAllocator = (*ClassAllocator)(nil)
+
 // NewClassAllocator 创建一个新的ClassAllocator实例
 //
 // returns: 初始化好的ClassAllocator指针
@@ -74,7 +76,7 @@ func (a *ClassAllocator) Malloc(size int) ([]byte, interface{}) {
 	// 从对应Pool获取或创建字节切片
 	v := a.pools[power].Get()
 
-	// 返回切片(可能比实际需要的大)和原始对象
+	// 返回切片和原始对象（可能比实际需要的大）
 	return v.([]byte)[:size], v
 }
 
