@@ -1,0 +1,4 @@
+trpc.app.Greeter
+trpc.examples.helloworld.Greeter
+helloworld
+trpc.log*

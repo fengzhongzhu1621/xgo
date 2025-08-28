@@ -1,0 +1,18 @@
+# 项目根目录执行下面的命令
+# docker build -t fengzhongzhu1621/gohttpserver:latest -f docker/Dockerfile.Gohttpserver .
+# docker run  -p 8000:8000 -v $HOME/code/go/xgo/assets:/app/public fengzhongzhu1621/gohttpserver:latest
+FROM golang:1.22.5
+WORKDIR /app/gohttpserver/
+COPY . /app/gohttpserver/
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags '-X main.VERSION=docker' -o run_gohttpserver gohttpserver/main.go
+
+FROM debian:stable
+WORKDIR /app
+RUN mkdir -p /app/public
+RUN apt-get update && apt-get install -y ca-certificates
+VOLUME /app/public
+ADD assets ./assets
+COPY --from=0 /app/gohttpserver/run_gohttpserver .
+EXPOSE 8000
+ENTRYPOINT [ "/app/run_gohttpserver", "--root=/app/public" ]
+CMD []

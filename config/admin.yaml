@@ -1,0 +1,21 @@
+server:
+  port: "8080"
+
+database:
+  default:
+    host: "127.0.0.1"
+    port: "3306"
+    user: "root"
+    pwd: ""
+    name: "xgo"
+    driver: "mysql"
+
+url_prefix: "admin"
+store:
+  path: "./uploads"
+  prefix: "uploads"
+language: "zh-CN"
+debug: true
+
+session:
+  provider: memory

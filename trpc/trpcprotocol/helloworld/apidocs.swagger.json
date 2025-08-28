@@ -1,0 +1,454 @@
+{
+ "swagger": "2.0",
+ "info": {
+  "title": "helloworld",
+  "description": "The api document of helloworld.proto",
+  "version": "2.0"
+ },
+ "consumes": [
+  "application/json"
+ ],
+ "produces": [
+  "application/json"
+ ],
+ "paths": {
+  "/cgi-bin/hello": {
+   "post": {
+    "summary": "",
+    "operationId": "SayHello",
+    "responses": {
+     "200": {
+      "description": "HelloReply",
+      "schema": {
+       "$ref": "#/definitions/trpc.examples.helloworld.HelloReply"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "msg",
+      "in": "query",
+      "required": false,
+      "type": "string"
+     }
+    ],
+    "tags": [
+     "greeterhttp.trpc"
+    ]
+   }
+  },
+  "/trpc.examples.helloworld.Greeter/SayHello": {
+   "post": {
+    "summary": "",
+    "operationId": "SayHello2",
+    "responses": {
+     "200": {
+      "description": "HelloReply",
+      "schema": {
+       "$ref": "#/definitions/trpc.examples.helloworld.HelloReply"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "msg",
+      "in": "query",
+      "required": false,
+      "type": "string"
+     }
+    ],
+    "tags": [
+     "greeter.trpc"
+    ]
+   }
+  },
+  "/trpc.examples.helloworld.GreeterHttp/SayHello": {
+   "post": {
+    "summary": "",
+    "operationId": "SayHello3",
+    "responses": {
+     "200": {
+      "description": "HelloReply",
+      "schema": {
+       "$ref": "#/definitions/trpc.examples.helloworld.HelloReply"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "msg",
+      "in": "query",
+      "required": false,
+      "type": "string"
+     }
+    ],
+    "tags": [
+     "greeterhttp.trpc"
+    ]
+   }
+  },
+  "/trpc.examples.helloworld.Messaging1Restful/GetMessage": {
+   "post": {
+    "summary": "",
+    "operationId": "GetMessage",
+    "responses": {
+     "200": {
+      "description": "Message1",
+      "schema": {
+       "$ref": "#/definitions/trpc.examples.helloworld.Message1"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "name",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "Mapped to URL path."
+     }
+    ],
+    "tags": [
+     "messaging1restful.trpc"
+    ]
+   }
+  },
+  "/trpc.examples.helloworld.Messaging2Restful/GetMessage": {
+   "post": {
+    "summary": "",
+    "operationId": "GetMessage2",
+    "responses": {
+     "200": {
+      "description": "Message2",
+      "schema": {
+       "$ref": "#/definitions/trpc.examples.helloworld.Message2"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "message_id",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "Mapped to URL path."
+     },
+     {
+      "name": "revision",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "format": "int64",
+      "description": "Mapped to URL query parameter `revision`."
+     },
+     {
+      "name": "sub.subfield",
+      "in": "query",
+      "required": false,
+      "type": "string"
+     }
+    ],
+    "tags": [
+     "messaging2restful.trpc"
+    ]
+   }
+  },
+  "/trpc.examples.helloworld.Messaging3Restful/UpdateMessage": {
+   "post": {
+    "summary": "",
+    "operationId": "UpdateMessage",
+    "responses": {
+     "200": {
+      "description": "Message3",
+      "schema": {
+       "$ref": "#/definitions/trpc.examples.helloworld.Message3"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "message.text",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "The resource content."
+     },
+     {
+      "name": "message_id",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "mapped to the URL"
+     }
+    ],
+    "tags": [
+     "messaging3restful.trpc"
+    ]
+   }
+  },
+  "/trpc.examples.helloworld.Messaging4Restful/UpdateMessage": {
+   "post": {
+    "summary": "",
+    "operationId": "UpdateMessage2",
+    "responses": {
+     "200": {
+      "description": "Message4",
+      "schema": {
+       "$ref": "#/definitions/trpc.examples.helloworld.Message4"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "message_id",
+      "in": "query",
+      "required": false,
+      "type": "string"
+     },
+     {
+      "name": "text",
+      "in": "query",
+      "required": false,
+      "type": "string"
+     }
+    ],
+    "tags": [
+     "messaging4restful.trpc"
+    ]
+   }
+  },
+  "/trpc.examples.helloworld.Messaging5Restful/GetMessage": {
+   "post": {
+    "summary": "",
+    "operationId": "GetMessage3",
+    "responses": {
+     "200": {
+      "description": "Message5",
+      "schema": {
+       "$ref": "#/definitions/trpc.examples.helloworld.Message5"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "message_id",
+      "in": "query",
+      "required": false,
+      "type": "string"
+     },
+     {
+      "name": "user_id",
+      "in": "query",
+      "required": false,
+      "type": "string"
+     }
+    ],
+    "tags": [
+     "messaging5restful.trpc"
+    ]
+   }
+  },
+  "/v1/messages/*": {
+   "get": {
+    "summary": "",
+    "operationId": "GetMessage4",
+    "responses": {
+     "200": {
+      "description": "Message1",
+      "schema": {
+       "$ref": "#/definitions/trpc.examples.helloworld.Message1"
+      }
+     }
+    },
+    "parameters": [],
+    "tags": [
+     "messaging1restful.restful"
+    ]
+   }
+  },
+  "/v1/messages/{message_id}": {
+   "get": {
+    "summary": "",
+    "operationId": "GetMessage5",
+    "responses": {
+     "200": {
+      "description": "Message5",
+      "schema": {
+       "$ref": "#/definitions/trpc.examples.helloworld.Message5"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "message_id",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "default": ""
+     },
+     {
+      "name": "user_id",
+      "in": "query",
+      "required": false,
+      "type": "string"
+     }
+    ],
+    "tags": [
+     "messaging5restful.restful"
+    ]
+   },
+   "post": {
+    "summary": "",
+    "operationId": "UpdateMessage3",
+    "responses": {
+     "200": {
+      "description": "Message4",
+      "schema": {
+       "$ref": "#/definitions/trpc.examples.helloworld.Message4"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "message_id",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "default": ""
+     },
+     {
+      "name": "requestBody",
+      "in": "body",
+      "required": false,
+      "schema": {
+       "$ref": "#/definitions/trpc.examples.helloworld.Message4.19f3defcef9e852f7f0d7e619eb72fb9"
+      }
+     }
+    ],
+    "tags": [
+     "messaging4restful.restful"
+    ]
+   }
+  },
+  "/v1/users/{user_id}/messages/{message_id}": {
+   "get": {
+    "summary": "",
+    "operationId": "GetMessage6",
+    "responses": {
+     "200": {
+      "description": "Message5",
+      "schema": {
+       "$ref": "#/definitions/trpc.examples.helloworld.Message5"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "user_id",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "default": ""
+     },
+     {
+      "name": "message_id",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "default": ""
+     }
+    ],
+    "tags": [
+     "messaging5restful.restful"
+    ]
+   }
+  }
+ },
+ "definitions": {
+  "trpc.examples.helloworld.HelloReply": {
+   "type": "object",
+   "properties": {
+    "msg": {
+     "title": "msg",
+     "type": "string"
+    }
+   },
+   "title": "trpc.examples.helloworld.HelloReply",
+   "description": "HelloReply"
+  },
+  "trpc.examples.helloworld.Message1": {
+   "type": "object",
+   "properties": {
+    "text": {
+     "title": "text",
+     "type": "string",
+     "description": "The resource content."
+    }
+   },
+   "title": "trpc.examples.helloworld.Message1",
+   "description": "Message1"
+  },
+  "trpc.examples.helloworld.Message2": {
+   "type": "object",
+   "properties": {
+    "text": {
+     "title": "text",
+     "type": "string",
+     "description": "The resource content."
+    }
+   },
+   "title": "trpc.examples.helloworld.Message2",
+   "description": "Message2"
+  },
+  "trpc.examples.helloworld.Message3": {
+   "type": "object",
+   "properties": {
+    "text": {
+     "title": "text",
+     "type": "string",
+     "description": "The resource content."
+    }
+   },
+   "title": "trpc.examples.helloworld.Message3",
+   "description": "Message3"
+  },
+  "trpc.examples.helloworld.Message4": {
+   "type": "object",
+   "properties": {
+    "message_id": {
+     "title": "message_id",
+     "type": "string"
+    },
+    "text": {
+     "title": "text",
+     "type": "string"
+    }
+   },
+   "title": "trpc.examples.helloworld.Message4",
+   "description": "Message4"
+  },
+  "trpc.examples.helloworld.Message4.19f3defcef9e852f7f0d7e619eb72fb9": {
+   "type": "object",
+   "properties": {
+    "text": {
+     "title": "text",
+     "type": "string"
+    }
+   },
+   "title": "trpc.examples.helloworld.Message4.19f3defcef9e852f7f0d7e619eb72fb9",
+   "description": "Message4"
+  },
+  "trpc.examples.helloworld.Message5": {
+   "type": "object",
+   "properties": {
+    "text": {
+     "title": "text",
+     "type": "string",
+     "description": "The resource content."
+    }
+   },
+   "title": "trpc.examples.helloworld.Message5",
+   "description": "Message5"
+  }
+ }
+}

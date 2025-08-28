@@ -1,0 +1,93 @@
+package cgroup
+
+import (
+	"bufio"
+	"errors"
+	"os"
+	"strconv"
+	"strings"
+
+	"github.com/fengzhongzhu1621/xgo/file"
+)
+
+// Doc: https://www.kernel.org/doc/Documentation/cgroup-v1/memory.txt
+
+const (
+	memFile     = "/sys/fs/cgroup/memory/memory.stat"
+	procMemFile = "/proc/meminfo"
+)
+
+var machineMemoryTotal, _ = getMachineMemoryTotal()
+
+// GetDockerMemoryUsageInfos 获取容器的内存使用相关信息
+func GetDockerMemoryUsageInfos() (usage float64, total, rss uint64, err error) {
+	dockerMemInfo, err := file.ReadMapFromFile(memFile)
+	if err != nil {
+		return usage, total, rss, err
+	}
+
+	quotaMemory, ok := dockerMemInfo["hierarchical_memory_limit"]
+	if !ok {
+		return usage, total, rss, errors.New("Invalid hierarchical_memory_limit")
+	}
+
+	// 宿主机内存大于容器配额内存
+	if machineMemoryTotal > quotaMemory {
+		total = quotaMemory
+	} else {
+		total = machineMemoryTotal
+	}
+
+	rss = dockerMemInfo["total_rss"] + dockerMemInfo["total_mapped_file"]
+
+	usage = float64(rss) / float64(total)
+	return
+}
+
+// getMachineMemoryTotal 获取机器总内存
+// "/proc/meminfo" 数据格式：
+// MemTotal:       197298928 kB
+// MemFree:         4111768 kB
+// MemAvailable:   134355500 kB
+// Buffers:          171064 kB
+// Cached:         102828996 kB
+func getMachineMemoryTotal() (total uint64, err error) {
+	file, err := os.Open(procMemFile)
+	if err != nil {
+		return 0, err
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		items := strings.SplitN(line, " ", 2)
+		if len(items) != 2 {
+			continue
+		}
+		// 解析 MemTotal 部分
+		if items[0] != "MemTotal:" {
+			continue
+		}
+		items[1] = strings.TrimSpace(items[1])
+		value := strings.TrimSuffix(items[1], "kB")
+		value = strings.TrimSpace(value)
+		total, err = strconv.ParseUint(value, 10, 64)
+		total *= 1024
+		if err != nil {
+			return 0, err
+		}
+		break
+	}
+
+	return
+}
+
+// GetMemoryStat 获取内存状态
+func GetMemoryStat() float64 {
+	usage, _, _, err := GetDockerMemoryUsageInfos()
+	if err != nil {
+		return 0.0
+	}
+	return usage * 100
+}

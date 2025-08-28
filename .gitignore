@@ -1,0 +1,70 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.o
+*.a
+*.prof
+*.un~
+*.swp
+
+_obj
+
+# Test binary, built with `go test -c`
+*.test
+_test
+test
+
+# Dependency directories (remove the comment below to include it)
+# vendor/
+*.out
+vendor/*
+!vendor/vendor.json
+coverage.out
+count.out
+profile.out
+tmp.out
+bin/*
+build/*
+dist/
+/Godeps/
+
+# Develop tools
+.idea/
+.vscode/
+.zed/
+.DS_Store
+.envrc
+.coverage.cov
+
+build/coverage.txt
+build/coverage.xml
+log/log.txt
+log.txt
+cpu.pprof
+mem.pprof
+
+# Architecture specific extensions/prefixes
+*.[568vq]
+[568vq].out
+
+*.cgo1.go
+*.cgo2.c
+_cgo_defun.c
+_cgo_gotypes.go
+_cgo_export.*
+
+_testmain.go
+__debug*
+
+run_gohttpserver
+bindata_assetfs.go
+assets_vfsdata.go
+
+*.log
+xgo
+
+# trpc
+.trpc-ui.pid

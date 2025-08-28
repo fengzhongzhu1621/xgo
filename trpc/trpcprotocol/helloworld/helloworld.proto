@@ -1,0 +1,140 @@
+syntax = "proto3";
+
+// trpc.{app}.{server}，以 trpc 为固定前缀，标识这是一个 trpc 服务协议
+// app 是应用名
+// server 是服务进程名
+// 生成的trpc_go.yaml中包含
+//
+// server:  # Server configuration.
+//   app: examples  # Application name for the business.
+//   server: helloworld  # Process server name.
+//   service:  # Services provided by the business, can have multiple.
+//     # 路由标识 trpc.{app}.{server}.{service}
+//     - name: trpc.examples.helloworld.Greeter  # Route name for the service.
+
+package trpc.examples.helloworld;
+option go_package="github.com/fengzhongzhu1621/xgo/trpc/trpcprotocol/helloworld";
+import "trpc/validate/validate.proto";
+import "trpc/proto/trpc_options.proto";
+import "trpc/api/annotations.proto";
+
+service Greeter {
+    rpc SayHello (HelloRequest) returns (HelloReply) {
+        option (trpc.alias) = "/cgi-bin/hello";
+    }
+}
+
+service GreeterHttp {
+    rpc SayHello (HelloRequest) returns (HelloReply) {
+        option (trpc.alias) = "/cgi-bin/hello";
+    }
+}
+
+message HelloRequest {
+    string msg = 1 [(validate.rules).string.min_len = 1];
+}
+
+message HelloReply {
+    string msg = 1;
+}
+
+// message SearchRequest {
+//   string query = 1 [(validate.rules).string = {
+//     pattern:   "([A-Za-z]+) ([A-Za-z]+)*$",
+//     max_bytes: 50,
+//   }];
+//   string email_1= 2 [(validate.rules).string.alphabets = true];
+//   string email_2= 3 [(validate.rules).string.alphanums = true];
+//   string email_3= 4 [(validate.rules).string.lowercase = true];
+// }
+
+// restful
+service Messaging1Restful {
+  rpc GetMessage(GetMessageRequest1) returns (Message1) {
+    option (trpc.api.http) = {
+        get: "/v1/{name=messages/*}"
+    };
+  }
+}
+
+message GetMessageRequest1 {
+  string name = 1; // Mapped to URL path.
+}
+
+message Message1 {
+  string text = 1; // The resource content.
+}
+
+
+service Messaging2Restful {
+  rpc GetMessage(GetMessageRequest2) returns (Message2) {
+    option (trpc.api.http) = {
+        get:"/v1/messages/{message_id}"
+    };
+  }
+}
+message GetMessageRequest2 {
+  message SubMessage {
+    string subfield = 1;
+  }
+  string message_id = 1; // Mapped to URL path.
+  int64 revision = 2;    // Mapped to URL query parameter `revision`.
+  SubMessage sub = 3;    // Mapped to URL query parameter `sub.subfield`.
+}
+
+message Message2 {
+  string text = 1; // The resource content.
+}
+
+service Messaging3Restful {
+  rpc UpdateMessage(UpdateMessageRequest3) returns (Message3) {
+    option (trpc.api.http) = {
+      post: "/v1/messages/{message_id}"
+      body: "message"
+    };
+  }
+}
+
+message UpdateMessageRequest3 {
+  string message_id = 1; // mapped to the URL
+  Message3 message = 2;   // mapped to the body
+}
+
+message Message3 {
+  string text = 1; // The resource content.
+}
+
+
+service Messaging4Restful {
+  rpc UpdateMessage(Message4) returns (Message4) {
+    option (trpc.api.http) = {
+      post: "/v1/messages/{message_id}"
+      body: "*"
+    };
+  }
+}
+
+message Message4 {
+  string message_id = 1;
+  string text = 2;
+}
+
+service Messaging5Restful {
+  rpc GetMessage(GetMessageRequest5) returns (Message5) {
+    option (trpc.api.http) = {
+      get: "/v1/messages/{message_id}"
+      additional_bindings {
+        get: "/v1/users/{user_id}/messages/{message_id}"
+      }
+    };
+  }
+}
+
+message GetMessageRequest5 {
+  string message_id = 1;
+  string user_id = 2;
+}
+
+message Message5 {
+  string text = 1; // The resource content.
+}

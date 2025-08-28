@@ -1,0 +1,83 @@
+MIT License
+
+Copyright (c) 2020 fengzhongzhu1621
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+========================================================================
+BSD 2-Clause licenses
+========================================================================
+The following components are provided under the BSD 2-Clause license.
+See file headers and project links for details.
+The text of each license is also included at licenses/LICENSE-[project].txt.
+
+    (BSD 2 License) websocketd v0.4.1 (https://github.com/joewalnes/websocketd)
+
+========================================================================
+MIT licenses
+========================================================================
+
+The following components are provided under the MIT License. See project link for details.
+The text of each license is also included at licenses/LICENSE-[project].txt.
+
+    (MIT License) strcase v0.2.0 (https://github.com/iancoleman/strcase)
+    (MIT License) go-homedir v1.1.0 (https://github.com/mitchellh/go-homedir)
+    (MIT License) fastrand (https://github.com/valyala/fastrand)
+    (MIT License) async v1.0.0 (https://github.com/rafaeldias/async)
+    (MIT License) cast v1.4.1 (https://github.com/spf13/cast)
+    (MIT License) viper v1.11.0 (https://github.com/spf13/viper)
+    (MIT License) logrus v1.8.1 (https://github.com/sirupsen/logrus)
+    (MIT License) gotenv v1.4.0 (https://github.com/joho/godotenv)
+    (MIT License) email v4.0.0 (https://github.com/jordan-wright/email)
+    (MIT License) dig v1.15.0 (https://github.com/uber-go/dig)
+    (MIT License) message-bus v1.1.5 (https://github.com/vardius/message-bus)
+    (MIT License) watermill v1.2.0-rc.11 (https://github.com/ThreeDotsLabs/watermill)
+    (MIT License) copier v0.3.5 (https://github.com/jinzhu/copier)
+    (MIT License) gin v1.9.1 (https://github.com/gin-gonic/gin)
+    (MIT License) gohttpserver 1.2.0 (https://github.com/codeskyblue/gohttpserver)
+    (MIT License) lancet v2.3.4 (https://github.com/duke-git/lancet/)
+    (MIT License) samber/lo v1.47.0 (https://github.com/samber/lo/)
+    (MIT License) lambda-go main (https://github.com/araujo88/lambda-go)
+    (MIT License) goutil v0.6.18 (https://github.com/gookit/goutil)
+    (MIT License) golang-set v2.7.0 (https://github.com/deckarep/golang-set)
+    (MIT License) bk-cmdb v3.1.1 (https://github.com/TencentBlueKing/bk-cmdb)
+    (MIT License) aes-bridge-go v2.0.0 (https://github.com/mervick/aes-bridge-go)
+
+========================================================================
+BSD 3-Clause licenses
+========================================================================
+The following components are provided under the BSD 3-Clause license. See project links for details.
+The text of each license is also included at licenses/LICENSE-[project].txt.
+
+    (BSD 3 License) go-flags v1.5.0 (https://github.com/jessevdk/go-flags)
+    (BSD 3 License) mergo v0.3.13 (https://github.com/imdario/mergo)
+    (BSD 3 License) go-cmp v0.5.9 (https://github.com/google/go-cmp)
+
+========================================================================
+Apache 2.0 licenses
+========================================================================
+The following components are provided under the Apache 2.0 license. See project links for details.
+The text of each license is also included at licenses/LICENSE-[project].txt.
+
+    (Apache 2.0 license) ini v1.63.2 (https://github.com/go-ini/ini)
+    (Apache 2.0 license) carbon v0.2.2 (https://github.com/uniplaces/carbon)
+    (Apache 2.0 license) go-utils v1.0.0 (https://github.com/trpc-ecosystem/go-utils)
+    (Apache 2.0 license) go-filter v1.0.1 (https://github.com/trpc-ecosystem/go-filter)
+    (Apache 2.0 license) trpc-go v1.0.3 (https://github.com/trpc-group/trpc-go)

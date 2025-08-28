@@ -1,0 +1,199 @@
+global: # Global configuration.
+  namespace: Development # Environment type, either Production or Development.
+  env_name: test # Environment name for non-production environments.
+
+client: # Backend configuration for client calls.
+  timeout: 1000 # Maximum processing time for all backends.
+  namespace: Development # Environment for all backends.
+  filter: # List of interceptors for all backend function calls.
+    - debuglog
+    - validation # trpc.group/trpc-go/trpc-filter/validation
+  service: # Configuration for individual backends.
+    - name: trpc.examples.helloworld.Greeter # Service name for the backend. trpc.{app}.{server}.{service}
+      namespace: Development # Environment for the backend.
+      network: tcp # Network type for the backend: tcp or udp (configuration takes priority).
+      protocol: trpc # Application layer protocol: trpc or http.
+      target: ip://127.0.0.1:8001 # Service address for requests.
+      method: # method 级别配置
+        SayHello:
+          timeout: 300
+    - name: trpc.kafka.producer.service
+      # 注意：使用单词topic
+      target: kafka://127.0.0.1:9092?topic=quickstart-events # 生产者的 partitioner 参数默认为 random
+      # 生产时同一用户需要有序，如何配置；客户端增加参数partitioner，可选 random（默认），roundrobin，hash（按 key 分区）
+      # target: kafka://ip1:port1,ip2:port2?clientid=xxx&partitioner=hash
+      # target: kafka://127.0.0.1:9092?clientid=test_producer&partitioner=hash&topic=quickstart-events
+      # 异步发送需要开启 async=1
+      # target: kafka://127.0.0.1:9092?topic=quickstart-events&async=1
+      # 默认启用了 gzip 压缩，优先考虑在 target 上加上参数compression=none
+      # target: kafka://127.0.0.1:9092?clientid=test_producer&partitioner=hash&topic=test&compression=none
+      # target: kafka://ip1:port1,ip2:port2?topic=YOUR_TOPIC&clientid=xxx&compression=xxx
+      # 北极星接入，不支持动态变更，如果北极星 IP 有变更，需要重启服务才能生效。如果需要获取所有北极星节点，需要关注 Q14
+      # target: kafka://YOUR_SERVICE_NAME?topic=YOUR_TOPIC&clientid=xxx&compression=xxx&discover=polaris&namespace=Development
+      # 透传 trpc 元数据
+      # target: kafka://11.135.87.176:9092?clientid=test_producer&partitioner=hash&topic=test_topic&trpcMeta=true
+      # timeout: 200 # kafka 全局的生产者配置 timeout 配置，默认 2s
+    - name: trpc.mysql.server.service # 注意 app 的值必须是 mysql
+      # Reference: https://github.com/go-sql-driver/mysql?tab=readme-ov-file#dsn-data-source-name
+      # target: dsn://root:my-secret-pw@tcp(127.0.0.1:3306)/my_database?charset=utf8mb4&parseTime=True
+      # target: gorm+polaris://root:xxx@tcp(${polaris_name})/my_database?parseTime=True
+      target: dsn://root:@tcp(127.0.0.1:3306)/xgo?charset=utf8mb4&parseTime=True
+    - name: trpc.mysql.xgo.read
+      target: dsn://root:@tcp(127.0.0.1:3306)/xgo?charset=utf8mb4&parseTime=True
+      timeout: 1000
+    - name: trpc.mysql.xgo.write
+      target: dsn://root:@tcp(127.0.0.1:3306)/xgo?charset=utf8mb4&parseTime=True
+    # - name: trpc.redis.test.redis # The service name of the backend service.
+    #   target: redis://:@127.0.0.1:6379 # Request service address format： redis://<user>:<password>@<host>:<port>/<db_number>, for details, please refer to：https://github.com/go-redis/redis/blob/v8.8.2/options.go#L189
+    #   # target: redis://127.0.0.1:6379/0?is_proxy=false&pool_size=88&min_idle_conns=10
+    #   # target: polaris://trpc.gamecenter.trpcproxy.TRPCProxy?is_proxy=true
+    #   timeout: 10000
+
+server: # Server configuration.
+  app: examples # Application name for the business.
+  server: helloworld # Process server name.
+  bin_path: /usr/local/trpc/bin/ # Path to binary executable files and framework configuration files.
+  conf_path: /usr/local/trpc/conf/ # Path to business configuration files.
+  data_path: /usr/local/trpc/data/ # Path to business data files.
+  filter: # List of interceptors for all service handler functions.
+    - debuglog
+    - validation # trpc.group/trpc-go/trpc-filter/validation
+    - recovery # Intercept panics from business processing goroutines created by the framework.
+  # 关闭服务器时的最短等待时间（以毫秒为单位），用于完成服务注销，用于优雅退出和优雅重启。此期间会存在消费者继续拉取消息的情况。
+  close_wait_time: 1000
+  # 关闭服务器时的最长等待时间（以毫秒为单位），用于完成所有请求的处理，用于优雅退出和优雅重启。
+  # 如果消费者处理时间较长，无法达到优雅退出时关闭 consumer group 的效果，可以适当调大这个值
+  max_close_wait_time: 2000
+  service: # Services provided by the business, can have multiple.
+    - name: trpc.examples.helloworld.Greeter # Route name for the service. trpc.{app}.{server}.{service}
+      ip: 127.0.0.1 # Service listening IP address, can use placeholder ${ip}. Use either ip or nic, ip takes priority.
+      # nic: eth0
+      port: 8001 # Service listening port, can use placeholder ${port}.
+      network: tcp # Network listening type: tcp or udp.
+      protocol: trpc # Application layer protocol: trpc or http.
+      timeout: 1000 # Maximum processing time for requests in milliseconds.
+    - name: trpc.examples.helloworld.GreeterHttp # Route name for the service.
+      ip: 127.0.0.1 # Service listening IP address, can use placeholder ${ip}. Use either ip or nic, ip takes priority.
+      # nic: eth0
+      port: 8002 # Service listening port, can use placeholder ${port}.
+      network: tcp # Network listening type: tcp or udp.
+      protocol: http # Application layer protocol: trpc or http.
+      timeout: 1000 # Maximum processing time for requests in milliseconds.
+    - name: trpc.examples.helloworld.time_local # service 的路由名称，本地定时器
+      port: 1000 # 服务监听端口 可使用占位符 ${port}
+      network: "*/5 * * * * ?startAtOnce=1" # 复用 network 字段来设置任务的调度策略
+      protocol: timer # 设置服务类型为定时器服务
+      timeout: 1000 # 请求最长处理时间 单位 毫秒
+    - name: trpc.examples.helloworld.time_distributed # service 的路由名称，分布式定时器
+      port: 1000 # 服务监听端口 可使用占位符 ${port}
+      network: "*/5 * * * * ?startAtOnce=1&scheduler=use_redis" # 复用 network 字段来设置任务的调度策略
+      protocol: timer # 设置服务类型为定时器服务
+      timeout: 1000 # 请求最长处理时间 单位 毫秒
+    - name: trpc.examples.helloworld.kafka_produer # service 的路由名称，分布式定时器
+      port: 1000 # 服务监听端口 可使用占位符 ${port}
+      network: "*/5 * * * * ?startAtOnce=1" # 复用 network 字段来设置任务的调度策略
+      protocol: timer # 设置服务类型为定时器服务
+      timeout: 1000 # 请求最长处理时间 单位 毫秒
+    - name: trpc.examples.helloworld.kafka-consumer-1
+      # 注意：
+      # 1. 使用单词topics，不是topic
+      # 2. 下载最新的saram，version默认使用 sarama.V1_1_1_0，需要根据kafka的版本自行修改，否则会报错 kafka server transport: Consume get error:EOF
+      address: 127.0.0.1:9092?topics=quickstart-events&group=quickstart-group
+      # address: 127.0.0.1:9092?topics=test&group=batch_test&batch=5&batchFlush=1000
+      # kafka consumer broker address，version 如果不设置则为 1.1.1.0，部分 ckafka 需要指定 0.10.2.0
+      # 优先检查 brokers 是否可达，然后检查支持的 kafka 客户端版本，尝试在配置文件 address 中加上参数例如version=0.10.2.0
+      # address: ip1:port1,ip2:port2?topics=topic1,topic2&group=xxx&version=x.x.x.x
+      # 北极星接入，不支持动态变更，如果北极星 IP 有变更，需要重启服务才能生效。如果需要获取所有北极星节点，需要关注 Q14
+      # address: YOUR_SERVICE_NAME?topics=topic1,topic2&group=xxx&version=x.x.x.x&discover=polaris&namespace=Development
+      # 同一消费者组的客户端重分组策略不一样，可修改参数strategy，可选：sticky(默认)，range，roundrobin
+      # address: ip1:port1,ip2:port2?topics=topic1,topic2&group=xxx&strategy=range
+      # 支持账号和密码
+      # address: ip1:port1,ip2:port2?topics=topic1,topic2&mechanism=SCRAM-SHA-512&user={user}&password={password}
+      # 指定 SASL 协议版本
+      # address: ip1:port1,ip2:port2?topics=topic1,topic2&mechanism=SCRAM-SHA-512&user=${user}&password=${password}&sasl_version=1
+      # 透传 trpc 元数据
+      # address: 11.135.87.176:9092?topics=test_topic&group=test_group&trpcMeta=true
+      protocol: kafka
+      # 请求最长处理时间 单位 毫秒
+      timeout: 1000
+    - name: trpc.examples.helloworld.kafka-consumer-2
+      # batch=5: 控制批量消费的消息数量上限，每个批次处理的最大消息条数为 5 条，当消费者累积达到 5 条消息时，会立即触发批量处理逻辑
+      # batchFlush=1000: 控制批量处理的最大等待时间(默认2秒)，批次刷新的最大时间间隔为 1000 毫秒（1 秒），
+      # 如果未达到 batch.size 的数量阈值，但时间达到 1 秒间隔，也会强制刷新处理当前批次。即若 1 秒内未满 5 条，则处理已累积的消息
+      address: 127.0.0.1:9092?topics=quickstart-events&group=quickstart-batch-group&batch=5&batchFlush=1000
+      protocol: kafka
+  admin:
+    ip: 127.0.0.1 # admin 的 ip，配置网卡 nic 也可以
+    port: 11014 # admin 的 port，必须同时配置这里的 ip port 才会启动 admin
+    read_timeout: 3000 # ms. 请求读取超时时间，防止慢客户端
+    # 默认配置下，获取 profile/trace 的时间最长为 60s，可以通过配置 admin 的 write_timeout 来调大时间。
+    write_timeout: 60000 # ms. 处理的超时时间，同时控制了获取 pprof/{profile,trace} 的最长时间，默认为 60s
+
+plugins: # Plugin configuration.
+  selector:
+    # polaris:
+    #   service_router:
+    #     # 服务端北极星寻址获取所有节点
+    #     # need_return_all_nodes: true
+  tracing:
+    debuglog: # trpc.group/trpc-go/trpc-filter/debuglog
+      log_type: json
+      enable_color: false
+  auth:
+    validation: # trpc.group/trpc-go/trpc-filter/validation
+      enable_error_log: true
+      server_validate_err_code: 51 # customize the error codes
+      client_validate_err_code: 151 # customize the error codes
+  database:
+    kafka:
+      rewrite_log: false # 默认是false，配置为true时，sarama 包的日志以 info 级别重定向到 trpc 的 log 文件中
+      # max_request_size: 104857600 # global maximum request body size
+      # max_response_size: 104857600 # global maximum response body size
+    gorm:
+      # Configuration effective for all gorm clients
+      max_idle: 20 # Maximum idle connections (default 10)，该值小于 0，则不保留任何空闲连接。
+      max_open: 100 # Maximum active connections (default 10000，该值小于 0，则打开的连接数没有限制。
+      max_lifetime: 180000 # Maximum connection lifetime in milliseconds (default 3min)，该值小于 0，则连接不会因连接时间而关闭。
+      driver_name: mysql # Driver used for connection, empty by default, import corresponding driver if needed
+      # 所有数据库连接默认的日志配置
+      logger:
+        # 慢查询阈值，单位 ms
+        slow_threshold: 200 # Slow query threshold in milliseconds, 0 means no slow query logging (default 0)，0 表示不打印慢查询指令（默认为 0）
+        # 日志是否着色
+        colorful: false # Whether to print colorful logs (default false)
+        # 是否忽略记录不存在的错误
+        ignore_record_not_found_error: false # Whether to ignore record not found errors (default false)，是否忽略查询记录为空的错误
+        # 1: Silent, 2: Error, 3: Warn, 4: Info
+        log_level: 4 # Log level: 1:Silent, 2:Error, 3:Warn, 4:Info (default no logging)
+        max_sql_size: 100 # Maximum SQL statement length for truncation, 0 means no limit (default 0)，截断 sql 指令最大长度，0 表示不限制
+      service:
+        # Configuration effective for trpc.mysql.server.service client
+        - name: trpc.mysql.server.service
+          max_idle: 10 # Maximum idle connections (default 10)
+          max_open: 50 # Maximum active connections (default 10000)
+          max_lifetime: 180000 # Maximum connection lifetime in milliseconds (default 3min)
+          driver_name: mysql # Driver used for connection, empty by default, import corresponding driver if needed
+  log: # Log configuration.
+    default: # Default log configuration, supports multiple outputs.
+      - writer: console # Console standard output (default).
+        level: debug # Log level for standard output.
+      - writer: file # Local file log.
+        level: info # Log level for local file rolling logs.
+        writer_config:
+          filename: ./trpc.log # Path to store local file rolling logs.
+          roll_type: "size" # size / time (default size)
+          write_mode: 2 # 日志写入模式，1-同步，2-异步，3-极速 (异步丢弃), 不配置默认异步模式
+          max_size: 100 # Maximum size of local file rolling logs in MB. 日志文件最大大小（单位 MB），为 0 表示不按大小滚动
+          max_backups: 2 # Maximum number of log files. 日志最大文件数，为 0 表示不删除多余文件
+          max_age: 7 # Maximum number of days to keep logs. 日志最大保留时间（单位 天），为 0 表示不清理旧文件
+          compress: false # Whether to compress log files. 日志文件是否压缩，默认不压缩
+          time_unit: day # 滚动时间间隔，支持：minute/hour/day/month/year
+        formatter: json # 标准输出日志的格式
+        formatter_config:
+          time_fmt: 2006-01-02 15:04:05 # 日志时间格式。"2006-01-02 15:04:05"为常规时间格式，"seconds"为秒级时间戳，"milliseconds"为毫秒时间戳，"nanoseconds"为纳秒时间戳
+          time_key: Time # 日志时间字段名称，不填默认"T"，填 "none" 可禁用此字段
+          level_key: Level # 日志级别字段名称，不填默认"L"，填 "none" 可禁用此字段
+          name_key: Name # 日志名称字段名称，不填默认"N"，填 "none" 可禁用此字段
+          caller_key: Caller # 日志调用方字段名称，不填默认"C"，填 "none" 可禁用此字段
+          message_key: Message # 日志消息体字段名称，不填默认"M"，填 "none" 可禁用此字段
+          stacktrace_key: StackTrace # 日志堆栈字段名称，不填默认"S"，填 "none" 可禁用此字段

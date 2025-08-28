@@ -1,0 +1,74 @@
+openapi: "3.0.0"
+info:
+    version: 1.0.0
+    title: Using complex schemas
+    description: An example of `anyOf`, `allOf` and `oneOf`
+components:
+    schemas:
+        # base types
+        # 表示一个客户端，必须包含 name 属性，类型为字符串。
+        Client:
+            type: object
+            required:
+                - name
+            properties:
+                name:
+                    type: string
+        # 表示一个身份，必须包含 issuer 属性，类型为字符串。
+        Identity:
+            type: object
+            required:
+                - issuer
+            properties:
+                issuer:
+                    type: string
+
+        # allOf performs a union of all types defined
+        # 继承自 Client，并新增一个必需的整数属性 id。
+        # 生成的对象必须同时满足 Client 和 ClientWithId 的要求，即包含 name 和 id。
+        ClientWithId:
+            allOf:
+                - $ref: "#/components/schemas/Client"
+                - properties:
+                      id:
+                          type: integer
+                  required:
+                      - id
+
+        # allOf performs a union of all types defined, but if there's a duplicate field defined, it'll be overwritten by the last schema
+        # https://github.com/oapi-codegen/oapi-codegen/issues/1569
+        # 继承自 Identity，并尝试多次定义 issuer 字段。
+        IdentityWithDuplicateField:
+            # 在 allOf 中，如果同一个字段被多次定义，后面的定义会覆盖前面的定义。
+            allOf:
+                # `issuer` will be ignored
+                - $ref: "#/components/schemas/Identity"
+                # `issuer` will be ignored
+                - properties:
+                      issuer:
+                          type: integer
+                # `issuer` will take precedence
+                - properties:
+                      issuer:
+                          type: object
+                          properties:
+                              name:
+                                  type: string
+                          required:
+                              - name
+
+        # anyOf results in a type that has an `AsClient`/`MergeClient`/`FromClient` and an `AsIdentity`/`MergeIdentity`/`FromIdentity` method so you can choose which of them you want to retrieve
+        # 对象可以是 Client 或 Identity 中的任意一种。
+        # 生成的对象只需满足 Client 或 Identity 中的一个即可。这意味着对象可以只有 name 属性，或者只有 issuer 属性。
+        ClientAndMaybeIdentity:
+            anyOf:
+                - $ref: "#/components/schemas/Client"
+                - $ref: "#/components/schemas/Identity"
+
+        # oneOf results in a type that has an `AsClient`/`MergeClient`/`FromClient` and an `AsIdentity`/`MergeIdentity`/`FromIdentity` method so you can choose which of them you want to retrieve
+        # 对象必须是 Client 或 Identity 中的一种，但不能同时是两者。
+        # 生成的对象必须严格符合 Client 或 Identity 的定义，但不能同时包含两者的属性。
+        ClientOrIdentity:
+            oneOf:
+                - $ref: "#/components/schemas/Client"
+                - $ref: "#/components/schemas/Identity"
