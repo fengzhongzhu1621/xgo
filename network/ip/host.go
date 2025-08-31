@@ -10,9 +10,27 @@ import (
 	"github.com/fengzhongzhu1621/xgo/validator"
 )
 
+// GetAddress 获取地址
+func GetAddress(addrPort string) (string, error) {
+	s := strings.TrimSpace(addrPort)
+	if err := validator.CheckAddrPort(s); err != nil {
+		return "", err
+	}
+	return getIP(s)
+}
+
 func getIP(addrPort string) (string, error) {
 	idx := strings.LastIndex(addrPort, ":")
 	return addrPort[:idx], nil
+}
+
+// GetPort 获取端口
+func GetPort(addrPort string) (uint, error) {
+	s := strings.TrimSpace(addrPort)
+	if err := validator.CheckAddrPort(s); err != nil {
+		return uint(0), err
+	}
+	return getPort(s)
 }
 
 func getPort(addrPort string) (uint, error) {
@@ -28,22 +46,7 @@ func getPort(addrPort string) (uint, error) {
 	return uint(port), nil
 }
 
-func GetAddress(addrPort string) (string, error) {
-	s := strings.TrimSpace(addrPort)
-	if err := validator.CheckAddrPort(s); err != nil {
-		return "", err
-	}
-	return getIP(s)
-}
-
-func GetPort(addrPort string) (uint, error) {
-	s := strings.TrimSpace(addrPort)
-	if err := validator.CheckAddrPort(s); err != nil {
-		return uint(0), err
-	}
-	return getPort(s)
-}
-
+// GetDailAddress 获取拨号地址
 func GetDailAddress(addr string) (string, error) {
 	uri, err := url.Parse(addr)
 	if err != nil {
