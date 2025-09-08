@@ -460,6 +460,7 @@ func must(err any, messageArgs ...any) {
 	case bool:
 		// false 则 panic 错误信息
 		if !e {
+			// 将对象转换为错误字符串
 			message := messageFromMsgAndArgs(messageArgs...)
 			if message == "" {
 				message = "not ok"
@@ -470,6 +471,7 @@ func must(err any, messageArgs ...any) {
 		// true 则不处理
 
 	case error:
+		// 将对象转换为错误字符串
 		message := messageFromMsgAndArgs(messageArgs...)
 		if message != "" {
 			panic(message + ": " + e.Error())
