@@ -8,9 +8,18 @@ import (
 	"trpc.group/trpc-go/trpc-go/errs"
 )
 
+// RequestType is the type of client request, such as SendAndRecv，SendOnly.
+type RequestType int
+
+// MetaData is request penetrate message.
+type MetaData map[string][]byte
+
+// CommonMeta is common meta message.
+type CommonMeta map[interface{}]interface{}
+
 // Msg defines core message data for multi protocol, business protocol
 // should set this message when packing and unpacking data.
-type Msg interface {
+type IMsg interface {
 	// Context returns rpc context
 	Context() context.Context
 

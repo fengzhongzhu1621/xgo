@@ -9,10 +9,10 @@ type Codec interface {
 	// Encode pack the body into binary buffer.
 	// client: Encode(msg, reqBody)(request-buffer, err)
 	// server: Encode(msg, rspBody)(response-buffer, err)
-	Encode(message Msg, body []byte) (buffer []byte, err error)
+	Encode(message IMsg, body []byte) (buffer []byte, err error)
 
 	// Decode unpack the body from binary buffer
 	// server: Decode(msg, request-buffer)(reqBody, err)
 	// client: Decode(msg, response-buffer)(rspBody, err)
-	Decode(message Msg, buffer []byte) (body []byte, err error)
+	Decode(message IMsg, buffer []byte) (body []byte, err error)
 }
