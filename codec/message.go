@@ -5,8 +5,21 @@ import (
 	"net"
 	"time"
 
-	"trpc.group/trpc-go/trpc-go/errs"
+	errs "github.com/fengzhongzhu1621/xgo/xerror"
 )
+
+// trpc context key data
+const (
+	ContextKeyMessage = ContextKey("TRPC_MESSAGE")
+	// ServiceSectionLength is the length of service section,
+	// service name example: trpc.app.server.service
+	ServiceSectionLength = 4
+)
+
+// ContextKey is trpc context key type, the specific value is judged
+// by interface, the interface will both judge value and type. Defining
+// a new type can avoid string value conflict.
+type ContextKey string
 
 // RequestType is the type of client request, such as SendAndRecv，SendOnly.
 type RequestType int
@@ -14,8 +27,32 @@ type RequestType int
 // MetaData is request penetrate message.
 type MetaData map[string][]byte
 
+// Clone returns a copied meta data.
+func (m MetaData) Clone() MetaData {
+	if m == nil {
+		return nil
+	}
+	md := MetaData{}
+	for k, v := range m {
+		md[k] = v
+	}
+	return md
+}
+
 // CommonMeta is common meta message.
 type CommonMeta map[interface{}]interface{}
+
+// Clone returns a copied common meta message.
+func (c CommonMeta) Clone() CommonMeta {
+	if c == nil {
+		return nil
+	}
+	cm := CommonMeta{}
+	for k, v := range c {
+		cm[k] = v
+	}
+	return cm
+}
 
 // Msg defines core message data for multi protocol, business protocol
 // should set this message when packing and unpacking data.
@@ -285,4 +322,52 @@ type IMsg interface {
 
 	// CallType returns call type.
 	CallType() RequestType
+}
+
+// CopyMsg copy src Msg to dst.
+// All fields of src msg will be copied to dst msg.
+func CopyMsg(dst, src IMsg) {
+	if dst == nil || src == nil {
+		return
+	}
+	dst.WithFrameHead(src.FrameHead())
+	dst.WithRequestTimeout(src.RequestTimeout())
+	dst.WithSerializationType(src.SerializationType())
+	dst.WithCompressType(src.CompressType())
+	dst.WithStreamID(src.StreamID())
+	dst.WithDyeing(src.Dyeing())
+	dst.WithDyeingKey(src.DyeingKey())
+	dst.WithServerRPCName(src.ServerRPCName())
+	dst.WithClientRPCName(src.ClientRPCName())
+	dst.WithServerMetaData(src.ServerMetaData().Clone())
+	dst.WithClientMetaData(src.ClientMetaData().Clone())
+	dst.WithCallerServiceName(src.CallerServiceName())
+	dst.WithCalleeServiceName(src.CalleeServiceName())
+	dst.WithCalleeContainerName(src.CalleeContainerName())
+	dst.WithServerRspErr(src.ServerRspErr())
+	dst.WithClientRspErr(src.ClientRspErr())
+	dst.WithServerReqHead(src.ServerReqHead())
+	dst.WithServerRspHead(src.ServerRspHead())
+	dst.WithClientReqHead(src.ClientReqHead())
+	dst.WithClientRspHead(src.ClientRspHead())
+	dst.WithLocalAddr(src.LocalAddr())
+	dst.WithRemoteAddr(src.RemoteAddr())
+	dst.WithLogger(src.Logger())
+	dst.WithCallerApp(src.CallerApp())
+	dst.WithCallerServer(src.CallerServer())
+	dst.WithCallerService(src.CallerService())
+	dst.WithCallerMethod(src.CallerMethod())
+	dst.WithCalleeApp(src.CalleeApp())
+	dst.WithCalleeServer(src.CalleeServer())
+	dst.WithCalleeService(src.CalleeService())
+	dst.WithCalleeMethod(src.CalleeMethod())
+	dst.WithNamespace(src.Namespace())
+	dst.WithSetName(src.SetName())
+	dst.WithEnvName(src.EnvName())
+	dst.WithEnvTransfer(src.EnvTransfer())
+	dst.WithRequestID(src.RequestID())
+	dst.WithStreamFrame(src.StreamFrame())
+	dst.WithCalleeSetName(src.CalleeSetName())
+	dst.WithCommonMeta(src.CommonMeta().Clone())
+	dst.WithCallType(src.CallType())
 }
