@@ -10,6 +10,8 @@ func init() {
 	RegisterCompressor(CompressTypeZlib, &ZlibCompress{})
 }
 
+var _ ICompressor = (*ZlibCompress)(nil)
+
 // ZlibCompress is zlib compressor.
 type ZlibCompress struct {
 }

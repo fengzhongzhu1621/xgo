@@ -11,6 +11,8 @@ func init() {
 	RegisterCompressor(CompressTypeGzip, &GzipCompress{})
 }
 
+var _ ICompressor = (*GzipCompress)(nil)
+
 // GzipCompress is gzip compressor.
 // GzipCompress 是gzip压缩器实现
 type GzipCompress struct {
