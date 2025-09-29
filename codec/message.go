@@ -40,6 +40,8 @@ func (m MetaData) Clone() MetaData {
 }
 
 // CommonMeta is common meta message.
+// ClientRequestAttachment: key = ClientAttachmentKey{}
+// ServerResponseAttachment: key = ServerAttachmentKey{}
 type CommonMeta map[interface{}]interface{}
 
 // Clone returns a copied common meta message.
