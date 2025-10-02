@@ -93,3 +93,9 @@ func Marshal(serializationType int, body interface{}) ([]byte, error) {
 	}
 	return s.Marshal(body)
 }
+
+// IsValidSerializationType checks whether t is a valid serialization type.
+func IsValidSerializationType(t int) bool {
+	const minValidSerializationType = SerializationTypePB
+	return t >= minValidSerializationType
+}

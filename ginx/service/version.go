@@ -3,7 +3,7 @@ package service
 import (
 	"github.com/fengzhongzhu1621/xgo/config"
 	"github.com/fengzhongzhu1621/xgo/ginx/service/types"
-	"github.com/fengzhongzhu1621/xgo/logging"
+	"github.com/fengzhongzhu1621/xgo/logging/zaplogger"
 	"github.com/fengzhongzhu1621/xgo/network/nethttp"
 	"github.com/fengzhongzhu1621/xgo/version"
 	"github.com/microcosm-cc/bluemonday"
@@ -97,7 +97,7 @@ func (s *versionsConfigService) ListVersions(
 func NewVersionsConfigService(cfg *config.Config) *versionsConfigService {
 	obj := versionsConfigService{
 		rootDir: cfg.RootDir,
-		logger:  logging.GetAppLogger(),
+		logger:  zaplogger.GetAppLogger(),
 	}
 
 	return &obj

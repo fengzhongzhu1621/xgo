@@ -66,3 +66,9 @@ func Decompress(compressorType int, in []byte) ([]byte, error) {
 	}
 	return compressor.Decompress(in)
 }
+
+// IsValidCompressType checks whether t is a valid Compress type.
+func IsValidCompressType(t int) bool {
+	const minValidCompressType = CompressTypeNoop
+	return t >= minValidCompressType
+}

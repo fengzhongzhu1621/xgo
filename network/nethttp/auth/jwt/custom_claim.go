@@ -7,7 +7,7 @@ import (
 
 	"github.com/dgrijalva/jwt-go/v4"
 	"github.com/fengzhongzhu1621/xgo/config"
-	"github.com/fengzhongzhu1621/xgo/logging"
+	"github.com/fengzhongzhu1621/xgo/logging/zaplogger"
 	"go.uber.org/zap"
 )
 
@@ -57,7 +57,7 @@ func NewCustomJwtClaims(option *CustomJwtClaimsOption) (*CustomJwtClaims, error)
 	claims := &CustomJwtClaims{
 		Operator: option.Operator,
 		Extra:    option.Extra,
-		logger:   logging.GetAppLogger(),
+		logger:   zaplogger.GetAppLogger(),
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: jwt.At(time.Now().Add(option.Expire)),
 			IssuedAt:  jwt.At(time.Now()),

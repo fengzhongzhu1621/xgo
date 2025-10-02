@@ -25,7 +25,7 @@ import (
 	"github.com/fengzhongzhu1621/xgo/crypto/encoding/toml"
 	"github.com/fengzhongzhu1621/xgo/crypto/encoding/yaml"
 	"github.com/fengzhongzhu1621/xgo/file/pathutils"
-	jww "github.com/fengzhongzhu1621/xgo/logging"
+	jww "github.com/fengzhongzhu1621/xgo/logging/jwwlogger"
 	"github.com/fengzhongzhu1621/xgo/numpy"
 	"github.com/fengzhongzhu1621/xgo/remote"
 	"github.com/fengzhongzhu1621/xgo/str/stringutils"

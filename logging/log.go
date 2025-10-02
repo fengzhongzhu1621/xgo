@@ -5,50 +5,24 @@ import (
 	"os"
 	"sync"
 	"time"
+
+	"github.com/fengzhongzhu1621/xgo/logging/level"
+	loglevel "github.com/fengzhongzhu1621/xgo/logging/level"
 )
 
 const DATETIME_DEFAULT_FORMAT string = "2006-01-02 15:04:05"
 
-type (
-	LogLevel int
-)
-
-const (
-	LOG_EMERG   = LogLevel(0) //  system is unusable
-	LOG_ALERT   = LogLevel(1) //  action must be taken immediately
-	LOG_CRIT    = LogLevel(2) //  critical conditions
-	LOG_ERR     = LogLevel(3) //  error conditions
-	LOG_WARNING = LogLevel(4) //  warning conditions
-	LOG_NOTICE  = LogLevel(5) //  normal but significant condition
-	LOG_INFO    = LogLevel(6) //  informational
-	LOG_DEBUG   = LogLevel(7) //  debug-level messages
-)
-
-func logLevelToString(t LogLevel) string {
-	switch t {
-	case LOG_ERR:
-		return "ERROR"
-	case LOG_WARNING:
-		return "WARNING"
-	case LOG_DEBUG:
-		return "DEBUG"
-	case LOG_INFO:
-		return "INFO"
-	}
-	return "unknown"
-}
-
 type LoggerConfig struct {
 	flag      int // properties
 	Formatter ILogFormatter
-	level     LogLevel
+	level     loglevel.LogLevel
 	mu        sync.Mutex
 	buf       []byte
 	out       io.Writer
 }
 
 type ILogFormatter interface {
-	Format(loggerConfig *LoggerConfig, t time.Time, level LogLevel, message string) error
+	Format(loggerConfig *LoggerConfig, t time.Time, level loglevel.LogLevel, message string) error
 }
 
 type DefaultFormatter struct{}
@@ -56,7 +30,7 @@ type DefaultFormatter struct{}
 func (formatter *DefaultFormatter) Format(
 	loggerConfig *LoggerConfig,
 	t time.Time,
-	level LogLevel,
+	level level.LogLevel,
 	message string,
 ) error {
 	buf := &loggerConfig.buf
@@ -68,7 +42,7 @@ func (formatter *DefaultFormatter) Format(
 	// *buf = append(*buf, '-')
 	// bytesconv.Itoa(buf, day, 2)
 	*buf = append(*buf, '|')
-	*buf = append(*buf, logLevelToString(level)...)
+	*buf = append(*buf, loglevel.LogLevelToString(level)...)
 	*buf = append(*buf, '|')
 	*buf = append(*buf, message...)
 	if len(message) == 0 || message[len(message)-1] != '\n' {
@@ -80,7 +54,7 @@ func (formatter *DefaultFormatter) Format(
 var loggerConfig = NewLogger(os.Stderr)
 
 func NewLogger(w io.Writer) *LoggerConfig {
-	return &LoggerConfig{out: os.Stderr, level: LOG_INFO, Formatter: &DefaultFormatter{}}
+	return &LoggerConfig{out: os.Stderr, level: level.LOG_INFO, Formatter: &DefaultFormatter{}}
 }
 
 func (loggerConfig *LoggerConfig) SetFlags(flag int) {
@@ -101,13 +75,13 @@ func (loggerConfig *LoggerConfig) SetOutputWriter(out io.Writer) {
 	loggerConfig.out = out
 }
 
-func (loggerConfig *LoggerConfig) SetLevel(level LogLevel) {
+func (loggerConfig *LoggerConfig) SetLevel(level level.LogLevel) {
 	loggerConfig.mu.Lock()
 	defer loggerConfig.mu.Unlock()
 	loggerConfig.level = level
 }
 
-func (loggerConfig *LoggerConfig) Output(calldepth int, level LogLevel, message string) error {
+func (loggerConfig *LoggerConfig) Output(calldepth int, level level.LogLevel, message string) error {
 	now := time.Now() // get this early.
 	loggerConfig.mu.Lock()
 	defer loggerConfig.mu.Unlock()
@@ -117,7 +91,7 @@ func (loggerConfig *LoggerConfig) Output(calldepth int, level LogLevel, message 
 	return err
 }
 
-func (loggerConfig *LoggerConfig) log(level LogLevel, message string) error {
+func (loggerConfig *LoggerConfig) log(level level.LogLevel, message string) error {
 	if loggerConfig.level > level {
 		return nil
 	}
@@ -125,7 +99,7 @@ func (loggerConfig *LoggerConfig) log(level LogLevel, message string) error {
 }
 
 func (loggerConfig *LoggerConfig) Info(message string) error {
-	return loggerConfig.log(LOG_INFO, message)
+	return loggerConfig.log(level.LOG_INFO, message)
 }
 
 func Info(message string) error {

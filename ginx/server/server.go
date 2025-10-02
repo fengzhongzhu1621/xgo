@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/fengzhongzhu1621/xgo/config"
-	"github.com/fengzhongzhu1621/xgo/logging"
+	"github.com/fengzhongzhu1621/xgo/logging/zaplogger"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -131,7 +131,7 @@ func (s *Server) Stop() {
 	}
 
 	// 刷新缓存的日志
-	logging.GetAppLogger().Sync()
+	zaplogger.GetAppLogger().Sync()
 
 	// 发送信号，表示服务器已经停止
 	s.stopChan <- struct{}{}

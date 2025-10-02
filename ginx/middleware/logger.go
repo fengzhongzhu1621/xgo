@@ -7,7 +7,7 @@ import (
 
 	"github.com/fengzhongzhu1621/xgo/cast"
 	"github.com/fengzhongzhu1621/xgo/ginx/utils"
-	"github.com/fengzhongzhu1621/xgo/logging"
+	"github.com/fengzhongzhu1621/xgo/logging/zaplogger"
 	"github.com/fengzhongzhu1621/xgo/monitor/sentry"
 	"github.com/fengzhongzhu1621/xgo/network/nethttp"
 	"github.com/fengzhongzhu1621/xgo/str/stringutils"
@@ -28,7 +28,7 @@ func (w bodyLogWriter) Write(b []byte) (int, error) {
 
 // AppLogger 日志中间件，记录请求和响应内容
 func AppLogger() gin.HandlerFunc {
-	logger := logging.GetAppLogger()
+	logger := zaplogger.GetAppLogger()
 
 	return func(c *gin.Context) {
 		fields := logContextFields(c)

@@ -6,7 +6,7 @@ import (
 	"syscall"
 	"time"
 
-	. "github.com/fengzhongzhu1621/xgo/logging"
+	"github.com/fengzhongzhu1621/xgo/logging/logscope"
 	"github.com/fengzhongzhu1621/xgo/str/bytesutils"
 	. "github.com/fengzhongzhu1621/xgo/system/command"
 )
@@ -15,12 +15,12 @@ type ProcessEndpoint struct {
 	process   *LaunchedProcess // 命令加载进程类
 	closetime time.Duration
 	output    chan []byte // 标准输出读取的数据发给这个管道
-	log       *LogScope
+	log       *logscope.LogScope
 	bin       bool // 传递数据的格式：字符串或二进制
 }
 
 // 构造函数.
-func NewProcessEndpoint(process *LaunchedProcess, bin bool, logging *LogScope) *ProcessEndpoint {
+func NewProcessEndpoint(process *LaunchedProcess, bin bool, logging *logscope.LogScope) *ProcessEndpoint {
 	return &ProcessEndpoint{
 		process: process,
 		output:  make(chan []byte),
