@@ -12,13 +12,6 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
-type WriteType string
-
-const (
-	WriterTypeOs   WriteType = "os"
-	WriterTypeFile WriteType = "file"
-)
-
 // NewSlogWriter 返回日志的输出
 func NewSlogWriter(writerType string, settings map[string]string) (io.Writer, error) {
 	switch writerType {
