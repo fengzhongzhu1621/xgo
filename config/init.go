@@ -6,14 +6,12 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/fengzhongzhu1621/xgo/collections/set"
 	"github.com/spf13/viper"
 )
 
 var (
-	cfgFile         string
-	globalConfig    *Config
-	SuperAppCodeSet *set.StringSet2
+	cfgFile      string
+	globalConfig *Config
 )
 
 func GetGlobalConfig() *Config {
