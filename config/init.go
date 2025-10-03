@@ -76,7 +76,7 @@ func InitLogger(cache bool) {
 	loggerInitOnce.Do(func() {
 		// 设置 web 服务器日志记录器
 		appLogger := zaplogger.NewZapJSONLogger(&logger.Web, cache)
-		zaplogger.SetDbLogger(&zaplogger.DBLogger{appLogger})
+		zaplogger.SetDbLogger(&zaplogger.DBLogger{Logger: appLogger})
 	})
 }
 
@@ -86,4 +86,8 @@ func init() {
 
 func init() {
 	LoadConfig()
+}
+
+func init() {
+	RegisterProvider(newFileProvider())
 }
