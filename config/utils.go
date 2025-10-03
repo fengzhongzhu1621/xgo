@@ -5,8 +5,8 @@ import (
 	"github.com/spf13/viper"
 )
 
-// GetString 如果配置中指定key的值为空，则返回默认值.
-func GetString(key, defaultValue string) string {
+// GetViperString 如果配置中指定key的值为空，则返回默认值.
+func GetViperString(key, defaultValue string) string {
 	val := viper.GetString(key)
 	if val != "" {
 		return val

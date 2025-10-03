@@ -5,25 +5,9 @@ import (
 	kafka "github.com/fengzhongzhu1621/xgo/db/kafka"
 	"github.com/fengzhongzhu1621/xgo/db/mysql"
 	redis "github.com/fengzhongzhu1621/xgo/db/redis/client"
+	"github.com/fengzhongzhu1621/xgo/logging/config"
 	"github.com/spf13/viper"
 )
-
-type LogConfig struct {
-	Level    string
-	Writer   string
-	Settings map[string]string // 日志详细配置
-}
-
-type Logger struct {
-	System LogConfig
-	API    LogConfig
-	Web    LogConfig
-}
-
-type ServiceLogConfig struct {
-	Level string
-	Dir   string
-}
 
 type Config struct {
 	// 调试开关
@@ -51,7 +35,7 @@ type Config struct {
 	PProf PProf `yaml:"pprof"`
 
 	// 日志
-	Logger Logger
+	Logger config.Logger
 
 	// 版本
 	RootDir string

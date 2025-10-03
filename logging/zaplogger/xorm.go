@@ -9,50 +9,50 @@ import (
 
 // DBLogger 实现了 zap 需要的接口
 type DBLogger struct {
-	logger *zap.Logger
+	Logger *zap.Logger
 }
 
 var _ xormLog.Logger = (*DBLogger)(nil)
 
 func (il *DBLogger) Sync() {
-	_ = il.logger.Sync()
+	_ = il.Logger.Sync()
 }
 
 func (il *DBLogger) Debug(v ...interface{}) {
-	il.logger.Debug(fmt.Sprint(v...))
+	il.Logger.Debug(fmt.Sprint(v...))
 }
 
 func (il *DBLogger) Debugf(format string, v ...interface{}) {
-	il.logger.Debug(fmt.Sprintf(format, v...))
+	il.Logger.Debug(fmt.Sprintf(format, v...))
 }
 
 func (il *DBLogger) Info(v ...interface{}) {
-	il.logger.Info(fmt.Sprint(v...))
+	il.Logger.Info(fmt.Sprint(v...))
 }
 
 func (il *DBLogger) Infof(format string, v ...interface{}) {
-	il.logger.Info(fmt.Sprintf(format, v...))
+	il.Logger.Info(fmt.Sprintf(format, v...))
 }
 
 func (il *DBLogger) Warn(v ...interface{}) {
-	il.logger.Warn(fmt.Sprint(v...))
+	il.Logger.Warn(fmt.Sprint(v...))
 }
 
 func (il *DBLogger) Warnf(format string, v ...interface{}) {
-	il.logger.Warn(fmt.Sprintf(format, v...))
+	il.Logger.Warn(fmt.Sprintf(format, v...))
 }
 
 func (il *DBLogger) Error(v ...interface{}) {
-	il.logger.Error(fmt.Sprint(v...))
+	il.Logger.Error(fmt.Sprint(v...))
 }
 
 func (il *DBLogger) Errorf(format string, v ...interface{}) {
-	il.logger.Error(fmt.Sprintf(format, v...))
+	il.Logger.Error(fmt.Sprintf(format, v...))
 }
 
 // Level 返回对应的 xorm 日志级别
 func (il *DBLogger) Level() xormLog.LogLevel {
-	switch il.logger.Core().Enabled(zap.DebugLevel) {
+	switch il.Logger.Core().Enabled(zap.DebugLevel) {
 	case true:
 		return xormLog.LOG_DEBUG
 	case false:

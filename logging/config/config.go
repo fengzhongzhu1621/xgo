@@ -77,3 +77,20 @@ type LogFormatConfig struct {
 	// StackTraceKey is the stack trace key of log output, default as "S".
 	StacktraceKey string `yaml:"stacktrace_key"`
 }
+
+type LogConfig struct {
+	Level    string
+	Writer   string
+	Settings map[string]string // 日志详细配置
+}
+
+type Logger struct {
+	System LogConfig
+	API    LogConfig
+	Web    LogConfig
+}
+
+type ServiceLogConfig struct {
+	Level string
+	Dir   string
+}

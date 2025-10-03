@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/fengzhongzhu1621/xgo/config"
+	"github.com/fengzhongzhu1621/xgo/logging/config"
 	"github.com/fengzhongzhu1621/xgo/logging/level"
 	"github.com/fengzhongzhu1621/xgo/logging/output"
 	"github.com/fengzhongzhu1621/xgo/logging/output/rollwriter"

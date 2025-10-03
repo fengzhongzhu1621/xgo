@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/fengzhongzhu1621/xgo/config"
+	"github.com/fengzhongzhu1621/xgo/logging/config"
 	"github.com/fengzhongzhu1621/xgo/logging/level"
 	"github.com/fengzhongzhu1621/xgo/logging/zaplogger"
 	"github.com/gookit/goutil/testutil/assert"

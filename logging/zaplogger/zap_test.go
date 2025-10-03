@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/fengzhongzhu1621/xgo/config"
+	"github.com/fengzhongzhu1621/xgo/logging/config"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )

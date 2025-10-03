@@ -1,22 +1,18 @@
 package zaplogger
 
 import (
-	"sync"
-
-	"github.com/fengzhongzhu1621/xgo/config"
+	"github.com/fengzhongzhu1621/xgo/logging/config"
 	"github.com/fengzhongzhu1621/xgo/logging/output"
 	"github.com/sirupsen/logrus"
 	"go.uber.org/zap"
 )
-
-var loggerInitOnce sync.Once
 
 var (
 	dbLogger  *DBLogger
 	appLogger *zap.Logger
 )
 
-func initSystemLogger(cfg *config.LogConfig) {
+func InitSystemLogger(cfg *config.LogConfig) {
 	writer, err := output.GetWriter(cfg.Writer, cfg.Settings)
 	if err != nil {
 		panic(err)
@@ -51,21 +47,6 @@ func GetDbLogger() *DBLogger {
 	return dbLogger
 }
 
-// InitLogger 初始化日志记录器，只能执行一次
-func InitLogger(cache bool) {
-	globalConfig := config.GetGlobalConfig()
-	logger := globalConfig.Logger
-
-	// 设置系统日志记录器
-	initSystemLogger(&logger.System)
-
-	loggerInitOnce.Do(func() {
-		// 设置 web 服务器日志记录器
-		appLogger := NewZapJSONLogger(&logger.Web, cache)
-		dbLogger = &DBLogger{appLogger}
-	})
-}
-
-func init() {
-	InitLogger(false)
+func SetDbLogger(logger *DBLogger) {
+	dbLogger = logger
 }

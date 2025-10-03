@@ -3,7 +3,7 @@ package zaplogger
 import (
 	"time"
 
-	"github.com/fengzhongzhu1621/xgo/config"
+	"github.com/fengzhongzhu1621/xgo/logging/config"
 	"github.com/fengzhongzhu1621/xgo/logging/level"
 	"github.com/fengzhongzhu1621/xgo/logging/output"
 	"go.uber.org/zap"

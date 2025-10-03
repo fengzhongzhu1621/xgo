@@ -5,9 +5,13 @@ import (
 	"path"
 	"path/filepath"
 	"runtime"
+	"sync"
 
+	"github.com/fengzhongzhu1621/xgo/logging/zaplogger"
 	"github.com/spf13/viper"
 )
+
+var loggerInitOnce sync.Once
 
 var (
 	cfgFile      string
@@ -59,6 +63,25 @@ func LoadConfig() {
 	if err != nil {
 		panic(fmt.Sprintf("Could not load configurations from file, error: %v", err))
 	}
+}
+
+// InitLogger 初始化日志记录器，只能执行一次
+func InitLogger(cache bool) {
+	globalConfig := GetGlobalConfig()
+	logger := globalConfig.Logger
+
+	// 设置系统日志记录器
+	zaplogger.InitSystemLogger(&logger.System)
+
+	loggerInitOnce.Do(func() {
+		// 设置 web 服务器日志记录器
+		appLogger := zaplogger.NewZapJSONLogger(&logger.Web, cache)
+		zaplogger.SetDbLogger(&zaplogger.DBLogger{appLogger})
+	})
+}
+
+func init() {
+	InitLogger(false)
 }
 
 func init() {
