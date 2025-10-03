@@ -1,4 +1,4 @@
-package default_log
+package logur
 
 import (
 	"context"
@@ -7,18 +7,17 @@ import (
 	"os"
 	"strings"
 
-	"github.com/fengzhongzhu1621/xgo/logging"
 	"logur.dev/logur"
 )
 
-// SetLogger sets a logger to the logging package.
-func SetLogger(name string, logger *log.Logger, level logur.Level) {
-	logging.SetLogger(name, New(logger, level))
+// SetCustomLogger sets a logger to the logging package.
+func SetCustomLogger(name string, logger *log.Logger, level logur.Level) {
+	SetLogger(name, New(logger, level))
 }
 
 // EnsureDefaultLogger will replace the default logger by log default logger.
 func EnsureDefaultLogger(level logur.Level) {
-	SetLogger(logging.DefaultLoggerName, log.New(os.Stderr, log.Prefix(), log.Flags()), level)
+	SetCustomLogger(DefaultLoggerName, log.New(os.Stderr, log.Prefix(), log.Flags()), level)
 }
 
 // Logger is a Logur adapter for TEMPLATE.

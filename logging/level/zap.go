@@ -30,7 +30,7 @@ var Levels = map[string]zapcore.Level{
 	"fatal": zapcore.FatalLevel,
 }
 
-var levelToZapLevel = map[Level]zapcore.Level{
+var LevelToZapLevel = map[Level]zapcore.Level{
 	LevelTrace: zapcore.DebugLevel,
 	LevelDebug: zapcore.DebugLevel,
 	LevelInfo:  zapcore.InfoLevel,
@@ -39,7 +39,7 @@ var levelToZapLevel = map[Level]zapcore.Level{
 	LevelFatal: zapcore.FatalLevel,
 }
 
-var zapLevelToLevel = map[zapcore.Level]Level{
+var ZapLevelToLevel = map[zapcore.Level]Level{
 	zapcore.DebugLevel: LevelDebug,
 	zapcore.InfoLevel:  LevelInfo,
 	zapcore.WarnLevel:  LevelWarn,

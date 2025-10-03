@@ -9,8 +9,23 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/fengzhongzhu1621/xgo/plugin"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
+
+var (
+	writers = make(map[string]plugin.IFactory)
+)
+
+// RegisterWriter registers log output writer. Writer may have multiple implementations.
+func RegisterWriter(name string, writer plugin.IFactory) {
+	writers[name] = writer
+}
+
+// GetWriter gets log output writer, returns nil if not exist.
+func GetLogWriter(name string) plugin.IFactory {
+	return writers[name]
+}
 
 // NewSlogWriter 返回日志的输出
 func NewSlogWriter(writerType string, settings map[string]string) (io.Writer, error) {

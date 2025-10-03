@@ -1,107 +1,190 @@
 package logging
 
 import (
-	"io"
-	"os"
-	"sync"
-	"time"
+	"context"
 
-	"github.com/fengzhongzhu1621/xgo/logging/level"
-	loglevel "github.com/fengzhongzhu1621/xgo/logging/level"
+	"github.com/fengzhongzhu1621/xgo/codec"
 )
 
-const DATETIME_DEFAULT_FORMAT string = "2006-01-02 15:04:05"
-
-type LoggerConfig struct {
-	flag      int // properties
-	Formatter ILogFormatter
-	level     loglevel.LogLevel
-	mu        sync.Mutex
-	buf       []byte
-	out       io.Writer
-}
-
-type ILogFormatter interface {
-	Format(loggerConfig *LoggerConfig, t time.Time, level loglevel.LogLevel, message string) error
-}
-
-type DefaultFormatter struct{}
-
-func (formatter *DefaultFormatter) Format(
-	loggerConfig *LoggerConfig,
-	t time.Time,
-	level level.LogLevel,
-	message string,
-) error {
-	buf := &loggerConfig.buf
-	*buf = append(*buf, t.Format(DATETIME_DEFAULT_FORMAT)...)
-	// year, month, day := t.Date()
-	// bytesconv.Itoa(buf, year, 4)
-	// *buf = append(*buf, '-')
-	// bytesconv.Itoa(buf, int(month), 2)
-	// *buf = append(*buf, '-')
-	// bytesconv.Itoa(buf, day, 2)
-	*buf = append(*buf, '|')
-	*buf = append(*buf, loglevel.LogLevelToString(level)...)
-	*buf = append(*buf, '|')
-	*buf = append(*buf, message...)
-	if len(message) == 0 || message[len(message)-1] != '\n' {
-		*buf = append(*buf, '\n')
+// Trace logs to TRACE log. Arguments are handled in the manner of fmt.Println.
+func Trace(args ...interface{}) {
+	if traceEnabled {
+		GetDefaultLogger().Trace(args...)
 	}
-	return nil
 }
 
-var loggerConfig = NewLogger(os.Stderr)
-
-func NewLogger(w io.Writer) *LoggerConfig {
-	return &LoggerConfig{out: os.Stderr, level: level.LOG_INFO, Formatter: &DefaultFormatter{}}
-}
-
-func (loggerConfig *LoggerConfig) SetFlags(flag int) {
-	loggerConfig.mu.Lock()
-	defer loggerConfig.mu.Unlock()
-	loggerConfig.flag = flag
-}
-
-func (loggerConfig *LoggerConfig) SetFormatter(formatter ILogFormatter) {
-	loggerConfig.mu.Lock()
-	defer loggerConfig.mu.Unlock()
-	loggerConfig.Formatter = formatter
-}
-
-func (loggerConfig *LoggerConfig) SetOutputWriter(out io.Writer) {
-	loggerConfig.mu.Lock()
-	defer loggerConfig.mu.Unlock()
-	loggerConfig.out = out
-}
-
-func (loggerConfig *LoggerConfig) SetLevel(level level.LogLevel) {
-	loggerConfig.mu.Lock()
-	defer loggerConfig.mu.Unlock()
-	loggerConfig.level = level
-}
-
-func (loggerConfig *LoggerConfig) Output(calldepth int, level level.LogLevel, message string) error {
-	now := time.Now() // get this early.
-	loggerConfig.mu.Lock()
-	defer loggerConfig.mu.Unlock()
-	loggerConfig.buf = loggerConfig.buf[:0]
-	loggerConfig.Formatter.Format(loggerConfig, now, level, message)
-	_, err := loggerConfig.out.Write(loggerConfig.buf)
-	return err
-}
-
-func (loggerConfig *LoggerConfig) log(level level.LogLevel, message string) error {
-	if loggerConfig.level > level {
-		return nil
+// Tracef logs to TRACE log. Arguments are handled in the manner of fmt.Printf.
+func Tracef(format string, args ...interface{}) {
+	if traceEnabled {
+		GetDefaultLogger().Tracef(format, args...)
 	}
-	return loggerConfig.Output(2, level, message)
 }
 
-func (loggerConfig *LoggerConfig) Info(message string) error {
-	return loggerConfig.log(level.LOG_INFO, message)
+// TraceContext logs to TRACE log. Arguments are handled in the manner of fmt.Println.
+func TraceContext(ctx context.Context, args ...interface{}) {
+	if !traceEnabled {
+		return
+	}
+	if l, ok := codec.Message(ctx).Logger().(ILogger); ok {
+		l.Trace(args...)
+		return
+	}
+	GetDefaultLogger().Trace(args...)
 }
 
-func Info(message string) error {
-	return loggerConfig.Info(message)
+// TraceContextf logs to TRACE log. Arguments are handled in the manner of fmt.Printf.
+func TraceContextf(ctx context.Context, format string, args ...interface{}) {
+	if !traceEnabled {
+		return
+	}
+	if l, ok := codec.Message(ctx).Logger().(ILogger); ok {
+		l.Tracef(format, args...)
+		return
+	}
+	GetDefaultLogger().Tracef(format, args...)
+}
+
+// Debug logs to DEBUG log. Arguments are handled in the manner of fmt.Println.
+func Debug(args ...interface{}) {
+	GetDefaultLogger().Debug(args...)
+}
+
+// Debugf logs to DEBUG log. Arguments are handled in the manner of fmt.Printf.
+func Debugf(format string, args ...interface{}) {
+	GetDefaultLogger().Debugf(format, args...)
+}
+
+// DebugContext logs to DEBUG log. Arguments are handled in the manner of fmt.Println.
+func DebugContext(ctx context.Context, args ...interface{}) {
+	if l, ok := codec.Message(ctx).Logger().(ILogger); ok {
+		l.Debug(args...)
+		return
+	}
+	GetDefaultLogger().Debug(args...)
+}
+
+// DebugContextf logs to DEBUG log. Arguments are handled in the manner of fmt.Printf.
+func DebugContextf(ctx context.Context, format string, args ...interface{}) {
+	if l, ok := codec.Message(ctx).Logger().(ILogger); ok {
+		l.Debugf(format, args...)
+		return
+	}
+	GetDefaultLogger().Debugf(format, args...)
+}
+
+// Info logs to INFO log. Arguments are handled in the manner of fmt.Println.
+func Info(args ...interface{}) {
+	GetDefaultLogger().Info(args...)
+}
+
+// Infof logs to INFO log. Arguments are handled in the manner of fmt.Printf.
+func Infof(format string, args ...interface{}) {
+	GetDefaultLogger().Infof(format, args...)
+}
+
+// InfoContext logs to INFO log. Arguments are handled in the manner of fmt.Println.
+func InfoContext(ctx context.Context, args ...interface{}) {
+	if l, ok := codec.Message(ctx).Logger().(ILogger); ok {
+		l.Info(args...)
+		return
+	}
+	GetDefaultLogger().Info(args...)
+}
+
+// InfoContextf logs to INFO log. Arguments are handled in the manner of fmt.Printf.
+func InfoContextf(ctx context.Context, format string, args ...interface{}) {
+	if l, ok := codec.Message(ctx).Logger().(ILogger); ok {
+		l.Infof(format, args...)
+		return
+	}
+	GetDefaultLogger().Infof(format, args...)
+}
+
+// Warn logs to WARNING log. Arguments are handled in the manner of fmt.Println.
+func Warn(args ...interface{}) {
+	GetDefaultLogger().Warn(args...)
+}
+
+// Warnf logs to WARNING log. Arguments are handled in the manner of fmt.Printf.
+func Warnf(format string, args ...interface{}) {
+	GetDefaultLogger().Warnf(format, args...)
+}
+
+// WarnContext logs to WARNING log. Arguments are handled in the manner of fmt.Println.
+func WarnContext(ctx context.Context, args ...interface{}) {
+	if l, ok := codec.Message(ctx).Logger().(ILogger); ok {
+		l.Warn(args...)
+		return
+	}
+	GetDefaultLogger().Warn(args...)
+}
+
+// WarnContextf logs to WARNING log. Arguments are handled in the manner of fmt.Printf.
+func WarnContextf(ctx context.Context, format string, args ...interface{}) {
+	if l, ok := codec.Message(ctx).Logger().(ILogger); ok {
+		l.Warnf(format, args...)
+		return
+	}
+	GetDefaultLogger().Warnf(format, args...)
+
+}
+
+// Error logs to ERROR log. Arguments are handled in the manner of fmt.Println.
+func Error(args ...interface{}) {
+	GetDefaultLogger().Error(args...)
+}
+
+// Errorf logs to ERROR log. Arguments are handled in the manner of fmt.Printf.
+func Errorf(format string, args ...interface{}) {
+	GetDefaultLogger().Errorf(format, args...)
+}
+
+// ErrorContext logs to ERROR log. Arguments are handled in the manner of fmt.Println.
+func ErrorContext(ctx context.Context, args ...interface{}) {
+	if l, ok := codec.Message(ctx).Logger().(ILogger); ok {
+		l.Error(args...)
+		return
+	}
+	GetDefaultLogger().Error(args...)
+}
+
+// ErrorContextf logs to ERROR log. Arguments are handled in the manner of fmt.Printf.
+func ErrorContextf(ctx context.Context, format string, args ...interface{}) {
+	if l, ok := codec.Message(ctx).Logger().(ILogger); ok {
+		l.Errorf(format, args...)
+		return
+	}
+	GetDefaultLogger().Errorf(format, args...)
+}
+
+// Fatal logs to ERROR log. Arguments are handled in the manner of fmt.Println.
+// All Fatal logs will exit by calling os.Exit(1).
+// Implementations may also call os.Exit() with a non-zero exit code.
+func Fatal(args ...interface{}) {
+	GetDefaultLogger().Fatal(args...)
+}
+
+// Fatalf logs to ERROR log. Arguments are handled in the manner of fmt.Printf.
+func Fatalf(format string, args ...interface{}) {
+	GetDefaultLogger().Fatalf(format, args...)
+}
+
+// FatalContext logs to ERROR log. Arguments are handled in the manner of fmt.Println.
+// All Fatal logs will exit by calling os.Exit(1).
+// Implementations may also call os.Exit() with a non-zero exit code.
+func FatalContext(ctx context.Context, args ...interface{}) {
+	if l, ok := codec.Message(ctx).Logger().(ILogger); ok {
+		l.Fatal(args...)
+		return
+	}
+	GetDefaultLogger().Fatal(args...)
+}
+
+// FatalContextf logs to ERROR log. Arguments are handled in the manner of fmt.Printf.
+func FatalContextf(ctx context.Context, format string, args ...interface{}) {
+	if l, ok := codec.Message(ctx).Logger().(ILogger); ok {
+		l.Fatalf(format, args...)
+		return
+	}
+	GetDefaultLogger().Fatalf(format, args...)
 }

@@ -1,4 +1,4 @@
-package log
+package config
 
 import (
 	"github.com/fengzhongzhu1621/xgo/datetime"
@@ -6,17 +6,17 @@ import (
 )
 
 // Config is the log config. Each log may have multiple outputs.
-type Config []OutputConfig
+type LogOutputConfigs []LogOutputConfig
 
 // OutputConfig is the output config, includes console, file and remote.
-type OutputConfig struct {
+type LogOutputConfig struct {
 	// Writer is the output of log, such as console or file.
-	Writer      string      `yaml:"writer"`
-	WriteConfig WriteConfig `yaml:"writer_config"`
+	Writer      string         `yaml:"writer"`
+	WriteConfig LogWriteConfig `yaml:"writer_config"`
 
 	// Formatter is the format of log, such as console or json.
-	Formatter    string       `yaml:"formatter"`
-	FormatConfig FormatConfig `yaml:"formatter_config"`
+	Formatter    string          `yaml:"formatter"`
+	FormatConfig LogFormatConfig `yaml:"formatter_config"`
 
 	// RemoteConfig is the remote config. It's defined by business and should be registered by
 	// third-party modules.
@@ -32,8 +32,8 @@ type OutputConfig struct {
 	EnableColor bool `yaml:"enable_color"`
 }
 
-// WriteConfig is the local file config.
-type WriteConfig struct {
+// LogWriteConfig is the local file config.
+type LogWriteConfig struct {
 	// LogPath is the log path like /usr/local/trpc/log/.
 	LogPath string `yaml:"log_path"`
 	// Filename is the file name like trpc.log.
@@ -57,7 +57,7 @@ type WriteConfig struct {
 }
 
 // FormatConfig is the log format config.
-type FormatConfig struct {
+type LogFormatConfig struct {
 	// TimeFmt is the time format of log output, default as "2006-01-02 15:04:05.000" on empty.
 	TimeFmt string `yaml:"time_fmt"`
 
