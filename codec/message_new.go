@@ -41,7 +41,8 @@ func EnsureMessage(ctx context.Context) (context.Context, IMsg) {
 		return ctx, m
 	}
 
-	// 如果上下文中没有消息，创建一个新消息（默认值）
+	// 上下文中没有消息，则
+	// 创建一个新消息（默认值），并将消息加入到上下文
 	return WithNewMessage(ctx)
 }
 

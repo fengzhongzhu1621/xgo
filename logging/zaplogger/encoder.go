@@ -21,6 +21,25 @@ var formatEncoders = map[string]NewFormatEncoder{
 	"json":    zapcore.NewJSONEncoder,
 }
 
+// RegisterFormatEncoder registers a NewFormatEncoder with the specified formatName key.
+// The existing formats include "console" and "json", but you can override these format encoders
+// or provide a new custom one.
+func RegisterFormatEncoder(formatName string, newFormatEncoder NewFormatEncoder) {
+	formatEncoders[formatName] = newFormatEncoder
+}
+
+// CustomTimeFormat customize time format.
+// Deprecated: Use https://pkg.go.dev/time#Time.Format instead.
+func CustomTimeFormat(t time.Time, format string) string {
+	return t.Format(format)
+}
+
+// DefaultTimeFormat returns the default time format "2006-01-02 15:04:05.000".
+// Deprecated: Use https://pkg.go.dev/time#Time.AppendFormat instead.
+func DefaultTimeFormat(t time.Time) []byte {
+	return defaultTimeFormat(t)
+}
+
 func NewConsoleCore(c *config.LogOutputConfig) (zapcore.Core, zap.AtomicLevel) {
 	lvl := zap.NewAtomicLevelAt(level.Levels[c.Level])
 	return zapcore.NewCore(

@@ -2,9 +2,80 @@ package logging
 
 import (
 	"context"
+	"errors"
 
 	"github.com/fengzhongzhu1621/xgo/codec"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
+
+// With adds user defined fields to Logger. Field support multiple values.
+func With(fields ...Field) ILogger {
+	if ol, ok := GetDefaultLogger().(IOptionLogger); ok {
+		return ol.WithOptions(WithAdditionalCallerSkip(-1)).With(fields...)
+	}
+	return GetDefaultLogger().With(fields...)
+}
+
+// WithContext add user defined fields to the Logger of context. Fields support multiple values.
+func WithContext(ctx context.Context, fields ...Field) ILogger {
+	logger, ok := codec.Message(ctx).Logger().(ILogger)
+	if !ok {
+		// 降级到默认logger
+		return With(fields...)
+	}
+	if ol, ok := logger.(IOptionLogger); ok {
+		return ol.WithOptions(WithAdditionalCallerSkip(-1)).With(fields...)
+	}
+	return logger.With(fields...)
+}
+
+// WithContextFields sets some user defined data to logs, such as uid, imei, etc.
+// Fields must be paired.
+// If ctx has already set a Msg, this function returns that ctx, otherwise, it returns a new one.
+func WithContextFields(ctx context.Context, fields ...string) context.Context {
+	tagCapacity := len(fields) / 2
+	tags := make([]Field, 0, tagCapacity)
+	for i := 0; i < tagCapacity; i++ {
+		tags = append(tags, Field{
+			Key:   fields[2*i],
+			Value: fields[2*i+1],
+		})
+	}
+
+	// 获取消息
+	ctx, msg := codec.EnsureMessage(ctx)
+	logger, ok := msg.Logger().(ILogger)
+	if ok && logger != nil {
+		logger = logger.With(tags...)
+	} else {
+		logger = GetDefaultLogger().With(tags...)
+	}
+
+	// 将 logger 加入到 msg 中
+	msg.WithLogger(logger)
+	return ctx
+}
+
+// RedirectStdLog redirects std log to trpc logger as log level INFO.
+// After redirection, log flag is zero, the prefix is empty.
+// The returned function may be used to recover log flag and prefix, and redirect output to
+// os.Stderr.
+func RedirectStdLog(logger ILogger) (func(), error) {
+	return RedirectStdLogAt(logger, zap.InfoLevel)
+}
+
+// RedirectStdLogAt redirects std log to trpc logger with a specific level.
+// After redirection, log flag is zero, the prefix is empty.
+// The returned function may be used to recover log flag and prefix, and redirect output to
+// os.Stderr.
+func RedirectStdLogAt(logger ILogger, level zapcore.Level) (func(), error) {
+	if l, ok := logger.(*zapLog); ok {
+		return zap.RedirectStdLogAt(l.logger, level)
+	}
+
+	return nil, errors.New("log: only supports redirecting std logs to trpc zap logger")
+}
 
 // Trace logs to TRACE log. Arguments are handled in the manner of fmt.Println.
 func Trace(args ...interface{}) {
