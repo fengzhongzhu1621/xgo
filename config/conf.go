@@ -141,7 +141,7 @@ type AppInfo struct {
 }
 
 // Load 将配置文件转换为全局结构体对象
-func Load(v *viper.Viper) (*Config, error) {
+func LoadByViper(v *viper.Viper) (*Config, error) {
 	var cfg Config
 
 	// 配置文件转换为全局结构体对象

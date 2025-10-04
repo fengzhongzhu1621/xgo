@@ -59,7 +59,7 @@ func LoadConfig() {
 	}
 
 	// 将配置文件转换为全局配置对象
-	globalConfig, err = Load(viper.GetViper())
+	globalConfig, err = LoadByViper(viper.GetViper())
 	if err != nil {
 		panic(fmt.Sprintf("Could not load configurations from file, error: %v", err))
 	}
@@ -81,11 +81,11 @@ func InitLogger(cache bool) {
 }
 
 func init() {
-	InitLogger(false)
+	LoadConfig()
 }
 
 func init() {
-	LoadConfig()
+	InitLogger(false)
 }
 
 func init() {

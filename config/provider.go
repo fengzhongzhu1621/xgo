@@ -7,7 +7,6 @@ import (
 
 	"github.com/fengzhongzhu1621/xgo/logging"
 	"github.com/fsnotify/fsnotify"
-	"trpc.group/trpc-go/tnet/log"
 )
 
 // providerMap 存储所有注册的数据提供者，以名称作为键
@@ -76,7 +75,7 @@ func newFileProvider() *FileProvider {
 		go fp.run() // 启动监听协程
 		return fp
 	}
-	log.Debugf("fsnotify.NewWatcher err: %+v", err)
+	logging.Debugf("fsnotify.NewWatcher err: %+v", err)
 	return fp
 }
 
