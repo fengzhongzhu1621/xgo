@@ -141,3 +141,74 @@ func TestLoadYaml(t *testing.T) {
 
 	require.Implements((*IConfig)(nil), c)
 }
+
+func TestGetString(t *testing.T) {
+	require := require.New(t)
+	c, err := Load("../tests/testdata/trpc_go.yaml", WithCodec("yaml"))
+	require.Nil(err, "failed to load config")
+
+	out := c.GetString("server.app", "cc")
+	t.Logf("return %+v", out)
+	require.Equal("test", out, "app name is wrong")
+
+	out = c.GetString("server.app1", "cc")
+	t.Logf("return %+v", out)
+	require.Equal("cc", out, "app name is wrong")
+
+	out = c.GetString("server.admin.port", "cc")
+	t.Logf("return %+v", out)
+	require.Equal("9528", out, "app name is wrong")
+
+	out = c.GetString("server.admin", "cc")
+	t.Logf("return %+v", out)
+	require.Equal("cc", out, "app name is wrong")
+}
+
+func TestGetBool(t *testing.T) {
+	require := require.New(t)
+	c, err := Load("../tests/testdata/trpc_go.yaml", WithCodec("yaml"))
+	require.Nil(err, "failed to load config")
+
+	out := c.GetBool("server.admin_port123", false)
+	t.Logf("return %+v", out)
+	require.Equal(false, out)
+
+	out = c.GetBool("server.app", false)
+	t.Logf("return %+v", out)
+	require.Equal(false, out)
+}
+
+func TestGet(t *testing.T) {
+	require := require.New(t)
+	c, err := Load("../tests/testdata/trpc_go.yaml", WithCodec("yaml"))
+	require.Nil(err, "failed to load config")
+
+	out := c.Get("server.admin_port123", 10001)
+	t.Logf("return %+v", out)
+	require.Equal(10001, out)
+}
+
+func TestIsSet(t *testing.T) {
+	require := require.New(t)
+	c, err := Load("../tests/testdata/trpc_go.yaml", WithCodec("yaml"))
+	require.Nil(err, "failed to load config")
+
+	out := c.IsSet("server.admin.port")
+	require.Equal(true, out)
+	out = c.IsSet("server.admin_port1")
+	require.Equal(false, out)
+}
+
+func TestUnmarshal(t *testing.T) {
+	require := require.New(t)
+	c, err := Load("../tests/testdata/trpc_go.yaml", WithCodec("yaml"), WithProvider("file"))
+	require.Nil(err, "failed to load config")
+	var b struct {
+		Server struct {
+			App string
+		}
+	}
+	err = c.Unmarshal(&b)
+	require.Nil(err)
+	require.Equal("test", b.Server.App, "failed to read item")
+}
