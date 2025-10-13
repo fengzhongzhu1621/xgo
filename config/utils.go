@@ -34,14 +34,17 @@ func UnmarshalKey(key string, obj interface{}) {
 	}
 }
 
-// search 在嵌套的配置数据中递归搜索指定键路径的值
+// searchByKeys 在嵌套的配置数据中递归搜索指定键路径的值
 // 参数:
-//   unmarshalledData: 已解析的配置数据映射
-//   keys: 键路径数组，用于在嵌套结构中定位目标值
+//
+//	unmarshalledData: 已解析的配置数据映射
+//	keys: 键路径数组，用于在嵌套结构中定位目标值
+//
 // 返回:
-//   interface{}: 找到的配置值
-//   error: 如果键不存在则返回 ErrConfigNotExist 错误
-func search(unmarshalledData map[string]interface{}, keys []string) (interface{}, error) {
+//
+//	interface{}: 找到的配置值
+//	error: 如果键不存在则返回 ErrConfigNotExist 错误
+func searchByKeys(unmarshalledData map[string]interface{}, keys []string) (interface{}, error) {
 	// 如果键路径为空，返回配置不存在错误
 	if len(keys) == 0 {
 		return nil, ErrConfigNotExist
@@ -57,15 +60,15 @@ func search(unmarshalledData map[string]interface{}, keys []string) (interface{}
 	if len(keys) == 1 {
 		return key, nil
 	}
-	
+
 	// 根据值的类型进行递归搜索
 	switch key := key.(type) {
 	case map[interface{}]interface{}:
 		// 处理 interface{} 键的映射，转换为 string 键的映射后递归搜索
-		return search(cast.ToStringMap(key), keys[1:])
+		return searchByKeys(cast.ToStringMap(key), keys[1:])
 	case map[string]interface{}:
 		// 处理 string 键的映射，直接递归搜索剩余的键路径
-		return search(key, keys[1:])
+		return searchByKeys(key, keys[1:])
 	default:
 		// 如果当前值不是映射类型，但还有剩余键路径，说明配置结构不匹配
 		return nil, ErrConfigNotExist

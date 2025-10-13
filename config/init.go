@@ -5,13 +5,11 @@ import (
 	"path"
 	"path/filepath"
 	"runtime"
-	"sync"
 
+	"github.com/fengzhongzhu1621/xgo/config/provider"
 	"github.com/fengzhongzhu1621/xgo/logging/zaplogger"
 	"github.com/spf13/viper"
 )
-
-var loggerInitOnce sync.Once
 
 var (
 	cfgFile      string
@@ -46,6 +44,7 @@ func GetCfgFile() string {
 	return cfgFile
 }
 
+// LoadConfig 使用 viper 读取配置文件
 func LoadConfig() {
 	var err error
 
@@ -73,14 +72,14 @@ func InitLogger(cache bool) {
 	// 设置系统日志记录器
 	zaplogger.InitSystemLogger(&logger.System)
 
-	loggerInitOnce.Do(func() {
-		// 设置 web 服务器日志记录器
-		appLogger := zaplogger.NewZapJSONLogger(&logger.Web, cache)
-		zaplogger.SetDbLogger(&zaplogger.DBLogger{Logger: appLogger})
-	})
+	// 设置 web 服务器日志记录器
+	appLogger := zaplogger.NewZapJSONLogger(&logger.Web, cache)
+	zaplogger.SetDbLogger(&zaplogger.DBLogger{Logger: appLogger})
+
 }
 
 func init() {
+	// 使用 viper 读取配置文件
 	LoadConfig()
 }
 
@@ -89,5 +88,6 @@ func init() {
 }
 
 func init() {
-	RegisterProvider(newFileProvider())
+	// 创建配置文件监听器
+	provider.RegisterProvider(provider.NewFileProvider())
 }

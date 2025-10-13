@@ -92,11 +92,11 @@ func Test_search(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := search(tt.args.unmarshalledData, tt.args.keys)
-			if !tt.wantErr(t, err, fmt.Sprintf("search(%v, %v)", tt.args.unmarshalledData, tt.args.keys)) {
+			got, err := searchByKeys(tt.args.unmarshalledData, tt.args.keys)
+			if !tt.wantErr(t, err, fmt.Sprintf("searchByKeys(%v, %v)", tt.args.unmarshalledData, tt.args.keys)) {
 				return
 			}
-			assert.Equalf(t, tt.want, got, "search(%v, %v)", tt.args.unmarshalledData, tt.args.keys)
+			assert.Equalf(t, tt.want, got, "searchByKeys(%v, %v)", tt.args.unmarshalledData, tt.args.keys)
 		})
 	}
 }

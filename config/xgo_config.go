@@ -6,77 +6,49 @@ import (
 	"sync"
 
 	"github.com/fengzhongzhu1621/xgo/cast"
+	"github.com/fengzhongzhu1621/xgo/config/entity"
+	"github.com/fengzhongzhu1621/xgo/config/hooks"
+	"github.com/fengzhongzhu1621/xgo/config/provider"
 	"github.com/fengzhongzhu1621/xgo/crypto/unmarshaler"
 	"github.com/fengzhongzhu1621/xgo/env"
 	"github.com/fengzhongzhu1621/xgo/logging"
-	"trpc.group/trpc-go/tnet/log"
 )
 
-var _ IConfig = (*TrpcConfig)(nil)
+var _ IConfig = (*XGoConfig)(nil)
 
-// TrpcConfig is used to parse yaml config file for trpc.
-type TrpcConfig struct {
-	id  string       // config identity
-	msg WatchMessage // new to init message for notify only copy
+// XGoConfig is used to parse yaml config file for xgo.
+type XGoConfig struct {
+	id  string             // config identity
+	msg hooks.WatchMessage // new to init message for notify only copy
 
-	p         IDataProvider      // config provider
-	path      string             // config name
-	decoder   unmarshaler.ICodec // config codec
-	expandEnv bool               // status for whether replace the variables in the configuration with environment variables
+	p         provider.IDataProvider // config provider
+	path      string                 // config name
+	decoder   unmarshaler.ICodec     // config codec
+	expandEnv bool                   // status for whether replace the variables in the configuration with environment variables
 
 	// because function is not support comparable in singleton, so the following options work only for the first load
 	watch     bool
-	watchHook func(message WatchMessage)
+	watchHook hooks.WatchMessageHookFunc
 
 	mutex sync.RWMutex
-	value *entity // store config value
+	value *entity.Entity // store config value
 }
 
-// WatchMessage change message
-type WatchMessage struct {
-	Provider  string // provider name
-	Path      string // config path
-	ExpandEnv bool   // expend env status
-	Codec     string // codec
-	Watch     bool   // status for start watch
-	Value     []byte // config content diff ?
-	Error     error  // load error message, success is empty string
-}
-
-// defaultNotifyChange default hook for notify config changed
-var defaultWatchHook = func(message WatchMessage) {}
-
-// SetDefaultWatchHook set default hook notify when config changed
-func SetDefaultWatchHook(f func(message WatchMessage)) {
-	defaultWatchHook = f
-}
-
-// entity 配置实体，包含配置内容的原始数据和解析后的数据
-type entity struct {
-	// 配置原始内容
-	raw []byte // current binary data
-	// 解析后的配置对象
-	data interface{} // unmarshal type to use point type, save latest no error data
-}
-
-func newEntity() *entity {
-	return &entity{
-		data: make(map[string]interface{}),
-	}
-}
-
-// newTrpcConfig create a new config instance
-func newTrpcConfig(path string, opts ...LoadOption) (*TrpcConfig, error) {
-	c := &TrpcConfig{
+// newXGoConfig create a new config instance
+func newXGoConfig(path string, opts ...LoadOption) (*XGoConfig, error) {
+	c := &XGoConfig{
+		p:         provider.GetProvider("file"), // 获得 FileProvider 对象
 		path:      path,                         // 配置文件路径
-		p:         GetProvider("file"),          // 获得 FileProvider 对象
 		decoder:   unmarshaler.GetCodec("yaml"), // 获得 yaml 编解码器对象
 		expandEnv: true,                         // 是否展开环境变量
-		watch:     true,                         // 是否开启监听
-		watchHook: func(message WatchMessage) {
+
+		watch: true, // 是否开启监听
+		watchHook: func(message hooks.WatchMessage) {
+			defaultWatchHook := hooks.GetWatchMessageHook()
 			defaultWatchHook(message)
 		},
 	}
+
 	for _, o := range opts {
 		o(c)
 	}
@@ -100,66 +72,82 @@ func newTrpcConfig(path string, opts ...LoadOption) (*TrpcConfig, error) {
 	return c, nil
 }
 
-// doWatch 监听回调函数，类型是 ProviderCallback
+// doWatch 解析并记录配置内容
 // 当配置文件内容发生变化后，触发此回调
-// data 监听的文件内容
-func (c *TrpcConfig) doWatch(data []byte) error {
+// raw 监听的文件内容
+func (c *XGoConfig) doWatch(raw []byte) error {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
-	return c.set(data)
+
+	return c.set(raw)
 }
 
-func (c *TrpcConfig) set(data []byte) error {
+// set 解析并记录配置内容到 entity 对象中
+func (c *XGoConfig) set(raw []byte) error {
+	var (
+		data = make(map[string]interface{})
+	)
+
+	// 解析环境变量
 	if c.expandEnv {
-		data = env.ExpandEnv(data)
+		raw = env.ExpandEnv(raw)
 	}
 
-	e := newEntity()
-	e.raw = data                              // 配置原始内容
-	err := c.decoder.Unmarshal(data, &e.data) // 解析后的配置对象
+	// 记录配置内容到 Entity 中
+	e := entity.NewEntity()
+	e.SetRaw(raw)                         // 配置原始内容
+	err := c.decoder.Unmarshal(raw, data) // 解析后的配置对象
 	if err != nil {
-		return fmt.Errorf("trpc/config: failed to parse:%w, id:%s", err, c.id)
+		return fmt.Errorf("xgo/config: failed to parse:%w, id:%s", err, c.id)
 	}
+	e.SetData(data)
+
 	c.value = e
 	return nil
 }
 
-func (c *TrpcConfig) notify(data []byte, err error) {
+// notify 执行 WatchMessageHook
+func (c *XGoConfig) notify(raw []byte, err error) {
 	m := c.msg
 
-	m.Value = data
+	m.Value = raw
 	if err != nil {
 		m.Error = err
 	}
 
+	// 执行 watch message hook，传递WatchMessage对象，包含配置的原始内容
 	c.watchHook(m)
 }
 
 // Load loads config.
-func (c *TrpcConfig) Load() error {
+func (c *XGoConfig) Load() error {
 	if c.p == nil {
 		return ErrProviderNotExist
 	}
 
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
+
+	// 读取配置内容
 	data, err := c.p.Read(c.path)
 	if err != nil {
-		return fmt.Errorf("trpc/config failed to load error: %w config id: %s", err, c.id)
+		return fmt.Errorf("xgo/config failed to load error: %w config id: %s", err, c.id)
 	}
 
+	// 解析并记录配置内容到 entity 对象中
 	return c.set(data)
 }
 
 // Reload reloads config.
-func (c *TrpcConfig) Reload() {
+func (c *XGoConfig) Reload() {
 	if err := c.Load(); err != nil {
-		logging.Tracef("trpc/config: failed to reload %s: %v", c.id, err)
+		logging.Tracef("xgo/config: failed to reload %s: %v", c.id, err)
 	}
 }
 
 // init return config entity error when entity is empty and load run loads config once
-func (c *TrpcConfig) init() error {
+func (c *XGoConfig) init() error {
+	// 防止重复初始化
 	c.mutex.RLock()
 	if c.value != nil {
 		c.mutex.RUnlock()
@@ -169,114 +157,120 @@ func (c *TrpcConfig) init() error {
 
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
+
 	if c.value != nil {
 		return nil
 	}
 
-	// 读取配置
+	// 读取配置内容
 	data, err := c.p.Read(c.path)
 	if err != nil {
-		return fmt.Errorf("trpc/config failed to load error: %w config id: %s", err, c.id)
+		return fmt.Errorf("xgo/config failed to load error: %w config id: %s", err, c.id)
 	}
-	// 解析配置内容为配置对象
+
+	// 解析并记录配置内容到 entity 对象中
 	return c.set(data)
 }
 
-func (c *TrpcConfig) get() *entity {
+// get 获取 entity 对象
+func (c *XGoConfig) get() *entity.Entity {
 	c.mutex.RLock()
 	defer c.mutex.RUnlock()
+
 	if c.value != nil {
 		return c.value
 	}
-	return newEntity()
+	return entity.NewEntity()
 }
 
 // Get returns config value by key. If key is absent will return the default value.
-func (c *TrpcConfig) Get(key string, defaultValue interface{}) interface{} {
+func (c *XGoConfig) Get(key string, defaultValue interface{}) interface{} {
+	// 根据 keys 查询配置中的 value 值
 	if v, ok := c.search(key); ok {
 		return v
 	}
+
 	return defaultValue
 }
 
 // Unmarshal deserializes the config into input param.
-func (c *TrpcConfig) Unmarshal(out interface{}) error {
-	return c.decoder.Unmarshal(c.get().raw, out)
+func (c *XGoConfig) Unmarshal(out interface{}) error {
+	return c.decoder.Unmarshal(c.get().GetRaw(), out)
 }
 
 // Bytes returns original config data as bytes.
-func (c *TrpcConfig) Bytes() []byte {
-	return c.get().raw
+func (c *XGoConfig) Bytes() []byte {
+	return c.get().GetRaw()
 }
 
 // GetInt returns int value by key, the second parameter
 // is default value when key is absent or type conversion fails.
-func (c *TrpcConfig) GetInt(key string, defaultValue int) int {
+func (c *XGoConfig) GetInt(key string, defaultValue int) int {
 	return c.findWithDefaultValue(key, defaultValue).(int)
 }
 
 // GetInt32 returns int32 value by key, the second parameter
 // is default value when key is absent or type conversion fails.
-func (c *TrpcConfig) GetInt32(key string, defaultValue int32) int32 {
+func (c *XGoConfig) GetInt32(key string, defaultValue int32) int32 {
 	return c.findWithDefaultValue(key, defaultValue).(int32)
 }
 
 // GetInt64 returns int64 value by key, the second parameter
 // is default value when key is absent or type conversion fails.
-func (c *TrpcConfig) GetInt64(key string, defaultValue int64) int64 {
+func (c *XGoConfig) GetInt64(key string, defaultValue int64) int64 {
 	return c.findWithDefaultValue(key, defaultValue).(int64)
 }
 
 // GetUint returns uint value by key, the second parameter
 // is default value when key is absent or type conversion fails.
-func (c *TrpcConfig) GetUint(key string, defaultValue uint) uint {
+func (c *XGoConfig) GetUint(key string, defaultValue uint) uint {
 	return c.findWithDefaultValue(key, defaultValue).(uint)
 }
 
 // GetUint32 returns uint32 value by key, the second parameter
 // is default value when key is absent or type conversion fails.
-func (c *TrpcConfig) GetUint32(key string, defaultValue uint32) uint32 {
+func (c *XGoConfig) GetUint32(key string, defaultValue uint32) uint32 {
 	return c.findWithDefaultValue(key, defaultValue).(uint32)
 }
 
 // GetUint64 returns uint64 value by key, the second parameter
 // is default value when key is absent or type conversion fails.
-func (c *TrpcConfig) GetUint64(key string, defaultValue uint64) uint64 {
+func (c *XGoConfig) GetUint64(key string, defaultValue uint64) uint64 {
 	return c.findWithDefaultValue(key, defaultValue).(uint64)
 }
 
 // GetFloat64 returns float64 value by key, the second parameter
 // is default value when key is absent or type conversion fails.
-func (c *TrpcConfig) GetFloat64(key string, defaultValue float64) float64 {
+func (c *XGoConfig) GetFloat64(key string, defaultValue float64) float64 {
 	return c.findWithDefaultValue(key, defaultValue).(float64)
 }
 
 // GetFloat32 returns float32 value by key, the second parameter
 // is default value when key is absent or type conversion fails.
-func (c *TrpcConfig) GetFloat32(key string, defaultValue float32) float32 {
+func (c *XGoConfig) GetFloat32(key string, defaultValue float32) float32 {
 	return c.findWithDefaultValue(key, defaultValue).(float32)
 }
 
 // GetBool returns bool value by key, the second parameter
 // is default value when key is absent or type conversion fails.
-func (c *TrpcConfig) GetBool(key string, defaultValue bool) bool {
+func (c *XGoConfig) GetBool(key string, defaultValue bool) bool {
 	return c.findWithDefaultValue(key, defaultValue).(bool)
 }
 
 // GetString returns string value by key, the second parameter
 // is default value when key is absent or type conversion fails.
-func (c *TrpcConfig) GetString(key string, defaultValue string) string {
+func (c *XGoConfig) GetString(key string, defaultValue string) string {
 	return c.findWithDefaultValue(key, defaultValue).(string)
 }
 
 // IsSet returns if the config specified by key exists.
-func (c *TrpcConfig) IsSet(key string) bool {
+func (c *XGoConfig) IsSet(key string) bool {
 	_, ok := c.search(key)
 	return ok
 }
 
 // findWithDefaultValue ensures that the type of `value` is same as `defaultValue`
-func (c *TrpcConfig) findWithDefaultValue(key string, defaultValue interface{}) (value interface{}) {
+func (c *XGoConfig) findWithDefaultValue(key string, defaultValue interface{}) (value interface{}) {
 	v, ok := c.search(key)
 	if !ok {
 		return defaultValue
@@ -313,18 +307,22 @@ func (c *TrpcConfig) findWithDefaultValue(key string, defaultValue interface{}) 
 	return v
 }
 
-func (c *TrpcConfig) search(key string) (interface{}, bool) {
+// search 根据 keys 查询配置中的 value 值
+func (c *XGoConfig) search(key string) (interface{}, bool) {
+	// 获取 entity 对象
 	e := c.get()
 
-	unmarshalledData, ok := e.data.(map[string]interface{})
+	// 获得解析后的配置内容
+	unmarshalledData, ok := e.GetData().(map[string]interface{})
 	if !ok {
 		return nil, false
 	}
 
+	// 根据 keys 查询配置 keys 的 value
 	subkeys := strings.Split(key, ".")
-	value, err := search(unmarshalledData, subkeys)
+	value, err := searchByKeys(unmarshalledData, subkeys)
 	if err != nil {
-		log.Debugf("trpc config: search key %s failed: %+v", key, err)
+		logging.Debugf("xgo config: search key %s failed: %+v", key, err)
 		return value, false
 	}
 

@@ -1,4 +1,4 @@
-package config
+package provider
 
 import (
 	"os"
@@ -41,6 +41,7 @@ func GetProvider(name string) IDataProvider {
 	return providerMap[name]
 }
 
+// ////////////////////////////////////////////////////////////////////////////////////////////////
 // 编译时检查 FileProvider 是否实现了 IDataProvider 接口
 var _ IDataProvider = (*FileProvider)(nil)
 
@@ -54,29 +55,35 @@ type FileProvider struct {
 	mu              sync.RWMutex          // 读写锁，保护并发访问
 }
 
-// Name 返回文件提供者的名称
-func (*FileProvider) Name() string {
-	return "file"
-}
-
-// newFileProvider 创建一个新的文件提供者实例
-func newFileProvider() *FileProvider {
+// NewFileProvider 创建一个新的文件提供者实例
+func NewFileProvider() *FileProvider {
 	fp := &FileProvider{
-		cb:              make(chan ProviderCallback), // 初始化回调函数通道
 		disabledWatcher: true,                        // 默认禁用监听器
+		watcher:         nil,                         // 文件系统监听器
+		cb:              make(chan ProviderCallback), // 初始化回调函数通道
 		cache:           make(map[string]string),     // 初始化路径缓存
 		modTime:         make(map[string]int64),      // 初始化修改时间缓存
+		mu:              sync.RWMutex{},              // 读写锁
 	}
 	// 尝试创建文件系统监听器
 	watcher, err := fsnotify.NewWatcher()
 	if err == nil {
-		fp.disabledWatcher = false // 启用监听器
-		fp.watcher = watcher
-		go fp.run() // 启动监听协程
+		fp.disabledWatcher = false // 标记启用监听器
+		fp.watcher = watcher       // 记录创建的文件监听器
+
+		// 启动事件监听协程
+		go fp.run()
+
 		return fp
 	}
+
 	logging.Debugf("fsnotify.NewWatcher err: %+v", err)
 	return fp
+}
+
+// Name 返回文件提供者的名称
+func (*FileProvider) Name() string {
+	return "file"
 }
 
 // Read 读取指定路径的文件，返回其内容的字节数组
@@ -86,11 +93,12 @@ func (fp *FileProvider) Read(path string) ([]byte, error) {
 		if err := fp.watcher.Add(filepath.Dir(path)); err != nil {
 			return nil, err
 		}
-		// 缓存文件路径映射
+		// 缓存文件路径映射，标记配置文件可以被监听器监听
 		fp.mu.Lock()
 		fp.cache[filepath.Clean(path)] = path
 		fp.mu.Unlock()
 	}
+
 	// 读取文件内容
 	data, err := os.ReadFile(path)
 	if err != nil {
@@ -104,7 +112,7 @@ func (fp *FileProvider) Read(path string) ([]byte, error) {
 func (fp *FileProvider) Watch(cb ProviderCallback) {
 	// 只有在监听器未被禁用时才添加回调函数
 	if !fp.disabledWatcher {
-		fp.cb <- cb
+		fp.cb <- cb // 向管道传递回调函数
 	}
 }
 
@@ -113,11 +121,11 @@ func (fp *FileProvider) run() {
 	fn := make([]ProviderCallback, 0) // 存储所有注册的回调函数
 	for {
 		select {
-		case i := <-fp.cb:
+		case eventActionFn := <-fp.cb:
 			// 接收到新的回调函数，添加到列表中
-			fn = append(fn, i)
+			fn = append(fn, eventActionFn)
 		case e := <-fp.watcher.Events:
-			// 接收到文件系统事件，检查是否为修改事件
+			// 接收到文件系统事件，仅处理修改事件
 			if t, ok := fp.isModified(e); ok {
 				fp.trigger(e, t, fn) // 触发所有回调函数
 			}
@@ -136,28 +144,33 @@ func (fp *FileProvider) isModified(e fsnotify.Event) (int64, bool) {
 	defer fp.mu.RUnlock()
 
 	// 检查文件是否在缓存中（即是否被监听）
+	// 如果不再缓存，说明这个文件没有被 provider 读取过，肯定不是一个配置文件，所以可以忽略
 	if _, ok := fp.cache[filepath.Clean(e.Name)]; !ok {
 		return 0, false
 	}
+
 	// 获取文件信息
 	fi, err := os.Stat(e.Name)
 	if err != nil {
 		return 0, false
 	}
-	// 检查修改时间是否更新
+
+	// 检查修改时间是否更新，返回最新的文件修改时间
 	if fi.ModTime().Unix() > fp.modTime[e.Name] {
 		return fi.ModTime().Unix(), true
 	}
+
 	return 0, false
 }
 
-// trigger 触发所有注册的回调函数
+// trigger 文件发生修改时，触发所有注册的回调函数
 func (fp *FileProvider) trigger(e fsnotify.Event, t int64, fn []ProviderCallback) {
 	// 读取修改后的文件内容
 	data, err := os.ReadFile(e.Name)
 	if err != nil {
 		return
 	}
+
 	// 更新缓存中的修改时间
 	fp.mu.Lock()
 	path := fp.cache[filepath.Clean(e.Name)] // 获取原始路径
@@ -166,6 +179,8 @@ func (fp *FileProvider) trigger(e fsnotify.Event, t int64, fn []ProviderCallback
 
 	// 并发调用所有回调函数
 	for _, f := range fn {
-		go f(path, data)
+		// path: 配置文件路径
+		// data: 最新的配置文件内容
+		go f(path, data) // 异步执行回调
 	}
 }

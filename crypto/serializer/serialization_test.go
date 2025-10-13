@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/gookit/goutil/testutil/assert"
-	"trpc.group/trpc-go/trpc-go/codec"
 )
 
 func TestJson(t *testing.T) {
@@ -12,7 +11,7 @@ func TestJson(t *testing.T) {
 		A int
 		B string
 	}
-	s := &codec.JSONSerialization{}
+	s := &JSONSerialization{}
 	body := []byte("{\"A\":1,\"B\":\"bb\"}")
 	data := &Data{}
 
@@ -39,7 +38,7 @@ func TestJsonPBNotImplProto(t *testing.T) {
 		A int
 		B string
 	}
-	s := &codec.JSONPBSerialization{}
+	s := &JSONPBSerialization{}
 	data := &Data{A: 1, B: "test"}
 
 	bytes, err := s.Marshal(data)
@@ -65,11 +64,11 @@ func TestXML(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		buf, err := codec.Marshal(codec.SerializationTypeXML, tt.In)
+		buf, err := Marshal(SerializationTypeXML, tt.In)
 		assert.Nil(t, err)
 
 		got := &Data{}
-		err = codec.Unmarshal(codec.SerializationTypeXML, buf, got)
+		err = Unmarshal(SerializationTypeXML, buf, got)
 		assert.Nil(t, err)
 
 		assert.Equal(t, tt.In.A, got.A)

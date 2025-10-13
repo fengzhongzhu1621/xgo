@@ -8,7 +8,7 @@ import (
 	errs "github.com/fengzhongzhu1621/xgo/xerror"
 )
 
-// trpc context key data
+// context key data
 const (
 	ContextKeyMessage = ContextKey("TRPC_MESSAGE")
 	// ServiceSectionLength is the length of service section,

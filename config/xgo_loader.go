@@ -3,19 +3,19 @@ package config
 import "sync"
 
 // LoadOption defines the option function for loading configuration.
-type LoadOption func(*TrpcConfig)
+type LoadOption func(*XGoConfig)
 
-// TrpcConfigLoader is a config loader for trpc.
-type TrpcConfigLoader struct {
-	watchers sync.Map
+// XGoConfigLoader is a config loader for xgo.
+type XGoConfigLoader struct {
+	watchers sync.Map // 管理多个路径的配置，key 是配置路径
 }
 
 // ////////////////////////////////////////////////////////////////////////////////////////////
 // DefaultConfigLoader is the default config loader.
-var DefaultConfigLoader = newTrpcConfigLoad()
+var DefaultConfigLoader = newXGoConfigLoad()
 
-func newTrpcConfigLoad() *TrpcConfigLoader {
-	return &TrpcConfigLoader{}
+func newXGoConfigLoad() *XGoConfigLoader {
+	return &XGoConfigLoader{}
 }
 
 // Load returns the config specified by input parameter.
@@ -30,9 +30,9 @@ func Reload(path string, opts ...LoadOption) error {
 
 // ////////////////////////////////////////////////////////////////////////////////////////////
 // Load returns the config specified by input parameter.
-func (loader *TrpcConfigLoader) Load(path string, opts ...LoadOption) (IConfig, error) {
+func (loader *XGoConfigLoader) Load(path string, opts ...LoadOption) (IConfig, error) {
 	// 创建配置对象
-	c, err := newTrpcConfig(path, opts...)
+	c, err := newXGoConfig(path, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +47,7 @@ func (loader *TrpcConfigLoader) Load(path string, opts ...LoadOption) (IConfig, 
 	// loaded：一个布尔值，指示 key 是否存在于 map 中。存在为 true，不存在为 false。
 	i, loaded := loader.watchers.LoadOrStore(c.p, w)
 	if !loaded {
-		// 监听配置变更，执行回调函数 w.watch，更新s.items 和 更新对应的 TrpcConfig 配置
+		// 监听配置变更，执行回调函数 w.watch，更新s.items 和 更新对应的 XGoConfig 配置
 		c.p.Watch(w.watch)
 	} else {
 		w = i.(*watcher)
@@ -56,10 +56,10 @@ func (loader *TrpcConfigLoader) Load(path string, opts ...LoadOption) (IConfig, 
 	// 获取或存储set配置对象
 	s := w.getOrCreate(c.path)
 
-	// 获取或存储 TrpcConfig 配置对象
+	// 获取或存储 XGoConfig 配置对象
 	c = s.getOrStore(c)
 
-	// 初始化 TrpcConfig 配置
+	// 初始化 XGoConfig 配置
 	if err = c.init(); err != nil {
 		return nil, err
 	}
@@ -68,8 +68,8 @@ func (loader *TrpcConfigLoader) Load(path string, opts ...LoadOption) (IConfig, 
 }
 
 // Reload reloads config data.
-func (loader *TrpcConfigLoader) Reload(path string, opts ...LoadOption) error {
-	c, err := newTrpcConfig(path, opts...)
+func (loader *XGoConfigLoader) Reload(path string, opts ...LoadOption) error {
+	c, err := newXGoConfig(path, opts...)
 	if err != nil {
 		return err
 	}
@@ -81,13 +81,14 @@ func (loader *TrpcConfigLoader) Reload(path string, opts ...LoadOption) error {
 	}
 	w := v.(*watcher)
 
-	// 获得 set 管理对象
+	// 因为 watcher 包含多个配置路径，所以需要从 watcher 中根据路径获得 set 管理对象
 	s := w.get(path)
 	if s == nil {
 		return ErrConfigNotExist
 	}
 
-	// 获得 set 管理的 TrpcConfig 对象
+	// 因为每个 set 可以管理多个XGoConfig 对象
+	// 所以需要根据 id 唯一标识获得 set 管理的 XGoConfig 对象
 	oc := s.get(c.id)
 	if oc == nil {
 		return ErrConfigNotExist
@@ -131,11 +132,11 @@ func (w *watcher) watch(path string, data []byte) {
 type set struct {
 	path  string
 	mutex sync.RWMutex
-	items []*TrpcConfig
+	items []*XGoConfig
 }
 
 // get data
-func (s *set) get(id string) *TrpcConfig {
+func (s *set) get(id string) *XGoConfig {
 	s.mutex.RLock()
 	defer s.mutex.RUnlock()
 	for _, v := range s.items {
@@ -146,7 +147,7 @@ func (s *set) get(id string) *TrpcConfig {
 	return nil
 }
 
-func (s *set) getOrStore(tc *TrpcConfig) *TrpcConfig {
+func (s *set) getOrStore(tc *XGoConfig) *XGoConfig {
 	if v := s.get(tc.id); v != nil {
 		return v
 	}
@@ -166,9 +167,9 @@ func (s *set) getOrStore(tc *TrpcConfig) *TrpcConfig {
 
 // watch data change, delete no watch model config and update watch model config and target notify
 // data 监听的文件内容
-func (s *set) watch(data []byte) {
-	var items []*TrpcConfig
-	var del []*TrpcConfig
+func (s *set) watch(raw []byte) {
+	var items []*XGoConfig
+	var del []*XGoConfig
 	s.mutex.Lock()
 	for _, v := range s.items {
 		if v.watch {
@@ -181,12 +182,14 @@ func (s *set) watch(data []byte) {
 	s.mutex.Unlock()
 
 	for _, item := range items {
-		// 保存配置的原始内容
-		err := item.doWatch(data)
-		item.notify(data, err)
+		// 解析并记录配置内容
+		err := item.doWatch(raw)
+		// 执行 WatchMessageHook
+		item.notify(raw, err)
 	}
 
 	for _, item := range del {
-		item.notify(data, nil)
+		// 执行 WatchMessageHook
+		item.notify(raw, nil)
 	}
 }

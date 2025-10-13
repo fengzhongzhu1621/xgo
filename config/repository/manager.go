@@ -1,4 +1,4 @@
-package config
+package repository
 
 // https://mp.weixin.qq.com/s/1L6ZirlfO4YnN3OOv2wQSw
 

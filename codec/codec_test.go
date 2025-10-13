@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/gookit/goutil/testutil/assert"
-	"trpc.group/trpc-go/trpc-go/codec"
 )
 
 // go test -v -coverprofile=cover.out
@@ -15,11 +14,11 @@ import (
 type Fake struct {
 }
 
-func (c *Fake) Encode(message codec.Msg, inbody []byte) (outbuf []byte, err error) {
+func (c *Fake) Encode(message IMsg, inbody []byte) (outbuf []byte, err error) {
 	return nil, nil
 }
 
-func (c *Fake) Decode(message codec.Msg, inbuf []byte) (outbody []byte, err error) {
+func (c *Fake) Decode(message IMsg, inbuf []byte) (outbody []byte, err error) {
 	return nil, nil
 }
 
@@ -27,18 +26,18 @@ func (c *Fake) Decode(message codec.Msg, inbuf []byte) (outbody []byte, err erro
 func TestCodec(t *testing.T) {
 	f := &Fake{}
 
-	codec.Register("fake", f, f)
+	Register("fake", f, f)
 
-	serverCodec := codec.GetServer("NoExists")
+	serverCodec := GetServer("NoExists")
 	assert.Nil(t, serverCodec)
 
-	clientCodec := codec.GetClient("NoExists")
+	clientCodec := GetClient("NoExists")
 	assert.Nil(t, clientCodec)
 
-	serverCodec = codec.GetServer("fake")
+	serverCodec = GetServer("fake")
 	assert.Equal(t, f, serverCodec)
 
-	clientCodec = codec.GetClient("fake")
+	clientCodec = GetClient("fake")
 	assert.Equal(t, f, clientCodec)
 }
 

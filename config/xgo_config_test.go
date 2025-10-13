@@ -1,6 +1,7 @@
 package config
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"os"
@@ -8,6 +9,7 @@ import (
 	"sync"
 	"testing"
 
+	"github.com/fengzhongzhu1621/xgo/config/provider"
 	"github.com/fengzhongzhu1621/xgo/crypto/unmarshaler"
 	"github.com/stretchr/testify/require"
 )
@@ -39,7 +41,7 @@ func NewEnvProvider(name string, data []byte) *EnvProvider {
 	}
 }
 
-var _ IDataProvider = (*EnvProvider)(nil)
+var _ provider.IDataProvider = (*EnvProvider)(nil)
 
 type EnvProvider struct {
 	name string
@@ -54,15 +56,15 @@ func (ep *EnvProvider) Read(string) ([]byte, error) {
 	return ep.data, nil
 }
 
-func (ep *EnvProvider) Watch(cb ProviderCallback) {
+func (ep *EnvProvider) Watch(cb provider.ProviderCallback) {
 	cb("", ep.data)
 }
 
-var _ IDataProvider = (*manualTriggerWatchProvider)(nil)
+var _ provider.IDataProvider = (*manualTriggerWatchProvider)(nil)
 
 type manualTriggerWatchProvider struct {
 	values    sync.Map
-	callbacks []ProviderCallback
+	callbacks []provider.ProviderCallback
 }
 
 func (m *manualTriggerWatchProvider) Name() string {
@@ -76,7 +78,7 @@ func (m *manualTriggerWatchProvider) Read(s string) ([]byte, error) {
 	return nil, fmt.Errorf("not found config")
 }
 
-func (m *manualTriggerWatchProvider) Watch(callback ProviderCallback) {
+func (m *manualTriggerWatchProvider) Watch(callback provider.ProviderCallback) {
 	m.callbacks = append(m.callbacks, callback)
 }
 
@@ -98,7 +100,7 @@ func TestCodecUnmarshalDstMustBeMap(t *testing.T) {
 }
 
 func TestEnvExpanded(t *testing.T) {
-	RegisterProvider(NewEnvProvider(t.Name(), []byte(`
+	provider.RegisterProvider(NewEnvProvider(t.Name(), []byte(`
 password: ${pwd}
 `)))
 
@@ -112,4 +114,30 @@ password: ${pwd}
 
 	require.Equal(t, t.Name(), cfg.GetString("password", ""))
 	require.Contains(t, string(cfg.Bytes()), fmt.Sprintf("password: %s", t.Name()))
+}
+
+func TestLoadYaml(t *testing.T) {
+	require := require.New(t)
+
+	err := Reload("../tests/testdata/trpc_go.yaml", WithCodec("yaml"))
+	require.NotNil(err)
+
+	_, err = Load("../tests/testdata/trpc_go.yaml.1", WithCodec("yaml"))
+	require.NotNil(err)
+
+	c, err := Load("../tests/testdata/trpc_go.yaml", WithCodec("yaml"))
+	require.Nil(err, "failed to load config")
+	// out := &T{}
+	out := c.GetString("server.app", "")
+	t.Logf("return %+v", out)
+	require.Equal(out, "test", "app name is wrong")
+
+	buf := c.Bytes()
+	require.NotNil(buf)
+	bytes.Contains(buf, []byte("test"))
+
+	err = Reload("../tests/testdata/trpc_go.yaml")
+	require.Nil(err)
+
+	require.Implements((*IConfig)(nil), c)
 }
