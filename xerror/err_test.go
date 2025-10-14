@@ -8,7 +8,6 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"trpc.group/trpc-go/trpc-go/errs"
 )
 
 //go:noinline
@@ -29,58 +28,58 @@ func child() error {
 
 //go:noinline
 func grandson() error {
-	return errs.Newf(111, "%s", "inner fail")
+	return Newf(111, "%s", "inner fail")
 }
 
 func TestErrs(t *testing.T) {
-	var err *errs.Error
+	var err *Error
 	str := err.Error()
 	assert.Contains(t, str, "success")
 
-	e := errs.New(111, "inner fail")
+	e := New(111, "inner fail")
 	assert.NotNil(t, e)
 
-	assert.EqualValues(t, 111, errs.Code(e))
-	assert.Equal(t, "inner fail", errs.Msg(e))
+	assert.EqualValues(t, 111, Code(e))
+	assert.Equal(t, "inner fail", Msg(e))
 
-	err, ok := e.(*errs.Error)
+	err, ok := e.(*Error)
 	assert.Equal(t, true, ok)
 	assert.NotNil(t, err)
-	assert.Equal(t, errs.ErrorTypeBusiness, err.Type)
+	assert.Equal(t, ErrorTypeBusiness, err.Type)
 
 	str = err.Error()
 	assert.Contains(t, str, "business")
 
-	e = errs.NewFrameError(111, "inner fail")
+	e = NewFrameError(111, "inner fail")
 	assert.NotNil(t, e)
 
-	assert.EqualValues(t, 111, errs.Code(e))
-	assert.Equal(t, "inner fail", errs.Msg(e))
+	assert.EqualValues(t, 111, Code(e))
+	assert.Equal(t, "inner fail", Msg(e))
 
-	err, ok = e.(*errs.Error)
+	err, ok = e.(*Error)
 	assert.Equal(t, true, ok)
 	assert.NotNil(t, err)
-	assert.Equal(t, errs.ErrorTypeFramework, err.Type)
+	assert.Equal(t, ErrorTypeFramework, err.Type)
 
 	str = err.Error()
 	assert.Contains(t, str, "framework")
 
-	assert.EqualValues(t, 0, errs.Code(nil))
-	assert.Equal(t, "success", errs.Msg(nil))
+	assert.EqualValues(t, 0, Code(nil))
+	assert.Equal(t, "success", Msg(nil))
 
-	assert.EqualValues(t, 0, errs.Code((*errs.Error)(nil)))
-	assert.Equal(t, "success", errs.Msg((*errs.Error)(nil)))
+	assert.EqualValues(t, 0, Code((*Error)(nil)))
+	assert.Equal(t, "success", Msg((*Error)(nil)))
 
 	e = errors.New("unknown error")
-	assert.Equal(t, errs.RetUnknown, errs.Code(e))
-	assert.Equal(t, "unknown error", errs.Msg(e))
+	assert.Equal(t, RetUnknown, Code(e))
+	assert.Equal(t, "unknown error", Msg(e))
 
-	err.Type = errs.ErrorTypeCalleeFramework
+	err.Type = ErrorTypeCalleeFramework
 	assert.Contains(t, err.Error(), "type:callee framework")
 }
 
 func TestErrsFormat(t *testing.T) {
-	err := errs.New(10000, "test error")
+	err := New(10000, "test error")
 
 	s := fmt.Sprintf("%s", err)
 	assert.Equal(t, "type:business, code:10000, msg:test error", s)
@@ -97,23 +96,23 @@ func TestErrsFormat(t *testing.T) {
 
 func TestNewFrameError(t *testing.T) {
 	ok := true
-	errs.SetTraceable(ok)
-	e := errs.NewFrameError(111, "inner fail")
+	SetTraceable(ok)
+	e := NewFrameError(111, "inner fail")
 	assert.NotNil(t, e)
 }
 
 func TestWrapFrameError(t *testing.T) {
 	ok := true
-	errs.SetTraceable(ok)
-	e := errs.WrapFrameError(errs.New(123, "inner fail"), 456, "wrap frame error")
+	SetTraceable(ok)
+	e := WrapFrameError(New(123, "inner fail"), 456, "wrap frame error")
 	assert.NotNil(t, e)
-	e = errs.WrapFrameError(nil, 456, "wrap frame error")
+	e = WrapFrameError(nil, 456, "wrap frame error")
 	assert.Nil(t, e)
 }
 
 func TestTraceError(t *testing.T) {
 
-	errs.SetTraceable(true)
+	SetTraceable(true)
 
 	err := parent()
 	assert.NotNil(t, err)

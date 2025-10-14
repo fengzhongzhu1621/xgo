@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	DataSize    = 10000
-	DataPerTask = 100
+	DataSize    int = 10000
+	DataPerTask     = 100
 )
 
 type Task struct {
@@ -61,8 +61,8 @@ func TestInvoke(t *testing.T) {
 			nums:  nums[i*DataPerTask : (i+1)*DataPerTask],
 			wg:    &wg,
 		}
-		// 发送任务到协程池
 		tasks = append(tasks, task)
+		// 发送单个任务到协程池
 		p.Invoke(task)
 	}
 

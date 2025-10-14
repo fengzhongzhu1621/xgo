@@ -3,7 +3,7 @@ package linkbuffer
 import "io"
 
 // Buffer is the interface of link buffer.
-type IBuffer interface {
+type IBufferLink interface {
 	IReader
 	IWriter
 

@@ -16,11 +16,18 @@ import (
 // 63表示支持的最大size是1<<63，这是64位系统上最大的可能值
 const maxPowerToRoundUpInt = 63
 
+var _ IAllocator = (*ClassAllocator)(nil)
+
+// ClassAllocator 是一个字节池，管理的字节大小满足2^n
+//
+// pools: 存储不同大小的sync.Pool数组，索引i对应大小2^i
+type ClassAllocator struct {
+	pools [maxPowerToRoundUpInt]*sync.Pool
+}
+
 // defaultAllocator 是默认的全局分配器实例
 // 使用NewClassAllocator初始化，提供线程安全的字节池
 var defaultAllocator = NewClassAllocator()
-
-var _ IAllocator = (*ClassAllocator)(nil)
 
 // NewClassAllocator 创建一个新的ClassAllocator实例
 //
@@ -35,6 +42,12 @@ func NewClassAllocator() *ClassAllocator {
 	// 初始化每个Pool
 	for i := range pools {
 		size := 1 << i // 计算该Pool管理的切片大小(2^i)
+		// 注意：下面的代码不会分配内存，仅在使用 Get() 方法后才会分配内存
+		//
+		// 为每个Pool创建一个新的字节切片，并将其放入Pool中
+		// 当Pool为空时，调用New函数创建新的字节切片
+		// 当Pool不为空时，从Pool中获取一个字节切片
+		// 注意：New函数返回的字节切片长度为0，但容量为size
 		pools[i] = &sync.Pool{
 			New: func() interface{} {
 				// 当Pool为空时，创建新的字节切片
@@ -45,13 +58,6 @@ func NewClassAllocator() *ClassAllocator {
 
 	// 返回初始化好的ClassAllocator
 	return &ClassAllocator{pools: pools}
-}
-
-// ClassAllocator 是一个字节池，管理的字节大小满足2^n
-//
-// pools: 存储不同大小的sync.Pool数组，索引i对应大小2^i
-type ClassAllocator struct {
-	pools [maxPowerToRoundUpInt]*sync.Pool
 }
 
 // Malloc 从池中获取一个[]byte，第二个返回值用于Free操作
@@ -70,10 +76,10 @@ func (a *ClassAllocator) Malloc(size int) ([]byte, interface{}) {
 	}
 
 	// 计算所需大小对应的Pool索引
-	// 找到最小的 power 使得 2^power >= n
+	// 找到最小的 power 使得 2^power >= size
 	power := math.PowerToRoundUp(size)
 
-	// 从对应Pool获取或创建字节切片
+	// 从对应Pool获取或创建字节切片（此时会分配内存）
 	v := a.pools[power].Get()
 
 	// 返回切片和原始对象（可能比实际需要的大）

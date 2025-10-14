@@ -51,6 +51,7 @@ func (s *udpServer) stop() {
 }
 
 func TestPacketReaderSucceed(t *testing.T) {
+	// 启动一个 UDP 服务器
 	s := &udpServer{}
 	s.start(context.Background())
 	t.Cleanup(s.stop)

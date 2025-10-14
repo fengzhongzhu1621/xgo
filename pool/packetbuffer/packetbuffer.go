@@ -18,26 +18,26 @@ import (
 
 var _ io.Reader = (*PacketBuffer)(nil)
 
+// PacketBuffer encapsulates a packet connection and implements the io.Reader interface.
+// PacketBuffer 封装数据包连接并实现 io.Reader 接口
+type PacketBuffer struct {
+	buf      []byte         // 存储读取的数据，一次性读取大量的数据缓存到这里
+	toBeFree interface{}    // 需要释放的内存标识
+	conn     net.PacketConn // 底层数据包连接
+
+	raddr net.Addr // 当前数据包的远程地址
+	r, w  int      // 读指针和写指针位置
+}
+
 // New creates a packet buffer with specific packet connection and size.
 // 创建指定大小和数据包连接的数据包缓冲区
 func New(conn net.PacketConn, size int) *PacketBuffer {
 	buf, i := allocator.Malloc(size) // 从内存分配器获取缓冲区
 	return &PacketBuffer{
 		buf:      buf,  // 数据存储缓冲区
-		conn:     conn, // 底层数据包连接
 		toBeFree: i,    // 需要释放的内存标识
+		conn:     conn, // 底层数据包连接
 	}
-}
-
-// PacketBuffer encapsulates a packet connection and implements the io.Reader interface.
-// PacketBuffer 封装数据包连接并实现 io.Reader 接口
-type PacketBuffer struct {
-	buf      []byte         // 数据存储缓冲区
-	toBeFree interface{}    // 需要释放的内存标识
-	conn     net.PacketConn // 底层数据包连接
-
-	raddr net.Addr // 当前数据包的远程地址
-	r, w  int      // 读指针和写指针位置
 }
 
 // Read reads data from the packet. Continuous reads cannot cross between multiple packet only if Close is called.
@@ -48,6 +48,8 @@ func (pb *PacketBuffer) Read(p []byte) (n int, err error) {
 	}
 	if pb.w == 0 {
 		// 缓冲区为空，连接读取新数据包到缓冲区
+		// 一次性读取大量的数据缓存到这里，避免频繁的内存分配和释放
+		// 读取数据包到缓冲区，返回读取的字节数和远程地址
 		n, raddr, err := pb.conn.ReadFrom(pb.buf)
 		if err != nil {
 			return 0, err // 读取失败
@@ -55,6 +57,8 @@ func (pb *PacketBuffer) Read(p []byte) (n int, err error) {
 		pb.w = n         // 设置写指针到数据末尾
 		pb.raddr = raddr // 保存远程地址
 	}
+
+	// 如果缓冲区中的数据未消耗完，则继续从缓冲区读取
 	n = copy(p, pb.buf[pb.r:pb.w]) // 复制数据到目标缓冲区
 	if n == 0 {
 		return 0, io.EOF // 没有数据可读

@@ -21,9 +21,22 @@ const (
 	RetOK                    = 0   // 成功
 	RetClientTimeout         = 101 // 客户端调用超时错误码
 	RetClientFullLinkTimeout = 102 // 客户端全链路超时错误码
-	RetServerTimeout         = 21  // 服务端超时错误码
-	RetServerFullLinkTimeout = 24  // 服务端全链路超时错误码
-	RetUnknown               = 999 // 未明确的错误码
+	// RetClientConnectFail is the error code of the client connection error.
+	RetClientConnectFail = 111
+	// RetClientNetErr is the error code of the client network error.
+	RetClientNetErr = 141
+	// RetClientCanceled is the error code for the upstream caller to cancel the request in advance.
+	RetClientCanceled = 161
+	// RetClientReadFrameErr is the error code of the client read frame error.
+	RetClientReadFrameErr = 171
+
+	RetServerTimeout = 21 // 服务端超时错误码
+	// RetServerOverload is the error code that the request is overloaded on the server side.
+	RetServerOverload        = 22
+	RetServerFullLinkTimeout = 24 // 服务端全链路超时错误码
+	RetServerSystemErr       = 31
+
+	RetUnknown = 999 // 未明确的错误码
 )
 
 // ErrorType is the error code type, including framework error code and business error code.
@@ -36,6 +49,14 @@ const (
 var (
 	// ErrUnknown is an unknown error.
 	ErrUnknown = NewFrameError(RetUnknown, "unknown error")
+
+	// ErrClientNoResponse is the error of the client not responding.
+	ErrClientNoResponse = NewFrameError(RetOK, "client no response")
+
+	// ErrServerRoutinePoolBusy is an error that the request is overloaded on the server side.
+	ErrServerRoutinePoolBusy = NewFrameError(RetServerOverload, "server goroutine pool too small")
+	// ErrServerNoResponse is a server-side unresponsive error.
+	ErrServerNoResponse = NewFrameError(RetOK, "server no response")
 )
 
 // typeDesc returns the error type description.

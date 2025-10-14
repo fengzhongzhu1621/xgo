@@ -1,4 +1,4 @@
-package pool
+package bufferpool
 
 import (
 	"bytes"
@@ -8,18 +8,12 @@ import (
 // 确保 defaultPool 类型实现了 IBufferPool 接口（编译时检查）
 var _ IBufferPool = (*defaultPool)(nil)
 
-// DefaultBufferPool 全局默认的缓冲区池实例
-var DefaultBufferPool IBufferPool
-
-// IBufferPool 缓冲区池接口定义
-type IBufferPool interface {
-	Put(*bytes.Buffer)
-	Get() *bytes.Buffer
-}
-
 type defaultPool struct {
 	pool *sync.Pool
 }
+
+// DefaultBufferPool 全局默认的缓冲区池实例
+var DefaultBufferPool IBufferPool
 
 func (p *defaultPool) Put(buf *bytes.Buffer) {
 	p.pool.Put(buf)

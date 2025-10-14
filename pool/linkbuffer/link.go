@@ -8,7 +8,7 @@ import (
 )
 
 // 确保Buf类型实现了IBuffer接口
-var _ IBuffer = (*Buf)(nil)
+var _ IBufferLink = (*BufLink)(nil)
 
 // Buf is a rich buffer to reuse underlying bytes.
 // 是一个功能丰富的缓冲区，用于重用底层字节数组；使用链表结构管理数据块，支持高效的内存重用
@@ -18,35 +18,37 @@ var _ IBuffer = (*Buf)(nil)
 // 使用dirty链表管理待释放的内存块，延迟实际的内存释放操作
 //
 // 这种设计适合需要高效内存管理和大量I/O操作的场景，如网络编程、文件处理等
-type Buf struct {
+type BufLink struct {
 	a             allocator.IAllocator // 字节切片分配器，用于分配和释放内存
 	minMallocSize int                  // 每次分配的最小字节大小
 
-	head, tail *bytes // 双向链表的头尾指针，用于管理缓冲区数据块
-	dirty      *bytes // 指向已释放但待清理的数据块链表
+	head, tail *bytesNode // 双向链表的头尾指针，用于管理缓冲区数据块
+	dirty      *bytesNode // 指向已释放但待清理的数据块链表
 }
 
 // NewLinkBuf creates a new buf. 创建一个新的缓冲区链表实例
-func NewLinkBuf(a allocator.IAllocator, minMallocSize int) *Buf {
-	bytes := NewBytes(nil, nil) // 创建一个空的bytes节点作为初始节点
-	return &Buf{
+func NewLinkBuf(a allocator.IAllocator, minMallocSize int) *BufLink {
+	// 创建一个空的bytes节点作为初始节点
+	node := NewBytesNode(nil, nil)
+
+	return &BufLink{
 		a:             a,             // 设置内存分配器
 		minMallocSize: minMallocSize, // 设置链表中每个节点的最小分配大小
-		head:          bytes,         // 初始化头节点
-		tail:          bytes,         // 初始化尾节点
+		head:          node,          // 初始化头节点
+		tail:          node,          // 初始化尾节点
 	}
 }
 
 // Write copies p to Buf and implements io.Writer. 将字节切片p写入缓冲区，实现io.Writer接口
-func (b *Buf) Write(p []byte) (int, error) {
+func (b *BufLink) Write(p []byte) (int, error) {
 	// 如果尾节点没有释放函数（表示未分配），则需要分配新空间；节点未分配内存
 	if b.tail.release == nil {
 		bts, release := b.a.Malloc(b.minMallocSize) // 从分配器分配内存
 		// bts[:0] 这行代码的作用是创建一个长度为 0，但容量保持不变的切片，指向 bts 的底层数组
 		// 新切片虽然长度为 0，但其容量（capacity）与 bts 相同。它仍然指向 b.a.Malloc 分配出来的那块原始内存空间。
 		// 这样做的目的是为了后续通过 append 操作向这个新切片添加数据时，可以直接复用这块已分配的内存，避免了立即再次分配内存的开销
-		b.tail.next = NewBytes(bts[:0], release) // 创建新的bytes节点，追加到链表的最后
-		b.tail = b.tail.next                     // 移动尾指针
+		b.tail.next = NewBytesNode(bts[:0], release) // 创建新的bytes节点，追加到链表的最后
+		b.tail = b.tail.next                         // 移动尾指针
 	}
 
 	available := cap(b.tail.bts) - len(b.tail.bts) // 计算当前尾节点的剩余空间
@@ -59,7 +61,7 @@ func (b *Buf) Write(p []byte) (int, error) {
 	b.tail.bts = append(b.tail.bts, p[:available]...)
 	// 分配新的内存块
 	bts, release := b.a.Malloc(b.minMallocSize)
-	b.tail.next = NewBytes(bts[:0], release)
+	b.tail.next = NewBytesNode(bts[:0], release)
 	b.tail = b.tail.next
 
 	// 递归写入剩余数据，返回写入的数据的数量
@@ -72,17 +74,17 @@ func (b *Buf) Write(p []byte) (int, error) {
 // Buf owns these bs, but won't release them to underlying allocator.
 // 追加一个或多个字节切片到缓冲区，但不获取这些切片的所有权
 // 不从sync.Pool中获取内存块
-func (b *Buf) Append(bs ...[]byte) {
+func (b *BufLink) Append(bs ...[]byte) {
 	for _, bts := range bs {
 		b.append(bts)
 	}
 }
 
-func (b *Buf) append(bts []byte) {
+func (b *BufLink) append(bts []byte) {
 	// 如果尾节点已满或未分配，直接创建新节点添加到链表尾部
 	if b.tail.release == nil || cap(b.tail.bts) == len(b.tail.bts) {
-		b.tail.next = NewBytes(bts, nil) // 创建新节点，不设置释放函数
-		b.tail = b.tail.next             // 移动尾指针
+		b.tail.next = NewBytesNode(bts, nil) // 创建新节点，不设置释放函数
+		b.tail = b.tail.next                 // 移动尾指针
 	} else {
 		// 处理部分填充的情况
 		remains := b.tail.bts[len(b.tail.bts):] // 获取当前尾节点的剩余空间
@@ -90,11 +92,11 @@ func (b *Buf) append(bts []byte) {
 		b.tail.release = nil                    // 清空释放函数，表示不释放
 
 		// 创建新节点存放追加的数据
-		b.tail.next = NewBytes(bts, nil)
+		b.tail.next = NewBytesNode(bts, nil)
 		b.tail = b.tail.next
 
 		// 创建另一个新节点存放原来的剩余空间
-		b.tail.next = NewBytes(remains, release)
+		b.tail.next = NewBytesNode(remains, release)
 		b.tail = b.tail.next
 	}
 }
@@ -102,9 +104,9 @@ func (b *Buf) append(bts []byte) {
 // Prepend prepends a slice to bytes to Buf. Next Read starts with the first bytes of slice.
 // Buf owns these bs, but won't release them to underlying allocator.
 // 将一个或多个字节切片预置到缓冲区头部
-func (b *Buf) Prepend(bs ...[]byte) {
+func (b *BufLink) Prepend(bs ...[]byte) {
 	for i := len(bs) - 1; i >= 0; i-- {
-		bytes := NewBytes(bs[i], nil)
+		bytes := NewBytesNode(bs[i], nil)
 		bytes.next = b.head
 		b.head = bytes
 	}
@@ -112,7 +114,7 @@ func (b *Buf) Prepend(bs ...[]byte) {
 
 // Alloc allocates a []byte with size n.
 // 在缓冲区尾部分配指定大小的字节切片
-func (b *Buf) Alloc(n int) []byte {
+func (b *BufLink) Alloc(n int) []byte {
 	// 检查尾节点是否有足够空间
 	if b.tail.release != nil && cap(b.tail.bts)-len(b.tail.bts) >= n {
 		l := len(b.tail.bts)          // 记录当前长度
@@ -121,28 +123,28 @@ func (b *Buf) Alloc(n int) []byte {
 	}
 
 	// 尾节点空间不足，分配新节点
-	bts, release := b.a.Malloc(n)            // 直接从分配器分配所需大小的内存
-	b.tail.next = NewBytes(bts[:n], release) // 创建新节点
-	b.tail = b.tail.next                     // 移动尾指针
-	return bts[:n]                           // 返回分配的切片
+	bts, release := b.a.Malloc(n)                // 直接从分配器分配所需大小的内存
+	b.tail.next = NewBytesNode(bts[:n], release) // 创建新节点
+	b.tail = b.tail.next                         // 移动尾指针
+	return bts[:n]                               // 返回分配的切片
 }
 
 // Prelloc allocates a []byte with size n at the beginning of Buf.
 // 在缓冲区头部分配指定大小的字节切片
-func (b *Buf) Prelloc(n int) []byte {
-	bts, release := b.a.Malloc(n)       // 从分配器分配内存
-	bytes := NewBytes(bts[:n], release) // 创建新节点
-	bytes.next = b.head                 // 新节点指向当前头节点
-	b.head = bytes                      // 更新头指针
-	return bts[:n]                      // 返回分配的切片
+func (b *BufLink) Prelloc(n int) []byte {
+	bts, release := b.a.Malloc(n)           // 从分配器分配内存
+	bytes := NewBytesNode(bts[:n], release) // 创建新节点
+	bytes.next = b.head                     // 新节点指向当前头节点
+	b.head = bytes                          // 更新头指针
+	return bts[:n]                          // 返回分配的切片
 }
 
 // Merge merges another Reader.
 // If r is not *Buf, b does not own the bytes of r.
 // If r is a *Buf, the ownership of r's bytes is changed to b, and the caller should not Release r.
 // 合并另一个读取器到当前缓冲区
-func (b *Buf) Merge(r IReader) {
-	bb, ok := r.(*Buf) // 尝试转换为*Buf类型
+func (b *BufLink) Merge(r IReader) {
+	bb, ok := r.(*BufLink) // 尝试转换为*Buf类型
 	if !ok {
 		// 如果不是*Buf类型，读取所有数据并追加
 		for _, bts := range r.ReadAll() {
@@ -158,7 +160,7 @@ func (b *Buf) Merge(r IReader) {
 // Read copies data to p, and returns the number of byte copied and an error.
 // The io.EOF is returned if Buf has no unread bytes and len(p) is not zero.
 // 从缓冲区读取数据到p，实现io.Reader接口
-func (b *Buf) Read(p []byte) (int, error) {
+func (b *BufLink) Read(p []byte) (int, error) {
 	if len(p) == 0 { // 如果目标切片为空，直接返回
 		return 0, nil
 	}
@@ -188,7 +190,7 @@ func (b *Buf) Read(p []byte) (int, error) {
 // ReadN tries best to read all size into one []byte.
 // The second return value may be smaller than size if underlying bytes is not continuous.
 // 尝试读取指定大小的数据到一个连续的字节切片中
-func (b *Buf) ReadN(size int) ([]byte, int) {
+func (b *BufLink) ReadN(size int) ([]byte, int) {
 	defer b.ensureNotEmpty() // 确保缓冲区不为空
 	b.dirtyEmptyHeads()      // 清理已空的数据块
 
@@ -204,12 +206,13 @@ func (b *Buf) ReadN(size int) ([]byte, int) {
 		b.head.bts = b.head.bts[size:] // 更新当前数据块的剩余数据
 		return bts, size               // 返回部分数据
 	}
+
 	return nil, 0 // 没有数据可读
 }
 
 // ReadAll returns all underlying []byte in [][]byte.
 // 读取所有底层数据块，返回二维字节切片
-func (b *Buf) ReadAll() [][]byte {
+func (b *BufLink) ReadAll() [][]byte {
 	defer b.ensureNotEmpty() // 确保缓冲区不为空
 	var all [][]byte         // 存储所有数据块
 
@@ -223,7 +226,7 @@ func (b *Buf) ReadAll() [][]byte {
 
 // ReadNext returns the next continuous []byte.
 // 读取下一个连续的数据块
-func (b *Buf) ReadNext() []byte {
+func (b *BufLink) ReadNext() []byte {
 	defer b.ensureNotEmpty() // 确保缓冲区不为空
 
 	for b.head != nil {
@@ -236,7 +239,7 @@ func (b *Buf) ReadNext() []byte {
 
 // Release releases the read bytes to allocator.
 // 释放已读取的字节到底层分配器
-func (b *Buf) Release() {
+func (b *BufLink) Release() {
 	// 遍历dirty链表，释放所有待释放的节点
 	for b.dirty != nil {
 		b.a.Free(b.dirty.release) // 调用分配器的Free方法释放内存
@@ -255,7 +258,7 @@ func (b *Buf) Release() {
 
 // Len returns the total len of underlying bytes.
 // 返回缓冲区中未读取字节的总长度
-func (b *Buf) Len() int {
+func (b *BufLink) Len() int {
 	var l int // 记录总长度
 
 	// 遍历所有数据块
@@ -266,7 +269,7 @@ func (b *Buf) Len() int {
 }
 
 // dirtyEmptyHeads 清理所有已空的数据块
-func (b *Buf) dirtyEmptyHeads() {
+func (b *BufLink) dirtyEmptyHeads() {
 	// 循环处理头节点为空的情况
 	for b.head != nil && len(b.head.bts) == 0 {
 		// 头指针移动到下一个节点
@@ -275,7 +278,7 @@ func (b *Buf) dirtyEmptyHeads() {
 }
 
 // dirtyHead 将当前头节点移动到dirty链表以待释放
-func (b *Buf) dirtyHead() []byte {
+func (b *BufLink) dirtyHead() []byte {
 	bts := b.head.bts // 保存当前头节点的数据
 
 	head := b.head     // 保存当前头节点
@@ -296,10 +299,10 @@ func (b *Buf) dirtyHead() []byte {
 }
 
 // ensureNotEmpty 确保缓冲区始终有一个空节点
-func (b *Buf) ensureNotEmpty() {
+func (b *BufLink) ensureNotEmpty() {
 	if b.head == nil { // 如果头节点为空
-		bytes := NewBytes(nil, nil) // 创建新的空节点
-		b.head = bytes              // 设置头节点
-		b.tail = bytes              // 设置尾节点
+		bytes := NewBytesNode(nil, nil) // 创建新的空节点
+		b.head = bytes                  // 设置头节点
+		b.tail = bytes                  // 设置尾节点
 	}
 }
