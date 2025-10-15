@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/fengzhongzhu1621/xgo/codec"
-	"trpc.group/trpc-go/trpc-go/pool/connpool"
+	"github.com/fengzhongzhu1621/xgo/network/connpool"
 	"trpc.group/trpc-go/trpc-go/pool/multiplexed"
 )
 
@@ -15,9 +15,9 @@ type RoundTripOptions struct {
 	Network               string // tcp/udp
 	LocalAddr             string // a random selected local address when accept a connection.
 	DialTimeout           time.Duration
-	Pool                  connpool.Pool // client connection pool
-	ReqType               RequestType   // SendAndRecv, SendOnly
-	FramerBuilder         codec.FramerBuilder
+	Pool                  connpool.IPool // client connection pool
+	ReqType               RequestType    // SendAndRecv, SendOnly
+	FramerBuilder         codec.IFramerBuilder
 	ConnectionMode        ConnectionMode
 	DisableConnectionPool bool // disable connection pool
 	EnableMultiplexed     bool // enable multiplexed
@@ -74,14 +74,14 @@ func WithDialNetwork(network string) RoundTripOption {
 }
 
 // WithDialPool returns a RoundTripOption which sets dial pool.
-func WithDialPool(pool connpool.Pool) RoundTripOption {
+func WithDialPool(pool connpool.IPool) RoundTripOption {
 	return func(opts *RoundTripOptions) {
 		opts.Pool = pool
 	}
 }
 
 // WithClientFramerBuilder returns a RoundTripOption which sets FramerBuilder.
-func WithClientFramerBuilder(builder codec.FramerBuilder) RoundTripOption {
+func WithClientFramerBuilder(builder codec.IFramerBuilder) RoundTripOption {
 	return func(opts *RoundTripOptions) {
 		opts.FramerBuilder = builder
 	}

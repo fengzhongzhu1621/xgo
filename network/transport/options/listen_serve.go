@@ -17,7 +17,7 @@ type ListenServeOptions struct {
 	Address       string
 	Network       string
 	Handler       handler.IHandler
-	FramerBuilder codec.FramerBuilder
+	FramerBuilder codec.IFramerBuilder
 	Listener      net.Listener
 
 	CACertFile  string        // ca certification file
@@ -47,7 +47,7 @@ func WithServiceName(name string) ListenServeOption {
 }
 
 // WithServerFramerBuilder returns a ListenServeOption which sets server frame builder.
-func WithServerFramerBuilder(fb codec.FramerBuilder) ListenServeOption {
+func WithServerFramerBuilder(fb codec.IFramerBuilder) ListenServeOption {
 	return func(opts *ListenServeOptions) {
 		opts.FramerBuilder = fb
 	}

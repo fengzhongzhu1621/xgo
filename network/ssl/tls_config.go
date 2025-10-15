@@ -182,11 +182,16 @@ func GetClientConfig(serverName, caCertFile, certFile, keyFile string) (*tls.Con
 	if err != nil {
 		return nil, err
 	}
+
+	// 设置客户端证书
 	tlsConf.RootCAs = certPool
 	if certFile == "" {
 		return tlsConf, nil
 	}
 
+	// 加载客户端证书和私钥
+	// 从一对文件中读取并解析 PEM 编码的 X.509 证书和私钥，构建一个 tls.Certificate 对象
+	// 成功时返回一个 tls.Certificate 结构体（其 Leaf 字段为 nil），失败时返回错误。
 	// enable two-way authentication and needs to send the
 	// client's own certificate to the server.
 	cert, err := tls.LoadX509KeyPair(certFile, keyFile)
@@ -194,5 +199,6 @@ func GetClientConfig(serverName, caCertFile, certFile, keyFile string) (*tls.Con
 		return nil, fmt.Errorf("client load cert file error: %w", err)
 	}
 	tlsConf.Certificates = []tls.Certificate{cert}
+
 	return tlsConf, nil
 }

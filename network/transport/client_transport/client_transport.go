@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/fengzhongzhu1621/xgo/network/connpool"
 	"github.com/fengzhongzhu1621/xgo/network/transport/options"
 	"github.com/fengzhongzhu1621/xgo/xerror"
-	"trpc.group/trpc-go/trpc-go/pool/connpool"
 	"trpc.group/trpc-go/trpc-go/pool/multiplexed"
 )
 

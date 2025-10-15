@@ -24,7 +24,7 @@ import (
 type tcpconn struct {
 	*conn
 	rwc         net.Conn
-	fr          codec.Framer
+	fr          codec.IFramer
 	localAddr   net.Addr
 	remoteAddr  net.Addr
 	serverAsync bool

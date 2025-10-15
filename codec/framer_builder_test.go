@@ -6,7 +6,7 @@ import (
 	"github.com/gookit/goutil/testutil/assert"
 )
 
-var _ SafeFramer = (*fakeSafeFramer)(nil)
+var _ ISafeFramer = (*fakeSafeFramer)(nil)
 
 type fakeSafeFramer struct {
 	safe bool

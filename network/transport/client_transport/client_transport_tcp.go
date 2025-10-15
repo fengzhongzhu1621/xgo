@@ -7,9 +7,10 @@ import (
 
 	"github.com/fengzhongzhu1621/xgo/buildin/buffer"
 	"github.com/fengzhongzhu1621/xgo/codec"
+	"github.com/fengzhongzhu1621/xgo/network/connpool"
+	"github.com/fengzhongzhu1621/xgo/network/dial"
 	"github.com/fengzhongzhu1621/xgo/network/transport/options"
 	"github.com/fengzhongzhu1621/xgo/xerror"
-	"trpc.group/trpc-go/trpc-go/pool/connpool"
 	"trpc.group/trpc-go/trpc-go/pool/multiplexed"
 )
 
@@ -81,7 +82,7 @@ func (c *clientTransport) dialTCP(ctx context.Context, opts *options.RoundTripOp
 		if opts.DialTimeout > 0 && opts.DialTimeout < timeout {
 			timeout = opts.DialTimeout
 		}
-		conn, err = connpool.Dial(&connpool.DialOptions{
+		conn, err = dial.Dial(&dial.DialOptions{
 			Network:       opts.Network,
 			Address:       opts.Address,
 			LocalAddr:     opts.LocalAddr,
@@ -148,14 +149,14 @@ func (c *clientTransport) tcpReadFrame(conn net.Conn, opts *options.RoundTripOpt
 		return nil, xerror.ErrClientNoResponse
 	}
 
-	var fr codec.Framer
+	var fr codec.IFramer
 	if opts.DisableConnectionPool {
 		// Do not create new Framer for each connection in connection pool.
 		fr = opts.FramerBuilder.New(buffer.NewReader(conn))
 	} else {
 		// The Framer is bound to conn in the connection pool.
 		var ok bool
-		fr, ok = conn.(codec.Framer)
+		fr, ok = conn.(codec.IFramer)
 		if !ok {
 			return nil, xerror.NewFrameError(xerror.RetClientConnectFail,
 				"tcp client transport: framer not implemented")

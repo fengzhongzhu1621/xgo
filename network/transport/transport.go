@@ -37,16 +37,16 @@ func RemoteAddrFromContext(ctx context.Context) net.Addr {
 }
 
 // /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-var framerBuilders = make(map[string]codec.FramerBuilder)
+var framerBuilders = make(map[string]codec.IFramerBuilder)
 
-// FramerBuilder is the alias of codec.FramerBuilder.
-type FramerBuilder = codec.FramerBuilder
+// FramerBuilder is the alias of codec.IFramerBuilder.
+type FramerBuilder = codec.IFramerBuilder
 
-// Framer is the alias of codec.Framer.
-type Framer = codec.Framer
+// Framer is the alias of codec.IFramer.
+type Framer = codec.IFramer
 
-// RegisterFramerBuilder register a codec.FramerBuilder.
-func RegisterFramerBuilder(name string, fb codec.FramerBuilder) {
+// RegisterFramerBuilder register a codec.IFramerBuilder.
+func RegisterFramerBuilder(name string, fb codec.IFramerBuilder) {
 	fbv := reflect.ValueOf(fb)
 	if fb == nil || fbv.Kind() == reflect.Ptr && fbv.IsNil() {
 		panic("transport: register framerBuilders nil")
@@ -58,7 +58,7 @@ func RegisterFramerBuilder(name string, fb codec.FramerBuilder) {
 }
 
 // GetFramerBuilder gets the FramerBuilder by name.
-func GetFramerBuilder(name string) codec.FramerBuilder {
+func GetFramerBuilder(name string) codec.IFramerBuilder {
 	return framerBuilders[name]
 }
 
