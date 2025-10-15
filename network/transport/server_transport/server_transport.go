@@ -2,7 +2,6 @@ package server_transport
 
 import (
 	"context"
-	"crypto/tls"
 	"errors"
 	"fmt"
 	"net"
@@ -11,12 +10,10 @@ import (
 	"strconv"
 	"strings"
 	"sync"
-	"syscall"
 	"time"
 
 	"github.com/fengzhongzhu1621/xgo/logging"
 	"github.com/fengzhongzhu1621/xgo/network/reuseport"
-	"github.com/fengzhongzhu1621/xgo/network/ssl"
 	"github.com/fengzhongzhu1621/xgo/network/transport/handler"
 	"github.com/fengzhongzhu1621/xgo/network/transport/options"
 	"github.com/panjf2000/ants/v2"
@@ -67,44 +64,44 @@ func (c *conn) handleClose(ctx context.Context) error {
 // /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var _ IServerTransport = (*serverTransport)(nil)
 
-// serverTransport is the implementation details of server transport, may be tcp or udp.
+// serverTransport 服务器传输的实现细节，支持TCP或UDP
 type serverTransport struct {
-	addrToConn map[string]*tcpconn
-	m          *sync.RWMutex
-	opts       *options.ServerTransportOptions
+	addrToConn map[string]*tcpconn             // 地址到TCP连接的映射
+	m          *sync.RWMutex                   // 读写锁，保护连接映射的并发安全
+	opts       *options.ServerTransportOptions // 服务器传输配置选项
 }
 
-// DefaultServerTransport is the default implementation of ServerStreamTransport.
+// DefaultServerTransport ServerStreamTransport的默认实现
 var DefaultServerTransport = NewServerTransport(options.WithReusePort(true))
 
-// NewServerTransport creates a new IServerTransport.
+// NewServerTransport 创建新的IServerTransport实例
 func NewServerTransport(opt ...options.ServerTransportOption) IServerTransport {
 	r := newServerTransport(opt...)
 	return &r
 }
 
-// newServerTransport creates a new serverTransport.
+// newServerTransport 创建新的serverTransport实例
 func newServerTransport(opt ...options.ServerTransportOption) serverTransport {
-	// this is the default option.
+	// 使用默认选项
 	opts := options.DefaultServerTransportOptions()
 	for _, o := range opt {
-		o(opts)
+		o(opts) // 应用用户提供的选项
 	}
-	addrToConn := make(map[string]*tcpconn)
+	addrToConn := make(map[string]*tcpconn) // 初始化连接映射
 	return serverTransport{addrToConn: addrToConn, m: &sync.RWMutex{}, opts: opts}
 }
 
-// ListenAndServe starts Listening, returns an error on failure.
+// ListenAndServe 开始监听，失败时返回错误
 func (s *serverTransport) ListenAndServe(ctx context.Context, opts ...options.ListenServeOption) error {
 	lsopts := &options.ListenServeOptions{}
 	for _, opt := range opts {
-		opt(lsopts)
+		opt(lsopts) // 应用监听服务选项
 	}
 
 	if lsopts.Listener != nil {
-		return s.listenAndServeStream(ctx, lsopts)
+		return s.listenAndServeStream(ctx, lsopts) // 使用自定义监听器
 	}
-	// Support simultaneous listening TCP and UDP.
+	// 支持同时监听TCP和UDP
 	networks := strings.Split(lsopts.Network, ",")
 	for _, network := range networks {
 		lsopts.Network = network
@@ -137,50 +134,69 @@ var (
 	once sync.Once
 )
 
-// listenAndServeStream starts listening, returns an error on failure.
+// listenAndServeStream 启动流式监听，失败时返回错误
 func (s *serverTransport) listenAndServeStream(ctx context.Context, opts *options.ListenServeOptions) error {
 	if opts.FramerBuilder == nil {
 		return errors.New("tcp transport FramerBuilder empty")
 	}
+
+	// 获取TCP监听器
 	ln, err := s.getTCPListener(opts)
 	if err != nil {
 		return fmt.Errorf("get tcp listener err: %w", err)
 	}
-	// We MUST save the raw TCP listener (instead of (*tls.listener) if TLS is enabled)
-	// to guarantee the underlying fd can be successfully retrieved for hot restart.
+
+	// 必须保存原始TCP监听器（而不是TLS监听器）以确保热重启时可以成功检索底层文件描述符
 	listenersMap.Store(ln, struct{}{})
+
+	// 可能升级为TLS监听器
 	ln, err = mayLiftToTLSListener(ln, opts)
 	if err != nil {
 		return fmt.Errorf("may lift to tls listener err: %w", err)
 	}
+
+	// 异步启动 TCP 流式服务
 	go s.serveStream(ctx, ln, opts)
 	return nil
 }
 
+// newConn 创建新的连接对象
+// 参数:
+//   - ctx: 上下文，用于取消和超时控制
+//   - opts: 监听服务选项，包含连接配置信息
+//
+// 返回值: 新创建的连接对象指针
 func (s *serverTransport) newConn(ctx context.Context, opts *options.ListenServeOptions) *conn {
+	// 从监听服务选项中获取空闲超时时间
 	idleTimeout := opts.IdleTimeout
+
+	// 检查服务器传输选项中是否设置了空闲超时时间
+	// 如果设置了，则优先使用服务器传输选项中的超时时间
 	if s.opts.IdleTimeout > 0 {
 		idleTimeout = s.opts.IdleTimeout
 	}
+
+	// 创建并返回新的连接对象
 	return &conn{
-		ctx:         ctx,
-		handler:     opts.Handler,
-		idleTimeout: idleTimeout,
+		ctx:         ctx,          // 设置连接上下文
+		handler:     opts.Handler, // 设置业务处理器
+		idleTimeout: idleTimeout,  // 设置空闲超时时间
 	}
 }
 
-// getTCPListener gets the TCP/Unix listener.
+// getTCPListener 获取/创建 TCP/Unix监听器
 func (s *serverTransport) getTCPListener(opts *options.ListenServeOptions) (listener net.Listener, err error) {
-	listener = opts.Listener
+	listener = opts.Listener // 使用自定义监听器
 
 	if listener != nil {
-		return listener, nil
+		return listener, nil // 直接返回自定义监听器
 	}
 
+	// 检查优雅重启环境变量，环境变量不存在 v 为空，ok 为 false
 	v, _ := os.LookupEnv(EnvGraceRestart)
 	ok, _ := strconv.ParseBool(v)
 	if ok {
-		// find the passed listener
+		// 查找从父进程传递的监听器（优雅重启）
 		pln, err := getPassedListener(opts.Network, opts.Address)
 		if err != nil {
 			return nil, err
@@ -190,63 +206,67 @@ func (s *serverTransport) getTCPListener(opts *options.ListenServeOptions) (list
 		if !ok {
 			return nil, errors.New("invalid net.Listener")
 		}
-		return listener, nil
+		return listener, nil // 返回继承的监听器
 	}
 
-	// Reuse port. To speed up IO, the kernel dispatches IO ReadReady events to threads.
+	// 端口复用：为了加速IO，内核将IO ReadReady事件分发给线程
 	if s.opts.ReusePort && opts.Network != "unix" {
-		listener, err = reuseport.Listen(opts.Network, opts.Address)
+		listener, err = reuseport.Listen(opts.Network, opts.Address) // 使用端口复用监听
 		if err != nil {
 			return nil, fmt.Errorf("%s reuseport error:%v", opts.Network, err)
 		}
 	} else {
-		listener, err = net.Listen(opts.Network, opts.Address)
+		listener, err = net.Listen(opts.Network, opts.Address) // 标准网络监听
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	return listener, nil
+	return listener, nil // 返回创建的监听器
 }
 
+// serveStream 启动 TCP 流式服务
 func (s *serverTransport) serveStream(ctx context.Context, ln net.Listener, opts *options.ListenServeOptions) error {
 	var once sync.Once
-	closeListener := func() { ln.Close() }
-	defer once.Do(closeListener)
-	// Create a goroutine to watch ctx.Done() channel.
-	// Once Server.Close(), TCP listener should be closed immediately and won't accept any new connection.
+	closeListener := func() { ln.Close() } // 关闭监听器的函数
+	defer once.Do(closeListener)           // 确保函数退出时关闭监听器
+
+	// 创建goroutine监听关闭信号
+	// 一旦Server.Close()被调用，TCP监听器应立即关闭并不再接受新连接
 	go func() {
 		select {
 		case <-ctx.Done():
-		// ctx.Done will perform the following two actions:
-		// 1. Stop listening.
-		// 2. Cancel all currently established connections.
-		// Whereas opts.StopListening will only stop listening.
+			// ctx.Done会执行以下两个操作：
+			// 1. 停止监听
+			// 2. 取消所有当前已建立的连接
+			// 而opts.StopListening只会停止监听
 		case <-opts.StopListening:
 		}
-		logging.Tracef("recv server close event")
-		once.Do(closeListener)
+		logging.Tracef("recv server close event") // 记录服务器关闭事件
+		once.Do(closeListener)                    // 执行一次关闭监听器操作
 	}()
+
+	// 启动TCP服务
 	return s.serveTCP(ctx, ln, opts)
 }
 
 // ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ---------------------------------packet server-----------------------------------------//
-// listenAndServePacket starts listening, returns an error on failure.
+// listenAndServePacket 启动数据包监听，失败时返回错误
 func (s *serverTransport) listenAndServePacket(ctx context.Context, opts *options.ListenServeOptions) error {
-	pool := createUDPRoutinePool(opts.Routines)
-	// Reuse port. To speed up IO, the kernel dispatches IO ReadReady events to threads.
+	pool := createUDPRoutinePool(opts.Routines) // 创建UDP协程池
+	// 端口复用：为了加速IO，内核将IO ReadReady事件分发给线程
 	if s.opts.ReusePort {
 		reuseport.ListenerBacklogMaxSize = 4096
 		cores := runtime.NumCPU()
 		for i := 0; i < cores; i++ {
-			udpconn, err := s.getUDPListener(opts)
+			udpconn, err := s.getUDPListener(opts) // 获取UDP监听器
 			if err != nil {
 				return err
 			}
 			listenersMap.Store(udpconn, struct{}{})
 
-			go s.servePacket(ctx, udpconn, pool, opts)
+			go s.servePacket(ctx, udpconn, pool, opts) // 启动数据包服务
 		}
 	} else {
 		udpconn, err := s.getUDPListener(opts)
@@ -300,227 +320,4 @@ func (s *serverTransport) servePacket(ctx context.Context, rwc net.PacketConn, p
 	default:
 		return errors.New("transport not support PacketConn impl")
 	}
-}
-
-// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// ------------------------ tcp/udp connection structures ----------------------------//
-
-var errNotFound = errors.New("listener not found")
-
-// ListenFd is the listener fd.
-type ListenFd struct {
-	Fd      uintptr
-	Name    string
-	Network string
-	Address string
-}
-
-// GetPassedListener gets the inherited listener from parent process by network and address.
-func GetPassedListener(network, address string) (interface{}, error) {
-	return getPassedListener(network, address)
-}
-
-func getPassedListener(network, address string) (interface{}, error) {
-	once.Do(inheritListeners)
-
-	key := network + ":" + address
-	v, ok := inheritedListenersMap.Load(key)
-	if !ok {
-		return nil, errNotFound
-	}
-
-	listeners := v.([]interface{})
-	if len(listeners) == 0 {
-		return nil, errNotFound
-	}
-
-	ln := listeners[0]
-	listeners = listeners[1:]
-	if len(listeners) == 0 {
-		inheritedListenersMap.Delete(key)
-	} else {
-		inheritedListenersMap.Store(key, listeners)
-	}
-
-	return ln, nil
-}
-
-// inheritListeners stores the listener according to start listenfd and number of listenfd passed
-// by environment variables.
-func inheritListeners() {
-	firstListenFd, err := strconv.ParseUint(os.Getenv(EnvGraceFirstFd), 10, 32)
-	if err != nil {
-		logging.Errorf("invalid %s, error: %v", EnvGraceFirstFd, err)
-	}
-
-	num, err := strconv.ParseUint(os.Getenv(EnvGraceRestartFdNum), 10, 32)
-	if err != nil {
-		logging.Errorf("invalid %s, error: %v", EnvGraceRestartFdNum, err)
-	}
-
-	for fd := firstListenFd; fd < firstListenFd+num; fd++ {
-		file := os.NewFile(uintptr(fd), "")
-		listener, addr, err := fileListener(file)
-		file.Close()
-		if err != nil {
-			logging.Errorf("get file listener error: %v", err)
-			continue
-		}
-
-		key := addr.Network() + ":" + addr.String()
-		v, ok := inheritedListenersMap.LoadOrStore(key, []interface{}{listener})
-		if ok {
-			listeners := v.([]interface{})
-			listeners = append(listeners, listener)
-			inheritedListenersMap.Store(key, listeners)
-		}
-	}
-}
-
-func fileListener(file *os.File) (interface{}, net.Addr, error) {
-	// Check file status.
-	fin, err := file.Stat()
-	if err != nil {
-		return nil, nil, err
-	}
-
-	// Is this a socket fd.
-	if fin.Mode()&os.ModeSocket == 0 {
-		return nil, nil, errFileIsNotSocket
-	}
-
-	// tcp, tcp4 or tcp6.
-	if listener, err := net.FileListener(file); err == nil {
-		return listener, listener.Addr(), nil
-	}
-
-	// udp, udp4 or udp6.
-	if packetConn, err := net.FilePacketConn(file); err == nil {
-		return packetConn, packetConn.LocalAddr(), nil
-	}
-
-	return nil, nil, errUnSupportedNetworkType
-}
-
-func getPacketConnFd(c net.PacketConn) (*ListenFd, error) {
-	sc, ok := c.(syscall.Conn)
-	if !ok {
-		return nil, fmt.Errorf("getPacketConnFd err: %w", errUnSupportedListenerType)
-	}
-	lnFd, err := getRawFd(sc)
-	if err != nil {
-		return nil, fmt.Errorf("getPacketConnFd getRawFd err: %w", err)
-	}
-	return &ListenFd{
-		Fd:      lnFd,
-		Name:    "a udp listener fd",
-		Network: c.LocalAddr().Network(),
-		Address: c.LocalAddr().String(),
-	}, nil
-}
-
-func getListenerFd(ln net.Listener) (*ListenFd, error) {
-	sc, ok := ln.(syscall.Conn)
-	if !ok {
-		return nil, fmt.Errorf("getListenerFd err: %w", errUnSupportedListenerType)
-	}
-	fd, err := getRawFd(sc)
-	if err != nil {
-		return nil, fmt.Errorf("getListenerFd getRawFd err: %w", err)
-	}
-	return &ListenFd{
-		Fd:      fd,
-		Name:    "a tcp listener fd",
-		Network: ln.Addr().Network(),
-		Address: ln.Addr().String(),
-	}, nil
-}
-
-// getRawFd acts like:
-//
-//	func (ln *net.TCPListener) (uintptr, error) {
-//		f, err := ln.File()
-//		if err != nil {
-//			return 0, err
-//		}
-//		fd, err := f.Fd()
-//		if err != nil {
-//			return 0, err
-//		}
-//	}
-//
-// But it differs in an important way:
-//
-//	The method (*os.File).Fd() will set the original file descriptor to blocking mode as a side effect of fcntl(),
-//	which will lead to indefinite hangs of Close/Read/Write, etc.
-//
-// References:
-//   - https://github.com/golang/go/issues/29277
-//   - https://github.com/golang/go/issues/29277#issuecomment-447526159
-//   - https://github.com/golang/go/issues/29277#issuecomment-448117332
-//   - https://github.com/golang/go/issues/43894
-func getRawFd(sc syscall.Conn) (uintptr, error) {
-	c, err := sc.SyscallConn()
-	if err != nil {
-		return 0, fmt.Errorf("sc.SyscallConn err: %w", err)
-	}
-	var lnFd uintptr
-	if err := c.Control(func(fd uintptr) {
-		lnFd = fd
-	}); err != nil {
-		return 0, fmt.Errorf("c.Control err: %w", err)
-	}
-	return lnFd, nil
-}
-
-// GetListenersFds gets listener fds.
-func GetListenersFds() []*ListenFd {
-	listenersFds := []*ListenFd{}
-	listenersMap.Range(func(key, _ interface{}) bool {
-		var (
-			fd  *ListenFd
-			err error
-		)
-
-		switch k := key.(type) {
-		case net.Listener:
-			fd, err = getListenerFd(k)
-		case net.PacketConn:
-			fd, err = getPacketConnFd(k)
-		default:
-			logging.Errorf("listener type passing not supported, type: %T", key)
-			err = fmt.Errorf("not supported listener type: %T", key)
-		}
-		if err != nil {
-			logging.Errorf("cannot get the listener fd, err: %v", err)
-			return true
-		}
-		listenersFds = append(listenersFds, fd)
-		return true
-	})
-	return listenersFds
-}
-
-// SaveListener saves the listener.
-func SaveListener(listener interface{}) error {
-	switch listener.(type) {
-	case net.Listener, net.PacketConn:
-		listenersMap.Store(listener, struct{}{})
-	default:
-		return fmt.Errorf("not supported listener type: %T", listener)
-	}
-	return nil
-}
-
-// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-func mayLiftToTLSListener(ln net.Listener, opts *options.ListenServeOptions) (net.Listener, error) {
-	if !(len(opts.TLSCertFile) > 0 && len(opts.TLSKeyFile) > 0) {
-		return ln, nil
-	}
-	// Enable TLS.
-	tlsConf, err := ssl.GetServerConfig(opts.CACertFile, opts.TLSCertFile, opts.TLSKeyFile)
-	if err != nil {
-		return nil, fmt.Errorf("tls get server config err: %w", err)
-	}
-	return tls.NewListener(ln, tlsConf), nil
 }

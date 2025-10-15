@@ -1,22 +1,22 @@
 package options
 
-// cstOptions is the client stream transport options.
+// CstOptions 客户端流传输配置选项
 type CstOptions struct {
-	MaxConcurrentStreams int
-	MaxIdleConnsPerHost  int
+	MaxConcurrentStreams int // 每个TCP连接的最大并发流数量
+	MaxIdleConnsPerHost  int // 每个主机的最大空闲连接数
 }
 
-// ClientStreamTransportOption sets properties of ClientStreamTransport.
+// ClientStreamTransportOption 客户端流传输选项修改函数类型
 type ClientStreamTransportOption func(*CstOptions)
 
-// WithMaxConcurrentStreams sets the maximum concurrent streams in each TCP connection.
+// WithMaxConcurrentStreams 设置每个TCP连接的最大并发流数量
 func WithMaxConcurrentStreams(n int) ClientStreamTransportOption {
 	return func(opts *CstOptions) {
 		opts.MaxConcurrentStreams = n
 	}
 }
 
-// WithMaxIdleConnsPerHost sets the maximum idle connections per host.
+// WithMaxIdleConnsPerHost 设置每个主机的最大空闲连接数
 func WithMaxIdleConnsPerHost(n int) ClientStreamTransportOption {
 	return func(opts *CstOptions) {
 		opts.MaxIdleConnsPerHost = n

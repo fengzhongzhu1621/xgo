@@ -8,34 +8,32 @@ import (
 	"github.com/fengzhongzhu1621/xgo/network/transport/handler"
 )
 
-// ListenServeOption modifies the ListenServeOptions.
+// ListenServeOption 服务器监听服务选项修改函数类型
 type ListenServeOption func(*ListenServeOptions)
 
-// ListenServeOptions is the server options on start.
+// ListenServeOptions 服务器启动时的监听服务选项
 type ListenServeOptions struct {
-	ServiceName   string
-	Address       string
-	Network       string
-	Handler       handler.IHandler
-	FramerBuilder codec.IFramerBuilder
-	Listener      net.Listener
+	ServiceName   string               // 服务名称
+	Address       string               // 监听地址
+	Network       string               // 网络类型 (tcp/udp)，多个逗号分割
+	Handler       handler.IHandler     // 业务处理器
+	FramerBuilder codec.IFramerBuilder // 帧构建器
+	Listener      net.Listener         // 自定义监听器
 
-	CACertFile  string        // ca certification file
-	TLSCertFile string        // server certification file
-	TLSKeyFile  string        // server key file
-	Routines    int           // size of goroutine pool
-	ServerAsync bool          // whether enable server async
-	Writev      bool          // whether enable writev in server
-	CopyFrame   bool          // whether copy frame
-	IdleTimeout time.Duration // idle timeout of connection
+	CACertFile  string        // CA证书文件路径
+	TLSCertFile string        // 服务器证书文件路径
+	TLSKeyFile  string        // 服务器密钥文件路径
+	Routines    int           // 协程池大小
+	ServerAsync bool          // 是否启用服务器异步模式
+	Writev      bool          // 是否启用writev优化
+	CopyFrame   bool          // 是否复制帧数据
+	IdleTimeout time.Duration // 连接空闲超时时间
 
-	// DisableKeepAlives, if true, disables keep-alives and only use the
-	// connection for a single request.
-	// This used for rpc transport layer like http, it's unrelated to
-	// the TCP keep-alives.
+	// DisableKeepAlives 如果为true，禁用keep-alive，每个连接只处理单个请求
+	// 用于RPC传输层（如HTTP），与TCP keep-alive无关
 	DisableKeepAlives bool
 
-	// StopListening is used to instruct the server transport to stop listening.
+	// StopListening 用于通知服务器传输停止监听
 	StopListening <-chan struct{}
 }
 

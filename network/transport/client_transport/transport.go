@@ -15,6 +15,7 @@ var (
 
 // ClientTransport defines the client transport layer interface.
 type IClientTransport interface {
+	// RoundTrip 方法实现了请求的发送与接收。它支支持多种连接模式，如连接池、多路复用。支持高性能网络库 tnet
 	RoundTrip(ctx context.Context, req []byte, opts ...options.RoundTripOption) (rsp []byte, err error)
 }
 

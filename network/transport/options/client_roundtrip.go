@@ -8,27 +8,27 @@ import (
 	"github.com/fengzhongzhu1621/xgo/network/multiplexed"
 )
 
-// RoundTripOptions is the options for one roundtrip.
+// RoundTripOptions 单次往返请求的配置选项
 type RoundTripOptions struct {
-	Address               string // IP:Port. Note: address has been resolved from naming service.
-	Password              string
-	Network               string // tcp/udp
-	LocalAddr             string // a random selected local address when accept a connection.
-	DialTimeout           time.Duration
-	Pool                  connpool.IPool // client connection pool
-	ReqType               RequestType    // SendAndRecv, SendOnly
-	FramerBuilder         codec.IFramerBuilder
-	ConnectionMode        ConnectionMode
-	DisableConnectionPool bool // disable connection pool
-	EnableMultiplexed     bool // enable multiplexed
-	Multiplexed           multiplexed.IPool
-	Msg                   codec.IMsg
-	Protocol              string // protocol type
+	Address               string               // IP:端口地址（已从命名服务解析）
+	Password              string               // 连接密码
+	Network               string               // 网络类型 (tcp/udp)
+	LocalAddr             string               // 接受连接时随机选择的本地地址
+	DialTimeout           time.Duration        // 拨号超时时间
+	Pool                  connpool.IPool       // 客户端连接池
+	ReqType               RequestType          // 请求类型：SendAndRecv, SendOnly
+	FramerBuilder         codec.IFramerBuilder // 帧构建器
+	ConnectionMode        ConnectionMode       // UDP连接模式
+	DisableConnectionPool bool                 // 禁用连接池
+	EnableMultiplexed     bool                 // 启用多路复用
+	Multiplexed           multiplexed.IPool    // 多路复用连接池
+	Msg                   codec.IMsg           // 消息对象
+	Protocol              string               // 协议类型
 
-	CACertFile    string // CA certificate file
-	TLSCertFile   string // client certificate file
-	TLSKeyFile    string // client key file
-	TLSServerName string // the name when client verifies the server, default as HTTP hostname
+	CACertFile    string // CA证书文件路径
+	TLSCertFile   string // 客户端证书文件路径
+	TLSKeyFile    string // 客户端密钥文件路径
+	TLSServerName string // 客户端验证服务器时的名称，默认为HTTP主机名
 }
 
 // ConnectionMode is the connection mode, either Connected or NotConnected.
