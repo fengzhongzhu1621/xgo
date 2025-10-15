@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gookit/goutil/testutil/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestCustomTimeFormat(t *testing.T) {

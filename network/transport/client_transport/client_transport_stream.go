@@ -5,9 +5,9 @@ import (
 	"sync"
 
 	"github.com/fengzhongzhu1621/xgo/codec"
+	"github.com/fengzhongzhu1621/xgo/network/multiplexed"
 	"github.com/fengzhongzhu1621/xgo/network/transport/options"
 	"github.com/fengzhongzhu1621/xgo/xerror"
-	"trpc.group/trpc-go/trpc-go/pool/multiplexed"
 )
 
 const (
@@ -17,9 +17,9 @@ const (
 
 // clientStreamTransport keeps compatibility with the original client transport.
 type clientStreamTransport struct {
-	streamIDToConn  map[uint32]multiplexed.MuxConn
+	streamIDToConn  map[uint32]multiplexed.IMuxConn
 	m               *sync.RWMutex
-	multiplexedPool multiplexed.Pool
+	multiplexedPool multiplexed.IPool
 }
 
 // DefaultClientStreamTransport is the default client stream transport.
@@ -37,7 +37,7 @@ func NewClientStreamTransport(opts ...options.ClientStreamTransportOption) IClie
 	t := &clientStreamTransport{
 		// Map streamID to connection. On the client side, ensure that the streamID is
 		// incremented and unique, otherwise the map of addr must be added.
-		streamIDToConn: make(map[uint32]multiplexed.MuxConn),
+		streamIDToConn: make(map[uint32]multiplexed.IMuxConn),
 		m:              &sync.RWMutex{},
 		multiplexedPool: multiplexed.New(
 			multiplexed.WithMaxVirConnsPerConn(options.MaxConcurrentStreams),
@@ -68,7 +68,7 @@ func (c *clientStreamTransport) Init(ctx context.Context, roundTripOpts ...optio
 
 	getOpts := multiplexed.NewGetOptions()
 	getOpts.WithVID(streamID)
-	fp, ok := opts.FramerBuilder.(multiplexed.FrameParser)
+	fp, ok := opts.FramerBuilder.(multiplexed.IFrameParser)
 	if !ok {
 		return xerror.NewFrameError(xerror.RetClientConnectFail,
 			"frame builder does not implement multiplexed.FrameParser")
@@ -170,7 +170,7 @@ func (c *clientStreamTransport) getOptions(ctx context.Context,
 }
 
 func (c *clientStreamTransport) getConnect(ctx context.Context,
-	roundTripOpts ...options.RoundTripOption) (multiplexed.MuxConn, error) {
+	roundTripOpts ...options.RoundTripOption) (multiplexed.IMuxConn, error) {
 	msg := codec.Message(ctx)
 	streamID := msg.StreamID()
 	c.m.RLock()

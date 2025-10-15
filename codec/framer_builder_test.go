@@ -3,7 +3,7 @@ package codec
 import (
 	"testing"
 
-	"github.com/gookit/goutil/testutil/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 var _ ISafeFramer = (*fakeSafeFramer)(nil)

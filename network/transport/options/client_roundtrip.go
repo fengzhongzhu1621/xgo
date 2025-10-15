@@ -5,7 +5,7 @@ import (
 
 	"github.com/fengzhongzhu1621/xgo/codec"
 	"github.com/fengzhongzhu1621/xgo/network/connpool"
-	"trpc.group/trpc-go/trpc-go/pool/multiplexed"
+	"github.com/fengzhongzhu1621/xgo/network/multiplexed"
 )
 
 // RoundTripOptions is the options for one roundtrip.
@@ -21,7 +21,7 @@ type RoundTripOptions struct {
 	ConnectionMode        ConnectionMode
 	DisableConnectionPool bool // disable connection pool
 	EnableMultiplexed     bool // enable multiplexed
-	Multiplexed           multiplexed.Pool
+	Multiplexed           multiplexed.IPool
 	Msg                   codec.IMsg
 	Protocol              string // protocol type
 
@@ -127,7 +127,7 @@ func WithMultiplexed(enable bool) RoundTripOption {
 
 // WithMultiplexedPool returns a RoundTripOption which sets multiplexed pool.
 // This function also enables multiplexed.
-func WithMultiplexedPool(p multiplexed.Pool) RoundTripOption {
+func WithMultiplexedPool(p multiplexed.IPool) RoundTripOption {
 	return func(opts *RoundTripOptions) {
 		opts.EnableMultiplexed = true
 		opts.Multiplexed = p

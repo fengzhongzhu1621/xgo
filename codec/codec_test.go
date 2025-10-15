@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/gookit/goutil/testutil/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 // go test -v -coverprofile=cover.out

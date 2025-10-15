@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"github.com/fengzhongzhu1621/xgo/tests/httptest"
-	"github.com/gookit/goutil/testutil/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 const (

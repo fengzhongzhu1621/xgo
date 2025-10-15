@@ -5,9 +5,9 @@ import (
 	"fmt"
 
 	"github.com/fengzhongzhu1621/xgo/network/connpool"
+	"github.com/fengzhongzhu1621/xgo/network/multiplexed"
 	"github.com/fengzhongzhu1621/xgo/network/transport/options"
 	"github.com/fengzhongzhu1621/xgo/xerror"
-	"trpc.group/trpc-go/trpc-go/pool/multiplexed"
 )
 
 // clientTransport is the implementation details of client transport, such as tcp/udp roundtrip.

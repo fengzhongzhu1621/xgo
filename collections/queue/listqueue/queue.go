@@ -36,6 +36,7 @@ func (q *Queue[T]) Put(v T) {
 
 	q.mu.Lock()
 
+	// 检测是否有读等待，如果有，则需要唤醒
 	if q.waiting {
 		wakeUp = true     // 标记需要唤醒等待的Get操作
 		q.waiting = false // 重置等待标志

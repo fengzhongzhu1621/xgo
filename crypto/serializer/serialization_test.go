@@ -3,7 +3,7 @@ package serializer
 import (
 	"testing"
 
-	"github.com/gookit/goutil/testutil/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestJson(t *testing.T) {

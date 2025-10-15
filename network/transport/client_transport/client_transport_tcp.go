@@ -9,9 +9,9 @@ import (
 	"github.com/fengzhongzhu1621/xgo/codec"
 	"github.com/fengzhongzhu1621/xgo/network/connpool"
 	"github.com/fengzhongzhu1621/xgo/network/dial"
+	"github.com/fengzhongzhu1621/xgo/network/multiplexed"
 	"github.com/fengzhongzhu1621/xgo/network/transport/options"
 	"github.com/fengzhongzhu1621/xgo/xerror"
-	"trpc.group/trpc-go/trpc-go/pool/multiplexed"
 )
 
 // tcpRoundTrip sends tcp request. It supports send, sendAndRcv, keepalive and multiplex.
@@ -184,7 +184,7 @@ func (c *clientTransport) multiplexed(ctx context.Context, req []byte, opts *opt
 	}
 	getOpts := multiplexed.NewGetOptions()
 	getOpts.WithVID(opts.Msg.RequestID())
-	fp, ok := opts.FramerBuilder.(multiplexed.FrameParser)
+	fp, ok := opts.FramerBuilder.(multiplexed.IFrameParser)
 	if !ok {
 		return nil, xerror.NewFrameError(xerror.RetClientConnectFail,
 			"frame builder does not implement multiplexed.FrameParser")

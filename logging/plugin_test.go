@@ -5,7 +5,7 @@ import (
 
 	"github.com/fengzhongzhu1621/xgo/datetime"
 	"github.com/fengzhongzhu1621/xgo/logging/config"
-	"github.com/gookit/goutil/testutil/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 type fakeDecoder struct{}

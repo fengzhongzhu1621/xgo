@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/fengzhongzhu1621/xgo/network/dial"
-	"github.com/gookit/goutil/testutil/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestWithOptions(t *testing.T) {

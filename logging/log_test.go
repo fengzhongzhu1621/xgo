@@ -7,7 +7,7 @@ import (
 	"github.com/fengzhongzhu1621/xgo/logging/config"
 	"github.com/fengzhongzhu1621/xgo/logging/output"
 	"github.com/fengzhongzhu1621/xgo/plugin"
-	"github.com/gookit/goutil/testutil/assert"
+	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"go.uber.org/zap/zaptest/observer"
