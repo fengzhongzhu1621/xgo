@@ -9,8 +9,6 @@ import (
 	"github.com/panjf2000/ants/v2"
 )
 
-const defaultBufferSize = 128 * 1024
-
 type handleParam struct {
 	req   []byte
 	c     *tcpconn

@@ -4,9 +4,7 @@ import (
 	"context"
 	"encoding/binary"
 	"errors"
-	"fmt"
 	"io"
-	"net"
 
 	"github.com/fengzhongzhu1621/xgo/codec"
 	"github.com/fengzhongzhu1621/xgo/xerror"
@@ -49,6 +47,7 @@ func (h *echoStreamHandler) Handle(ctx context.Context, req []byte) ([]byte, err
 type errorHandler struct{}
 
 func (h *errorHandler) Handle(ctx context.Context, req []byte) ([]byte, error) {
+	// 模拟服务端报错，将连接关闭消息交给业务处理层处理，并会关闭 tcp 连接
 	return nil, errors.New("handle error")
 }
 
@@ -79,27 +78,49 @@ type framer struct {
 	r  io.Reader
 }
 
+// ReadFrame 从数据流中读取一个完整的帧
+// 帧格式: [4字节长度头] + [实际数据内容]
+// 返回值:
+// - []byte: 包含长度头和数据的完整帧
+// - error: 读取过程中发生的错误
 func (f *framer) ReadFrame() ([]byte, error) {
+	// 检查帧构建器是否设置了预定义错误
+	// 用于测试场景或错误注入
 	if f.fb.errSet {
 		return nil, f.fb.err
 	}
-	var lenData [4]byte
 
+	// 	+----------------+---------------------+
+	// | 4字节长度头    | 实际数据内容        |
+	// | (大端序uint32) | (长度由头部指定)    |
+	// +----------------+---------------------+
+
+	var lenData [4]byte // 4字节缓冲区，用于存储帧长度信息
+
+	// 读取4个字节的帧长度数据
+	// io.ReadFull确保读取完整4个字节，否则返回错误
 	_, err := io.ReadFull(f.r, lenData[:])
 	if err != nil {
 		return nil, err
 	}
-
+	// 将4字节的大端序数据转换为uint32类型的长度值
+	// 大端序(网络字节序)确保跨平台兼容性
 	length := binary.BigEndian.Uint32(lenData[:])
 
+	// 分配完整帧的缓冲区: 长度头(4字节) + 实际数据(length字节)
 	msg := make([]byte, len(lenData)+int(length))
+
+	// 将长度头数据复制到消息缓冲区的前4个字节
 	copy(msg, lenData[:])
 
+	// 从数据流中读取实际的数据内容到消息缓冲区的剩余部分
+	// 从第5个字节开始(msg[len(lenData):])存放实际数据
 	_, err = io.ReadFull(f.r, msg[len(lenData):])
 	if err != nil {
 		return nil, err
 	}
 
+	// 返回完整的帧数据(包含长度头+实际数据)
 	return msg, nil
 }
 
@@ -173,48 +194,4 @@ func (f *multiplexedFramer) ReadFrame() ([]byte, error) {
 
 func (f *multiplexedFramer) IsSafe() bool {
 	return f.fb.safe
-}
-
-// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-func getFreeAddr(network string) string {
-	p, err := getFreePort(network)
-	if err != nil {
-		panic(err)
-	}
-
-	return fmt.Sprintf(":%d", p)
-}
-
-func getFreePort(network string) (int, error) {
-	if network == "tcp" || network == "tcp4" || network == "tcp6" {
-		addr, err := net.ResolveTCPAddr(network, "localhost:0")
-		if err != nil {
-			return -1, err
-		}
-
-		l, err := net.ListenTCP(network, addr)
-		if err != nil {
-			return -1, err
-		}
-		defer l.Close()
-
-		return l.Addr().(*net.TCPAddr).Port, nil
-	}
-
-	if network == "udp" || network == "udp4" || network == "udp6" {
-		addr, err := net.ResolveUDPAddr(network, "localhost:0")
-		if err != nil {
-			return -1, err
-		}
-
-		l, err := net.ListenUDP(network, addr)
-		if err != nil {
-			return -1, err
-		}
-		defer l.Close()
-
-		return l.LocalAddr().(*net.UDPAddr).Port, nil
-	}
-
-	return -1, errors.New("invalid network")
 }

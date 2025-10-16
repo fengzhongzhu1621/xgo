@@ -31,3 +31,28 @@ func RetryBackoff(retry int, minBackoff, maxBackoff time.Duration) (time.Duratio
 
 	return d, nil
 }
+
+// DoTempDelay 实现了指数退避策略，用于处理临时性错误的重试延迟
+// 参数 tempDelay: 当前的延迟时间，如果是第一次重试则为0
+// 返回值: 计算出的新延迟时间，用于下一次重试
+func DoTempDelay(tempDelay time.Duration) time.Duration {
+	// 判断是否为第一次重试
+	if tempDelay == 0 {
+		// 第一次重试，设置初始延迟为5毫秒
+		tempDelay = 5 * time.Millisecond
+	} else {
+		// 非第一次重试，将延迟时间翻倍（指数增长核心）
+		tempDelay *= 2
+	}
+
+	// 设置最大延迟上限为1秒，防止延迟时间无限增长
+	if max := 1 * time.Second; tempDelay > max {
+		tempDelay = max
+	}
+
+	// 让当前goroutine休眠指定的延迟时间
+	time.Sleep(tempDelay)
+
+	// 返回新的延迟时间，供下一次重试使用
+	return tempDelay
+}

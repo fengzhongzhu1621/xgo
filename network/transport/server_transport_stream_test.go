@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/fengzhongzhu1621/xgo/codec"
+	"github.com/fengzhongzhu1621/xgo/network/ip"
 	"github.com/fengzhongzhu1621/xgo/network/transport/client_transport"
 	"github.com/fengzhongzhu1621/xgo/network/transport/options"
 	"github.com/fengzhongzhu1621/xgo/network/transport/server_transport"
@@ -197,7 +198,7 @@ func TestStreamTCPListenAndServeSend(t *testing.T) {
 	fb := &multiplexedFramerBuilder{}
 
 	// Test IO EOF.
-	port := getFreeAddr("tcp")
+	port := ip.GetFreeAddr("tcp")
 	la := "127.0.0.1" + port
 	ct := client_transport.NewClientStreamTransport()
 	err = ct.Init(ctx, options.WithDialNetwork("tcp"), options.WithDialAddress(lnAddr),

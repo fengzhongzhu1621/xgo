@@ -27,6 +27,7 @@ func (c *clientTransport) tcpRoundTrip(ctx context.Context, reqData []byte,
 			"tcp client transport: framer builder empty")
 	}
 
+	// 从连接池获取一个空闲连接
 	conn, err := c.dialTCP(ctx, opts)
 	if err != nil {
 		return nil, err
@@ -34,6 +35,8 @@ func (c *clientTransport) tcpRoundTrip(ctx context.Context, reqData []byte,
 	// TCP connection is exclusively multiplexed. Close determines whether connection should be put
 	// back into the connection pool to be reused.
 	defer conn.Close()
+
+	// 上下文追加信息
 	msg := codec.Message(ctx)
 	msg.WithRemoteAddr(conn.RemoteAddr())
 	msg.WithLocalAddr(conn.LocalAddr())
@@ -47,11 +50,13 @@ func (c *clientTransport) tcpRoundTrip(ctx context.Context, reqData []byte,
 			"tcp client transport timeout before Write: "+ctx.Err().Error())
 	}
 
+	// 发送请求数据
 	err = c.tcpWriteFrame(ctx, conn, reqData)
 	if err != nil {
 		return nil, err
 	}
 
+	// 读取响应数据
 	rspData, err := c.tcpReadFrame(conn, opts)
 
 	return rspData, err
@@ -121,58 +126,92 @@ func (c *clientTransport) dialTCP(ctx context.Context, opts *options.RoundTripOp
 	return conn, nil
 }
 
-// tcpWriteReqData writes the tcp frame.
+// tcpWriteFrame 写入TCP帧数据到连接
+// 参数:
+//   - ctx: 上下文，用于取消和超时控制
+//   - conn: 网络连接对象
+//   - reqData: 要发送的请求数据字节切片
+//
+// 返回值: 错误信息，成功返回nil
 func (c *clientTransport) tcpWriteFrame(ctx context.Context, conn net.Conn, reqData []byte) error {
-	// Send package in a loop.
-	sentNum := 0
-	num := 0
-	var err error
+	sentNum := 0  // 已发送字节数
+	num := 0      // 单次写入的字节数
+	var err error // 错误变量
+
+	// 循环发送直到所有数据发送完成
 	for sentNum < len(reqData) {
+		// 从已发送位置开始写入剩余数据
 		num, err = conn.Write(reqData[sentNum:])
 		if err != nil {
+			// 检查是否为超时错误
 			if e, ok := err.(net.Error); ok && e.Timeout() {
+				// 返回客户端超时错误
 				return xerror.NewFrameError(xerror.RetClientTimeout,
 					"tcp client transport Write: "+err.Error())
 			}
+			// 返回网络错误
 			return xerror.NewFrameError(xerror.RetClientNetErr,
 				"tcp client transport Write: "+err.Error())
 		}
+
+		// 更新已发送字节数
 		sentNum += num
 	}
+
+	// 所有数据发送成功，返回nil
 	return nil
 }
 
-// tcpReadFrame reads the tcp frame.
+// tcpReadFrame 从TCP连接读取帧数据
+// 参数:
+// - conn: 网络连接对象
+// - opts: 往返选项配置，包含连接池、请求类型等设置
+// 返回值:
+// - []byte: 读取到的帧数据
+// - error: 读取过程中发生的错误
 func (c *clientTransport) tcpReadFrame(conn net.Conn, opts *options.RoundTripOptions) ([]byte, error) {
-	// send only.
+	// 检查请求类型是否为"仅发送"模式
+	// 如果是仅发送模式，不需要等待响应，直接返回无响应错误
 	if opts.ReqType == codec.SendOnly {
 		return nil, xerror.ErrClientNoResponse
 	}
 
-	var fr codec.IFramer
+	var fr codec.IFramer // 帧读取器接口变量
+
+	// 根据连接池禁用标志选择不同的帧读取器创建策略
 	if opts.DisableConnectionPool {
-		// Do not create new Framer for each connection in connection pool.
+		// 短连接模式：为每个连接创建新的帧读取器
+		// 使用缓冲读取器包装连接，提高读取性能
+		// 这种模式下帧读取器与连接生命周期绑定
 		fr = opts.FramerBuilder.New(buffer.NewReader(conn))
 	} else {
-		// The Framer is bound to conn in the connection pool.
+		// 连接池模式：尝试从连接对象本身获取帧读取器
+		// 在连接池中，帧读取器通常已经与连接绑定，可以复用
 		var ok bool
-		fr, ok = conn.(codec.IFramer)
+		fr, ok = conn.(codec.IFramer) // 类型断言，检查连接是否实现了IFramer接口
+
+		// 如果连接没有实现帧读取器接口，返回连接失败错误
 		if !ok {
 			return nil, xerror.NewFrameError(xerror.RetClientConnectFail,
 				"tcp client transport: framer not implemented")
 		}
 	}
 
+	// 使用帧读取器读取完整的帧数据
 	rspData, err := fr.ReadFrame()
 	if err != nil {
+		// 错误处理：区分超时错误和其他网络错误
 		if e, ok := err.(net.Error); ok && e.Timeout() {
+			// 超时错误：客户端读取超时
 			return nil, xerror.NewFrameError(xerror.RetClientTimeout,
 				"tcp client transport ReadFrame: "+err.Error())
 		}
+		// 其他读取错误：帧读取失败
 		return nil, xerror.NewFrameError(xerror.RetClientReadFrameErr,
 			"tcp client transport ReadFrame: "+err.Error())
 	}
 
+	// 成功读取帧数据，返回给调用方
 	return rspData, nil
 }
 
@@ -197,6 +236,8 @@ func (c *clientTransport) multiplexed(ctx context.Context, req []byte, opts *opt
 		return nil, err
 	}
 	defer conn.Close()
+
+	// 上下文追加信息
 	msg := codec.Message(ctx)
 	msg.WithRemoteAddr(conn.RemoteAddr())
 

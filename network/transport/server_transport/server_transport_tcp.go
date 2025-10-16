@@ -10,6 +10,7 @@ import (
 
 	"github.com/fengzhongzhu1621/xgo/buildin/buffer"
 	"github.com/fengzhongzhu1621/xgo/codec"
+	"github.com/fengzhongzhu1621/xgo/collections/backoff"
 	"github.com/fengzhongzhu1621/xgo/collections/ring/writev"
 	"github.com/fengzhongzhu1621/xgo/logging"
 	"github.com/fengzhongzhu1621/xgo/network/ip"
@@ -36,36 +37,45 @@ type tcpconn struct {
 	closeNotify chan struct{}
 }
 
-// close closes socket and cleans up.
+// close 关闭socket连接并进行资源清理
+// 使用sync.Once确保关闭操作只执行一次，避免重复关闭导致的竞态条件
 func (c *tcpconn) close() {
 	c.closeOnce.Do(func() {
-		// Send error msg to handler.
+		// 创建连接关闭消息，通知业务处理层
 		ctx, msg := codec.WithNewMessage(context.Background())
-		msg.WithLocalAddr(c.localAddr)
-		msg.WithRemoteAddr(c.remoteAddr)
+		msg.WithLocalAddr(c.localAddr)   // 设置本地地址信息
+		msg.WithRemoteAddr(c.remoteAddr) // 设置远程地址信息
+
+		// 构建连接关闭错误信息，并将错误信息设置到消息中
 		e := &xerror.Error{
-			Type: xerror.ErrorTypeFramework,
-			Code: xerror.RetServerSystemErr,
-			Desc: "trpc",
-			Msg:  "Server connection closed",
+			Type: xerror.ErrorTypeFramework,  // 框架级错误类型
+			Code: xerror.RetServerSystemErr,  // 服务器系统错误码
+			Desc: "trpc",                     // 错误描述
+			Msg:  "Server connection closed", // 错误消息
 		}
 		msg.WithServerRspErr(e)
-		// The connection closing message is handed over to handler.
+
+		// 将连接关闭消息交给业务处理层处理
+		// 允许业务层进行最后的清理工作或状态保存
 		if err := c.conn.handleClose(ctx); err != nil {
 			logging.Trace("transport: notify connection close failed", err)
 		}
-		// Notify to stop writev sending goroutine.
+
+		// 通知停止writev发送goroutine（如果启用）
+		// writev模式用于批量发送数据，需要专门的goroutine处理
 		if c.writev {
-			close(c.closeNotify)
+			close(c.closeNotify) // 关闭通知通道，触发goroutine退出
 		}
 
-		// Remove cache in server stream transport.
-		key := ip.AddrToKey(c.localAddr, c.remoteAddr)
-		c.st.m.Lock()
-		delete(c.st.addrToConn, key)
-		c.st.m.Unlock()
+		// 从服务器流传输的缓存中移除连接信息
+		// 防止内存泄漏和重复连接处理
+		key := ip.AddrToKey(c.localAddr, c.remoteAddr) // 生成连接唯一标识键
+		c.st.m.Lock()                                  // 加锁保护并发访问
+		delete(c.st.addrToConn, key)                   // 从连接映射表中删除
+		c.st.m.Unlock()                                // 释放锁
 
-		// Finally, close the socket connection.
+		// 最后，关闭底层的socket连接
+		// 这是实际的网络资源释放操作
 		c.rwc.Close()
 	})
 }
@@ -101,7 +111,7 @@ func (c *tcpconn) serve() {
 			}
 		}
 
-		// 读取一个完整的包
+		// 服务端从客户端监听的连接中读取一个完整的包
 		req, err := c.fr.ReadFrame()
 		if err != nil {
 			if err == io.EOF {
@@ -154,9 +164,11 @@ func (c *tcpconn) handleSync(req []byte) {
 
 // handleSyncWithErr 处理业务逻辑
 func (c *tcpconn) handleSyncWithErr(req []byte, e error) {
+	// 创建一个新的消息，并传递给 ctx，覆盖 ctx 原来携带的消息
 	ctx, msg := codec.WithNewMessage(context.Background())
 	defer codec.PutBackMessage(msg)
 
+	// 追加额外信息到消息中
 	msg.WithServerRspErr(e)
 	// Record local addr and remote addr to context.
 	msg.WithLocalAddr(c.localAddr)
@@ -175,6 +187,7 @@ func (c *tcpconn) handleSyncWithErr(req []byte, e error) {
 		return
 	}
 
+	// 发送服务端响应
 	{
 		// common RPC write rsp.
 		_, err = c.write(rsp)
@@ -204,7 +217,7 @@ func (s *serverTransport) serveTCP(ctx context.Context, ln net.Listener, opts *o
 			// 处理接受连接时出现的错误
 			if ne, ok := err.(net.Error); ok && ne.Temporary() {
 				// 如果是临时性错误，采用指数退避策略计算下一次延迟时间，并在阻塞等待下一次连接
-				tempDelay = doTempDelay(tempDelay)
+				tempDelay = backoff.DoTempDelay(tempDelay)
 				continue
 			}
 
@@ -251,7 +264,7 @@ func (s *serverTransport) serveTCP(ctx context.Context, ln net.Listener, opts *o
 		tc := &tcpconn{
 			conn:        s.newConn(ctx, opts),                          // 创建新的连接对象
 			rwc:         rwc,                                           // 原始网络连接
-			fr:          opts.FramerBuilder.New(buffer.NewReader(rwc)), // 帧解析器，用于处理数据帧
+			fr:          opts.FramerBuilder.New(buffer.NewReader(rwc)), // 帧解析器，用于从接收到的 tcp 连接获取数据帧
 			remoteAddr:  rwc.RemoteAddr(),                              // 客户端地址
 			localAddr:   rwc.LocalAddr(),                               // 服务器地址
 			serverAsync: opts.ServerAsync,                              // 是否启用异步处理模式
@@ -280,29 +293,4 @@ func (s *serverTransport) serveTCP(ctx context.Context, ln net.Listener, opts *o
 		// 启动新的goroutine处理该连接，实现并发处理
 		go tc.serve()
 	}
-}
-
-// doTempDelay 实现了指数退避策略，用于处理临时性错误的重试延迟
-// 参数 tempDelay: 当前的延迟时间，如果是第一次重试则为0
-// 返回值: 计算出的新延迟时间，用于下一次重试
-func doTempDelay(tempDelay time.Duration) time.Duration {
-	// 判断是否为第一次重试
-	if tempDelay == 0 {
-		// 第一次重试，设置初始延迟为5毫秒
-		tempDelay = 5 * time.Millisecond
-	} else {
-		// 非第一次重试，将延迟时间翻倍（指数增长核心）
-		tempDelay *= 2
-	}
-
-	// 设置最大延迟上限为1秒，防止延迟时间无限增长
-	if max := 1 * time.Second; tempDelay > max {
-		tempDelay = max
-	}
-
-	// 让当前goroutine休眠指定的延迟时间
-	time.Sleep(tempDelay)
-
-	// 返回新的延迟时间，供下一次重试使用
-	return tempDelay
 }

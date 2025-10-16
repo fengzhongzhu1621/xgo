@@ -9,13 +9,14 @@ import (
 	"testing"
 	"time"
 
+	"github.com/fengzhongzhu1621/xgo/network/ip"
 	"github.com/fengzhongzhu1621/xgo/network/transport/options"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func Test_ServerTransport_UDP(t *testing.T) {
-	var addr = getFreeAddr("udp")
+	var addr = ip.GetFreeAddr("udp")
 
 	wg := sync.WaitGroup{}
 	wg.Add(1)
