@@ -45,6 +45,7 @@ func (p *pluginInfo) hasDependence(status map[string]bool) (bool, error) {
 //   - status: 所有插件的初始化状态映射
 //   - dependences: 当前插件依赖的其他插件名称列表
 //   - flexible: 是否为弱依赖关系，true表示弱依赖，false表示强依赖
+//
 // 返回值:
 //   - bool: true表示存在未初始化的依赖插件，false表示所有依赖插件都已初始化或不存在依赖
 //   - error: 依赖检查过程中的错误，如自我依赖或强依赖的插件不存在

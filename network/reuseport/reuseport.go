@@ -44,7 +44,7 @@ func getSockaddr(proto, addr string) (sa syscall.Sockaddr, soType int, err error
 }
 
 func getSocketFileName(proto, addr string) string {
-	return fmt.Sprintf(fileNameTemplate, os.Getpid(), proto, addr)  // 生成唯一的socket文件名
+	return fmt.Sprintf(fileNameTemplate, os.Getpid(), proto, addr) // 生成唯一的socket文件名
 }
 
 // Listen function is an alias for NewReusablePortListener.
